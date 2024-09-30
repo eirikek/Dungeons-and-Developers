@@ -8,8 +8,8 @@ export default function MonsterCard() {
 
   return(
     <div className="card">
-      <img src={monsterImageURL}/>
-      <p>{monsterInfo.name}</p>
+      <h2>{monsterInfo.name}</h2>
+      <img src={monsterImageURL} />
       <p>{monsterInfo.type}</p>
       <p>{monsterInfo.alignment}</p>
       <p>HP: {monsterInfo.hp}</p>
