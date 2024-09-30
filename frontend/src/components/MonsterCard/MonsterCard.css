@@ -5,13 +5,14 @@
     justify-content: center;
     background-color: #BA3B46;
     max-width: 20vw;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
 img {
     max-width: 15vw;
     border-radius: 15px;
     box-shadow: 0 2px 2px 0;
-
 }
 
 h2 {
