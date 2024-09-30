@@ -1,12 +1,17 @@
 import './App.css';
-import MonsterCard from './components/MonsterCard/MonsterCard.tsx';
+import Monsters from './components/Monsters/Monsters.tsx';
+import { useState } from 'react';
+import dataMonsters from './data/mockup.ts';
 
 function App() {
+  const [monsters, setMonsters] = useState(dataMonsters.results);
+
+  const handleSetMonsters = () => {
+    // code here
+  };
   return (
     <>
-      <h1 className="text-6xl">Hello world!</h1>
-      <MonsterCard />
-      {}
+      <Monsters monsters={monsters} />
     </>
   );
 }
