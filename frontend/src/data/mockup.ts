@@ -1,6 +1,6 @@
 // monsters
 
-export const monsters = {
+const monsters = {
   count: 334,
   results: [
     {
@@ -385,6 +385,7 @@ export const monsters = {
     },
   ],
 };
+export default monsters;
 
 // specific monster
 export const darkmantle = {
