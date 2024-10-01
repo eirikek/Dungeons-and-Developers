@@ -1,14 +1,22 @@
-import './App.css'
 import MonsterCard from './components/MonsterCard/MonsterCard.tsx';
+import mockup from '../../frontend/src/data/mockup.ts';
+
+const monsterNameArray: string[] = [];
+
+mockup.results.forEach((result) => {
+  monsterNameArray.push(result.index);
+});
 
 function App() {
-
   return (
     <>
-      <h1 className="text-6xl">Hello world!</h1>
-      <MonsterCard monsterName={"adult-black-dragon"}/>
-     </>
-  )
+      <div className="flex m-5 gap-5">
+        {monsterNameArray.map((name, index) => (
+          <MonsterCard monsterName={name} key={index} />
+        ))}
+      </div>
+    </>
+  );
 }
 
-export default App
+export default App;
