@@ -2,12 +2,13 @@ import {useEffect, useState} from "react";
 
 
 function useMonster(monsterName: string) {
-  const [data, setData] = useState<{ name: string; type: string; image: string; alignment: string; hit_points: number }>({
+  const [data, setData] = useState<{ name: string; type: string; image: string; alignment: string; hit_points: number, size: string }>({
     name: "",
     type: "",
     image: "",
     alignment: "",
     hit_points: 0,
+    size: "",
   });
 
 
@@ -23,7 +24,8 @@ function useMonster(monsterName: string) {
     type: data.type,
     img: data.image,
     alignment: data.alignment,
-    hp: data.hit_points
+    hp: data.hit_points,
+    size: data.size
   }
 }
 
