@@ -5,9 +5,11 @@ export default {
     extend: {
       colors: {
         customRed: '#D40101',
+        customGray: '#808080',
       },
       backgroundImage: {
         terrain: "url('/src/assets/terrain.jpeg')",
+        storm_giant: "url('/src/assets/storm_giant.jpeg')",
       },
       keyframes: {
         underlineExpand: {
