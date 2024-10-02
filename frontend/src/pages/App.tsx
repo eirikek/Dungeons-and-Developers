@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import './App.css';
 
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',
@@ -35,7 +34,8 @@ function App() {
   return (
     <>
       <main
-        className="relative flex items-center justify-center h-screen bg-terrain bg-cover bg-center before:absolute before:inset-0 before:bg-black before:opacity-70 before:z-0">
+        className="relative flex items-center justify-center h-screen z-0 before:absolute before:inset-0 before:bg-terrain before:bg-cover before:bg-center before:animate-background-zoom  before:z-0">
+        <div className="absolute inset-0 bg-black opacity-70 z-10"></div>
         <section className="w-full h-3/4 relative z-10 flex flex-col items-center justify-around">
           <header>
             <h1
