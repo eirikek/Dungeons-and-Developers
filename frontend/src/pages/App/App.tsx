@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import Navbar from '../../components/Navbar/Navbar';
 
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',
@@ -35,7 +34,6 @@ function App() {
 
   return (
     <>
-      <Navbar />
       <main
         className="relative flex items-center justify-center h-screen bg-terrain bg-cover bg-center before:absolute before:inset-0 before:bg-black before:opacity-70 before:z-0">
         <section className="w-full h-3/4 relative z-10 flex flex-col items-center justify-around">
