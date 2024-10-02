@@ -1,13 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    './index.html',
-    './src/**/*.{js,ts,jsx,tsx}',
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      colors: {
+        customRed: '#D40101',
+      },
       backgroundImage: {
-        'terrain': 'url(\'/src/assets/terrain.jpeg\')',
+        terrain: "url('/src/assets/terrain.jpeg')",
       },
       keyframes: {
         underlineExpand: {
