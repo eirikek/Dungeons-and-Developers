@@ -9,6 +9,9 @@ export default {
       backgroundImage: {
         'terrain': 'url(\'/src/assets/terrain.jpeg\')',
       },
+      colors: {
+        customRed: '#DB3232',
+      },
       keyframes: {
         underlineExpand: {
           '0%': { width: '0', left: '50%' },
