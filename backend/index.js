@@ -2,19 +2,19 @@ import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { Neo4jGraphQL } from '@neo4j/graphql';
 import neo4j from 'neo4j-driver';
-import axios from 'axios';
 
 const typeDefs = `
-  type Monster {
-    name: String!
-    hit_points: Int!
-    size: String!
-    alignment: String!
-    image: String
+  type User {
+    username: String!
   }
 
   type Query {
-    monster(index: String!): Monster
+    userExists(username: String!): Boolean!
+    login(username: String!): Boolean!
+  }
+
+  type Mutation {
+    register(username: String!): User
   }
 `;
 
@@ -22,13 +22,37 @@ const driver = neo4j.driver('bolt://localhost:7800', neo4j.auth.basic('admin', '
 
 const resolvers = {
   Query: {
-    monster: async (_, { index }) => {
-      try {
-        const response = await axios.get(`https://www.dnd5eapi.co/api/monsters/${index}/`);
-        return response.data;
-      } catch (error) {
-        throw new Error('Failed to get data');
-      }
+    // Check if a user already exists
+    userExists: async (_, { username }) => {
+      const session = driver.session();
+      const result = await session.run(
+        'MATCH (u:User {username: $username}) RETURN u',
+        { username },
+      );
+      session.close();
+      return result.records.length > 0;
+    },
+    // Log in: Just check if the user exists for now
+    login: async (_, { username }) => {
+      const session = driver.session();
+      const result = await session.run(
+        'MATCH (u:User {username: $username}) RETURN u',
+        { username },
+      );
+      session.close();
+      return result.records.length > 0;
+    },
+  },
+  Mutation: {
+    // Register a new user
+    register: async (_, { username }) => {
+      const session = driver.session();
+      const result = await session.run(
+        'CREATE (u:User {username: $username}) RETURN u',
+        { username },
+      );
+      session.close();
+      return { username };
     },
   },
 };
