@@ -22,6 +22,11 @@ export default {
           '50%': { width: '100%', left: '0%' },
         },
       },
+      zoom: {
+        '0%': { transform: 'scale(1)' },
+        '50%': { transform: 'scale(1.4)' },
+        '100%': { transform: 'scale(1)' },
+      },
       animation: {
         'underline-expand': 'underlineExpand 0.3s ease-out forwards',
       },
