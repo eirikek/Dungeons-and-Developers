@@ -2,10 +2,15 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    screens: {
+      tablet: '776px',
+      laptop: '1024px',
+      desktop: '1300px',
+    },
     extend: {
       colors: {
-        customRed: '#D40101',
-        customGray: '#808080',
+        customRed: '#DB3232',
+        customGray: '#1E1E1E',
       },
       backgroundImage: {
         terrain: "url('/src/assets/terrain.jpeg')",
