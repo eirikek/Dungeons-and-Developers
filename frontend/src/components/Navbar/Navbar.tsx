@@ -75,40 +75,41 @@ const Navbar = () => {
       <nav
         className={`${
           showNavbar ? 'top-0' : '-top-20'
-        } fixed left-0 w-full bg-customRed text-white lg:p-5 p-2 z-50 transition-all duration-300 ease-in-out`}
+        } fixed left-0 w-full bg-customRed text-white laptop:p-5 p-2 z-50 transition-all duration-300 ease-in-out`}
       >
         <div className="container mx-auto flex justify-between items-center px-8">
-          <img src={logo} alt="Dungeons & Developers logo" className="h-9 lg:hidden" />
+          <img src={logo} alt="Dungeons & Developers logo" className="h-9 tablet:hidden" />
 
           {/* Hamburger Icon */}
-          <div className="lg:hidden">
-            <button onClick={toggleMenu} className="text-3xl p-2">
+          <div className="tablet:hidden">
+            <button
+              onClick={toggleMenu}
+              className="text-3xl p-2"
+              aria-expanded={isOpen ? 'true' : 'false'}
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+            >
               {isOpen ? <FiX /> : <FiMenu />}
             </button>
           </div>
 
           {/* Menu for large screens */}
-          <div className="hidden lg:flex justify-between container">
+          <div className="hidden tablet:flex justify-between container">
             <button className="relative group text-3xl pb-1">
               Monsters
-              <span
-                className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
+              <span className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
             </button>
             <button className="relative group text-3xl pb-1">
               Dungeons & Developers
-              <span
-                className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
+              <span className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
             </button>
             <button className="relative group text-3xl pb-1">
               My profile
-              <span
-                className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
+              <span className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
             </button>
             <button className="relative group text-3xl pb-1 flex items-center gap-2">
               Log out
               <IoIosLogOut />
-              <span
-                className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
+              <span className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
             </button>
           </div>
         </div>
@@ -118,7 +119,7 @@ const Navbar = () => {
       <div
         className={`fixed top-0 right-0 h-full w-64 bg-customRed text-white transition-transform transform ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
-        } lg:hidden pl-4 pt-10 z-50`}
+        } tablet:hidden pl-4 pt-10 z-50`}
       >
         <button onClick={toggleMenu} className="absolute top-4 right-11 text-3xl">
           <FiX />
