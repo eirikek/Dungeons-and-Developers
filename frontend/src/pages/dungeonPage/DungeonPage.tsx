@@ -26,10 +26,10 @@ export default function DungeonPage() {
             <CustomInput
               placeholder="Enter dungeon name"
               inputName="Dungeon Name"
-              value={dungeonName}
+              value={dungeonName} 
               onSave={handleSaveDungeonName}
             />
-            <DungeonMonsterGrid />
+            <DungeonMonsterGrid /> 
           </section>
         </article>
       </main>

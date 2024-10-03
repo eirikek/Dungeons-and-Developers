@@ -29,6 +29,7 @@ export default {
       },
       animation: {
         'underline-expand': 'underlineExpand 0.3s ease-out forwards',
+        'background-zoom': 'zoom 120s linear infinite',
       },
     },
   },
