@@ -3,7 +3,6 @@ import MonsterCard from '../../components/MonsterCard/MonsterCard.tsx';
 import mockup from '../../data/mockup.ts';
 import Navbar from '../../components/Navbar/Navbar.tsx';
 import { hourglass } from 'ldrs';
-import monsters from '../../data/mockup.ts';
 
 const monsterNameArray: string[] = mockup.results.map((result: any) => result.index);
 const monsterNameArray20: string[] = monsterNameArray.slice(0, 6);
