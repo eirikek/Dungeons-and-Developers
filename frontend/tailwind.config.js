@@ -15,6 +15,7 @@ export default {
       backgroundImage: {
         terrain: "url('/src/assets/terrain.jpeg')",
         storm_giant: "url('/src/assets/storm_giant.jpeg')",
+        madmage: "url('/src/assets/madmage.jpeg')",
       },
       keyframes: {
         underlineExpand: {
