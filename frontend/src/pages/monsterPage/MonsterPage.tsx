@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import MonsterCard from '../../components/MonsterCard/MonsterCard.tsx';
 import mockup from '../../data/mockup.ts';
 import Navbar from '../../components/Navbar/Navbar.tsx';
+import { hourglass } from 'ldrs';
 
 const monsterNameArray: string[] = mockup.results.map((result: any) => result.index);
 const monsterNameArray20: string[] = monsterNameArray.slice(0, 6);
@@ -9,12 +10,11 @@ const monsterNameArray20: string[] = monsterNameArray.slice(0, 6);
 export default function MonsterPage() {
   const [loadedCount, setLoadedCount] = useState<number>(0);
   const totalMonsters = monsterNameArray20.length;
+  hourglass.register();
 
   const handleMonsterLoad = () => {
     setLoadedCount((prevCount) => {
-      const newCount = prevCount + 1;
-      console.log(`Loaded ${newCount} out of ${totalMonsters} monsters`);
-      return newCount;
+      return prevCount + 1;
     });
   };
 
@@ -28,9 +28,7 @@ export default function MonsterPage() {
         className="flex flex-col items-center justify-center h-full"
         style={{ display: isLoading ? 'block' : 'none' }}
       >
-        <p className="text-white text-xl font-bold">
-          Loading monsters... ({loadedCount} / {totalMonsters})
-        </p>
+        <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
       </div>
 
       <div
