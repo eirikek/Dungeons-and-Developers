@@ -49,8 +49,6 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
       {!imageLoaded && <div>Loading image...</div>}
       <div className="mb-[3px] p-[5px] text-white font-semibold">
         <p>Type: {monsterInfo.type}</p>
-        <p>Size: {monsterInfo.size}</p>
-        <p>Alignment: {monsterInfo.alignment}</p>
         <p>HP: {monsterInfo.hp}</p>
         <p>Click for more stats!</p>
       </div>
