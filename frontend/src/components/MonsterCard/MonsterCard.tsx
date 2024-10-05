@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import useMonster from '../../hooks/useMonster.ts';
 import NoMonsterImageFound from '../../assets/NoMonsterImageFound.jpg';
-import MonsterCardInfo from './MonsterCardInfo.tsx';
+import MonsterCardInfo from './MonsterReviewModal.tsx';
 
 interface MonsterCardProps {
   monsterName: string;

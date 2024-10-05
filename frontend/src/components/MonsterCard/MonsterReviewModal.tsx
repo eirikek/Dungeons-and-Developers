@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 import useMonster from '../../hooks/useMonster.ts';
 import NoMonsterImageFound from '../../assets/NoMonsterImageFound.jpg';
 
-type MonsterCardInfo = {
+type MonsterReviewModal = {
   name: string;
 };
 
@@ -35,7 +35,7 @@ const marks = [
   },
 ];
 
-const MonsterCardInfo = ({ name }: MonsterCardInfo) => {
+const MonsterCardInfo = ({ name }: MonsterReviewModal) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [difficulty, setDifficulty] = useState<number>(0);
@@ -77,8 +77,8 @@ const MonsterCardInfo = ({ name }: MonsterCardInfo) => {
             handleClose();
           },
           sx: {
-            width: '700px',
-            height: '600px',
+            width: '100vw',
+            height: '93vh',
             maxWidth: 'none',
             padding: 4,
             backgroundColor: 'black',
@@ -110,6 +110,17 @@ const MonsterCardInfo = ({ name }: MonsterCardInfo) => {
                   '& .MuiSlider-markLabel': {
                     color: 'white',
                     fontFamily: 'MedievalSharp',
+                    fontSize: '1.5rem',
+                  },
+                  '& .MuiSlider-thumb': {
+                    width: 24,
+                    height: 24,
+                  },
+                  '& .MuiSlider-track': {
+                    height: 10,
+                  },
+                  '& .MuiSlider-rail': {
+                    height: 10,
                   },
                 }}
               />
@@ -132,12 +143,14 @@ const MonsterCardInfo = ({ name }: MonsterCardInfo) => {
               sx={{
                 '& .MuiInputBase-input': {
                   color: 'white',
-                  fontSize: '16px',
+                  fontSize: '20px',
+                  height: 'auto',
+                  padding: '16px',
                 },
                 '& .MuiInputLabel-root': {
                   color: 'white',
                   fontFamily: 'MedievalSharp',
-                  fontSize: '20px',
+                  fontSize: '24px',
                 },
                 '& .MuiInput-underline:before': {
                   borderBottomColor: 'white',
@@ -145,7 +158,7 @@ const MonsterCardInfo = ({ name }: MonsterCardInfo) => {
                 '& .MuiInput-underline:after': {
                   borderBottomColor: 'yellow',
                 },
-                width: '400px',
+                width: '500px',
               }}
             ></TextField>
           </article>
