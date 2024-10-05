@@ -7,7 +7,7 @@ interface CounterProps {
 }
 
 export default function Counter({ value, onChange }: CounterProps) {
-  const changeTimer = useRef<NodeJS.Timeout | null>(null); // Store the interval ID
+  const changeTimer = useRef<NodeJS.Timeout | null>(null);
   const rate = 100;
 
   const clearTimer = () => {
@@ -24,15 +24,13 @@ export default function Counter({ value, onChange }: CounterProps) {
     changeTimer.current = setInterval(() => {
       const elapsedTime = Date.now() - startTime;
       const incrementValue = Math.floor(elapsedTime / rate);
-      const newValue = value + incrementValue;
+      let newValue = value + incrementValue;
 
-      // Ensure the value does not go over 100
-      if (newValue <= 100) {
-        onChange(newValue);
-      } else {
-        onChange(100);
-        clearTimer();
+      if (newValue > 100) {
+        newValue = newValue % 101;
       }
+
+      onChange(newValue);
     }, 100);
   };
 
@@ -43,15 +41,13 @@ export default function Counter({ value, onChange }: CounterProps) {
     changeTimer.current = setInterval(() => {
       const elapsedTime = Date.now() - startTime;
       const decrementValue = Math.floor(elapsedTime / rate);
-      const newValue = value - decrementValue;
+      let newValue = value - decrementValue;
 
-      // Ensure the value does not go below 0
-      if (newValue >= 0) {
-        onChange(newValue);
-      } else {
-        onChange(0);
-        clearTimer();
+      if (newValue < 0) {
+        newValue = 100 - (Math.abs(newValue) % 101);
       }
+
+      onChange(newValue);
     }, 100);
   };
 
