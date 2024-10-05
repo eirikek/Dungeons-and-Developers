@@ -2,8 +2,19 @@ import Navbar from '../../components/Navbar/Navbar.tsx';
 import placeholderImg from '../../assets/my_character_bg.jpg';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import Button from '../../components/Button/Button.tsx';
+import Counter from '../../components/Counter/Counter.tsx';
+import { useState } from 'react';
 
 export default function MyCharacterPage() {
+  const [abilities, setAbilities] = useState([0, 0, 0, 0, 0, 0]);
+  
+  const handleAbilityChange = (index: number, newValue: number) => {
+    const updatedAbilities = [...abilities];
+    updatedAbilities[index] = newValue;
+    setAbilities(updatedAbilities);
+  };
+
+
   return (
     <>
       <Navbar />
@@ -59,12 +70,9 @@ export default function MyCharacterPage() {
                 {[...Array(6)].map((_, index) => (
                   <div key={index} className="flex items-center">
                     <label className="text-lg w-32">Ability {index + 1}:</label>
-                    <input
-                      type="number"
-                      className="text-black rounded-lg p-2 w-20 text-2xl"
-                      min="0"
-                      max="100"
-                      defaultValue="0"
+                    <Counter
+                      value={abilities[index]}
+                      onChange={(newValue) => handleAbilityChange(index, newValue)}
                     />
                   </div>
                 ))}

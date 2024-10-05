@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 interface ButtonProps {
@@ -9,7 +8,7 @@ interface ButtonProps {
   linkTo?: string;
 }
 
-const Button: React.FC<ButtonProps> = ({ text, onClick, className = '', textSize = 'text-3xl', linkTo }) => {
+export default function Button({ text, onClick, className = '', textSize = 'text-3xl', linkTo }: ButtonProps) {
   const buttonContent = (
     <>
       {text}
@@ -40,5 +39,3 @@ const Button: React.FC<ButtonProps> = ({ text, onClick, className = '', textSize
     </button>
   );
 };
-
-export default Button;
