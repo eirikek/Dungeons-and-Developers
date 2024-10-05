@@ -7,34 +7,52 @@ interface CounterProps {
 }
 
 export default function Counter({ value, onChange }: CounterProps) {
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);  // Reference to store the interval ID
+  const changeTimer = useRef<NodeJS.Timeout | null>(null); // Store the interval ID
+  const rate = 100;
 
-  const handleIncrement = () => {
-    if (value < 100) {
-      onChange(value + 1);
-    }
-  };
-
-  const handleDecrement = () => {
-    if (value > 0) {
-      onChange(value - 1);
+  const clearTimer = () => {
+    if (changeTimer.current) {
+      clearInterval(changeTimer.current);
+      changeTimer.current = null;
     }
   };
 
   const startIncrement = () => {
-    handleIncrement();
-    intervalRef.current = setInterval(handleIncrement, 100);
+    clearTimer();
+    const startTime = Date.now();
+
+    changeTimer.current = setInterval(() => {
+      const elapsedTime = Date.now() - startTime;
+      const incrementValue = Math.floor(elapsedTime / rate);
+      const newValue = value + incrementValue;
+
+      // Ensure the value does not go over 100
+      if (newValue <= 100) {
+        onChange(newValue);
+      } else {
+        onChange(100);
+        clearTimer();
+      }
+    }, 100);
   };
 
   const startDecrement = () => {
-    handleDecrement();
-    intervalRef.current = setInterval(handleDecrement, 100);
-  };
+    clearTimer();
+    const startTime = Date.now();
 
-  const stopAction = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
+    changeTimer.current = setInterval(() => {
+      const elapsedTime = Date.now() - startTime;
+      const decrementValue = Math.floor(elapsedTime / rate);
+      const newValue = value - decrementValue;
+
+      // Ensure the value does not go below 0
+      if (newValue >= 0) {
+        onChange(newValue);
+      } else {
+        onChange(0);
+        clearTimer();
+      }
+    }, 100);
   };
 
   return (
@@ -42,24 +60,26 @@ export default function Counter({ value, onChange }: CounterProps) {
       <button
         className="text-white hover:text-gray-400"
         onMouseDown={startIncrement}
-        onMouseUp={stopAction}
-        onMouseLeave={stopAction}
+        onMouseUp={clearTimer}
+        onMouseLeave={clearTimer}
         onTouchStart={startIncrement}
-        onTouchEnd={stopAction}
+        onTouchEnd={clearTimer}
       >
         <FaChevronUp size={24} />
       </button>
-      <div className="text-2xl text-white py-2">{value}</div>
+
+      <div className="text-2xl text-white py-2 w-12 text-center">{value}</div>
+
       <button
         className="text-white hover:text-gray-400"
         onMouseDown={startDecrement}
-        onMouseUp={stopAction}
-        onMouseLeave={stopAction}
+        onMouseUp={clearTimer}
+        onMouseLeave={clearTimer}
         onTouchStart={startDecrement}
-        onTouchEnd={stopAction}
+        onTouchEnd={clearTimer}
       >
         <FaChevronDown size={24} />
       </button>
     </div>
   );
-};
+}
