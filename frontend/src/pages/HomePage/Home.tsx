@@ -7,16 +7,37 @@ import dragonGif from '../../assets/dragon.gif';
 import Tilt from 'react-parallax-tilt';
 import Section from '../../components/Home/Section.tsx';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
-  // Scroll tracking for the first dragon
   const { scrollYProgress } = useScroll();
 
-  // Animate dragon1 from left to right (on the first section)
-  const dragon1X = useTransform(scrollYProgress, [0.4, 0.5], ['-500%', '500%']);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Animate dragon2 from right to left (between last sections)
-  const dragon2X = useTransform(scrollYProgress, [0.8, 1.2], ['100%', '-100%']);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const dragon1X = useTransform(
+    scrollYProgress,
+    isMobile ? [0.35, 0.6] : [0.35, 0.65],
+    isMobile ? ['-300%', '300%'] : ['-600%', '600%'],
+  );
+
+  const dragon2X = useTransform(
+    scrollYProgress,
+    isMobile ? [0.65, 0.9] : [0.7, 1.0],
+    isMobile ? ['300%', '-300%'] : ['600%', '-600%'],
+  );
 
   return (
     <>
@@ -45,7 +66,7 @@ export default function Home() {
         </Tilt>
 
       </header>
-      <main className="w-full bg-black flex flex-col items-center py-48 xl:gap-36 gap-20 overflow-hidden">
+      <main className="w-full bg-black flex flex-col items-center py-48 xl:gap-36 gap-16 overflow-hidden">
         <Section
           title="Create Your Character"
           text={
@@ -79,7 +100,7 @@ export default function Home() {
         <motion.img
           src={dragonGif}
           alt="dragon"
-          className="w-44 invert shadow-none"
+          className="md:w-44 w-32 invert shadow-none"
           style={{
             x: dragon1X,
             scaleX: -1,
@@ -111,12 +132,13 @@ export default function Home() {
           reversed={true}
         />
 
+        {/* Second dragon animation from right to left */}
         <motion.img
           src={dragonGif}
           alt="dragon"
-          className="w-44 invert shadow-none"
+          className="md:w-44 w-32 invert shadow-none"
           style={{
-            x: dragon2X, // Apply the animated position
+            x: dragon2X,
           }}
         />
 
