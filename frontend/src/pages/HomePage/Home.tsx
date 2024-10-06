@@ -1,5 +1,6 @@
 import Navbar from '../../components/Navbar/Navbar.tsx';
 import text_logo from '../../assets/text_logo.png';
+import Tilt from 'react-parallax-tilt';
 
 export default function Home() {
   return (
@@ -11,20 +12,28 @@ export default function Home() {
         <div
           className="absolute inset-0 z-10"
           style={{
-            background: 'linear-gradient(to bottom, transparent 50%, black 100%)',
+            background: 'linear-gradient(to bottom, transparent 80%, black 100%)',
           }}
         ></div>
 
-        <img
-          src={text_logo}
-          alt="text_logo"
-          className="relative z-20 object-contain shadow-none p-8"
-        />
+        <Tilt
+          tiltMaxAngleX={15}
+          tiltMaxAngleY={15}
+          scale={1.05}
+          className="relative z-20 w-2/5 h-2/5"
+        >
+          <img
+            src={text_logo}
+            alt="text_logo"
+            className="object-contain shadow-none w-full h-full p-8"
+          />
+        </Tilt>
 
       </header>
+      
       <main className="w-full h-screen bg-black flex flex-col items-center">
         <section className="w-4/5">
-          <h1 className="text-5xl">How to play</h1>
+          <h1 className="text-5xl text-white">How to play</h1>
         </section>
       </main>
     </>
