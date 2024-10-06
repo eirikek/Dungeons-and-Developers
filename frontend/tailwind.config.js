@@ -13,8 +13,9 @@ export default {
         customGray: '#1E1E1E',
       },
       backgroundImage: {
-        terrain: "url('/src/assets/terrain.jpeg')",
-        storm_giant: "url('/src/assets/storm_giant.jpeg')",
+        terrain: 'url(\'/src/assets/terrain.jpeg\')',
+        storm_giant: 'url(\'/src/assets/storm_giant.jpeg\')',
+        my_character_bg: 'url(\'/src/assets/my_character_bg.jpg\')',
       },
       keyframes: {
         underlineExpand: {
