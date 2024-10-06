@@ -3,7 +3,7 @@ import text_logo from '../../assets/text_logo.png';
 import characterImg from '../../assets/characters.webp';
 import monstersImg from '../../assets/monsters.jpg';
 import hammerImg from '../../assets/hammer.png';
-import dragonGif from '../../assets/dragon.gif.gif';
+import dragonGif from '../../assets/dragon.gif';
 import Tilt from 'react-parallax-tilt';
 import Section from '../../components/Home/Section.tsx';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -13,7 +13,7 @@ export default function Home() {
   const { scrollYProgress } = useScroll();
 
   // Animate dragon1 from left to right (on the first section)
-  const dragon1X = useTransform(scrollYProgress, [0.4, 0.5], ['-100%', '100%']);
+  const dragon1X = useTransform(scrollYProgress, [0.4, 0.5], ['-500%', '500%']);
 
   // Animate dragon2 from right to left (between last sections)
   const dragon2X = useTransform(scrollYProgress, [0.8, 1.2], ['100%', '-100%']);
@@ -35,7 +35,7 @@ export default function Home() {
           tiltMaxAngleX={15}
           tiltMaxAngleY={15}
           scale={1.05}
-          className="relative z-20 w-1/2 h-1/2"
+          className="relative z-20 xl:w-1/2 md:w-3/4"
         >
           <img
             src={text_logo}
@@ -45,7 +45,7 @@ export default function Home() {
         </Tilt>
 
       </header>
-      <main className="w-full bg-black flex flex-col items-center py-48 gap-40">
+      <main className="w-full bg-black flex flex-col items-center py-48 xl:gap-36 gap-20 overflow-hidden">
         <Section
           title="Create Your Character"
           text={
