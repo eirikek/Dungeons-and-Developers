@@ -16,6 +16,7 @@ export default {
         terrain: 'url(\'/src/assets/terrain.jpeg\')',
         storm_giant: 'url(\'/src/assets/storm_giant.jpeg\')',
         equipment_bg: 'url(\'/src/assets/equipment_bg.jpeg\')',
+        my_character_bg: 'url(\'/src/assets/my_character_bg.jpg\')',
       },
       keyframes: {
         underlineExpand: {
