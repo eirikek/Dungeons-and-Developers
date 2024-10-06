@@ -17,6 +17,7 @@ export default {
         storm_giant: 'url(\'/src/assets/storm_giant.jpeg\')',
         equipment_bg: 'url(\'/src/assets/equipment_bg.jpeg\')',
         my_character_bg: 'url(\'/src/assets/my_character_bg.jpg\')',
+        home_bg: 'url(\'/src/assets/home_bg.jpeg\')',
       },
       keyframes: {
         underlineExpand: {

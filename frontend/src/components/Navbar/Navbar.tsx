@@ -78,7 +78,7 @@ const Navbar = () => {
         } fixed left-0 w-full bg-customRed text-white laptop:p-5 p-2 z-50 transition-all duration-300 ease-in-out`}
       >
         <div className="container mx-auto flex justify-between items-center px-8">
-          <img src={logo} alt="Dungeons & Developers logo" className="h-9 tablet:hidden" />
+          <img src={logo} alt="Dungeons & Developers logo" className="h-9 tablet:hidden shadow-none" />
 
           {/* Hamburger Icon */}
           <div className="tablet:hidden">
@@ -96,20 +96,24 @@ const Navbar = () => {
           <div className="hidden tablet:flex justify-between container">
             <button className="relative group text-3xl pb-1">
               Monsters
-              <span className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
+              <span
+                className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
             </button>
             <button className="relative group text-3xl pb-1">
               Dungeons & Developers
-              <span className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
+              <span
+                className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
             </button>
             <button className="relative group text-3xl pb-1">
               My profile
-              <span className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
+              <span
+                className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
             </button>
             <button className="relative group text-3xl pb-1 flex items-center gap-2">
               Log out
               <IoIosLogOut />
-              <span className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
+              <span
+                className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
             </button>
           </div>
         </div>
