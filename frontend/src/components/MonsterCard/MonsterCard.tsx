@@ -4,6 +4,7 @@ import NoMonsterImageFound from '../../assets/NoMonsterImageFound.jpg';
 import DungeonButton from './DungeonButton.tsx';
 import { DungeonContext } from '../../context/DungeonContext.tsx';
 import MonsterReviewModal from './MonsterReviewModal.tsx';
+import { useLocation } from 'react-router-dom';
 
 export interface MonsterCardProps {
   monsterName: string;
@@ -14,6 +15,10 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
   const { isInDungeon, toggleDungeon } = useContext(DungeonContext);
   const monsterInfo = useMonster(monsterName);
   const [imageLoaded, setImageLoaded] = useState(false);
+
+  const location = useLocation();
+
+  const isOnDungeonPage = location.pathname === '/project2/dungeon';
 
   useEffect(() => {
     if (monsterInfo.name && !monsterInfo.img) {
@@ -42,7 +47,7 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
   return (
     <div className="flex flex-col items-center justify-center bg-black max-w-[20vw] rounded-[10px] shadow-[rgba(0,0,0,0.15)_1.95px_1.95px_2.6px]">
       <aside className="flex flex-row gap-8 mb-12">
-        {isInDungeon(monsterName) ? <></> : <MonsterReviewModal name={monsterName} />}
+        {isOnDungeonPage ? <></> : <MonsterReviewModal name={monsterName} />}
 
         <DungeonButton onAddToDungeonClick={() => toggleDungeon(monsterName)} isInDungeon={isInDungeon(monsterName)} />
       </aside>
