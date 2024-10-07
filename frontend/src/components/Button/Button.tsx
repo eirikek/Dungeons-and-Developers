@@ -23,8 +23,8 @@ export default function Button({
                                }: ButtonProps) {
   const underlineClass = noUnderline
     ? ''
-    : `absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0 ${
-      isActive ? 'w-full left-0' : '' // Underline for active page on desktop
+    : `absolute bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0 ${
+      isActive ? 'w-full left-0' : 'left-1/2' // Underline for active page on desktop
     }`;
 
   const activeClass = isActive
