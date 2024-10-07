@@ -34,7 +34,7 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad, isInDung
   };
 
   if (!monsterInfo.name) {
-    return <div>Loading...</div>; // Or any loading indicator you prefer
+    return <div>Loading...</div>;
   }
 
   const handleAddToDungeon = () => {
@@ -63,7 +63,6 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad, isInDung
       <div className="mb-[3px] p-[5px] text-white font-semibold">
         <p>Type: {monsterInfo.type}</p>
         <p>HP: {monsterInfo.hp}</p>
-        <p>Click for more stats!</p>
       </div>
     </div>
   );
