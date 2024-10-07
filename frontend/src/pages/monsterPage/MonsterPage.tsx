@@ -16,7 +16,6 @@ export default function MonsterPage() {
   // Used for loading screen
   hourglass.register();
 
-  // Filter monsters based on search term, search across the entire dataset
   const normalizedSearchTerm = searchTerm.toLowerCase().replace(/-/g, ' ');
   const filteredMonsters = monsterNameArray.filter((monsterName) =>
     monsterName.toLowerCase().replace(/-/g, ' ').includes(normalizedSearchTerm)
@@ -49,7 +48,6 @@ export default function MonsterPage() {
     setLoadedCount(0);
   };
 
-  // Reset pagination to first page when search term changes
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
