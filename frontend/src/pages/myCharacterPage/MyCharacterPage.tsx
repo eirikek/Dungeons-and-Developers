@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 export default function MyCharacterPage() {
   const [abilities, setAbilities] = useState([0, 0, 0, 0, 0, 0]);
-  
+
   const handleAbilityChange = (index: number, newValue: number) => {
     const updatedAbilities = [...abilities];
     updatedAbilities[index] = newValue;
@@ -32,7 +32,7 @@ export default function MyCharacterPage() {
           <section className="w-full flex laptop:flex-row justify-between">
 
             {/* Left Section - Race */}
-            <article className="w-full laptop:w-1/2 flex flex-col items-center">
+            <article className="w-full xl:w-1/2 flex flex-col items-center">
               <Button text="Race" className="mb-8" />
               <div className="flex items-center gap-4">
                 <button className="text-4xl text-white hover:text-gray-400">
@@ -46,7 +46,7 @@ export default function MyCharacterPage() {
             </article>
 
             {/* Right Section - Class */}
-            <article className="w-full laptop:w-1/2 flex flex-col items-center">
+            <article className="w-full xl:w-1/2 flex flex-col items-center">
               <Button text="Class" className="mb-8" />
               <div className="flex items-center gap-4">
                 <button className="text-4xl text-white hover:text-gray-400">
@@ -61,12 +61,12 @@ export default function MyCharacterPage() {
           </section>
 
           {/* Bottom Section: Abilities and Equipment */}
-          <section className="w-full flex laptop:flex-row justify-between">
+          <section className="w-full flex xl:flex-row justify-between">
 
             {/* Left Section - Ability Class */}
-            <article className="flex flex-col items-center w-full laptop:w-1/2">
+            <article className="flex flex-col items-center w-full xl:w-1/2">
               <Button text="Ability Classes" className="mb-8" />
-              <div className="grid grid-cols-1 laptop:grid-cols-2 gap-y-6 gap-x-40">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-y-6 gap-x-40">
                 {[...Array(6)].map((_, index) => (
                   <div key={index} className="flex items-center">
                     <label className="text-lg w-32">Ability {index + 1}:</label>
@@ -80,9 +80,9 @@ export default function MyCharacterPage() {
             </article>
 
             {/* Right Section - Equipment */}
-            <article className="flex flex-col items-center w-full laptop:w-1/2">
+            <article className="flex flex-col items-center w-full xl:w-1/2">
               <Button text="Equipments" className="mb-8" />
-              <div className="grid grid-cols-1 laptop:grid-cols-2 gap-y-4 gap-x-40">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-y-4 gap-x-40">
                 {['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8', 'Item 9', 'Item 10'].map((item, index) => (
                   <li key={index} className="list-disc list-inside text-lg">
                     {item}
