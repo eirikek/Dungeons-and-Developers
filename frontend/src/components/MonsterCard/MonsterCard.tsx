@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import useMonster from '../../hooks/useMonster.ts';
 import NoMonsterImageFound from '../../assets/NoMonsterImageFound.jpg';
 import MonsterCardInfo from './MonsterReviewModal.tsx';
+import DungeonButton from './DungeonButton.tsx';
 
 interface MonsterCardProps {
   monsterName: string;
   onLoad: () => void;
+  isInDungeon: boolean;
+  onToggleDungeon: (name: string) => void;
 }
 
-const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
+const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad, isInDungeon, onToggleDungeon }) => {
   const monsterInfo = useMonster(monsterName);
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -34,11 +37,19 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
     return <div>Loading...</div>; // Or any loading indicator you prefer
   }
 
+  const handleAddToDungeon = () => {
+    onToggleDungeon(monsterName);
+  };
+
   const monsterImageURL = monsterInfo.img ? `https://www.dnd5eapi.co${monsterInfo.img}` : NoMonsterImageFound;
 
   return (
     <div className="flex flex-col items-center justify-center bg-black max-w-[20vw] rounded-[10px] shadow-[rgba(0,0,0,0.15)_1.95px_1.95px_2.6px]">
-      <MonsterCardInfo name={monsterName} />
+      <aside className="flex flex-row gap-8 mb-12">
+        <MonsterCardInfo name={monsterName} />
+        <DungeonButton onAddToDungeonClick={handleAddToDungeon} isInDungeon={isInDungeon} />
+      </aside>
+
       <img
         src={monsterImageURL}
         alt={monsterInfo.img ? 'Image of the monster' : 'No monster image found'}
