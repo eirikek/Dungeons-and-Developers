@@ -31,7 +31,8 @@ export default function LoginPage() {
 
   return (
     <>
-      <main className="relative flex items-center justify-center h-screen z-0 before:absolute before:inset-0 before:bg-terrain before:bg-cover before:bg-center before:animate-background-zoom  before:z-0">
+      <main
+        className="relative flex items-center justify-center h-screen overflow-hidden z-0 before:absolute before:inset-0 before:bg-terrain before:bg-cover before:bg-center before:animate-background-zoom  before:z-0">
         <div className="absolute inset-0 bg-black opacity-70 z-10"></div>
         <section className="w-full h-3/4 relative z-10 flex flex-col items-center justify-around">
           <header>
@@ -48,7 +49,8 @@ export default function LoginPage() {
             ></input>
             <button className="relative group text-3xl pb-1">
               Log in
-              <span className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
+              <span
+                className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
             </button>
           </section>
           <section className="flex flex-col items-center gap-5">
@@ -60,7 +62,8 @@ export default function LoginPage() {
             ></input>
             <button className="relative group text-3xl pb-1">
               Register
-              <span className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
+              <span
+                className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
             </button>
           </section>
         </section>

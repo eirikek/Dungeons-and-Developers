@@ -7,6 +7,7 @@ interface ButtonProps {
   textSize?: string;
   linkTo?: string;
   noUnderline?: boolean;
+  isActive?: boolean; // New prop
   children?: React.ReactNode;
 }
 
@@ -17,11 +18,18 @@ export default function Button({
                                  textSize = 'text-3xl',
                                  linkTo,
                                  noUnderline = false,
+                                 isActive = false, // Default value
                                  children,
                                }: ButtonProps) {
   const underlineClass = noUnderline
     ? ''
-    : 'absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0';
+    : `absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0 ${
+      isActive ? 'w-full left-0' : '' // Underline for active page on desktop
+    }`;
+
+  const activeClass = isActive
+    ? 'bold xl:font-normal' // Bold text for active page on mobile
+    : '';
 
   const buttonContent = (
     <>
@@ -34,7 +42,7 @@ export default function Button({
   // If linkTo is provided, use Link component for navigation
   if (linkTo) {
     return (
-      <Link to={linkTo} className={`relative group flex ${textSize} ${className}`}>
+      <Link to={linkTo} className={`relative group flex ${textSize} ${activeClass} ${className}`}>
         {buttonContent}
       </Link>
     );
@@ -42,7 +50,7 @@ export default function Button({
 
   // Otherwise, render a regular button
   return (
-    <button className={`relative group flex ${textSize} ${className}`} onClick={onClick}>
+    <button className={`relative group flex ${textSize} ${activeClass} ${className}`} onClick={onClick}>
       {buttonContent}
     </button>
   );
