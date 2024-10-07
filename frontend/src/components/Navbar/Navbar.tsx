@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { IoIosLogOut } from 'react-icons/io';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { FaChevronDown } from 'react-icons/fa';
-import logo from '../../../public/dnd-icon.ico';
+import logo from '../../assets/d_and_d.svg';
 import Button from '../Button/Button.tsx';
 
 const Navbar = () => {
@@ -82,7 +82,7 @@ const Navbar = () => {
         } fixed w-full bg-customRed text-white p-3 z-50 transition-all duration-300 ease-in-out`}
       >
         <div className="flex xl:justify-center justify-between items-center xl:w-full">
-          <img src={logo} alt="Dungeons & Developers logo" className="w-10 ml-6 xl:hidden shadow-none" />
+          <img src={logo} alt="Dungeons & Developers logo" className="w-12 ml-6 xl:hidden shadow-none" />
 
           {/* Hamburger Icon */}
           <div className="flex items-center mr-6 xl:hidden">
@@ -98,9 +98,9 @@ const Navbar = () => {
 
           {/* Menu for large screens */}
           <div className="hidden xl:flex justify-between items-center w-11/12">
-            <img src={logo} alt="Dungeons & Developers logo" className="w-12 xl:block hidden shadow-none" />
+            <img src={logo} alt="Dungeons & Developers logo" className="w-16 xl:block hidden shadow-none" />
             <section className="flex justify-between 4xl:w-3/5 w-4/5">
-              <Button text={'Monsters'} linkTo={'#'} />
+              <Button text={'Monsters'} linkTo={'#'} className="font-bold" />
               <Button text={'Dungeon'} linkTo={'#'} />
 
               <div
@@ -171,7 +171,7 @@ const Navbar = () => {
           <li>
             <div className="space-y-2">
               <div className="flex">
-                <Button text={'My Character'} linkTo={'#'} className="text-xl" noUnderline={true} />
+                <Button text={'My character'} linkTo={'#'} className="text-xl" noUnderline={true} />
                 <FaChevronDown
                   onClick={toggleMobileDropdown}
                   className={`transition-transform duration-300 ml-7 mt-0.5 size-5 ${
