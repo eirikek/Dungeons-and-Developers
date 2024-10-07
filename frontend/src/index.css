@@ -6,9 +6,10 @@
 body {
     background-color: #EEEEEE;
 }
+
 html {
     font-family: "MedievalSharp", cursive, "sans-serif";
-    color: black;
+    color: white;
     overflow-x: hidden;
     margin: 0;
     padding: 0;
