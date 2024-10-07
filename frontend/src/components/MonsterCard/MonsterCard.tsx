@@ -52,7 +52,6 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
       <div className="mb-[3px] p-[5px] text-white font-semibold">
         <p>Type: {monsterInfo.type}</p>
         <p>HP: {monsterInfo.hp}</p>
-        <p>Click for more stats!</p>
       </div>
     </div>
   );
