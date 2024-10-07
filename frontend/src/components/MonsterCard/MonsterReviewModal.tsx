@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 import useMonster from '../../hooks/useMonster.ts';
 import NoMonsterImageFound from '../../assets/NoMonsterImageFound.jpg';
 
-type MonsterReviewModal = {
+type ReviewType = {
   name: string;
 };
 
@@ -35,7 +35,7 @@ const marks = [
   },
 ];
 
-const MonsterCardInfo = ({ name }: MonsterReviewModal) => {
+const MonsterReviewModal = ({ name }: ReviewType) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [difficulty, setDifficulty] = useState<number>(0);
@@ -177,4 +177,4 @@ const MonsterCardInfo = ({ name }: MonsterReviewModal) => {
   );
 };
 
-export default MonsterCardInfo;
+export default MonsterReviewModal;
