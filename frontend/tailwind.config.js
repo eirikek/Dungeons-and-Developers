@@ -20,11 +20,14 @@ export default {
         customGray: '#1E1E1E',
       },
       backgroundImage: {
-        terrain: 'url(\'/src/assets/terrain.jpeg\')',
-        storm_giant: 'url(\'/src/assets/storm_giant.jpeg\')',
-        equipment_bg: 'url(\'/src/assets/equipment_bg.jpeg\')',
-        my_character_bg: 'url(\'/src/assets/my_character_bg.jpg\')',
+
+        terrain: "url('/src/assets/terrain.jpeg')",
+        storm_giant: "url('/src/assets/storm_giant.jpeg')",
+        equipment_bg: "url('/src/assets/equipment_bg.jpeg')",
+        my_character_bg: "url('/src/assets/my_character_bg.jpg')",
+        madmage: "url('/src/assets/madmage.jpeg')",
         home_bg: 'url(\'/src/assets/home_bg.jpeg\')',
+
       },
       keyframes: {
         underlineExpand: {
