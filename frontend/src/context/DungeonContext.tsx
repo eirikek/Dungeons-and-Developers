@@ -1,8 +1,16 @@
 import { createContext, useState, useEffect, ReactNode } from 'react';
 
+export interface MonsterData {
+  name: string;
+  type: string;
+  alignment: string;
+  hp: number;
+  size: string;
+}
+
 interface DungeonContextType {
-  dungeonMonsters: string[];
-  toggleDungeon: (monsterName: string) => void;
+  dungeonMonsters: MonsterData[];
+  toggleDungeon: (monsterName: MonsterData) => void;
   isInDungeon: (monsterName: string) => boolean;
 }
 
@@ -18,24 +26,27 @@ export const DungeonProvider = ({ children }: { children: ReactNode }) => {
     return savedDungeon ? JSON.parse(savedDungeon) : [];
   };
 
-  const [dungeonMonsters, setDungeonMonsters] = useState<string[]>(initializeDungeon);
+  const [dungeonMonsters, setDungeonMonsters] = useState<MonsterData[]>(initializeDungeon);
 
   useEffect(() => {
     localStorage.setItem('dungeonMonsters', JSON.stringify(dungeonMonsters));
   }, [dungeonMonsters]);
 
-  const toggleDungeon = (monsterName: string) => {
-    setDungeonMonsters((prev) =>
-      prev.includes(monsterName)
-        ? prev.filter((name) => name !== monsterName)
-        : prev.length < 6
-        ? [...prev, monsterName]
-        : prev
-    );
+  const toggleDungeon = (monster: MonsterData) => {
+    setDungeonMonsters((prev) => {
+      const isAlreadyInDungeon = prev.some((m) => m.name === monster.name);
+
+      if (isAlreadyInDungeon) {
+        return prev.filter((m) => m.name !== monster.name);
+      } else if (prev.length < 6) {
+        return [...prev, monster];
+      }
+      return prev;
+    });
   };
 
   const isInDungeon = (monsterName: string) => {
-    return dungeonMonsters.includes(monsterName);
+    return dungeonMonsters.some((monster) => monster.name === monsterName);
   };
 
   return (

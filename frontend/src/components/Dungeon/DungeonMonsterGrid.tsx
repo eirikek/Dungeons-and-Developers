@@ -1,25 +1,14 @@
-import React, { useContext, useState, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import MonsterCard from '../MonsterCard/MonsterCard.tsx';
 import { DungeonContext } from '../../context/DungeonContext.tsx';
 import { hourglass } from 'ldrs';
 
-const DungeonMonsterGrid: React.FC = () => {
+const DungeonMonsterGrid = () => {
   const { dungeonMonsters } = useContext(DungeonContext);
   const [loadedMonsters, setLoadedMonsters] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   hourglass.register();
-
-  useEffect(() => {
-    setIsLoading(true);
-    setLoadedMonsters(0);
-  }, [dungeonMonsters]);
-
-  useEffect(() => {
-    if (loadedMonsters === dungeonMonsters.length && dungeonMonsters.length > 0) {
-      setIsLoading(false);
-    }
-  }, [loadedMonsters, dungeonMonsters.length]);
+  const isLoading = loadedMonsters < dungeonMonsters.length;
 
   const handleMonsterLoad = () => {
     setLoadedMonsters((prevCount) => prevCount + 1);
@@ -39,9 +28,9 @@ const DungeonMonsterGrid: React.FC = () => {
         style={{ display: isLoading ? 'none' : 'block' }}
       >
         <ul className="grid grid-cols-3 max-laptop:grid-cols-2 max-mobile:grid-cols-1 list-none gap-6">
-          {dungeonMonsters.map((monsterName) => (
-            <li key={monsterName}>
-              <MonsterCard monsterName={monsterName} onLoad={handleMonsterLoad} />
+          {dungeonMonsters.map((monster) => (
+            <li key={monster.name}>
+              <MonsterCard monsterName={monster.name} onLoad={handleMonsterLoad} />
             </li>
           ))}
         </ul>

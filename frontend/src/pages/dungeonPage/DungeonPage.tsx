@@ -1,15 +1,19 @@
 import '../../components/MonsterCard/MonsterCard.css';
 import Navbar from '../../components/Navbar/Navbar.tsx';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import DungeonHeader from '../../components/Dungeon/DungeonHeader.tsx';
 import CustomInput from '../../components/Dungeon/CustomInput.tsx';
 import DungeonMonsterGrid from '../../components/Dungeon/DungeonMonsterGrid.tsx';
+import DungeonStats from '../../components/Dungeon/DungeonStats.tsx';
+import { DungeonContext } from '../../context/DungeonContext.tsx';
 
 export default function DungeonPage() {
   const [dungeonName, setDungeonName] = useState(() => {
     const savedName = localStorage.getItem('dungeonName');
     return savedName || 'Enter dungeon name';
   });
+
+  const { dungeonMonsters } = useContext(DungeonContext);
 
   const handleSaveDungeonName = (newName: string) => {
     setDungeonName(newName);
@@ -30,6 +34,7 @@ export default function DungeonPage() {
               onSave={handleSaveDungeonName}
             />
             <DungeonMonsterGrid />
+            <DungeonStats monsters={dungeonMonsters} />
           </section>
         </article>
       </main>

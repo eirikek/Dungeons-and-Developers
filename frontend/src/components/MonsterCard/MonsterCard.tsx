@@ -42,6 +42,16 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
     return <div>Loading...</div>;
   }
 
+  const handleAddToDungeon = () => {
+    toggleDungeon({
+      name: monsterInfo.name,
+      type: monsterInfo.type,
+      alignment: monsterInfo.alignment,
+      hp: monsterInfo.hp,
+      size: monsterInfo.size,
+    });
+  };
+
   const monsterImageURL = monsterInfo.img ? `https://www.dnd5eapi.co${monsterInfo.img}` : NoMonsterImageFound;
 
   return (
@@ -49,7 +59,7 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
       <aside className="flex flex-row gap-8 mb-12">
         {isOnDungeonPage ? <></> : <MonsterReviewModal name={monsterName} />}
 
-        <DungeonButton onAddToDungeonClick={() => toggleDungeon(monsterName)} isInDungeon={isInDungeon(monsterName)} />
+        <DungeonButton onAddToDungeonClick={handleAddToDungeon} isInDungeon={isInDungeon(monsterName)} />
       </aside>
 
       <img
