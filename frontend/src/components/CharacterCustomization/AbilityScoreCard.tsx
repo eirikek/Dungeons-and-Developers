@@ -17,9 +17,9 @@ export default function AbilityScoreCard(){
 
   return (
     <>
-        <section className="flex flex-col justify-center w-3/4 rounded space-y-10">
+        <section className="flex flex-col justify-center w-3/4 rounded gap-5">
           <article
-            className="flex flex-row gap-5 items-center p-8 rounded-lg ">
+            className="flex flex-row gap-5 items-center p-8 rounded-lg bg-fuchsia-300 bg-opacity-60 mt-5">
             <h2 className="text-3xl">{chaName.name}</h2>
             <select>
               <option value="1">1</option>
@@ -39,7 +39,7 @@ export default function AbilityScoreCard(){
           </article>
 
           <article
-            className="flex flex-row gap-5 items-center p-8 rounded-lg shadow-lg ">
+            className="flex flex-row gap-5 items-center p-8 rounded-lg shadow-lg bg-fuchsia-300 bg-opacity-60">
             <h2 className="text-3xl">{conName.name}</h2>
             <select>
               <option value="1">1</option>
@@ -58,7 +58,7 @@ export default function AbilityScoreCard(){
             </ul>
           </article>
           <article
-            className="flex flex-row gap-5 items-center p-8 rounded-lg shadow-lg ">
+            className="flex flex-row gap-5 items-center p-8 rounded-lg shadow-lg bg-fuchsia-300 bg-opacity-60 ">
             <h2 className="text-3xl">{dexName.name}</h2>
             <select>
               <option value="1">1</option>
@@ -78,7 +78,7 @@ export default function AbilityScoreCard(){
           </article>
 
           <article
-            className="flex flex-row gap-5 items-center  p-8 rounded-lg shadow-lg ">
+            className="flex flex-row gap-5 items-center  p-8 rounded-lg shadow-lg bg-fuchsia-300 bg-opacity-60 ">
             <h2 className="text-3xl">{intName.name}</h2>
             <select>
               <option value="1">1</option>
@@ -98,7 +98,7 @@ export default function AbilityScoreCard(){
           </article>
 
           <article
-            className="flex flex-row gap-5 items-center p-8 rounded-lg shadow-lg ">
+            className="flex flex-row gap-5 items-center p-8 rounded-lg shadow-lg bg-fuchsia-300 bg-opacity-60">
             <h2 className="text-3xl">{strName.name}</h2>
             <select>
               <option value="1">1</option>
@@ -118,7 +118,7 @@ export default function AbilityScoreCard(){
           </article>
 
           <article
-            className="flex flex-row gap-5 items-center p-8 rounded-lg shadow-lg ">
+            className="flex flex-row gap-5 items-center p-8 rounded-lg shadow-lg bg-fuchsia-300 bg-opacity-60 ">
             <h2 className="text-3xl">{wisName.name}</h2>
             <select>
               <option value="1">1</option>
