@@ -3,6 +3,7 @@ import MonsterCard from '../../components/MonsterCard/MonsterCard.tsx';
 import mockup from '../../data/mockup.ts';
 import Navbar from '../../components/Navbar/Navbar.tsx';
 import { hourglass } from 'ldrs';
+import { Button } from '@mui/material';
 
 const monsterNameArray: string[] = mockup.results.map((result: any) => result.index);
 const monsterNameArray20: string[] = monsterNameArray.slice(0, 6);
@@ -11,6 +12,16 @@ export default function MonsterPage() {
   const [loadedCount, setLoadedCount] = useState<number>(0);
   const [searchTerm, setSearchTerm] = useState<string>(''); // State for the search term
   const totalMonsters = monsterNameArray20.length;
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const monstersPerPage = 6;
+  const totalPages = Math.ceil(monsterNameArray.length / monstersPerPage);
+
+  const displayedMonsters = monsterNameArray.slice(
+    (currentPage - 1) * monstersPerPage,
+    (currentPage - 1) * monstersPerPage + monstersPerPage
+  );
+
+  // Used for loading screen
   hourglass.register();
 
   const handleMonsterLoad = () => {
@@ -23,9 +34,27 @@ export default function MonsterPage() {
 
   const normalizedSearchTerm = searchTerm.toLowerCase().replace(/-/g, ' ');
 
-  const filteredMonsters = monsterNameArray20.filter((monsterName) =>
+  const filteredMonsters = displayedMonsters.filter((monsterName) =>
     monsterName.toLowerCase().replace(/-/g, ' ').includes(normalizedSearchTerm)
   );
+
+  const handleNextPage = () => {
+    if (currentPage === 13) {
+      setCurrentPage(1);
+    } else {
+      setCurrentPage(currentPage + 1);
+    }
+    setLoadedCount(0);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage === 1) {
+      setCurrentPage(totalPages);
+    } else {
+      setCurrentPage(currentPage - 1);
+    }
+    setLoadedCount(0);
+  };
 
   return (
     <div className="bg-madmage bg-center bg-cover bg-no-repeat min-h-screen flex flex-col items-center justify-center">
@@ -58,6 +87,11 @@ export default function MonsterPage() {
             <MonsterCard key={monsterName} monsterName={monsterName} onLoad={handleMonsterLoad} />
           ))}
         </div>
+        <Button onClick={handlePrevPage}>Previous page </Button>
+        <p>
+          Page: {currentPage}/{totalPages}
+        </p>
+        <Button onClick={handleNextPage}>Next page </Button>
       </div>
     </div>
   );
