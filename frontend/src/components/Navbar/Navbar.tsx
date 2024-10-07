@@ -186,7 +186,7 @@ const Navbar = () => {
                         isActive={location.pathname.startsWith('/project2/mycharacter')} />
                 <FaChevronDown
                   onClick={toggleMobileDropdown}
-                  className={`transition-transform duration-300 ml-7 mt-0.5 size-5 ${
+                  className={`transition-transform duration-300 ml-11 size-6 ${
                     isMobileDropdownOpen ? 'rotate-180' : 'rotate-0'
                   }`}
                 />

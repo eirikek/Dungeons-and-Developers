@@ -28,7 +28,7 @@ export default function Button({
     }`;
 
   const activeClass = isActive
-    ? 'bold xl:font-normal' // Bold text for active page on mobile
+    ? 'bold xl:font-[MedievalSharp]' // Bold text for active page on mobile
     : '';
 
   const buttonContent = (
@@ -42,7 +42,7 @@ export default function Button({
   // If linkTo is provided, use Link component for navigation
   if (linkTo) {
     return (
-      <Link to={linkTo} className={`relative group flex ${textSize} ${activeClass} ${className}`}>
+      <Link to={linkTo} className={`w-fit relative group flex ${textSize} ${activeClass} ${className}`}>
         {buttonContent}
       </Link>
     );
