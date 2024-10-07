@@ -31,7 +31,7 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
   };
 
   if (!monsterInfo.name) {
-    return <div>Loading...</div>; // Or any loading indicator you prefer
+    return <div>Loading...</div>;
   }
 
   const monsterImageURL = monsterInfo.img ? `https://www.dnd5eapi.co${monsterInfo.img}` : NoMonsterImageFound;
