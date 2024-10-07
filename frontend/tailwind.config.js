@@ -11,10 +11,20 @@ export default {
       colors: {
         customRed: '#DB3232',
         customGray: '#1E1E1E',
+        owlblue: '#16455C',
+        dessertyellow: '#503D1D',
+        dragongreen: '#131706',
+
       },
       backgroundImage: {
         terrain: "url('/src/assets/terrain.jpeg')",
         storm_giant: "url('/src/assets/storm_giant.jpeg')",
+        dessert: "url('/src/assets/dessert.jpeg')",
+        owlbeast: "url('/src/assets/owlbeast.jpeg')",
+        bluedrake: "url('/src/assets/bluedrake.jpeg')",
+        gnome: "url('/src/assets/gnome.png')",
+
+        charisma: "url('/src/assets/charisma.jpg')",
       },
       keyframes: {
         underlineExpand: {
