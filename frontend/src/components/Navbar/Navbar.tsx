@@ -1,18 +1,25 @@
 import { useState, useEffect } from 'react';
 import { IoIosLogOut } from 'react-icons/io';
 import { FiMenu, FiX } from 'react-icons/fi';
+import { FaChevronDown } from 'react-icons/fa';
 import logo from '../../../public/dnd-icon.ico';
+import Button from '../Button/Button.tsx';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
+  const [isDropdownHovered, setIsDropdownHovered] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  // Close the mobile menu when switching to desktop view
+  const toggleMobileDropdown = () => {
+    setIsMobileDropdownOpen(!isMobileDropdownOpen);
+  };
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
@@ -27,7 +34,6 @@ const Navbar = () => {
     };
   }, []);
 
-  // Prevent scrolling when the menu is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -36,18 +42,15 @@ const Navbar = () => {
     }
   }, [isOpen]);
 
-  // Scroll detection to hide/show the navbar
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
 
-      // Ignore scroll events when at the top/bottom of the page
       if (currentScrollY <= 0 || currentScrollY >= maxScrollY) {
         return;
       }
 
-      // Threshold to avoid minor scroll changes, like the bouncing effect when scrolling to bottom/top in safari
       const scrollThreshold = 10;
 
       if (Math.abs(currentScrollY - lastScrollY) < scrollThreshold) {
@@ -94,27 +97,51 @@ const Navbar = () => {
 
           {/* Menu for large screens */}
           <div className="hidden lg:flex justify-between container">
-            <button className="relative group text-3xl pb-1">
-              Monsters
-              <span
-                className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
-            </button>
-            <button className="relative group text-3xl pb-1">
-              Dungeons & Developers
-              <span
-                className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
-            </button>
-            <button className="relative group text-3xl pb-1">
-              My profile
-              <span
-                className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
-            </button>
-            <button className="relative group text-3xl pb-1 flex items-center gap-2">
-              Log out
-              <IoIosLogOut />
-              <span
-                className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
-            </button>
+            <Button text={'Monsters'} linkTo={'#'} />
+            <Button text={'Dungeon'} linkTo={'#'} />
+
+            <div
+              className="relative"
+              onMouseEnter={() => setIsDropdownHovered(true)}
+              onMouseLeave={() => setIsDropdownHovered(false)}
+            >
+              <Button
+                text={'My character'}
+                linkTo={'#'}
+                className={`flex items-center space-x-3 ${
+                  isDropdownHovered ? 'no-underline' : ''
+                }`}
+              >
+                <FaChevronDown
+                  className={`transition-transform duration-300 ${
+                    isDropdownHovered ? 'rotate-180' : ''
+                  }`}
+                />
+              </Button>
+
+              {/* Dropdown menu */}
+              <div
+                className={`absolute py-10 px-10 w-72 bg-customRed rounded overflow-hidden duration-300 ease-in-out max-h-0 ${
+                  isDropdownHovered ? 'max-h-72 opacity-100' : 'opacity-0'
+                }`}
+              >
+                <ul className="flex flex-col gap-10">
+                  <li className="w-fit">
+                    <Button text={'Races'} linkTo={'#'} />
+                  </li>
+                  <li className="w-fit">
+                    <Button text={'Classes'} linkTo={'#'} />
+                  </li>
+                  <li className="w-fit">
+                    <Button text={'Ability Scores'} linkTo={'#'} />
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <Button text={'Log out'}>
+              <IoIosLogOut className="ml-2 mt-0.5" />
+            </Button>
           </div>
         </div>
       </nav>
@@ -130,19 +157,45 @@ const Navbar = () => {
         </button>
         <ul className="mt-16 space-y-10">
           <li>
-            <button className="text-xl">Monsters</button>
+            <Button text={'Monsters'} linkTo={'#'} className="text-xl" />
           </li>
           <li>
-            <button className="text-xl">Dungeons & Developers</button>
+            <Button text={'Dungeon'} linkTo={'#'} className="text-xl" />
           </li>
+
           <li>
-            <button className="text-xl">My profile</button>
+            <div className="space-y-2">
+              <div className="flex justify-between text-xl">
+                My character
+                <FaChevronDown
+                  onClick={toggleMobileDropdown}
+                  className={`transition-transform duration-300 ${
+                    isMobileDropdownOpen ? 'rotate-180' : 'rotate-0'
+                  }`}
+                />
+              </div>
+
+              {isMobileDropdownOpen && (
+                <ul className="space-y-2 pl-4">
+                  <li>
+                    <Button text={'Races'} linkTo={'#'} className="px-4 py-2" noUnderline={true} />
+                  </li>
+                  <li>
+                    <Button text={'Classes'} linkTo={'#'} className="px-4 py-2" noUnderline={true} />
+                  </li>
+                  <li>
+                    <Button text={'Ability Scores'} linkTo={'#'} className="px-4 py-2" noUnderline={true} />
+                  </li>
+                </ul>
+              )}
+            </div>
           </li>
+
           <li>
-            <button className="text-xl flex items-center gap-2">
+            <div className="text-xl flex items-center">
               Log out
-              <IoIosLogOut />
-            </button>
+              <IoIosLogOut className="ml-2 mt-1" />
+            </div>
           </li>
         </ul>
       </div>
