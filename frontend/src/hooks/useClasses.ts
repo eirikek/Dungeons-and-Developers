@@ -2,33 +2,30 @@ import { useEffect, useState } from 'react';
 
 
 
-function useAbilityScores(abilityScoreName: string) {
+function useClasses(className: string) {
   const [data, setData] = useState<{
     name: string;
-    full_name: string;
-    desc: string;
-    skills: string[];
+    hit_die: number;
+
   }>({
     name: '',
-    full_name: '',
-    desc: '',
-    skills: [],
+    hit_die: 0,
+
   });
 
 
   useEffect(() => {
-    fetch('https://www.dnd5eapi.co/api/ability-scores/' + abilityScoreName)
+    fetch('https://www.dnd5eapi.co/api/classes/' + className)
       .then((response) => response.json())
       .then((json) => setData(json))
       .catch((error) => console.log(error));
-  }, [abilityScoreName]);
+  }, [className]);
 
   return {
     name: data.name,
-    full_name: data.full_name,
-    desc: data.desc,
-    skills: data.skills,
+    hit_die: data.hit_die,
+
   };
 }
 
-export default useAbilityScores;
+export default useClasses;

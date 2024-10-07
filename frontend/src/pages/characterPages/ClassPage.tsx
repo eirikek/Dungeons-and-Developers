@@ -1,6 +1,7 @@
 
 import Navbar from '../../components/Navbar/Navbar.tsx';
 import CharacterButton from '../../components/CharacterCustomization/CharacterButton.tsx';
+import ClassCard from '../../components/CharacterCustomization/ClassCard.tsx';
 
 export default function ClassPage(){
   return (
@@ -11,8 +12,8 @@ export default function ClassPage(){
           <CharacterButton></CharacterButton>
         </section>
       </section>
-      <section className="h-screen w-full bg-gradient-to-b from-owlblue to-black">
-
+      <section className="flex flex-col items-center w-full bg-gradient-to-b from-owlblue to-black">
+        <ClassCard></ClassCard>
 
       </section>
 

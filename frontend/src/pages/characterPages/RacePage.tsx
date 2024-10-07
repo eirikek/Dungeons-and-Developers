@@ -12,7 +12,7 @@ export default function RacePage(){
           <CharacterButton></CharacterButton>
         </section>
       </section>
-      <section className="h-screen w-full bg-gradient-to-b from-dessertyellow to-black">
+      <section className="flex flex-col items-center w-full bg-gradient-to-b from-dessertyellow to-black">
           <RaceCard></RaceCard>
 
       </section>

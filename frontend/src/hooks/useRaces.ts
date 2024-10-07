@@ -2,22 +2,17 @@ import { useEffect, useState } from 'react';
 
 
 
-interface AbilityBonus {
-  ability_score: {
-    index: string;
-    name: string;
-  };
-  bonus: number;
-}
-
-interface RaceData {
-  name: string;
-  alignment: string;
-  ability_bonuses: AbilityBonus[];
-}
-
 function useRace(race: string) {
-  const [data, setData] = useState<RaceData | null>(null);
+  const [data, setData] = useState<{
+    name: string;
+    alignment: string;
+    abilityBonuses: string[];
+  }>({
+    name: '',
+    alignment: '',
+    abilityBonuses: [],
+  });
+
 
   useEffect(() => {
     fetch('https://www.dnd5eapi.co/api/races/' + race)
@@ -27,9 +22,9 @@ function useRace(race: string) {
   }, [race]);
 
   return {
-    name: data?.name || '',
-    alignment: data?.alignment || '',
-    abilityBonuses: data?.ability_bonuses || [],
+    name: data.name,
+    alignment: data.alignment,
+    abilityBonuses: data.abilityBonuses,
   };
 }
 
