@@ -6,27 +6,43 @@ import { useLocation } from 'react-router-dom';
 const MainPageLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
 
+  const isLoginPage = location.pathname === '/project2';
+
   return (
     <>
-      <Navbar />
+      {!isLoginPage && <Navbar />}
       <motion.div
         key={location.pathname}
-        initial="initialState"
-        animate="animateState"
-        exit="exitState"
-        transition={{ duration: 0.4 }}
+        initial={isLoginPage ? 'fadeInitial' : 'clipInitial'}
+        animate={isLoginPage ? 'fadeAnimate' : 'clipAnimate'}
+        exit={isLoginPage ? 'fadeExit' : 'clipExit'}
+        transition={{ duration: 0.5 }}
         variants={{
-          initialState: {
+          // ClipPath animations for all other pages
+          clipInitial: {
             opacity: 0,
-            clipPath: 'polygon(50% 0, 50% 0, 50% 100%, 50% 100%)', // Start clipped in the center
+            clipPath: 'polygon(50% 0, 50% 0, 50% 100%, 50% 100%)', // Clipped in the center
           },
-          animateState: {
+          clipAnimate: {
             opacity: 1,
-            clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', // Expanding outward to full screen
+            clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', // Expanding to full screen
           },
-          exitState: {
+          clipExit: {
             opacity: 0,
             clipPath: 'polygon(50% 0, 50% 0, 50% 100%, 50% 100%)', // Clipping inward to center
+          },
+          // Fade animations for LoginPage
+          fadeInitial: {
+            opacity: 0,
+            backgroundColor: 'black', // Fade starts with black
+          },
+          fadeAnimate: {
+            opacity: 1,
+            backgroundColor: 'transparent', // Fade into the page
+          },
+          fadeExit: {
+            opacity: 0,
+            backgroundColor: 'black', // Fade out to black
           },
         }}
       >

@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import Button from '../../components/Button/Button.tsx';
+import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',
@@ -30,7 +32,7 @@ export default function LoginPage() {
   }, []);
 
   return (
-    <>
+    <MainPageLayout>
       <main
         className="relative flex items-center justify-center h-screen overflow-hidden z-0 before:absolute before:inset-0 before:bg-terrain before:bg-cover before:bg-center before:animate-background-zoom  before:z-0">
         <div className="absolute inset-0 bg-black opacity-70 z-10"></div>
@@ -47,11 +49,7 @@ export default function LoginPage() {
               className="text-2xl w-96 p-2 border-2 rounded bg-transparent text-center"
               placeholder="Username"
             ></input>
-            <button className="relative group text-3xl pb-1">
-              Log in
-              <span
-                className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
-            </button>
+            <Button text="Log in" linkTo="/project2/home" />
           </section>
           <section className="flex flex-col items-center gap-5">
             <h2 className="text-3xl text-white mb-5">Or register to start a new one</h2>
@@ -68,6 +66,6 @@ export default function LoginPage() {
           </section>
         </section>
       </main>
-    </>
+    </MainPageLayout>
   );
 }

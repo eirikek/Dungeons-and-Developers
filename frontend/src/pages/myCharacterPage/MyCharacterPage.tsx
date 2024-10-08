@@ -1,9 +1,9 @@
-import Navbar from '../../components/Navbar/Navbar.tsx';
 import placeholderImg from '../../assets/my_character_bg.jpg';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import Button from '../../components/Button/Button.tsx';
 import Counter from '../../components/Counter/Counter.tsx';
 import { useState } from 'react';
+import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 
 export default function MyCharacterPage() {
   const [abilities, setAbilities] = useState([0, 0, 0, 0, 0, 0]);
@@ -14,10 +14,8 @@ export default function MyCharacterPage() {
     setAbilities(updatedAbilities);
   };
 
-
   return (
-    <>
-      <Navbar />
+    <MainPageLayout>
       <main
         className="relative flex flex-col items-center justify-center h-screen w-full z-0 before:absolute before:inset-0 before:bg-my_character_bg before:bg-cover before:bg-center before:z-0">
         <div
@@ -93,6 +91,6 @@ export default function MyCharacterPage() {
           </section>
         </div>
       </main>
-    </>
+    </MainPageLayout>
   );
 }
