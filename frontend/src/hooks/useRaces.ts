@@ -7,10 +7,12 @@ function useRace(race: string) {
     name: string;
     alignment: string;
     abilityBonuses: string[];
+    index:string;
   }>({
     name: '',
     alignment: '',
     abilityBonuses: [],
+    index:'',
   });
 
 
@@ -25,6 +27,7 @@ function useRace(race: string) {
     name: data.name,
     alignment: data.alignment,
     abilityBonuses: data.abilityBonuses,
+    index: data.index,
   };
 }
 
