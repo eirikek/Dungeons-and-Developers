@@ -4,6 +4,7 @@ import mockup from '../../data/mockup.ts';
 import Navbar from '../../components/Navbar/Navbar.tsx';
 import { hourglass } from 'ldrs';
 import { Button } from '@mui/material';
+import MonsterPopUp from '../../components/MonsterPopUp/MonsterPopUp.tsx';
 
 const monsterNameArray: string[] = mockup.results.map((result: any) => result.index);
 const monstersPerPage = 6;
@@ -12,6 +13,7 @@ export default function MonsterPage() {
   const [loadedCount, setLoadedCount] = useState<number>(0);
   const [searchTerm, setSearchTerm] = useState<string>(''); // State for the search term
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [modal, setModal] = useState<string>('');
 
   // Used for loading screen
   hourglass.register();
@@ -32,6 +34,15 @@ export default function MonsterPage() {
 
   const handleMonsterLoad = () => {
     setLoadedCount((prevCount) => prevCount + 1);
+  };
+
+  const handleModalClick = (monsterIndex: string) => {
+    setModal(monsterIndex);
+    console.log(monsterIndex);
+  };
+
+  const handleClose = () => {
+    setModal('');
   };
 
   const handleNextPage = () => {
@@ -82,8 +93,17 @@ export default function MonsterPage() {
 
         <div className="grid grid-cols-3 gap-8 mt-8">
           {displayedMonsters.map((monsterName) => (
-            <MonsterCard key={monsterName} monsterName={monsterName} onLoad={handleMonsterLoad} />
+            <MonsterCard
+              key={monsterName}
+              monsterName={monsterName}
+              onLoad={handleMonsterLoad}
+              onClick={() => handleModalClick(monsterName)}
+            />
           ))}
+        </div>
+
+        <div className={'fixed top-28 left-[15%]'}>
+          {modal && <MonsterPopUp closeModal={handleClose} monsterName={modal} />}
         </div>
 
         {totalFilteredMonsters > monstersPerPage && (

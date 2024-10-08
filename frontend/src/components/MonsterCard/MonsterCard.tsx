@@ -6,9 +6,10 @@ import MonsterCardInfo from './MonsterReviewModal.tsx';
 interface MonsterCardProps {
   monsterName: string;
   onLoad: () => void;
+  onClick: () => void;
 }
 
-const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
+const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad, onClick }) => {
   const monsterInfo = useMonster(monsterName);
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -52,6 +53,7 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
       <div className="mb-[3px] p-[5px] text-white font-semibold">
         <p>Type: {monsterInfo.type}</p>
         <p>HP: {monsterInfo.hp}</p>
+        <button onClick={onClick}>Get more info! </button>
       </div>
     </div>
   );
