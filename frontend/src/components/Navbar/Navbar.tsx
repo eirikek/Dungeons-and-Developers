@@ -133,7 +133,7 @@ const Navbar = () => {
                 {/* Dropdown menu */}
                 <div
                   className={`absolute left-1/2 transform -translate-x-1/2 w-72 bg-customRed rounded overflow-hidden duration-300 ease-in-out max-h-0 ${
-                    isDropdownHovered ? 'max-h-72 opacity-100' : 'opacity-0'
+                    isDropdownHovered ? 'max-h-96 opacity-100' : 'opacity-0'
                   }`}
                 >
                   <ul className="flex flex-col gap-10 p-10">
@@ -148,6 +148,10 @@ const Navbar = () => {
                     <li className="w-fit">
                       <Button text={'Ability Scores'} linkTo={'/project2/abilityscore'}
                               isActive={location.pathname === '/project2/abilityscore'} />
+                    </li>
+                    <li className="w-fit">
+                      <Button text={'Equipments'} linkTo={'/project2/equipment'}
+                              isActive={location.pathname === '/project2/equipment'} />
                     </li>
                   </ul>
                 </div>
@@ -194,7 +198,7 @@ const Navbar = () => {
 
               <div
                 className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                  isMobileDropdownOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
+                  isMobileDropdownOpen ? 'max-h-52 opacity-100' : 'max-h-0 opacity-0'
                 }`}
               >
                 <ul className="space-y-2 pl-4">
@@ -209,6 +213,10 @@ const Navbar = () => {
                   <li>
                     <Button text={'Ability Scores'} linkTo={'/project2/abilityscore'} className="px-4 py-2 text-xl"
                             noUnderline={true} isActive={location.pathname === '/project2/abilityscore'} />
+                  </li>
+                  <li>
+                    <Button text={'Equipments'} linkTo={'/project2/equipment'} className="px-4 py-2 text-xl"
+                            noUnderline={true} isActive={location.pathname === '/project2/equipment'} />
                   </li>
                 </ul>
               </div>

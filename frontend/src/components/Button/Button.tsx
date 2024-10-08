@@ -7,7 +7,7 @@ interface ButtonProps {
   textSize?: string;
   linkTo?: string;
   noUnderline?: boolean;
-  isActive?: boolean; // New prop
+  isActive?: boolean;
   children?: React.ReactNode;
 }
 
@@ -18,7 +18,7 @@ export default function Button({
                                  textSize = 'text-3xl',
                                  linkTo,
                                  noUnderline = false,
-                                 isActive = false, // Default value
+                                 isActive = false,
                                  children,
                                }: ButtonProps) {
   const underlineClass = noUnderline
