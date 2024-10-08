@@ -7,6 +7,7 @@ import RacePage from './pages/characterPages/RacePage.tsx';
 import AbilityScorePage from './pages/characterPages/AbilityScorePage.tsx';
 import EquipmentPage from './pages/equipmentPage/equipmentPage.tsx';
 import MyCharacterPage from './pages/myCharacterPage/MyCharacterPage.tsx';
+import MonsterPage from './pages/monsterPage/MonsterPage.tsx';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/project2/race" element={<RacePage />} />
         <Route path="/project2/abilityscore" element={<AbilityScorePage />} />
         <Route path="/project2/equipment" element={<EquipmentPage />} />
+        <Route path="/project2/monsters" element={<MonsterPage />} />
         <Route path="/project2/mycharacter" element={<MyCharacterPage />} />
       </Routes>
     </BrowserRouter>

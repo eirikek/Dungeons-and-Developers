@@ -14,7 +14,6 @@ export default {
         owlblue: '#16455C',
         dessertyellow: '#503D1D',
         dragongreen: '#131706',
-
       },
       backgroundImage: {
         terrain: "url('/src/assets/terrain.jpeg')",
@@ -23,11 +22,11 @@ export default {
         owlbeast: "url('/src/assets/owlbeast.jpeg')",
         bluedrake: "url('/src/assets/bluedrake.jpeg')",
         gnome: "url('/src/assets/gnome.png')",
-
         charisma: "url('/src/assets/charisma.jpg')",
-        equipment_bg: 'url(\'/src/assets/equipment_bg.jpeg\')',
-        my_character_bg: 'url(\'/src/assets/my_character_bg.jpg\')',
-        home_bg: 'url(\'/src/assets/home_bg.jpeg\')',
+        equipment_bg: "url('/src/assets/equipment_bg.jpeg')",
+        my_character_bg: "url('/src/assets/my_character_bg.jpg')",
+        madmage: "url('/src/assets/madmage.jpeg')",
+        home_bg: "url('/src/assets/home_bg.jpeg')",
       },
       keyframes: {
         underlineExpand: {
