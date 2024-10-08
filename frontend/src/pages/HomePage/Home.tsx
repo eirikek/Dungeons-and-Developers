@@ -1,4 +1,3 @@
-import Navbar from '../../components/Navbar/Navbar.tsx';
 import text_logo from '../../assets/text_logo.png';
 import characterImg from '../../assets/characters.webp';
 import monstersImg from '../../assets/monsters.jpg';
@@ -9,6 +8,7 @@ import Tilt from 'react-parallax-tilt';
 import Section from '../../components/Home/Section.tsx';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 
 export default function Home() {
   const { scrollYProgress } = useScroll();
@@ -41,8 +41,7 @@ export default function Home() {
   );
 
   return (
-    <>
-      <Navbar />
+    <MainPageLayout>
       <header
         className="w-full h-screen bg-home_bg bg-cover bg-center bg-black bg-opacity-40 bg-blend-overlay flex items-center justify-center relative">
 
@@ -166,6 +165,6 @@ export default function Home() {
           image={hammerImg}
         />
       </main>
-    </>
+    </MainPageLayout>
   );
 }
