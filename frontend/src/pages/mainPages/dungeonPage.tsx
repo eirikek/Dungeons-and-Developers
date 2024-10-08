@@ -1,7 +1,7 @@
 import '../../components/MonsterCard/MonsterCard.css';
 import { useState } from 'react';
 import DungeonHeader from '../../components/Dungeon/DungeonHeader.tsx';
-import CustomInput from '../../components/Dungeon/CustomInput.tsx';
+import CustomInput from '../../components/CustomInput/CustomInput.tsx';
 import DungeonMonsterGrid from '../../components/Dungeon/DungeonMonsterGrid.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 

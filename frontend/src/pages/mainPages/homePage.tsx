@@ -5,7 +5,7 @@ import hammerImg from '../../assets/images/hammer.png';
 import dragonGif from '../../assets/images/dragon.gif';
 import favoriteImg from '../../assets/images/favorite.png';
 import Tilt from 'react-parallax-tilt';
-import Section from '../../components/Home/Section.tsx';
+import HomeSection from '../../components/Home/HomeSection.tsx';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
@@ -67,7 +67,7 @@ export default function HomePage() {
 
       </header>
       <main className="w-full bg-black flex flex-col items-center py-48 xl:gap-36 gap-16 overflow-hidden">
-        <Section
+        <HomeSection
           title="Create Your Character"
           text={
             <>
@@ -107,7 +107,7 @@ export default function HomePage() {
           }}
         />
 
-        <Section
+        <HomeSection
           title="Explore Monsters"
           text={
             <>
@@ -142,7 +142,7 @@ export default function HomePage() {
           }}
         />
 
-        <Section
+        <HomeSection
           title="Build Your Dungeon"
           text={
             <>

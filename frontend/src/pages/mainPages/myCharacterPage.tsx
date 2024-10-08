@@ -21,15 +21,15 @@ export default function MyCharacterPage() {
         <div
           className="flex flex-col justify-center items-center bg-black bg-opacity-70 text-white w-5/6 my-20 z-10 gap-10 p-16">
 
-          {/* Top Section: Character Name */}
+          {/* Top HomeSection: Character Name */}
           <section className="w-full flex justify-center items-center">
             <h1 className="text-3xl text-white tracking-widest">CHARACTER NAME</h1>
           </section>
 
-          {/* Middle Section: Race and Class */}
+          {/* Middle HomeSection: Race and Class */}
           <section className="w-full flex laptop:flex-row justify-between">
 
-            {/* Left Section - Race */}
+            {/* Left HomeSection - Race */}
             <article className="w-full xl:w-1/2 flex flex-col items-center">
               <CustomButton text="Race" className="mb-8" />
               <div className="flex items-center gap-4">
@@ -43,7 +43,7 @@ export default function MyCharacterPage() {
               </div>
             </article>
 
-            {/* Right Section - Class */}
+            {/* Right HomeSection - Class */}
             <article className="w-full xl:w-1/2 flex flex-col items-center">
               <CustomButton text="Class" className="mb-8" />
               <div className="flex items-center gap-4">
@@ -58,10 +58,10 @@ export default function MyCharacterPage() {
             </article>
           </section>
 
-          {/* Bottom Section: Abilities and Equipment */}
+          {/* Bottom HomeSection: Abilities and Equipment */}
           <section className="w-full flex xl:flex-row justify-between">
 
-            {/* Left Section - Ability Class */}
+            {/* Left HomeSection - Ability Class */}
             <article className="flex flex-col items-center w-full xl:w-1/2">
               <CustomButton text="Ability Classes" className="mb-8" />
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-y-6 gap-x-40">
@@ -77,7 +77,7 @@ export default function MyCharacterPage() {
               </div>
             </article>
 
-            {/* Right Section - Equipment */}
+            {/* Right HomeSection - Equipment */}
             <article className="flex flex-col items-center w-full xl:w-1/2">
               <CustomButton text="Equipments" className="mb-8" />
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-y-4 gap-x-40">

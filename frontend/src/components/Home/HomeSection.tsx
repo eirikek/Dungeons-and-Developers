@@ -8,7 +8,7 @@ interface SectionProps {
   reversed?: boolean;
 }
 
-export default function Section({ title, text, image, reversed = false }: SectionProps) {
+export default function HomeSection({ title, text, image, reversed = false }: SectionProps) {
   // Animation variants for text and header coming from the bottom
   const textVariants = {
     hidden: { opacity: 0, y: 100 },
