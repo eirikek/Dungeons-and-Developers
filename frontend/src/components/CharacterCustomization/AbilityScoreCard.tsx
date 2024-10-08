@@ -1,143 +1,56 @@
-
 import useAbilityScores from '../../hooks/useAbilityScores.ts';
+import CharacterAbilityCard from './CharacterAbilityCard';
 
-
-
-export default function AbilityScoreCard(){
-  const chaName = useAbilityScores("cha")
-  const conName = useAbilityScores("con")
-  const dexName = useAbilityScores("dex")
-  const intName = useAbilityScores("int")
-  const strName = useAbilityScores("str")
-  const wisName = useAbilityScores("wis")
-
-
-
-
+export default function AbilityScoreCard() {
+  const chaName = useAbilityScores('cha');
+  const conName = useAbilityScores('con');
+  const dexName = useAbilityScores('dex');
+  const intName = useAbilityScores('int');
+  const strName = useAbilityScores('str');
+  const wisName = useAbilityScores('wis');
 
   return (
-    <>
-        <section className="flex flex-col justify-center w-3/4 rounded space-y-10">
-          <article
-            className="flex flex-row gap-5 items-center p-8 rounded-lg ">
-            <h2 className="text-3xl">{chaName.name}</h2>
-            <select>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-            </select>
-            <h3 className="text-white">{chaName.full_name}</h3>
-            <p className="text-sm">" {chaName.desc} "</p>
+    <main className="flex flex-col justify-center w-3/4 rounded gap-5">
+      {/* Render a CharacterAbilityCard for each ability */}
+      <CharacterAbilityCard
+        name={chaName.name}
+        fullName={chaName.full_name}
+        description={chaName.desc}
+        skills={chaName.skills.map(skill => ({ name: typeof skill === 'string' ? skill : skill.name }))}
+      />
+      <CharacterAbilityCard
+        name={conName.name}
+        fullName={conName.full_name}
+        description={conName.desc}
+        skills={conName.skills.map(skill => ({ name: typeof skill === 'string' ? skill : skill.name }))}
+      />
+      <CharacterAbilityCard
+        name={dexName.name}
+        fullName={dexName.full_name}
+        description={dexName.desc}
+        skills={dexName.skills.map(skill => ({ name: typeof skill === 'string' ? skill : skill.name }))}
+      />
+      <CharacterAbilityCard
+        name={intName.name}
+        fullName={intName.full_name}
+        description={intName.desc}
+        skills={intName.skills.map(skill => ({ name: typeof skill === 'string' ? skill : skill.name }))}
+      />
+      <CharacterAbilityCard
+        name={strName.name}
+        fullName={strName.full_name}
+        description={strName.desc}
+        skills={strName.skills.map(skill => ({ name: typeof skill === 'string' ? skill : skill.name }))}
+      />
+      <CharacterAbilityCard
+        name={wisName.name}
+        fullName={wisName.full_name}
+        description={wisName.desc}
+        skills={wisName.skills.map(skill => ({ name: typeof skill === 'string' ? skill : skill.name }))}
+      />
+    </main>
+  );
+}
 
-            <ul className="text-white">
-              Skills:
-              {chaName.skills.map((skill, index) => (
-                <li key={index}>{skill.name}</li>
-              ))}
-            </ul>
-          </article>
 
-          <article
-            className="flex flex-row gap-5 items-center p-8 rounded-lg shadow-lg ">
-            <h2 className="text-3xl">{conName.name}</h2>
-            <select>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-            </select>
-            <h3 className="text-white">{conName.full_name}</h3>
-            <p className="text-sm">" {conName.desc} "</p>
 
-            <ul className="text-white">
-              Skills:
-              {conName.skills.map((skill, index) => (
-                <li key={index}>{skill.name}</li>
-              ))}
-            </ul>
-          </article>
-          <article
-            className="flex flex-row gap-5 items-center p-8 rounded-lg shadow-lg ">
-            <h2 className="text-3xl">{dexName.name}</h2>
-            <select>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-            </select>
-            <h3 className="text-white">{dexName.full_name}</h3>
-            <p className="text-sm">" {dexName.desc} "</p>
-
-            <ul className="text-white">
-              Skills:
-              {dexName.skills.map((skill, index) => (
-                <li key={index}>{skill.name}</li>
-              ))}
-            </ul>
-          </article>
-
-          <article
-            className="flex flex-row gap-5 items-center  p-8 rounded-lg shadow-lg ">
-            <h2 className="text-3xl">{intName.name}</h2>
-            <select>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-            </select>
-            <h3 className="text-white">{intName.full_name}</h3>
-            <p className="text-sm">" {intName.desc} "</p>
-
-            <ul className="text-white">
-              Skills:
-              {intName.skills.map((skill, index) => (
-                <li key={index}>{skill.name}</li>
-              ))}
-            </ul>
-          </article>
-
-          <article
-            className="flex flex-row gap-5 items-center p-8 rounded-lg shadow-lg ">
-            <h2 className="text-3xl">{strName.name}</h2>
-            <select>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-            </select>
-            <h3 className="text-white">{strName.full_name}</h3>
-            <p className="text-sm">" {strName.desc} "</p>
-
-            <ul className="text-white">
-              Skills:
-              {strName.skills.map((skill, index) => (
-                <li key={index}>{skill.name}</li>
-              ))}
-            </ul>
-          </article>
-
-          <article
-            className="flex flex-row gap-5 items-center p-8 rounded-lg shadow-lg ">
-            <h2 className="text-3xl">{wisName.name}</h2>
-            <select>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-            </select>
-            <h3 className="text-white">{wisName.full_name}</h3>
-            <p className="text-sm">" {wisName.desc} "</p>
-
-            <ul className="text-white">
-              Skills:
-              {wisName.skills.map((skill, index) => (
-                <li key={index}>{skill.name}</li>
-              ))}
-            </ul>
-          </article>
-        </section>
-
-      </>
-      )
-      }

@@ -6,10 +6,12 @@ function useClasses(className: string) {
   const [data, setData] = useState<{
     name: string;
     hit_die: number;
+    index:string;
 
   }>({
     name: '',
     hit_die: 0,
+    index: '',
 
   });
 
@@ -24,6 +26,7 @@ function useClasses(className: string) {
   return {
     name: data.name,
     hit_die: data.hit_die,
+    index: data.index,
 
   };
 }
