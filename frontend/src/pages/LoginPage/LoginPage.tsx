@@ -32,7 +32,7 @@ export default function LoginPage() {
   }, []);
 
   return (
-    <MainPageLayout>
+    <MainPageLayout isLoginTransition={true}>
       <main
         className="relative flex items-center justify-center h-screen overflow-hidden z-0 before:absolute before:inset-0 before:bg-terrain before:bg-cover before:bg-center before:animate-background-zoom  before:z-0">
         <div className="absolute inset-0 bg-black opacity-70 z-10"></div>
