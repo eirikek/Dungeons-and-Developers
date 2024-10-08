@@ -25,13 +25,31 @@ const MainPageLayout: React.FC<MainPageLayoutProps> = ({ children, isLoginTransi
   }, []);
 
   if (isMobile) {
-    return (
-      <>
-        {location.pathname !== '/project2' && <Navbar />}
-        {children}
-      </>
-    );
+    if (isLoginTransition) {
+      // fade in/out only for login/logout transitions
+      return (
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {location.pathname !== '/project2' && <Navbar />}
+          {children}
+        </motion.div>
+      );
+    } else {
+      // No animation for regular page transitions
+      return (
+        <>
+          {location.pathname !== '/project2' && <Navbar />}
+          {children}
+        </>
+      );
+    }
   }
+
 
   const motionWrapper = (
     <motion.div
