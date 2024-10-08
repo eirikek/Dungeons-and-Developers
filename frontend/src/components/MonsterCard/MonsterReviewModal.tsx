@@ -6,7 +6,7 @@ import { GiSpikedDragonHead } from 'react-icons/gi';
 import { GiDaemonSkull } from 'react-icons/gi';
 import React, { useState } from 'react';
 import useMonster from '../../hooks/useMonster.ts';
-import NoMonsterImageFound from '../../assets/NoMonsterImageFound.jpg';
+import NoMonsterImageFound from '../../assets/images/NoMonsterImageFound.jpg';
 
 type MonsterReviewModal = {
   name: string;
@@ -72,7 +72,7 @@ const MonsterCardInfo = ({ name }: MonsterReviewModal) => {
               JSON.stringify({
                 difficulty: difficulty,
                 description: description,
-              })
+              }),
             );
             handleClose();
           },

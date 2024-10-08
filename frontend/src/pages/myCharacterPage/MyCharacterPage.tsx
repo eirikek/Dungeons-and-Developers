@@ -1,4 +1,4 @@
-import placeholderImg from '../../assets/my_character_bg.jpg';
+import placeholderImg from '../../assets/images/my_character_bg.jpg';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import Button from '../../components/Button/Button.tsx';
 import Counter from '../../components/Counter/Counter.tsx';

@@ -1,9 +1,9 @@
-import text_logo from '../../assets/text_logo.png';
-import characterImg from '../../assets/characters.webp';
-import monstersImg from '../../assets/monsters.jpg';
-import hammerImg from '../../assets/hammer.png';
-import dragonGif from '../../assets/dragon.gif';
-import favoriteImg from '../../assets/favorite.png';
+import text_logo from '../../assets/images/text_logo.png';
+import characterImg from '../../assets/images/characters.webp';
+import monstersImg from '../../assets/images/monsters.jpg';
+import hammerImg from '../../assets/images/hammer.png';
+import dragonGif from '../../assets/images/dragon.gif';
+import favoriteImg from '../../assets/images/favorite.png';
 import Tilt from 'react-parallax-tilt';
 import Section from '../../components/Home/Section.tsx';
 import { motion, useScroll, useTransform } from 'framer-motion';

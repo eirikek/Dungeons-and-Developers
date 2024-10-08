@@ -1,56 +1,43 @@
-import useAbilityScores from '../../hooks/useAbilityScores.ts';
-import CharacterAbilityCard from './CharacterAbilityCard';
+import React from 'react';
+import { motion } from 'framer-motion';
 
-export default function AbilityScoreCard() {
-  const chaName = useAbilityScores('cha');
-  const conName = useAbilityScores('con');
-  const dexName = useAbilityScores('dex');
-  const intName = useAbilityScores('int');
-  const strName = useAbilityScores('str');
-  const wisName = useAbilityScores('wis');
-
-  return (
-    <main className="flex flex-col justify-center w-3/4 rounded gap-5">
-      {/* Render a CharacterAbilityCard for each ability */}
-      <CharacterAbilityCard
-        name={chaName.name}
-        fullName={chaName.full_name}
-        description={chaName.desc}
-        skills={chaName.skills.map(skill => ({ name: typeof skill === 'string' ? skill : skill.name }))}
-      />
-      <CharacterAbilityCard
-        name={conName.name}
-        fullName={conName.full_name}
-        description={conName.desc}
-        skills={conName.skills.map(skill => ({ name: typeof skill === 'string' ? skill : skill.name }))}
-      />
-      <CharacterAbilityCard
-        name={dexName.name}
-        fullName={dexName.full_name}
-        description={dexName.desc}
-        skills={dexName.skills.map(skill => ({ name: typeof skill === 'string' ? skill : skill.name }))}
-      />
-      <CharacterAbilityCard
-        name={intName.name}
-        fullName={intName.full_name}
-        description={intName.desc}
-        skills={intName.skills.map(skill => ({ name: typeof skill === 'string' ? skill : skill.name }))}
-      />
-      <CharacterAbilityCard
-        name={strName.name}
-        fullName={strName.full_name}
-        description={strName.desc}
-        skills={strName.skills.map(skill => ({ name: typeof skill === 'string' ? skill : skill.name }))}
-      />
-      <CharacterAbilityCard
-        name={wisName.name}
-        fullName={wisName.full_name}
-        description={wisName.desc}
-        skills={wisName.skills.map(skill => ({ name: typeof skill === 'string' ? skill : skill.name }))}
-      />
-    </main>
-  );
+interface Skill {
+  name: string;
 }
 
+interface AbilityScoreCardProps {
+  name: string;
+  description: string;
+  skills: Skill[];
+}
+
+const AbilityScoreCard: React.FC<AbilityScoreCardProps> = ({ name, description, skills }) => {
+  return (
+    <motion.section
+      className="flex flex-row gap-5 items-center p-8 rounded-lg shadow-lg bg-fuchsia-300 bg-opacity-60 mt-5"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 1, ease: 'circInOut' }}
+      variants={{
+        hidden: { opacity: 0, y: 100 },
+        visible: { opacity: 1, y: 0 },
+      }}
+    >
+      <h2 className="text-3xl">{name}</h2>
+      <div>
+        <p className="text-sm">" {description} "</p>
+        <ul className="text-white">
+          Skills:
+          {skills.map((skill, index) => (
+            <li key={index}>{skill.name}</li>
+          ))}
+        </ul>
+      </div>
+    </motion.section>
+  );
+};
+
+export default AbilityScoreCard;
 
 

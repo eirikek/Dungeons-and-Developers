@@ -1,22 +1,23 @@
-
-import Navbar from '../../components/Navbar/Navbar.tsx';
-import CharacterButton from '../../components/CharacterCustomization/CharacterButton.tsx';
+import useClasses from '../../hooks/useClasses.ts';
 import ClassCard from '../../components/CharacterCustomization/ClassCard.tsx';
+import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 
-export default function ClassPage(){
+export default function ClassPage() {
+  const classes = ['barbarian', 'bard', 'cleric', 'druid', 'fighter', 'monk', 'paladin', 'ranger', 'rogue', 'sorcerer', 'warlock', 'wizard'];
+  const classData = classes.map(useClasses);
+
   return (
-    <>
-      <section className="relative flex items-center justify-center h-screen z-0 before:absolute before:inset-0 before:bg-owlbeast before:bg-cover before:bg-center before:animate-background-zoom  before:z-0">
-        <Navbar />
-        <section className="w-full h-1/4 relative z-10 flex flex-row items-center justify-around">
-          <CharacterButton></CharacterButton>
-        </section>
-      </section>
-      <section className="flex flex-col items-center w-full bg-gradient-to-b from-owlblue to-black">
-        <ClassCard></ClassCard>
-
-      </section>
-
-    </>
+    <SubPageLayout>
+      <main className="flex flex-col items-center w-full">
+        {classData.map((classInfo, index) => (
+          <ClassCard
+            key={index}
+            name={classInfo.name}
+            hit_die={classInfo.hit_die}
+            index={classInfo.index}
+          />
+        ))}
+      </main>
+    </SubPageLayout>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import useMonster from '../../hooks/useMonster.ts';
-import NoMonsterImageFound from '../../assets/NoMonsterImageFound.jpg';
+import NoMonsterImageFound from '../../assets/images/NoMonsterImageFound.jpg';
 import MonsterCardInfo from './MonsterReviewModal.tsx';
 
 interface MonsterCardProps {
@@ -37,7 +37,8 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
   const monsterImageURL = monsterInfo.img ? `https://www.dnd5eapi.co${monsterInfo.img}` : NoMonsterImageFound;
 
   return (
-    <div className="flex flex-col items-center justify-center bg-black max-w-[20vw] rounded-[10px] shadow-[rgba(0,0,0,0.15)_1.95px_1.95px_2.6px]">
+    <div
+      className="flex flex-col items-center justify-center bg-black max-w-[20vw] rounded-[10px] shadow-[rgba(0,0,0,0.15)_1.95px_1.95px_2.6px]">
       <MonsterCardInfo name={monsterName} />
       <img
         src={monsterImageURL}

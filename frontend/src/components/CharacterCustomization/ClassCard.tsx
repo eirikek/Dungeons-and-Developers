@@ -1,91 +1,35 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import classImages from '../../utils/classImageMapping.tsx';
 
-import useClasses from '../../hooks/useClasses.ts';
-import CharacterClassCard from './CharacterClassCrad.tsx';
+interface ClassCardProps {
+  name: string;
+  hit_die: number;
+  index: string;
+}
 
-export default function ClassCard() {
-  const barbarianName = useClasses("barbarian")
-  const bardName = useClasses("bard")
-  const clericName = useClasses("cleric")
-  const druidName = useClasses("druid")
-  const fighterName = useClasses("fighter")
-  const monkName = useClasses("monk")
-  const paladinName = useClasses("paladin")
-  const rangerName = useClasses("ranger")
-  const rogueName = useClasses("rogue")
-  const sorcererName = useClasses("sorcerer")
-  const warlockName = useClasses("warlock")
-  const wizardName = useClasses("wizard")
-  console.log("a")
-
-
-
-
-
+const ClassCard: React.FC<ClassCardProps> = ({ name, hit_die, index }) => {
+  const classImage = classImages[index];
 
   return (
-    <>
-      <main className="flex flex-col justify-center w-3/4 rounded gap-5">
-        <CharacterClassCard
-        name={barbarianName.name}
-        index={barbarianName.index}
-        hit_die={barbarianName.hit_die}
-        ></CharacterClassCard>
-        <CharacterClassCard
-          name={bardName.name}
-          index={bardName.index}
-          hit_die={bardName.hit_die}
-        ></CharacterClassCard>
-        <CharacterClassCard
-          name={clericName.name}
-          index={clericName.index}
-          hit_die={clericName.hit_die}
-        ></CharacterClassCard>
-        <CharacterClassCard
-          name={druidName.name}
-          index={druidName.index}
-          hit_die={druidName.hit_die}
-        ></CharacterClassCard>
-        <CharacterClassCard
-          name={fighterName.name}
-          index={fighterName.index}
-          hit_die={fighterName.hit_die}
-        ></CharacterClassCard>
-        <CharacterClassCard
-          name={monkName.name}
-          index={monkName.index}
-          hit_die={monkName.hit_die}
-        ></CharacterClassCard>
-        <CharacterClassCard
-          name={paladinName.name}
-          index={paladinName.index}
-          hit_die={paladinName.hit_die}
-        ></CharacterClassCard>
-        <CharacterClassCard
-          name={rangerName.name}
-          index={rangerName.index}
-          hit_die={rangerName.hit_die}
-        ></CharacterClassCard>
-        <CharacterClassCard
-          name={rogueName.name}
-          index={rogueName.index}
-          hit_die={rogueName.hit_die}
-        ></CharacterClassCard>
-        <CharacterClassCard
-          name={sorcererName.name}
-          index={sorcererName.index}
-          hit_die={sorcererName.hit_die}
-        ></CharacterClassCard>
-        <CharacterClassCard
-          name={warlockName.name}
-          index={warlockName.index}
-          hit_die={warlockName.hit_die}
-        ></CharacterClassCard>
-        <CharacterClassCard
-          name={wizardName.name}
-          index={wizardName.index}
-          hit_die={wizardName.hit_die}
-        ></CharacterClassCard>
-      </main>
-      </>
-      )
-      }
+    <motion.section
+      className="flex flex-row gap-5 items-center p-8 rounded-lg shadow-lg bg-opacity-60 mt-5"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 1 }}
+      transition={{ duration: 2, ease: 'circInOut' }}
+      variants={{
+        hidden: { opacity: 0, y: 100 },
+        visible: { opacity: 1, y: 0 },
+      }}
+    >
+      <img src={classImage} alt={name} className="max-w-60 max-h-80 shadow-none" />
+      <div>
+        <h2 className="text-3xl">{name}</h2>
+        <p className="text-sm">Hit Die: {hit_die}</p>
+      </div>
+    </motion.section>
+  );
+};
+
+export default ClassCard;

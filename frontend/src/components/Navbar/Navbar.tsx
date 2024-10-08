@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { IoIosLogOut } from 'react-icons/io';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { FaChevronDown } from 'react-icons/fa';
-import logo from '../../assets/d_and_d.svg';
+import logo from '../../assets/images/d_and_d.svg';
 import Button from '../Button/Button.tsx';
 import { Link, useLocation } from 'react-router-dom';
 
