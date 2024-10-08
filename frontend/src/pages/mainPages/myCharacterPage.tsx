@@ -1,6 +1,6 @@
-import placeholderImg from '../../assets/images/my_character_bg.jpg';
+import placeholderImg from '../../assets/images/background/login_bg.jpeg';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import Button from '../../components/Button/Button.tsx';
+import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import Counter from '../../components/Counter/Counter.tsx';
 import { useState } from 'react';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
@@ -17,7 +17,7 @@ export default function MyCharacterPage() {
   return (
     <MainPageLayout>
       <main
-        className="relative flex flex-col items-center justify-center h-screen w-full z-0 before:absolute before:inset-0 before:bg-my_character_bg before:bg-cover before:bg-center before:z-0">
+        className="relative flex flex-col items-center justify-center h-screen w-full z-0 before:absolute before:inset-0 before:bg-myCharacter before:bg-cover before:bg-center before:z-0">
         <div
           className="flex flex-col justify-center items-center bg-black bg-opacity-70 text-white w-5/6 my-20 z-10 gap-10 p-16">
 
@@ -31,7 +31,7 @@ export default function MyCharacterPage() {
 
             {/* Left Section - Race */}
             <article className="w-full xl:w-1/2 flex flex-col items-center">
-              <Button text="Race" className="mb-8" />
+              <CustomButton text="Race" className="mb-8" />
               <div className="flex items-center gap-4">
                 <button className="text-4xl text-white hover:text-gray-400">
                   <FaChevronLeft />
@@ -45,7 +45,7 @@ export default function MyCharacterPage() {
 
             {/* Right Section - Class */}
             <article className="w-full xl:w-1/2 flex flex-col items-center">
-              <Button text="Class" className="mb-8" />
+              <CustomButton text="Class" className="mb-8" />
               <div className="flex items-center gap-4">
                 <button className="text-4xl text-white hover:text-gray-400">
                   <FaChevronLeft />
@@ -63,7 +63,7 @@ export default function MyCharacterPage() {
 
             {/* Left Section - Ability Class */}
             <article className="flex flex-col items-center w-full xl:w-1/2">
-              <Button text="Ability Classes" className="mb-8" />
+              <CustomButton text="Ability Classes" className="mb-8" />
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-y-6 gap-x-40">
                 {[...Array(6)].map((_, index) => (
                   <div key={index} className="flex items-center">
@@ -79,7 +79,7 @@ export default function MyCharacterPage() {
 
             {/* Right Section - Equipment */}
             <article className="flex flex-col items-center w-full xl:w-1/2">
-              <Button text="Equipments" className="mb-8" />
+              <CustomButton text="Equipments" className="mb-8" />
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-y-4 gap-x-40">
                 {['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8', 'Item 9', 'Item 10'].map((item, index) => (
                   <li key={index} className="list-disc list-inside text-lg">

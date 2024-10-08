@@ -1,5 +1,5 @@
 import useClasses from '../../hooks/useClasses.ts';
-import ClassCard from '../../components/CharacterCustomization/ClassCard.tsx';
+import ClassCard from '../../components/SubPages/ClassCard.tsx';
 import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 
 export default function ClassPage() {

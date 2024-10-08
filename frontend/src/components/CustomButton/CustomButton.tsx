@@ -11,16 +11,16 @@ interface ButtonProps {
   children?: React.ReactNode;
 }
 
-export default function Button({
-                                 text,
-                                 onClick,
-                                 className = '',
-                                 textSize = 'text-3xl',
-                                 linkTo,
-                                 noUnderline = false,
-                                 isActive = false,
-                                 children,
-                               }: ButtonProps) {
+export default function CustomButton({
+                                       text,
+                                       onClick,
+                                       className = '',
+                                       textSize = 'text-3xl',
+                                       linkTo,
+                                       noUnderline = false,
+                                       isActive = false,
+                                       children,
+                                     }: ButtonProps) {
   const underlineClass = noUnderline
     ? ''
     : `absolute bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0 ${

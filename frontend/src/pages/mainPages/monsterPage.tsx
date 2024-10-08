@@ -57,7 +57,7 @@ export default function MonsterPage() {
   return (
     <MainPageLayout>
       <div
-        className="bg-madmage bg-center bg-cover bg-no-repeat min-h-screen flex flex-col items-center justify-center">
+        className="bg-monsters bg-center bg-cover bg-no-repeat min-h-screen flex flex-col items-center justify-center">
 
         <div className="mt-5"></div>
 

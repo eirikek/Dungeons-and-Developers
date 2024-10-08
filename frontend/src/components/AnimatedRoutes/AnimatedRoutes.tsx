@@ -1,13 +1,13 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
-import LoginPage from '../../pages/LoginPage/LoginPage.tsx';
-import HomePage from '../../pages/HomePage/Home.tsx';
-import DungeonPage from '../../pages/dungeonPage/DungeonPage.tsx';
-import ClassPage from '../../pages/characterPages/ClassPage.tsx';
-import RacePage from '../../pages/characterPages/RacePage.tsx';
-import AbilityScorePage from '../../pages/characterPages/AbilityScorePage.tsx';
-import EquipmentPage from '../../pages/equipmentPage/equipmentPage.tsx';
-import MonsterPage from '../../pages/monsterPage/MonsterPage.tsx';
-import MyCharacterPage from '../../pages/myCharacterPage/MyCharacterPage.tsx';
+import LoginPage from '../../pages/mainPages/loginPage.tsx';
+import HomePage from '../../pages/mainPages/homePage.tsx';
+import DungeonPage from '../../pages/mainPages/dungeonPage.tsx';
+import ClassPage from '../../pages/subPages/classPage.tsx';
+import RacePage from '../../pages/subPages/racePage.tsx';
+import AbilityScorePage from '../../pages/subPages/abilityScorePage.tsx';
+import EquipmentPage from '../../pages/subPages/equipmentPage.tsx';
+import MonsterPage from '../../pages/mainPages/monsterPage.tsx';
+import MyCharacterPage from '../../pages/mainPages/myCharacterPage.tsx';
 import { AnimatePresence } from 'framer-motion';
 
 export default function AnimatedRoutes() {

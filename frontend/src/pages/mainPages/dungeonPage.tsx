@@ -18,7 +18,7 @@ export default function DungeonPage() {
 
   return (
     <MainPageLayout>
-      <section className="min-h-screen flex flex-col bg-storm_giant bg-cover bg-center bg-no-repeat relative">
+      <section className="min-h-screen flex flex-col bg-dungeon bg-cover bg-center bg-no-repeat relative">
         <main className="flex-grow flex flex-col items-center justify-center relative z-10 ">
           <article className="flex flex-col gap-16 items-center w-full max-w-7xl mx-auto">
             <DungeonHeader />

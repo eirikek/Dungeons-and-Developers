@@ -10,7 +10,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 
-export default function Home() {
+export default function HomePage() {
   const { scrollYProgress } = useScroll();
 
   const [isMobile, setIsMobile] = useState(false);
@@ -43,7 +43,7 @@ export default function Home() {
   return (
     <MainPageLayout>
       <header
-        className="w-full h-screen bg-home_bg bg-cover bg-center bg-black bg-opacity-40 bg-blend-overlay flex items-center justify-center relative">
+        className="w-full h-screen bg-home bg-cover bg-center bg-black bg-opacity-40 bg-blend-overlay flex items-center justify-center relative">
 
         <div
           className="absolute inset-0 z-10"

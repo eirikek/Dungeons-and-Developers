@@ -41,7 +41,7 @@ export default function EquipmentPage() {
     <>
       <Navbar />
       <main
-        className="relative flex flex-col items-center justify-center h-screen w-full z-0 before:absolute before:inset-0 before:bg-equipment_bg before:bg-cover before:bg-center before:z-0">
+        className="relative flex flex-col items-center justify-center h-screen w-full z-0 before:absolute before:inset-0 before:bg-equipments before:bg-cover before:bg-center before:z-0">
         <div
           className="flex flex-col justify-center items-center bg-black bg-opacity-70 text-white w-5/6 my-20 z-10 gap-20 p-16">
           <h1 className="text-4xl">Equipments</h1>

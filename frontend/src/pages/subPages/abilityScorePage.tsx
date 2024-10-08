@@ -1,5 +1,5 @@
 import useAbilityScores from '../../hooks/useAbilityScores.ts';
-import AbilityScoreCard from '../../components/CharacterCustomization/AbilityScoreCard.tsx';
+import AbilityScoreCard from '../../components/SubPages/AbilityScoreCard.tsx';
 import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 
 export default function AbilityScorePage() {

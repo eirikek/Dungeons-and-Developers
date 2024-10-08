@@ -5,8 +5,8 @@ import { GiGoblinHead } from 'react-icons/gi';
 import { GiSpikedDragonHead } from 'react-icons/gi';
 import { GiDaemonSkull } from 'react-icons/gi';
 import React, { useState } from 'react';
-import useMonster from '../../hooks/useMonster.ts';
-import NoMonsterImageFound from '../../assets/images/NoMonsterImageFound.jpg';
+import useMonsters from '../../hooks/useMonsters.ts';
+import NoMonsterImageFound from '../../assets/images/no_monster_image_found.jpg';
 
 type MonsterReviewModal = {
   name: string;
@@ -40,7 +40,7 @@ const MonsterCardInfo = ({ name }: MonsterReviewModal) => {
 
   const [difficulty, setDifficulty] = useState<number>(0);
   const [description, setDescription] = useState('');
-  const image = useMonster(name).img;
+  const image = useMonsters(name).img;
   const monsterImageURL = image ? `https://www.dnd5eapi.co${image}` : NoMonsterImageFound;
 
   const getStringValue = (value: number) => {

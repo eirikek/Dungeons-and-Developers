@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import useMonster from '../../hooks/useMonster.ts';
-import NoMonsterImageFound from '../../assets/images/NoMonsterImageFound.jpg';
+import useMonsters from '../../hooks/useMonsters.ts';
+import NoMonsterImageFound from '../../assets/images/no_monster_image_found.jpg';
 import MonsterCardInfo from './MonsterReviewModal.tsx';
 
 interface MonsterCardProps {
@@ -9,7 +9,7 @@ interface MonsterCardProps {
 }
 
 const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
-  const monsterInfo = useMonster(monsterName);
+  const monsterInfo = useMonsters(monsterName);
   const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {

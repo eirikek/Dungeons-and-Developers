@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Button from '../../components/Button/Button.tsx';
+import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 
 const quotes = [
@@ -34,7 +34,7 @@ export default function LoginPage() {
   return (
     <MainPageLayout isLoginTransition={true}>
       <main
-        className="relative flex items-center justify-center h-screen overflow-hidden z-0 before:absolute before:inset-0 before:bg-terrain before:bg-cover before:bg-center before:animate-background-zoom  before:z-0">
+        className="relative flex items-center justify-center h-screen overflow-hidden z-0 before:absolute before:inset-0 before:bg-login before:bg-cover before:bg-center before:animate-background-zoom  before:z-0">
         <div className="absolute inset-0 bg-black opacity-70 z-10"></div>
         <section className="w-full h-3/4 relative z-10 flex flex-col items-center justify-around">
           <header>
@@ -49,7 +49,7 @@ export default function LoginPage() {
               className="text-2xl w-96 p-2 border-2 rounded bg-transparent text-center"
               placeholder="Username"
             ></input>
-            <Button text="Log in" linkTo="/project2/home" />
+            <CustomButton text="Log in" linkTo="/project2/home" />
           </section>
           <section className="flex flex-col items-center gap-5">
             <h2 className="text-3xl text-white mb-5">Or register to start a new one</h2>

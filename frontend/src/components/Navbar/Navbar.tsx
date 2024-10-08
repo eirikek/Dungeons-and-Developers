@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { IoIosLogOut } from 'react-icons/io';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { FaChevronDown } from 'react-icons/fa';
-import logo from '../../assets/images/d_and_d.svg';
-import Button from '../Button/Button.tsx';
+import logo from '../../assets/images/logo.svg';
+import CustomButton from '../CustomButton/CustomButton.tsx';
 import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
@@ -107,17 +107,17 @@ const Navbar = () => {
               <img src={logo} alt="Dungeons & Developers logo" className="w-16 xl:block hidden shadow-none" />
             </Link>
             <section className="flex justify-between 4xl:w-3/5 w-4/5">
-              <Button text={'Monsters'} linkTo={'/project2/monsters'}
-                      isActive={location.pathname === '/project2/monsters'} />
-              <Button text={'Dungeon'} linkTo={'/project2/dungeon'}
-                      isActive={location.pathname === '/project2/dungeon'} />
+              <CustomButton text={'Monsters'} linkTo={'/project2/monsters'}
+                            isActive={location.pathname === '/project2/monsters'} />
+              <CustomButton text={'Dungeon'} linkTo={'/project2/dungeon'}
+                            isActive={location.pathname === '/project2/dungeon'} />
 
               <div
                 className="relative"
                 onMouseEnter={() => setIsDropdownHovered(true)}
                 onMouseLeave={() => setIsDropdownHovered(false)}
               >
-                <Button
+                <CustomButton
                   text={'My character'}
                   linkTo={'/project2/mycharacter'}
                   className={`flex items-center space-x-3`}
@@ -128,7 +128,7 @@ const Navbar = () => {
                       isDropdownHovered ? 'rotate-180' : ''
                     }`}
                   />
-                </Button>
+                </CustomButton>
 
                 {/* Dropdown menu */}
                 <div
@@ -138,28 +138,28 @@ const Navbar = () => {
                 >
                   <ul className="flex flex-col gap-10 p-10">
                     <li className="w-fit">
-                      <Button text={'Races'} linkTo={'/project2/race'}
-                              isActive={location.pathname === '/project2/race'} />
+                      <CustomButton text={'Races'} linkTo={'/project2/race'}
+                                    isActive={location.pathname === '/project2/race'} />
                     </li>
                     <li className="w-fit">
-                      <Button text={'Classes'} linkTo={'/project2/class'}
-                              isActive={location.pathname === '/project2/class'} />
+                      <CustomButton text={'Classes'} linkTo={'/project2/class'}
+                                    isActive={location.pathname === '/project2/class'} />
                     </li>
                     <li className="w-fit">
-                      <Button text={'Ability Scores'} linkTo={'/project2/abilityscore'}
-                              isActive={location.pathname === '/project2/abilityscore'} />
+                      <CustomButton text={'Ability Scores'} linkTo={'/project2/abilityscore'}
+                                    isActive={location.pathname === '/project2/abilityscore'} />
                     </li>
                     <li className="w-fit">
-                      <Button text={'Equipments'} linkTo={'/project2/equipment'}
-                              isActive={location.pathname === '/project2/equipment'} />
+                      <CustomButton text={'Equipments'} linkTo={'/project2/equipment'}
+                                    isActive={location.pathname === '/project2/equipment'} />
                     </li>
                   </ul>
                 </div>
               </div>
 
-              <Button text={'Log out'} linkTo={'/project2'} isActive={location.pathname === '/project2'}>
+              <CustomButton text={'Log out'} linkTo={'/project2'} isActive={location.pathname === '/project2'}>
                 <IoIosLogOut className="ml-2 mt-0.5" />
-              </Button>
+              </CustomButton>
             </section>
           </div>
         </div>
@@ -176,18 +176,19 @@ const Navbar = () => {
         </button>
         <ul className="mt-16 space-y-10">
           <li>
-            <Button text={'Monsters'} linkTo={'/project2/monsters'} className="text-xl" noUnderline={true}
-                    isActive={location.pathname === '/project2/monsters'} />
+            <CustomButton text={'Monsters'} linkTo={'/project2/monsters'} className="text-xl" noUnderline={true}
+                          isActive={location.pathname === '/project2/monsters'} />
           </li>
           <li>
-            <Button text={'Dungeon'} linkTo={'/project2/dungeon'} className="text-xl" noUnderline={true}
-                    isActive={location.pathname === '/project2/dungeon'} />
+            <CustomButton text={'Dungeon'} linkTo={'/project2/dungeon'} className="text-xl" noUnderline={true}
+                          isActive={location.pathname === '/project2/dungeon'} />
           </li>
           <li>
             <div className="space-y-2">
               <div className="flex">
-                <Button text={'My character'} linkTo={'/project2/mycharacter'} className="text-xl" noUnderline={true}
-                        isActive={location.pathname.startsWith('/project2/mycharacter')} />
+                <CustomButton text={'My character'} linkTo={'/project2/mycharacter'} className="text-xl"
+                              noUnderline={true}
+                              isActive={location.pathname.startsWith('/project2/mycharacter')} />
                 <FaChevronDown
                   onClick={toggleMobileDropdown}
                   className={`transition-transform duration-300 ml-11 size-6 ${
@@ -203,20 +204,23 @@ const Navbar = () => {
               >
                 <ul className="space-y-2 pl-4">
                   <li>
-                    <Button text={'Races'} linkTo={'/project2/race'} className="px-4 py-2 text-xl" noUnderline={true}
-                            isActive={location.pathname === '/project2/race'} />
+                    <CustomButton text={'Races'} linkTo={'/project2/race'} className="px-4 py-2 text-xl"
+                                  noUnderline={true}
+                                  isActive={location.pathname === '/project2/race'} />
                   </li>
                   <li>
-                    <Button text={'Classes'} linkTo={'/project2/class'} className="px-4 py-2 text-xl" noUnderline={true}
-                            isActive={location.pathname === '/project2/class'} />
+                    <CustomButton text={'Classes'} linkTo={'/project2/class'} className="px-4 py-2 text-xl"
+                                  noUnderline={true}
+                                  isActive={location.pathname === '/project2/class'} />
                   </li>
                   <li>
-                    <Button text={'Ability Scores'} linkTo={'/project2/abilityscore'} className="px-4 py-2 text-xl"
-                            noUnderline={true} isActive={location.pathname === '/project2/abilityscore'} />
+                    <CustomButton text={'Ability Scores'} linkTo={'/project2/abilityscore'}
+                                  className="px-4 py-2 text-xl"
+                                  noUnderline={true} isActive={location.pathname === '/project2/abilityscore'} />
                   </li>
                   <li>
-                    <Button text={'Equipments'} linkTo={'/project2/equipment'} className="px-4 py-2 text-xl"
-                            noUnderline={true} isActive={location.pathname === '/project2/equipment'} />
+                    <CustomButton text={'Equipments'} linkTo={'/project2/equipment'} className="px-4 py-2 text-xl"
+                                  noUnderline={true} isActive={location.pathname === '/project2/equipment'} />
                   </li>
                 </ul>
               </div>
@@ -224,10 +228,10 @@ const Navbar = () => {
           </li>
 
           <li>
-            <Button text={'Log out'} linkTo={'/project2'} className="text-xl flex items-center"
-                    isActive={location.pathname === '/project2'}>
+            <CustomButton text={'Log out'} linkTo={'/project2'} className="text-xl flex items-center"
+                          isActive={location.pathname === '/project2'}>
               <IoIosLogOut className="ml-2" />
-            </Button>
+            </CustomButton>
           </li>
         </ul>
       </div>
