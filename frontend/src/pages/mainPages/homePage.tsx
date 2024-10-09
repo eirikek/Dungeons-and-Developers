@@ -79,8 +79,7 @@ export default function HomePage() {
                   their background.
                 </li>
                 <li>Class: The class defines your character’s role in the game, determining their skills and HP. Each
-                  class specializes in different aspects of gameplay, like spellcasting or close
-                  combat.
+                  class specializes in different aspects of gameplay, like animal handling or survival.
                 </li>
                 <li>Ability Scores: These scores define your character’s basic attributes These attributes affect
                   everything from how well your character fights to how well they interact with others in the game.

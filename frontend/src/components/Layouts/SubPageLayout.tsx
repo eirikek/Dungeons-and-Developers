@@ -10,7 +10,8 @@ const SubPageLayout: React.FC<SubPageLayoutProps> = ({ children }) => {
   return (
     <>
       <Navbar />
-      <main className="relative flex flex-col justify-center items-center w-full bg-subPage bg-cover min-h-screen">
+      <main
+        className="relative flex flex-col justify-center items-center w-full bg-subPage bg-cover bg-center min-h-screen">
         {/* Overlay with solid black top, gradient transition, and semi-transparent background */}
         <div className="absolute inset-0 w-full h-full">
           <div className="absolute top-0 left-0 w-full h-[10%] bg-black"></div>

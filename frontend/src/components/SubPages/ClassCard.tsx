@@ -6,9 +6,10 @@ interface ClassCardProps {
   name: string;
   hit_die: number;
   index: string;
+  skills: string[];
 }
 
-const ClassCard: React.FC<ClassCardProps> = ({ name, hit_die, index }) => {
+const ClassCard: React.FC<ClassCardProps> = ({ name, hit_die, index, skills }) => {
   const classImage = classImages[index];
 
   return (
@@ -28,6 +29,7 @@ const ClassCard: React.FC<ClassCardProps> = ({ name, hit_die, index }) => {
         <div>
           <h2 className="text-3xl">{name}</h2>
           <p className="text-lg">HP: {hit_die}</p>
+          <p className="text-lg">Skills: {skills.join(', ')}</p>
         </div>
       </div>
       <div>
