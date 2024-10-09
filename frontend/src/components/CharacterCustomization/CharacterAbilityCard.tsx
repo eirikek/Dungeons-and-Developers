@@ -17,7 +17,7 @@ const CharacterAbilityCard: React.FC<CharacterAbilityCardProps> = ({ name, fullN
 
   return (
     <motion.section
-      className="flex flex-row gap-5 items-center p-8 rounded-lg shadow-lg bg-fuchsia-300 bg-opacity-60 mt-5"
+      className="flex flex-row gap-5 items-center p-8 rounded-lg shadow-lg bg-opacity-60 mt-5"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.3 }}

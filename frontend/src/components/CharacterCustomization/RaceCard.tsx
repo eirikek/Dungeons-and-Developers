@@ -16,11 +16,6 @@ export default function RaceCard() {
   const tieflingName = useRaces("tiefling")
 
 
-
-
-
-
-
   return (
     <>
       <CharacterRaceCard
