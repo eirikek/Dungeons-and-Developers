@@ -9,12 +9,12 @@ export default function RacePage() {
 
   return (
     <SubPageLayout>
-      <section className="flex flex-col items-center w-full bg-gradient-to-b from-dessertyellow to-black">
+      <section className="flex flex-col items-center w-full gap-10">
         {raceData.map((race, index) => (
           <RaceCard
             key={index}
             name={race.name}
-            description={`Alignment: ${race.alignment}`}
+            description={`${race.alignment}`}
             imageUrl={imageMapping[race.index]}
           />
         ))}

@@ -8,7 +8,7 @@ export default function ClassPage() {
 
   return (
     <SubPageLayout>
-      <main className="flex flex-col items-center w-full">
+      <section className="flex flex-col items-center w-full gap-10">
         {classData.map((classInfo, index) => (
           <ClassCard
             key={index}
@@ -17,7 +17,7 @@ export default function ClassPage() {
             index={classInfo.index}
           />
         ))}
-      </main>
+      </section>
     </SubPageLayout>
   );
 }

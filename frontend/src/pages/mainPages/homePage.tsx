@@ -75,12 +75,11 @@ export default function HomePage() {
                 Build your unique character by selecting race, class, ability scores, and equipment.
               </p>
               <ul className="list-disc pl-5 space-y-2">
-                <li>Race: The race of your character determines their appearance, innate abilities, and sometimes even
-                  their background. Each race brings specific bonuses to your character, such as increased strength or
-                  agility.
+                <li>Race: The race of your character determines their appearance, and sometimes even
+                  their background.
                 </li>
-                <li>Class: The class defines your character’s role in the game, determining their skills, abilities, and
-                  combat style. Each class specializes in different aspects of gameplay, like spellcasting or close
+                <li>Class: The class defines your character’s role in the game, determining their skills and HP. Each
+                  class specializes in different aspects of gameplay, like spellcasting or close
                   combat.
                 </li>
                 <li>Ability Scores: These scores define your character’s basic attributes These attributes affect

@@ -13,20 +13,25 @@ const ClassCard: React.FC<ClassCardProps> = ({ name, hit_die, index }) => {
 
   return (
     <motion.section
-      className="flex flex-row gap-5 items-center p-8 rounded-lg shadow-lg bg-opacity-60 mt-5"
+      className="flex flex-row h-60 w-full justify-between items-center p-12 rounded-lg bg-black bg-opacity-80"
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 1 }}
-      transition={{ duration: 2, ease: 'circInOut' }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 1, ease: 'circInOut' }}
       variants={{
         hidden: { opacity: 0, y: 100 },
         visible: { opacity: 1, y: 0 },
       }}
     >
-      <img src={classImage} alt={name} className="max-w-60 max-h-80 shadow-none" />
+      <div className="flex items-center gap-5">
+        <img src={classImage} alt={name} className="max-w-44 shadow-none" />
+        <div>
+          <h2 className="text-3xl">{name}</h2>
+          <p className="text-lg">HP: {hit_die}</p>
+        </div>
+      </div>
       <div>
-        <h2 className="text-3xl">{name}</h2>
-        <p className="text-sm">Hit Die: {hit_die}</p>
+        <input type="checkbox" className="cursor-pointer w-32 h-12 accent-customRed " />
       </div>
     </motion.section>
   );
