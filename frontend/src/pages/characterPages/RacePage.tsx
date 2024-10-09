@@ -1,6 +1,7 @@
 import Navbar from '../../components/Navbar/Navbar.tsx';
 import CharacterButton from '../../components/CharacterCustomization/CharacterButton.tsx';
 import RaceCard from '../../components/CharacterCustomization/RaceCard.tsx';
+import Footer from '../../components/Footer/Footer.tsx';
 
 export default function RacePage(){
   return (
@@ -16,6 +17,7 @@ export default function RacePage(){
           <RaceCard></RaceCard>
 
       </section>
+      <Footer />
 
     </>
   );
