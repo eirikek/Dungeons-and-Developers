@@ -48,14 +48,20 @@ export default function MonsterPage() {
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
+    } else if (currentPage == Math.ceil(monsterNameArray.length / monstersPerPage)) {
+      setCurrentPage(1);
     }
+
     setLoadedCount(0);
   };
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
+    } else if (currentPage === 1) {
+      setCurrentPage(Math.ceil(monsterNameArray.length / monstersPerPage));
     }
+
     setLoadedCount(0);
   };
 
@@ -107,17 +113,13 @@ export default function MonsterPage() {
         </div>
 
         {totalFilteredMonsters > monstersPerPage && (
-          <>
-            <Button onClick={handlePrevPage} disabled={currentPage === 1}>
-              Previous Page
-            </Button>
+          <div className={'flex'}>
+            <Button onClick={handlePrevPage}>Previous Page</Button>
             <p>
               Page: {currentPage}/{totalPages}
             </p>
-            <Button onClick={handleNextPage} disabled={currentPage === totalPages}>
-              Next Page
-            </Button>
-          </>
+            <Button onClick={handleNextPage}>Next Page</Button>
+          </div>
         )}
       </div>
     </div>

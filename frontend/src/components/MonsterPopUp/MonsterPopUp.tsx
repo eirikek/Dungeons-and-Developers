@@ -8,7 +8,7 @@ interface MonsterPopUpProps {
 
 const MonsterPopUp: React.FC<MonsterPopUpProps> = ({ monsterName, closeModal }) => {
   const monsterInfo = useMonster(monsterName);
-  const monsterImageURL = monsterInfo.img ? `https://www.dnd5eapi.co${monsterInfo.img}` : 'No image Found';
+  const monsterImageURL = monsterInfo.img ? `https://www.dnd5eapi.co${monsterInfo.img}` : NoMonsterImageFound;
 
   return (
     <div className="h-[60vh] bg-[#DB3232] w-[40vw] shadow-inner">
@@ -16,7 +16,11 @@ const MonsterPopUp: React.FC<MonsterPopUpProps> = ({ monsterName, closeModal }) 
         X
       </button>
       <main className={'flex'}>
-        <img src={monsterImageURL} alt={'Image of selected monster'} className={'rounded w-[40%]'} />
+        <img
+          src={monsterImageURL}
+          alt={monsterInfo.img ? 'Image of the monster' : 'No monster image found'}
+          className={'rounded w-[40%]'}
+        />
         <div className={'flex flex-col'}>
           <h2>{monsterInfo.name}</h2>
           <p>Type: {monsterInfo.type}</p>
