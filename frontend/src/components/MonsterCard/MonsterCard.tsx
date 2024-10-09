@@ -51,7 +51,6 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad, onClick 
       {!imageLoaded && <div>Loading image...</div>}
       <h2 className="text-white font-bold text-lg">{monsterInfo.name}</h2>
       <div className="mb-[3px] p-[5px] text-white font-semibold">
-        <p>Type: {monsterInfo.type}</p>
         <p>HP: {monsterInfo.hp}</p>
         <button onClick={onClick}>Get more info! </button>
       </div>
