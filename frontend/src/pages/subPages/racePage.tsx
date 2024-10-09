@@ -1,6 +1,6 @@
 import useRaces from '../../hooks/useRaces.ts';
 import RaceCard from '../../components/SubPages/RaceCard.tsx';
-import imageMapping from '../../utils/raceImageMapping.tsx';
+import imageMapping from '../../utils/raceImageMapping.ts';
 import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 
 export default function RacePage() {

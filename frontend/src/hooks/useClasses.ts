@@ -33,29 +33,38 @@ function useClasses(className: string) {
   });
 
   useEffect(() => {
-    fetch(`https://www.dnd5eapi.co/api/classes/${className}`)
-      .then((response) => response.json())
-      .then((json) => {
-        // Ensure we have the correct type for proficiency choices
-        const proficiencyChoices: ProficiencyChoice | undefined = json.proficiency_choices.find(
-          (choice: ProficiencyChoice) => choice.type === 'proficiencies',
-        );
+    let isMounted = true;  // To avoid setting state on unmounted component
 
-        // Map the skill names while removing "Skill: " prefix
-        const skills = proficiencyChoices
-          ? proficiencyChoices.from.options.map((option: ProficiencyOption) =>
-            option.item.name.replace('Skill: ', ''),
-          )
-          : [];
+    // Fetch data only if the className changes
+    if (className) {
+      fetch(`https://www.dnd5eapi.co/api/classes/${className}`)
+        .then((response) => response.json())
+        .then((json) => {
+          if (isMounted) {
+            const proficiencyChoices: ProficiencyChoice | undefined = json.proficiency_choices?.find(
+              (choice: ProficiencyChoice) => choice.type === 'proficiencies',
+            );
 
-        setData({
-          name: json.name,
-          hit_die: json.hit_die,
-          index: json.index,
-          skills,
-        });
-      })
-      .catch((error) => console.log(error));
+            const skills = proficiencyChoices
+              ? proficiencyChoices.from.options.map((option: ProficiencyOption) =>
+                option.item.name.replace('Skill: ', ''),
+              )
+              : [];
+
+            setData({
+              name: json.name,
+              hit_die: json.hit_die,
+              index: json.index,
+              skills,
+            });
+          }
+        })
+        .catch((error) => console.log(error));
+    }
+
+    return () => {
+      isMounted = false;  // Cleanup function
+    };
   }, [className]);
 
   return {

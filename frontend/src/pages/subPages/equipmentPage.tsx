@@ -1,9 +1,8 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
-import Navbar from '../../components/Navbar/Navbar.tsx';
-
-const equipmentList = Array.from({ length: 100 }, (_, i) => `Equipment ${i + 1}`);
+import useEquipments from '../../hooks/useEquipments.ts';
+import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 
 const variants = {
   enter: (direction: number) => ({
@@ -20,9 +19,12 @@ const variants = {
   }),
 };
 
-export default function EquipmentPage() {
+const EquipmentPage: React.FC = () => {
+  const results = useEquipments();
+  console.log(results);
+
   const itemsPerPage = 20;
-  const totalPages = Math.ceil(equipmentList.length / itemsPerPage);
+  const totalPages = Math.ceil(results.length / itemsPerPage);
   const [currentPage, setCurrentPage] = useState(0);
   const [direction, setDirection] = useState(1); // +1 for next, -1 for previous
 
@@ -32,14 +34,14 @@ export default function EquipmentPage() {
     setCurrentPage((prevPage) => (prevPage + newDirection + totalPages) % totalPages);
   };
 
-  const currentEquipment = equipmentList.slice(
+  const currentEquipment = results.slice(
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage,
   );
 
+
   return (
-    <>
-      <Navbar />
+    <MainPageLayout>
       <main
         className="relative flex flex-col items-center justify-center h-screen w-full z-0 before:absolute before:inset-0 before:bg-equipments before:bg-cover before:bg-center before:z-0">
         <div
@@ -59,10 +61,10 @@ export default function EquipmentPage() {
                 exit="exit"
                 transition={{ duration: 0.3 }}
               >
-                {currentEquipment.map((item, index) => (
+                {currentEquipment.map((equip, index) => (
                   <div key={index} className="flex items-center">
                     <input type="checkbox" className="mr-4 cursor-pointer w-8 h-8 accent-customRed" />
-                    <span className="text-xl">{item}</span>
+                    <span className="text-xl">{equip.name}</span>
                   </div>
                 ))}
               </motion.div>
@@ -89,6 +91,7 @@ export default function EquipmentPage() {
           </section>
         </div>
       </main>
-    </>
+    </MainPageLayout>
   );
-}
+};
+export default EquipmentPage;

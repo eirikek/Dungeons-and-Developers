@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import classImages from '../../utils/classImageMapping.tsx';
+import classImages from '../../utils/classImageMapping.ts';
 
 interface ClassCardProps {
   name: string;
