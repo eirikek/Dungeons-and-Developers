@@ -9,9 +9,16 @@ import EquipmentPage from '../../pages/subPages/equipmentPage.tsx';
 import MonsterPage from '../../pages/mainPages/monsterPage.tsx';
 import MyCharacterPage from '../../pages/mainPages/myCharacterPage.tsx';
 import { AnimatePresence } from 'framer-motion';
+import { useEffect } from 'react';
 
 export default function AnimatedRoutes() {
   const location = useLocation();
+
+  // Scroll to the top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>

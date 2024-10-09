@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 
-
-
 function useAbilityScores(abilityScoreName: string) {
   const [data, setData] = useState<{
     name: string;
