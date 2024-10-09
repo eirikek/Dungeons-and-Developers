@@ -1,12 +1,9 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Slider, TextField } from '@mui/material';
-import { LuSwords } from 'react-icons/lu';
-import { GiRoundShield } from 'react-icons/gi';
-import { GiGoblinHead } from 'react-icons/gi';
-import { GiSpikedDragonHead } from 'react-icons/gi';
-import { GiDaemonSkull } from 'react-icons/gi';
 import React, { useState } from 'react';
-import useMonster from '../../hooks/useMonster.ts';
+import { GiDaemonSkull, GiGoblinHead, GiRoundShield, GiSpikedDragonHead } from 'react-icons/gi';
+import { LuSwords } from 'react-icons/lu';
 import NoMonsterImageFound from '../../assets/NoMonsterImageFound.jpg';
+import useMonster from '../../hooks/useMonster.ts';
 
 type ReviewType = {
   name: string;

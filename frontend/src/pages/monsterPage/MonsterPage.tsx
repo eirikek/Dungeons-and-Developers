@@ -1,34 +1,41 @@
-import { useState, useEffect } from 'react';
-import MonsterCard from '../../components/MonsterCard/MonsterCard.tsx';
-import mockup from '../../data/mockup.ts';
-import Navbar from '../../components/Navbar/Navbar.tsx';
-import { hourglass } from 'ldrs';
 import { Button } from '@mui/material';
+import { hourglass } from 'ldrs';
+import { useEffect, useMemo, useState } from 'react';
+import MonsterCard from '../../components/MonsterCard/MonsterCard';
+import Navbar from '../../components/Navbar/Navbar';
+import useMonster from '../../hooks/useMonster';
 
-const monsterNameArray: string[] = mockup.results.map((result: any) => result.index);
 const monstersPerPage = 6;
 
 export default function MonsterPage() {
   const [loadedCount, setLoadedCount] = useState<number>(0);
-  const [searchTerm, setSearchTerm] = useState<string>(''); // State for the search term
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
+
+  // Fetch all monsters using the custom hook
+  const { allMonsters, isLoading: isLoadingMonsters } = useMonster();
 
   // Used for loading screen
   hourglass.register();
 
-  const normalizedSearchTerm = searchTerm.toLowerCase().replace(/-/g, ' ');
-  const filteredMonsters = monsterNameArray.filter((monsterName) =>
-    monsterName.toLowerCase().replace(/-/g, ' ').includes(normalizedSearchTerm)
-  );
+  const filteredMonsters = useMemo(() => {
+    if (!allMonsters) return [];
+    const normalizedSearchTerm = searchTerm.toLowerCase().replace(/-/g, ' ');
+    return allMonsters.filter((monster) =>
+      monster.name.toLowerCase().replace(/-/g, ' ').includes(normalizedSearchTerm)
+    );
+  }, [allMonsters, searchTerm]);
 
   // Apply pagination to filtered results
   const totalFilteredMonsters = filteredMonsters.length;
   const totalPages = Math.ceil(totalFilteredMonsters / monstersPerPage);
 
-  const displayedMonsters = filteredMonsters.slice(
-    (currentPage - 1) * monstersPerPage,
-    (currentPage - 1) * monstersPerPage + monstersPerPage
-  );
+  const displayedMonsters = useMemo(() => {
+    return filteredMonsters.slice(
+      (currentPage - 1) * monstersPerPage,
+      currentPage * monstersPerPage
+    );
+  }, [filteredMonsters, currentPage]);
 
   const handleMonsterLoad = () => {
     setLoadedCount((prevCount) => prevCount + 1);
@@ -50,9 +57,10 @@ export default function MonsterPage() {
 
   useEffect(() => {
     setCurrentPage(1);
+    setLoadedCount(0);
   }, [searchTerm]);
 
-  const isLoading = loadedCount < displayedMonsters.length;
+  const isLoading = isLoadingMonsters || loadedCount < displayedMonsters.length;
 
   return (
     <div className="bg-madmage bg-center bg-cover bg-no-repeat min-h-screen flex flex-col items-center justify-center">
@@ -81,8 +89,12 @@ export default function MonsterPage() {
         />
 
         <div className="grid grid-cols-3 gap-8 mt-8">
-          {displayedMonsters.map((monsterName) => (
-            <MonsterCard key={monsterName} monsterName={monsterName} onLoad={handleMonsterLoad} />
+          {displayedMonsters.map((monster) => (
+            <MonsterCard
+              key={monster.index}
+              monsterName={monster.name}
+              onLoad={handleMonsterLoad}
+            />
           ))}
         </div>
 
