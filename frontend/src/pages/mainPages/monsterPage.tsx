@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import MonsterCard from '../../components/MonsterCard/MonsterCard.tsx';
 import mockup from '../../data/mockup.ts';
 import { hourglass } from 'ldrs';
-import { Button } from '@mui/material';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { CiSearch } from 'react-icons/ci';
 
 const monsterNameArray: string[] = mockup.results.map((result: any) => result.index);
-const monstersPerPage = 6;
+const monstersPerPage = 8;
 
 export default function MonsterPage() {
   const [loadedCount, setLoadedCount] = useState<number>(0);
@@ -56,10 +57,9 @@ export default function MonsterPage() {
 
   return (
     <MainPageLayout>
-      <div
-        className="bg-monsters bg-center bg-cover bg-no-repeat min-h-screen flex flex-col items-center justify-center">
-
-        <div className="mt-5"></div>
+      <main
+        className="relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-monsters before:bg-cover before:bg-center before:z-0">
+        <div className="absolute inset-0 w-full h-full bg-black opacity-70" />
 
         <div
           className="flex flex-col items-center justify-center h-full"
@@ -68,40 +68,56 @@ export default function MonsterPage() {
           <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
         </div>
 
-        <div
-          className="bg-customGray bg-opacity-80 p-8 rounded-lg shadow-lg w-2/3 tablet:w-10/12 h-auto flex flex-col items-center justify-center mt-10 mb-10"
+        <section
+          className="flex flex-col py-10 text-white min-h-[calc(100vh-100px)] min-w-[70%] z-10 mt-24"
           style={{ display: isLoading ? 'none' : 'block' }}
         >
-          <h2 className="text-2xl text-white font-bold mt-10">Monsters</h2>
-          <input
-            type="text"
-            placeholder="Search for a monster..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <div className="relative w-full flex items-center justify-center mb-10">
+            {/* Input Field */}
+            <div className="absolute left-0">
+              <CiSearch size={25} className="absolute left-3 top-1/2 transform -translate-y-[60%] text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search for a monster..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-12 px-4 py-3 w-72 rounded-lg border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 text-lg"
+              />
+            </div>
 
-          <div className="grid grid-cols-3 gap-8 mt-8">
+            {/* Centered h2 */}
+            <h2 className="text-4xl text-center">Monsters</h2>
+          </div>
+
+          <div
+            className="flex-grow gap-10 w-full overflow-y-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-10">
             {displayedMonsters.map((monsterName) => (
               <MonsterCard key={monsterName} monsterName={monsterName} onLoad={handleMonsterLoad} />
             ))}
           </div>
 
           {totalFilteredMonsters > monstersPerPage && (
-            <>
-              <Button onClick={handlePrevPage} disabled={currentPage === 1}>
+            <div className="flex justify-center gap-40 w-full text-xl mt-10">
+              <button
+                className="flex items-center hover:text-gray-400 w-44"
+                onClick={(handlePrevPage)}
+                disabled={currentPage === 1}
+              >
+                <FaChevronLeft className="mr-2" />
                 Previous Page
-              </Button>
-              <p>
-                Page: {currentPage}/{totalPages}
-              </p>
-              <Button onClick={handleNextPage} disabled={currentPage === totalPages}>
+              </button>
+              <span className="w-2 text-center">{currentPage}</span>
+              <button
+                className="flex items-center hover:text-gray-400 w-44"
+                onClick={handleNextPage}
+              >
                 Next Page
-              </Button>
-            </>
+                <FaChevronRight className="ml-2" />
+              </button>
+            </div>
           )}
-        </div>
-      </div>
+        </section>
+      </main>
     </MainPageLayout>
   );
 }

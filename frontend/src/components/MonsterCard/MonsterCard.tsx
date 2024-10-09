@@ -38,22 +38,25 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
 
   return (
     <div
-      className="flex flex-col items-center justify-center bg-black max-w-[20vw] rounded-[10px] shadow-[rgba(0,0,0,0.15)_1.95px_1.95px_2.6px]">
-      <MonsterCardInfo name={monsterName} />
-      <img
-        src={monsterImageURL}
-        alt={monsterInfo.img ? 'Image of the monster' : 'No monster image found'}
-        className="max-w-[15vw] rounded-[15px] shadow-[0_2px_2px_0_rgba(0,0,0,1) top-0 pt-0 mt-0]"
-        onLoad={handleImageLoad}
-        onError={handleImageError}
-        style={{ display: imageLoaded ? 'block' : 'none' }}
-      />
-      {!imageLoaded && <div>Loading image...</div>}
-      <h2 className="text-white font-bold text-lg">{monsterInfo.name}</h2>
-      <div className="mb-[3px] p-[5px] text-white font-semibold">
-        <p>Type: {monsterInfo.type}</p>
-        <p>HP: {monsterInfo.hp}</p>
+      className="flex flex-col items-center justify-between bg-black shadow-black shadow-2xl pb-5 w-72 h-[340px] rounded-lg overflow-hidden"
+    >
+      <div className="w-full h-52 overflow-hidden">
+        <img
+          src={monsterImageURL}
+          alt={monsterInfo.img ? 'Image of the monster' : 'No monster image found'}
+          className="object-cover h-full w-full object-top"
+          onLoad={handleImageLoad}
+          onError={handleImageError}
+          style={{ display: imageLoaded ? 'block' : 'none' }}
+        />
+        {!imageLoaded && <div>Loading image...</div>}
       </div>
+      <div className="flex flex-col gap-1 w-full p-3">
+        <h2 className="text-white text-xl bold">{monsterInfo.name}</h2>
+        <p className="text-md">Type: {monsterInfo.type}</p>
+        <p className="text-md">HP: {monsterInfo.hp}</p>
+      </div>
+      <MonsterCardInfo name={monsterName} />
     </div>
   );
 };

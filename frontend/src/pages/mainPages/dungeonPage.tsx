@@ -1,4 +1,3 @@
-import '../../components/MonsterCard/MonsterCard.css';
 import { useState } from 'react';
 import DungeonHeader from '../../components/Dungeon/DungeonHeader.tsx';
 import CustomInput from '../../components/CustomInput/CustomInput.tsx';

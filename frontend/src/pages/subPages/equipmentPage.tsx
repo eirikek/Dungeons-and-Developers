@@ -43,17 +43,18 @@ const EquipmentPage: React.FC = () => {
   return (
     <MainPageLayout>
       <main
-        className="relative flex flex-col items-center justify-center h-screen w-full z-0 before:absolute before:inset-0 before:bg-equipments before:bg-cover before:bg-center before:z-0">
+        className="relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-equipments before:bg-cover before:bg-center before:z-0">
+        <div className="absolute inset-0 w-full h-full bg-black opacity-70" />
         <div
-          className="flex flex-col justify-center items-center bg-black bg-opacity-70 text-white w-5/6 my-20 z-10 gap-20 p-16">
+          className="flex flex-col justify-between items-center text-white w-full h-full z-10 rounded-xl mt-10 gap-36 p-16">
           <h1 className="text-4xl">Equipments</h1>
 
           {/* Equipment Grid */}
-          <section className="w-full overflow-hidden flex items-center justify-center">
+          <section className="w-full h-9/10 overflow-hidden flex items-center justify-center">
             <AnimatePresence initial={false} custom={direction} mode="wait">
               <motion.div
                 key={currentPage}
-                className="grid grid-cols-4 gap-x-52 gap-y-8"
+                className="grid grid-cols-4 gap-x-20 gap-y-16"
                 custom={direction}
                 variants={variants}
                 initial="enter"
@@ -63,7 +64,7 @@ const EquipmentPage: React.FC = () => {
               >
                 {currentEquipment.map((equip, index) => (
                   <div key={index} className="flex items-center">
-                    <input type="checkbox" className="mr-4 cursor-pointer w-8 h-8 accent-customRed" />
+                    <input type="checkbox" className="mr-4 cursor-pointer min-w-8 min-h-8 accent-customRed" />
                     <span className="text-xl">{equip.name}</span>
                   </div>
                 ))}
