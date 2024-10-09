@@ -73,7 +73,6 @@ export default function MonsterPage() {
           style={{ display: isLoading ? 'none' : 'block' }}
         >
           <div className="relative w-full flex items-center justify-center mb-10">
-            {/* Input Field */}
             <div className="absolute left-0">
               <CiSearch size={25} className="absolute left-3 top-1/2 transform -translate-y-[60%] text-gray-400" />
               <input
@@ -85,7 +84,6 @@ export default function MonsterPage() {
               />
             </div>
 
-            {/* Centered h2 */}
             <h2 className="text-4xl text-center">Monsters</h2>
           </div>
 
@@ -97,7 +95,7 @@ export default function MonsterPage() {
           </div>
 
           {totalFilteredMonsters > monstersPerPage && (
-            <div className="flex justify-center gap-40 w-full text-xl mt-10">
+            <section className="flex justify-center gap-40 w-full text-xl mt-10">
               <button
                 className="flex items-center hover:text-gray-400 w-44"
                 onClick={(handlePrevPage)}
@@ -114,7 +112,7 @@ export default function MonsterPage() {
                 Next Page
                 <FaChevronRight className="ml-2" />
               </button>
-            </div>
+            </section>
           )}
         </section>
       </main>

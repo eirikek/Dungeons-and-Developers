@@ -21,7 +21,6 @@ const variants = {
 
 const EquipmentPage: React.FC = () => {
   const results = useEquipments();
-  console.log(results);
 
   const itemsPerPage = 20;
   const totalPages = Math.ceil(results.length / itemsPerPage);
@@ -46,15 +45,15 @@ const EquipmentPage: React.FC = () => {
         className="relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-equipments before:bg-cover before:bg-center before:z-0">
         <div className="absolute inset-0 w-full h-full bg-black opacity-70" />
         <div
-          className="flex flex-col justify-between items-center text-white w-full h-full z-10 rounded-xl mt-10 gap-36 p-16">
+          className="flex flex-col py-10 text-white min-h-[calc(100vh-100px)] min-w-[70%] z-10 mt-24 justify-between items-center">
           <h1 className="text-4xl">Equipments</h1>
 
           {/* Equipment Grid */}
-          <section className="w-full h-9/10 overflow-hidden flex items-center justify-center">
+          <section className="w-full h-9/10 overflow-hidden">
             <AnimatePresence initial={false} custom={direction} mode="wait">
               <motion.div
                 key={currentPage}
-                className="grid grid-cols-4 gap-x-20 gap-y-16"
+                className="grid grid-cols-4 gap-x-20 gap-y-16 w-full"
                 custom={direction}
                 variants={variants}
                 initial="enter"
@@ -73,20 +72,21 @@ const EquipmentPage: React.FC = () => {
           </section>
 
           {/* Pagination Controls */}
-          <section className="flex justify-center gap-40 w-full text-xl">
+          <section className="flex justify-center gap-40 w-full text-xl mt-10">
             <button
-              className="flex items-center hover:text-gray-400"
+              className="flex items-center hover:text-gray-400 w-44"
               onClick={() => paginate(-1)}
+              disabled={currentPage === 0}
             >
               <FaChevronLeft className="mr-2" />
-              Previous
+              Previous Page
             </button>
-            <span className="inline-block w-4 text-center">{currentPage + 1}</span>
+            <span className="w-2 text-center">{currentPage + 1}</span>
             <button
-              className="flex items-center hover:text-gray-400"
+              className="flex items-center hover:text-gray-400 w-44"
               onClick={() => paginate(1)}
             >
-              Next
+              Next Page
               <FaChevronRight className="ml-2" />
             </button>
           </section>
