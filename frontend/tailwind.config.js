@@ -26,6 +26,7 @@ export default {
         myCharacter: 'url(\'/src/assets/images/background/my_character_bg.jpg\')',
         monsters: 'url(\'/src/assets/images/background/monsters_bg.jpeg\')',
         home: 'url(\'/src/assets/images/background/home_bg.jpeg\')',
+        subPage: 'url(\'/src/assets/images/background/sub_page_bg3.png\')',
       },
       keyframes: {
         underlineExpand: {
@@ -41,6 +42,10 @@ export default {
       animation: {
         'underline-expand': 'underlineExpand 0.3s ease-out forwards',
         'background-zoom': 'zoom 120s linear infinite',
+      },
+      flexGrow: {
+        '2': 2,
+        '3': 3,
       },
     },
   },

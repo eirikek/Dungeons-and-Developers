@@ -8,16 +8,14 @@ export default function AbilityScorePage() {
 
   return (
     <SubPageLayout>
-      <section className="flex flex-col items-center w-full bg-gradient-to-b from-dragongreen to-black">
-        {abilityData.map((ability, index) => (
-          <AbilityScoreCard
-            key={index}
-            name={ability.name}
-            description={ability.desc}
-            skills={ability.skills.map(skill => ({ name: typeof skill === 'string' ? skill : skill.name }))}
-          />
-        ))}
-      </section>
+      {abilityData.map((ability, index) => (
+        <AbilityScoreCard
+          key={index}
+          name={ability.full_name}
+          description={ability.desc}
+          skills={ability.skills.map(skill => ({ name: typeof skill === 'string' ? skill : skill.name }))}
+        />
+      ))}
     </SubPageLayout>
   );
 }
