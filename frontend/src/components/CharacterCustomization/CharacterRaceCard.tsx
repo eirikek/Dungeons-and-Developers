@@ -17,7 +17,7 @@ const classImages: { [key: string]: string } = {
   dwarf,
   elf,
   gnome,
-  'half-elf': half_elf, // Correctly map 'half-elf' to its variable
+  'half-elf': half_elf,
   'half-orc': half_orc,
   halfling,
   human,
@@ -26,13 +26,13 @@ const classImages: { [key: string]: string } = {
 
 };
 
-interface CharacterAbilityCardProps {
+interface CharacterRaceCardProps {
   index: string;
   alignment: string;
   name:string;
 
 }
-const CharacterRaceCard: React.FC<CharacterAbilityCardProps> = ({ name, alignment, index }) => {
+const CharacterRaceCard: React.FC<CharacterRaceCardProps> = ({ name, alignment, index }) => {
   const classImage = classImages[index];
   return (
     <motion.section
