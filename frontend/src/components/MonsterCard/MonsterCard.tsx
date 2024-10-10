@@ -20,7 +20,7 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
       setImageLoaded(true);
       onLoad();
     }
-  }, [monsterInfo.img, onLoad]);
+  }, [monsterInfo.name, monsterInfo.img, onLoad]);
 
   const handleToggleFavorite = () => {
     setIsFavorite((prev) => !prev); // Toggle favorite state
@@ -81,8 +81,12 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
         <h2 className="text-white text-xl bold">{monsterInfo.name}</h2>
         <p className="text-md">Type: {monsterInfo.type}</p>
         <p className="text-md">HP: {monsterInfo.hp}</p>
+        <div className="flex w-full justify-between">
+          <MonsterCardInfo name={monsterName} />
+          <button onClick={handleToggleFavorite}
+                  className="hover:text-customRed transition-all duration-200">{isFavorite ? 'Remove from dungeon' : 'Add to dungeon'}</button>
+        </div>
       </div>
-      <MonsterCardInfo name={monsterName} />
     </div>
   );
 };
