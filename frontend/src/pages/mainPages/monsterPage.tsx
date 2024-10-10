@@ -6,12 +6,18 @@ import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { CiSearch } from 'react-icons/ci';
 import Pagination from '../../components/Pagination/Pagination.tsx';
 
-const monsterNameArray: string[] = mockup.results.map((result: any) => result.index);
+interface Monster {
+  index: string;
+  name: string;
+  url: string;
+}
+
+const monsterNameArray: string[] = mockup.results.map((result: Monster) => result.index);
 const monstersPerPage = 8;
 
 export default function MonsterPage() {
   const [loadedCount, setLoadedCount] = useState<number>(0);
-  const [searchTerm, setSearchTerm] = useState<string>(''); // State for the search term
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   // Used for loading screen
