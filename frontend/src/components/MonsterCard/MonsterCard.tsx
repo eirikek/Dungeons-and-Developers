@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import useMonsters from '../../hooks/useMonsters.ts';
 import NoMonsterImageFound from '../../assets/images/no_monster_image_found.jpg';
 import MonsterCardInfo from './MonsterReviewModal.tsx';
+import unfavoriteIcon from '../../assets/images/unfavorite.png';
+import favoriteIcon from '../../assets/images/favorite.png';
 
 interface MonsterCardProps {
   monsterName: string;
@@ -11,6 +13,7 @@ interface MonsterCardProps {
 const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
   const monsterInfo = useMonsters(monsterName);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     if (monsterInfo.name && !monsterInfo.img) {
@@ -18,6 +21,10 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
       onLoad();
     }
   }, [monsterInfo.img, onLoad]);
+
+  const handleToggleFavorite = () => {
+    setIsFavorite((prev) => !prev); // Toggle favorite state
+  };
 
   const handleImageLoad = () => {
     setImageLoaded(true);
@@ -40,7 +47,7 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
     <div
       className="flex flex-col items-center justify-between bg-black shadow-black shadow-2xl pb-5 w-72 h-[340px] rounded-lg overflow-hidden"
     >
-      <div className="w-full h-52 overflow-hidden">
+      <div className="relative w-full h-52 overflow-hidden">
         <img
           src={monsterImageURL}
           alt={monsterInfo.img ? 'Image of the monster' : 'No monster image found'}
@@ -50,6 +57,25 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
           style={{ display: imageLoaded ? 'block' : 'none' }}
         />
         {!imageLoaded && <div>Loading image...</div>}
+
+        <button
+          className="absolute top-0 right-2"
+          onClick={handleToggleFavorite}
+        >
+          <img
+            src={
+              isFavorite
+                ? favoriteIcon
+                : unfavoriteIcon
+            }
+            alt="favorite-icon"
+            className="w-20 h-20"
+            style={{
+              objectFit: 'contain',
+            }}
+          />
+        </button>
+
       </div>
       <div className="flex flex-col gap-1 w-full p-3">
         <h2 className="text-white text-xl bold">{monsterInfo.name}</h2>
