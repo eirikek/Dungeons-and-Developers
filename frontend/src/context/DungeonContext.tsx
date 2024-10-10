@@ -1,17 +1,11 @@
 import { createContext, useState, useEffect, ReactNode } from 'react';
+import { MonsterCardDataProps } from '../hooks/useMonster';
 
-export interface MonsterData {
-  name: string;
-  type: string;
-  alignment: string;
-  hp: number;
-  size: string;
-}
 
 interface DungeonContextType {
-  dungeonMonsters: MonsterData[];
-  toggleDungeon: (monsterName: MonsterData) => void;
-  isInDungeon: (monsterName: string) => boolean;
+  dungeonMonsters: MonsterCardDataProps[];
+  toggleDungeon: (monster: MonsterCardDataProps) => void;
+  isInDungeon: (monsterIndex: string) => boolean;
 }
 
 export const DungeonContext = createContext<DungeonContextType>({
@@ -26,18 +20,18 @@ export const DungeonProvider = ({ children }: { children: ReactNode }) => {
     return savedDungeon ? JSON.parse(savedDungeon) : [];
   };
 
-  const [dungeonMonsters, setDungeonMonsters] = useState<MonsterData[]>(initializeDungeon);
+  const [dungeonMonsters, setDungeonMonsters] = useState<MonsterCardDataProps[]>(initializeDungeon);
 
   useEffect(() => {
     localStorage.setItem('dungeonMonsters', JSON.stringify(dungeonMonsters));
   }, [dungeonMonsters]);
 
-  const toggleDungeon = (monster: MonsterData) => {
+  const toggleDungeon = (monster: MonsterCardDataProps) => {
     setDungeonMonsters((prev) => {
-      const isAlreadyInDungeon = prev.some((m) => m.name === monster.name);
+      const isAlreadyInDungeon = prev.some((m) => m.index === monster.index);
 
       if (isAlreadyInDungeon) {
-        return prev.filter((m) => m.name !== monster.name);
+        return prev.filter((m) => m.index !== monster.index);
       } else if (prev.length < 6) {
         return [...prev, monster];
       }
@@ -45,8 +39,8 @@ export const DungeonProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const isInDungeon = (monsterName: string) => {
-    return dungeonMonsters.some((monster) => monster.name === monsterName);
+  const isInDungeon = (monsterIndex: string) => {
+    return dungeonMonsters.some((monster) => monster.index === monsterIndex);
   };
 
   return (

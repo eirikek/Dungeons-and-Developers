@@ -2,11 +2,11 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, S
 import React, { useState } from 'react';
 import { GiDaemonSkull, GiGoblinHead, GiRoundShield, GiSpikedDragonHead } from 'react-icons/gi';
 import { LuSwords } from 'react-icons/lu';
-import NoMonsterImageFound from '../../assets/NoMonsterImageFound.jpg';
-import useMonster from '../../hooks/useMonster.ts';
 
 type ReviewType = {
+  monsterIndex: string;
   name: string;
+  image: string;
 };
 
 const marks = [
@@ -32,13 +32,12 @@ const marks = [
   },
 ];
 
-const MonsterReviewModal = ({ name }: ReviewType) => {
+const MonsterReviewModal = ({ name, monsterIndex, image}: ReviewType) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [difficulty, setDifficulty] = useState<number>(0);
   const [description, setDescription] = useState('');
-  const image = useMonster(name).img;
-  const monsterImageURL = image ? `https://www.dnd5eapi.co${image}` : NoMonsterImageFound;
+  
 
   const getStringValue = (value: number) => {
     return `${value}`;
@@ -84,7 +83,7 @@ const MonsterReviewModal = ({ name }: ReviewType) => {
       >
         <DialogContent className="flex flex-row items-center bg-black gap-6">
           <Box sx={{ width: '50%' }}>
-            <img src={monsterImageURL} alt="Image of selected monster" />
+            <img src={image} alt="Image of selected monster" />
           </Box>
           <article className="flex flex-col gap-4 w-1/2">
             <DialogContentText sx={{ color: 'white', fontSize: '24px', fontFamily: 'MedievalSharp' }}>
@@ -133,8 +132,7 @@ const MonsterReviewModal = ({ name }: ReviewType) => {
               fullWidth
               variant="standard"
               multiline
-              rows={4}
-              maxRows={12}
+              minRows={4}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               sx={{
@@ -162,10 +160,10 @@ const MonsterReviewModal = ({ name }: ReviewType) => {
         </DialogContent>
 
         <DialogActions className="bg-black">
-          <Button onClick={handleClose} aria-label="Cancel-button">
+          <Button onClick={handleClose} aria-label="Cancel">
             Cancel
           </Button>
-          <Button type="submit" aria-lable="Save-button">
+          <Button type="submit" aria-label="Save">
             Save
           </Button>
         </DialogActions>

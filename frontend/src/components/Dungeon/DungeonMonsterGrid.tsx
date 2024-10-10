@@ -1,7 +1,7 @@
-import { useContext, useState } from 'react';
-import MonsterCard from '../MonsterCard/MonsterCard.tsx';
-import { DungeonContext } from '../../context/DungeonContext.tsx';
 import { hourglass } from 'ldrs';
+import { useContext, useState } from 'react';
+import { DungeonContext } from '../../context/DungeonContext.tsx';
+import MonsterCard from '../MonsterCard/MonsterCard.tsx';
 
 const DungeonMonsterGrid = () => {
   const { dungeonMonsters } = useContext(DungeonContext);
@@ -29,8 +29,8 @@ const DungeonMonsterGrid = () => {
       >
         <ul className="grid grid-cols-3 max-laptop:grid-cols-2 max-mobile:grid-cols-1 list-none gap-6">
           {dungeonMonsters.map((monster) => (
-            <li key={monster.name}>
-              <MonsterCard monsterName={monster.name} onLoad={handleMonsterLoad} />
+            <li key={monster.index}>
+              <MonsterCard {...monster} onLoad={handleMonsterLoad} />
             </li>
           ))}
         </ul>

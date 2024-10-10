@@ -1,7 +1,8 @@
-import { MonsterData } from '../../context/DungeonContext.tsx';
+import { MonsterCardDataProps } from "../../hooks/useMonster";
+
 
 type Stats = {
-  monsters: MonsterData[];
+  monsters: MonsterCardDataProps[];
 };
 
 const DungeonStats = ({ monsters }: Stats) => {
@@ -17,7 +18,7 @@ const DungeonStats = ({ monsters }: Stats) => {
   );
 
   return (
-    <aside>
+    <aside className="flex flex-col items-center text-center">
       <h3 className="text-2xl">Dungeon Stats</h3>
       <p>{`Total hp for monsters: ${totalHp}`}</p>
       <h4>Aligment distribution</h4>

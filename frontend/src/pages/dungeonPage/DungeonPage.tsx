@@ -1,10 +1,10 @@
-import '../../components/MonsterCard/MonsterCard.css';
-import Navbar from '../../components/Navbar/Navbar.tsx';
 import { useContext, useState } from 'react';
-import DungeonHeader from '../../components/Dungeon/DungeonHeader.tsx';
 import CustomInput from '../../components/Dungeon/CustomInput.tsx';
+import DungeonHeader from '../../components/Dungeon/DungeonHeader.tsx';
 import DungeonMonsterGrid from '../../components/Dungeon/DungeonMonsterGrid.tsx';
 import DungeonStats from '../../components/Dungeon/DungeonStats.tsx';
+import '../../components/MonsterCard/MonsterCard.css';
+import Navbar from '../../components/Navbar/Navbar.tsx';
 import { DungeonContext } from '../../context/DungeonContext.tsx';
 
 export default function DungeonPage() {
@@ -33,8 +33,12 @@ export default function DungeonPage() {
               value={dungeonName}
               onSave={handleSaveDungeonName}
             />
-            <DungeonMonsterGrid />
+            <section className='flex flex-col items-center'>
             <DungeonStats monsters={dungeonMonsters} />
+            </section>
+           
+            <DungeonMonsterGrid />
+            
           </section>
         </article>
       </main>
