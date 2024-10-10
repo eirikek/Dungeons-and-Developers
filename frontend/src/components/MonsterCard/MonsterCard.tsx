@@ -22,9 +22,8 @@ const MonsterCard = ({ index, name, type, hp, alignment, size, img, onLoad }: Mo
   useEffect(() => {
     if (index && !img) {
       setImageLoaded(true);
-      onLoad();
     }
-  }, [img, onLoad, index]);
+  }, [img, index]);
 
   const handleImageLoad = () => {
     setImageLoaded(true);

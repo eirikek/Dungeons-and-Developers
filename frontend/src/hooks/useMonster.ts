@@ -1,5 +1,6 @@
 import { useQueries, UseQueryResult } from '@tanstack/react-query';
 import axios from 'axios';
+import { useMemo } from 'react';
 import { defaultURL, monstersURL } from '../constants';
 
 /**
@@ -68,36 +69,45 @@ const mapToCard = (data: Monster): MonsterCardDataProps => {
 };
 
 /**
- * Custom hook to fetch multiple monsters' data using React Query.
- * @param {string | string[]} monsterIndexes - The index or indices of the monsters to fetch.
+ * Custom hook to fetch and filter multiple monsters' data using React Query.
+ * @param {string[]} monsterIndexes - The indices of all available monsters.
+ * @param {string} searchTerm - The search term to filter monsters.
+ * @param {number} currentPage - The current page number.
+ * @param {number} monstersPerPage - The number of monsters to display per page.
  * @param {boolean} [fullDetails=false] - Whether to fetch full details or just card data.
  * @returns {UseQueryResult<Monster | MonsterCardDataProps, Error>[]} - An array of query results.
  */
-// based on https://tanstack.com/query/latest/docs/framework/react/guides/caching
-// https://tanstack.com/query/latest/docs/framework/react/reference/useQueries
 function useMonsters(
-  monsterIndexes: string | string[],
+  monsterIndexes: string[],
+  searchTerm: string,
+  currentPage: number,
+  monstersPerPage: number,
   fullDetails: boolean = false
 ): UseQueryResult<Monster | MonsterCardDataProps, Error>[] {
-  const isSingleMonster = typeof monsterIndexes === 'string';
+  const filteredMonsters = useMemo(
+    () => searchTerm === '' 
+      ? monsterIndexes 
+      : monsterIndexes.filter((monsterIndex) => 
+          monsterIndex.toLowerCase().includes(searchTerm.toLowerCase().replace(/\s+/g, '-'))
+        ),
+    [monsterIndexes, searchTerm]
+  );
 
-  const queries = isSingleMonster
-    ? [
-        {
-          queryKey: ['monster', monsterIndexes],
-          queryFn: () => fetchMonster(monsterIndexes as string),
-          staleTime: Infinity,
-          gcTime: Infinity,
-          select: (data: Monster) => (fullDetails ? data : mapToCard(data)),
-        },
-      ]
-    : (monsterIndexes as string[]).map((index) => ({
-        queryKey: ['monster', index],
-        queryFn: () => fetchMonster(index),
-        staleTime: Infinity,
-        gcTime: Infinity,
-        select: (data: Monster) => (fullDetails ? data : mapToCard(data)),
-      }));
+  const paginatedMonsters = useMemo(
+    () => filteredMonsters.slice(
+      (currentPage - 1) * monstersPerPage,
+      currentPage * monstersPerPage
+    ),
+    [filteredMonsters, currentPage, monstersPerPage]
+  );
+
+  const queries = paginatedMonsters.map((index) => ({
+    queryKey: ['monster', index, searchTerm],
+    queryFn: () => fetchMonster(index),
+    staleTime: Infinity,
+    gcTime: Infinity,
+    select: (data: Monster) => (fullDetails ? data : mapToCard(data)),
+  }));
 
   return useQueries({ queries });
 }
