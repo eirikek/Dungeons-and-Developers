@@ -30,14 +30,14 @@ export default function HomePage() {
 
   const dragon1X = useTransform(
     scrollYProgress,
-    isMobile ? [0.35, 0.6] : [0.35, 0.65],
-    isMobile ? ['-300%', '300%'] : ['-600%', '600%'],
+    isMobile ? [0.35, 0.7] : [0.35, 0.65],
+    isMobile ? ['-300%', '300%'] : ['-800%', '800%'],
   );
 
   const dragon2X = useTransform(
     scrollYProgress,
-    isMobile ? [0.65, 0.9] : [0.7, 1.0],
-    isMobile ? ['300%', '-300%'] : ['600%', '-600%'],
+    isMobile ? [0.65, 1] : [0.7, 1.0],
+    isMobile ? ['300%', '-300%'] : ['800%', '-800%'],
   );
 
   return (
