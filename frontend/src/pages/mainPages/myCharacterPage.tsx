@@ -52,6 +52,7 @@ const MyCharacterPage = () => {
         <div className="absolute inset-0 w-full h-full bg-black opacity-70" />
         <div
           className="flex flex-col py-20 text-white min-h-[calc(100vh-100px)] min-w-[70%] z-10 mt-24 justify-between items-center">
+          <h2 className="text-4xl">My Character</h2>
           {/* RACE SECTION */}
           <section className="w-full flex justify-between">
             <article className="w-full xl:w-1/2 flex flex-col items-center">
