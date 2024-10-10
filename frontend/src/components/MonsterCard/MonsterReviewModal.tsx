@@ -67,7 +67,9 @@ const MonsterCardInfo = ({ name }: MonsterReviewModal) => {
                   color: '#DB3232',
                 },
                 fontFamily: 'MedievalSharp',
-                fontSize: '12px',
+                fontSize: '15px',
+                textTransform: 'none',
+                padding: '3px',
               }}>
         Review
       </Button>
