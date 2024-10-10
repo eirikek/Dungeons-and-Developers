@@ -1,4 +1,14 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Slider, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Slider,
+  TextField,
+} from '@mui/material';
 import React, { useState } from 'react';
 import { GiDaemonSkull, GiGoblinHead, GiRoundShield, GiSpikedDragonHead } from 'react-icons/gi';
 import { LuSwords } from 'react-icons/lu';
@@ -32,23 +42,28 @@ const marks = [
   },
 ];
 
-const MonsterReviewModal = ({ name, monsterIndex, image}: ReviewType) => {
+const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [difficulty, setDifficulty] = useState<number>(0);
   const [description, setDescription] = useState('');
-  
-
-  const getStringValue = (value: number) => {
-    return `${value}`;
-  };
 
   const handleClickOpen = () => {
+    const savedReview = localStorage.getItem(`Review: ${monsterIndex}`);
+    if (savedReview) {
+      const parsedReview = JSON.parse(savedReview);
+      setDifficulty(parsedReview.difficulty);
+      setDescription(parsedReview.description);
+    }
     setIsOpen(true);
   };
 
   const handleClose = () => {
     setIsOpen(false);
+  };
+
+  const getStringValue = (value: number) => {
+    return `${value}`;
   };
 
   return (
@@ -64,7 +79,7 @@ const MonsterReviewModal = ({ name, monsterIndex, image}: ReviewType) => {
           onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
             event.preventDefault();
             localStorage.setItem(
-              name,
+              `Review: ${monsterIndex}`,
               JSON.stringify({
                 difficulty: difficulty,
                 description: description,
@@ -86,6 +101,7 @@ const MonsterReviewModal = ({ name, monsterIndex, image}: ReviewType) => {
             <img src={image} alt="Image of selected monster" />
           </Box>
           <article className="flex flex-col gap-4 w-1/2">
+            <DialogTitle className="text-4xl">{name}</DialogTitle>
             <DialogContentText sx={{ color: 'white', fontSize: '24px', fontFamily: 'MedievalSharp' }}>
               Difficulty
             </DialogContentText>
