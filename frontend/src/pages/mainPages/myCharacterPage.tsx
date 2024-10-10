@@ -48,10 +48,11 @@ const MyCharacterPage = () => {
     <MainPageLayout>
       <main
         className="relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-myCharacter before:bg-cover before:bg-center before:z-0">
-        {/* RACE SECTION */}
+
         <div className="absolute inset-0 w-full h-full bg-black opacity-70" />
         <div
           className="flex flex-col py-20 text-white min-h-[calc(100vh-100px)] min-w-[70%] z-10 mt-24 justify-between items-center">
+          {/* RACE SECTION */}
           <section className="w-full flex justify-between">
             <article className="w-full xl:w-1/2 flex flex-col items-center">
               <h2 className="text-3xl mb-8">Race:</h2>

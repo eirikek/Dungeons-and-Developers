@@ -3,8 +3,8 @@ import MonsterCard from '../../components/MonsterCard/MonsterCard.tsx';
 import mockup from '../../data/mockup.ts';
 import { hourglass } from 'ldrs';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { CiSearch } from 'react-icons/ci';
+import Pagination from '../../components/Pagination/Pagination.tsx';
 
 const monsterNameArray: string[] = mockup.results.map((result: any) => result.index);
 const monstersPerPage = 8;
@@ -33,20 +33,6 @@ export default function MonsterPage() {
 
   const handleMonsterLoad = () => {
     setLoadedCount((prevCount) => prevCount + 1);
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-    setLoadedCount(0);
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-    setLoadedCount(0);
   };
 
   useEffect(() => {
@@ -95,24 +81,17 @@ export default function MonsterPage() {
           </div>
 
           {totalFilteredMonsters > monstersPerPage && (
-            <section className="flex justify-center gap-40 w-full text-xl mt-10">
-              <button
-                className="flex items-center hover:text-gray-400 w-44"
-                onClick={(handlePrevPage)}
-                disabled={currentPage === 1}
-              >
-                <FaChevronLeft className="mr-2" />
-                Previous Page
-              </button>
-              <span className="w-2 text-center">{currentPage}</span>
-              <button
-                className="flex items-center hover:text-gray-400 w-44"
-                onClick={handleNextPage}
-              >
-                Next Page
-                <FaChevronRight className="ml-2" />
-              </button>
-            </section>
+            <Pagination
+              currentPage={currentPage}
+              onPageChange={(direction) => {
+                const newPage = currentPage + direction;
+                if (newPage >= 1 && newPage <= totalPages) {
+                  setCurrentPage(newPage);
+                  setLoadedCount(0);
+                }
+              }}
+              totalPages={totalPages}
+            />
           )}
         </section>
       </main>

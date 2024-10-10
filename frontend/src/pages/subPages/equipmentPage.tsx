@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEquipments from '../../hooks/useEquipments.ts';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
+import Pagination from '../../components/Pagination/Pagination.tsx';
 
 const variants = {
   enter: (direction: number) => ({
@@ -24,18 +24,20 @@ const EquipmentPage: React.FC = () => {
 
   const itemsPerPage = 20;
   const totalPages = Math.ceil(results.length / itemsPerPage);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [direction, setDirection] = useState(1); // +1 for next, -1 for previous
 
-  // Pagination function to handle page navigation and set the direction
-  const paginate = (newDirection: number) => {
-    setDirection(newDirection);
-    setCurrentPage((prevPage) => (prevPage + newDirection + totalPages) % totalPages);
+  const handlePageChange = (newDirection: number) => {
+    const newPage = currentPage + newDirection;
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      setDirection(newDirection);
+    }
   };
 
   const currentEquipment = results.slice(
+    (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage,
   );
 
 
@@ -72,24 +74,11 @@ const EquipmentPage: React.FC = () => {
           </section>
 
           {/* Pagination Controls */}
-          <section className="flex justify-center gap-40 w-full text-xl mt-10">
-            <button
-              className="flex items-center hover:text-gray-400 w-44"
-              onClick={() => paginate(-1)}
-              disabled={currentPage === 0}
-            >
-              <FaChevronLeft className="mr-2" />
-              Previous Page
-            </button>
-            <span className="w-2 text-center">{currentPage + 1}</span>
-            <button
-              className="flex items-center hover:text-gray-400 w-44"
-              onClick={() => paginate(1)}
-            >
-              Next Page
-              <FaChevronRight className="ml-2" />
-            </button>
-          </section>
+          <Pagination
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+            totalPages={totalPages}
+          />
         </div>
       </main>
     </MainPageLayout>
