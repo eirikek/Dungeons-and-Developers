@@ -30,7 +30,9 @@ export default function AnimatedRoutes() {
         <Route path="/project2/abilityscore" element={<AbilityScorePage />} />
         <Route path="/project2/equipment" element={<EquipmentPage />} />
         <Route path="/project2/monsters" element={<MonsterPage />} />
-        <Route path="/project2/mycharacter" element={<MyCharacterPage />} />
+        <Route path="/project2/mycharacter" element={<MyCharacterPage raceChange={() => {
+        }} classChange={() => {
+        }} />} /> {/*Dummy values for raceChange and classChange*/}
       </Routes>
     </AnimatePresence>
   );
