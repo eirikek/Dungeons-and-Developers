@@ -6,8 +6,6 @@ export default function AbilityScorePage() {
   const abilities = ['cha', 'con', 'dex', 'int', 'str', 'wis'];
   const abilityData = abilities.map(useAbilityScores);
 
-  console.log(abilityData);
-
   return (
     <SubPageLayout>
       <section className="flex flex-col items-center w-full gap-10">

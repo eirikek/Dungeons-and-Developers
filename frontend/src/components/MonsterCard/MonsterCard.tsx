@@ -56,7 +56,7 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
           onError={handleImageError}
           style={{ display: imageLoaded ? 'block' : 'none' }}
         />
-        {!imageLoaded && <div>Loading image...</div>}
+        {!imageLoaded && <div className="flex justify-center w-full py-24">Loading image...</div>}
 
         <button
           className="absolute top-0 right-2"
