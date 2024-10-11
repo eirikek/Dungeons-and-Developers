@@ -1,5 +1,5 @@
-import useMonster from '../../hooks/useMonster.ts';
-import NoMonsterImageFound from '../../assets/NoMonsterImageFound.jpg';
+import useMonsters from '../../hooks/useMonsters.ts';
+// import NoMonsterImageFound from '../../assets/NoMonsterImageFound.jpg';
 
 interface MonsterPopUpProps {
   monsterName: string;
@@ -7,11 +7,11 @@ interface MonsterPopUpProps {
 }
 
 const MonsterPopUp: React.FC<MonsterPopUpProps> = ({ monsterName, closeModal }) => {
-  const monsterInfo = useMonster(monsterName);
-  const monsterImageURL = monsterInfo.img ? `https://www.dnd5eapi.co${monsterInfo.img}` : NoMonsterImageFound;
+  const monsterInfo = useMonsters(monsterName);
+  const monsterImageURL = monsterInfo.img ? `https://www.dnd5eapi.co${monsterInfo.img}` : ' NoMonsterImageFound';
 
   return (
-    <div className="h-[60vh] bg-[#DB3232] w-[40vw] shadow-inner">
+    <div className="h-[60vh] bg-black w-[40vw] shadow-inner">
       <button className="text-xl text-white " onClick={() => closeModal()}>
         X
       </button>
