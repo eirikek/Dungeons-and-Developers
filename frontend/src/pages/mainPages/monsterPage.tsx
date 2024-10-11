@@ -7,6 +7,7 @@ import MonsterCard from '../../components/MonsterCard/MonsterCard';
 import Navbar from '../../components/Navbar/Navbar';
 import mockup, { Monster } from '../../data/mockup';
 import useMonsters, { MonsterCardDataProps } from '../../hooks/useMonster';
+import MonsterModal from '../../components/MonsterModal/MonsterModal.tsx';
 
 const monsterIndexArray: string[] = mockup.results.map((result: Monster) => result.index);
 const monstersPerPage = 6;
@@ -62,8 +63,8 @@ export default function MonsterPage() {
     setModal('');
   };
 
-  const handleModalClick = (monsterIndex: string) => {
-    setModal(monsterIndex);
+  const handleModalClick = (monsterIndex: string | undefined) => {
+    setModal(monsterIndex ?? '');
   };
 
   const handleMonsterLoad = useCallback((index: number) => {
@@ -76,27 +77,19 @@ export default function MonsterPage() {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
       setLoadedImages(new Set());
-    }
-  }, [currentPage, totalPages]);
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    } else if (currentPage == Math.ceil(monsterNameArray.length / monstersPerPage)) {
+    } else if (currentPage == Math.ceil(monsterIndexArray.length / monstersPerPage)) {
       setCurrentPage(1);
     }
-
-    setLoadedCount(0);
-  };
+  }, [currentPage, totalPages]);
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     } else if (currentPage === 1) {
-      setCurrentPage(Math.ceil(monsterNameArray.length / monstersPerPage));
+      setCurrentPage(Math.ceil(monsterIndexArray.length / monstersPerPage));
     }
 
-    setLoadedCount(0);
+    setLoadedImages(new Set());
   };
 
   useEffect(() => {
@@ -142,7 +135,7 @@ export default function MonsterPage() {
                   key={idx}
                   {...monster.data!}
                   onLoad={() => handleMonsterLoad(idx)}
-                  onClickFunc={() => handleModalClick(monster)}
+                  onClickFunc={() => handleModalClick(monster.data?.index)}
                 />
               ))}
             </div>
