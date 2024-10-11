@@ -1,8 +1,9 @@
-import '../../components/MonsterCard/MonsterCard.css';
-import { useState } from 'react';
-import DungeonHeader from '../../components/Dungeon/DungeonHeader.tsx';
+import { useContext, useState } from 'react';
 import CustomInput from '../../components/CustomInput/CustomInput.tsx';
 import DungeonMonsterGrid from '../../components/Dungeon/DungeonMonsterGrid.tsx';
+import DungeonStats from '../../components/Dungeon/DungeonStats.tsx';
+import '../../components/MonsterCard/MonsterCard.css';
+import { DungeonContext } from '../../context/DungeonContext.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 
 export default function DungeonPage() {
@@ -11,6 +12,8 @@ export default function DungeonPage() {
     return savedName || 'Enter dungeon name';
   });
 
+  const { dungeonMonsters } = useContext(DungeonContext);
+
   const handleSaveDungeonName = (newName: string) => {
     setDungeonName(newName);
     localStorage.setItem('dungeonName', newName);
@@ -18,10 +21,9 @@ export default function DungeonPage() {
 
   return (
     <MainPageLayout>
-      <section className="min-h-screen flex flex-col bg-dungeon bg-cover bg-center bg-no-repeat relative">
+      <section className="min-h-screen flex flex-col bg-storm_giant bg-cover bg-center bg-no-repeat relative">
         <main className="flex-grow flex flex-col items-center justify-center relative z-10 ">
           <article className="flex flex-col gap-16 items-center w-full max-w-7xl mx-auto">
-            <DungeonHeader />
             <section className="bg-customGray bg-opacity-80 p-8 rounded-lg shadow-lg w-2/3 tablet:w-10/12">
               <CustomInput
                 placeholder="Enter dungeon name"
@@ -29,6 +31,10 @@ export default function DungeonPage() {
                 value={dungeonName}
                 onSave={handleSaveDungeonName}
               />
+              <section className="flex flex-col items-center">
+                <DungeonStats monsters={dungeonMonsters} />
+              </section>
+
               <DungeonMonsterGrid />
             </section>
           </article>

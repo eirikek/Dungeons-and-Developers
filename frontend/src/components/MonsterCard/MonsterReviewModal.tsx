@@ -1,15 +1,22 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Slider, TextField } from '@mui/material';
-import { LuSwords } from 'react-icons/lu';
-import { GiRoundShield } from 'react-icons/gi';
-import { GiGoblinHead } from 'react-icons/gi';
-import { GiSpikedDragonHead } from 'react-icons/gi';
-import { GiDaemonSkull } from 'react-icons/gi';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Slider,
+  TextField,
+} from '@mui/material';
 import React, { useState } from 'react';
-import useMonsters from '../../hooks/useMonsters.ts';
-import NoMonsterImageFound from '../../assets/images/no_monster_image_found.jpg';
+import { GiDaemonSkull, GiGoblinHead, GiRoundShield, GiSpikedDragonHead } from 'react-icons/gi';
+import { LuSwords } from 'react-icons/lu';
 
-type MonsterReviewModal = {
+type ReviewType = {
+  monsterIndex: string;
   name: string;
+  image: string;
 };
 
 const marks = [
@@ -35,24 +42,28 @@ const marks = [
   },
 ];
 
-const MonsterCardInfo = ({ name }: MonsterReviewModal) => {
+const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [difficulty, setDifficulty] = useState<number>(0);
   const [description, setDescription] = useState('');
-  const image = useMonsters(name).img;
-  const monsterImageURL = image ? `https://www.dnd5eapi.co${image}` : NoMonsterImageFound;
-
-  const getStringValue = (value: number) => {
-    return `${value}`;
-  };
 
   const handleClickOpen = () => {
+    const savedReview = localStorage.getItem(`Review: ${monsterIndex}`);
+    if (savedReview) {
+      const parsedReview = JSON.parse(savedReview);
+      setDifficulty(parsedReview.difficulty);
+      setDescription(parsedReview.description);
+    }
     setIsOpen(true);
   };
 
   const handleClose = () => {
     setIsOpen(false);
+  };
+
+  const getStringValue = (value: number) => {
+    return `${value}`;
   };
 
   return (
@@ -68,11 +79,11 @@ const MonsterCardInfo = ({ name }: MonsterReviewModal) => {
           onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
             event.preventDefault();
             localStorage.setItem(
-              name,
+              `Review: ${monsterIndex}`,
               JSON.stringify({
                 difficulty: difficulty,
                 description: description,
-              }),
+              })
             );
             handleClose();
           },
@@ -87,9 +98,10 @@ const MonsterCardInfo = ({ name }: MonsterReviewModal) => {
       >
         <DialogContent className="flex flex-row items-center bg-black gap-6">
           <Box sx={{ width: '50%' }}>
-            <img src={monsterImageURL} alt="Image of selected monster" />
+            <img src={image} alt="Image of selected monster" />
           </Box>
           <article className="flex flex-col gap-4 w-1/2">
+            <DialogTitle className="text-4xl">{name}</DialogTitle>
             <DialogContentText sx={{ color: 'white', fontSize: '24px', fontFamily: 'MedievalSharp' }}>
               Difficulty
             </DialogContentText>
@@ -136,8 +148,7 @@ const MonsterCardInfo = ({ name }: MonsterReviewModal) => {
               fullWidth
               variant="standard"
               multiline
-              rows={4}
-              maxRows={12}
+              minRows={4}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               sx={{
@@ -165,10 +176,10 @@ const MonsterCardInfo = ({ name }: MonsterReviewModal) => {
         </DialogContent>
 
         <DialogActions className="bg-black">
-          <Button onClick={handleClose} aria-label="Cancel-button">
+          <Button onClick={handleClose} aria-label="Cancel">
             Cancel
           </Button>
-          <Button type="submit" aria-lable="Save-button">
+          <Button type="submit" aria-label="Save">
             Save
           </Button>
         </DialogActions>
@@ -177,4 +188,4 @@ const MonsterCardInfo = ({ name }: MonsterReviewModal) => {
   );
 };
 
-export default MonsterCardInfo;
+export default MonsterReviewModal;
