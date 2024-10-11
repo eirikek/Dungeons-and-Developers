@@ -23,9 +23,6 @@ export default function DungeonPage() {
       <main
         className="relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-dungeon before:bg-cover before:bg-center before:z-0">
         <div className="absolute inset-0 w-full h-full bg-black opacity-70" />
-        <section className="flex flex-col items-center">
-          <DungeonStats monsters={dungeonMonsters} />
-        </section>
         <div
           className="flex flex-col py-20 text-white min-h-[calc(100vh-100px)] min-w-[70%] z-10 mt-20 justify-between items-center">
           <CustomInput
@@ -34,6 +31,8 @@ export default function DungeonPage() {
             value={dungeonName}
             onSave={handleSaveDungeonName}
           />
+          <DungeonStats monsters={dungeonMonsters} />
+
           <DungeonMonsterGrid />
         </div>
       </main>

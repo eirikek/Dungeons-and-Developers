@@ -4,13 +4,13 @@ import debounce from 'lodash/debounce';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import MonsterCard from '../../components/MonsterCard/MonsterCard';
 import mockup, { Monster } from '../../data/mockup';
-import useMonsters, { MonsterCardDataProps } from '../../hooks/useMonster';
+import useMonster, { MonsterCardDataProps } from '../../hooks/useMonster.ts';
 import { hourglass } from 'ldrs';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { CiSearch } from 'react-icons/ci';
 
 const monsterIndexArray: string[] = mockup.results.map((result: Monster) => result.index);
-const monstersPerPage = 6;
+const monstersPerPage = 8;
 
 export default function MonsterPage() {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -21,7 +21,7 @@ export default function MonsterPage() {
   // Used for loading screen
   hourglass.register();
 
-  const monsterData = useMonsters(
+  const monsterData = useMonster(
     monsterIndexArray,
     debouncedSearchTerm,
     currentPage,
@@ -122,7 +122,7 @@ export default function MonsterPage() {
             <p className="text-white mt-4">An error occurred while loading monsters.</p>
           ) : displayedMonsters.length > 0 ? (
             <>
-              <div className="grid grid-cols-3 gap-8 mt-8">
+              <div className="grid grid-cols-4 gap-8 mt-8">
                 {displayedMonsters.map((monster, idx) => (
                   <MonsterCard key={idx} {...monster.data!} onLoad={() => handleMonsterLoad(idx)} />
                 ))}

@@ -52,14 +52,19 @@ const MonsterCard = ({ index, name, type, hp, alignment, size, img, onLoad }: Mo
             className="max-w-[15vw] rounded-[15px] shadow-[0_2px_2px_0_rgba(0,0,0,1) top-0 pt-0 mt-0]"
           />
         ) : (
-        <img
-          src={monsterImageURL}
-          alt={img ? 'Image of the monster' : 'No monster image found'}
-          className="object-cover h-full w-full object-top"
-          onLoad={handleImageLoad}
-          onError={handleImageError}
-          style={{ display: imageLoaded ? 'block' : 'none' }}
-        />
+          <div className="relative flex justify-center w-full h-full">
+            <img
+              src={monsterImageURL}
+              alt={img ? 'Image of the monster' : 'No monster image found'}
+              className="object-cover h-full w-full object-top"
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+              style={{ display: imageLoaded ? 'block' : 'none' }}
+            />
+            <div className="absolute left-[80%] top-5">
+              <DungeonButton onAddToDungeonClick={handleToggleDungeon} isInDungeon={isInDungeon(index)} />
+            </div>
+          </div>
         )}
         {!imageLoaded && <div className="flex justify-center w-full py-24">Loading image...</div>}
 
@@ -70,10 +75,9 @@ const MonsterCard = ({ index, name, type, hp, alignment, size, img, onLoad }: Mo
         <p className="text-md">Type: {type}</p>
         <p className="text-md">HP: {hp}</p>
         <div className="flex w-full justify-between">
-          <MonsterReviewModal name={name} monsterIndex={index} image={monsterImageURL}/>
+          <MonsterReviewModal name={name} monsterIndex={index} image={monsterImageURL} />
           <button onClick={handleToggleDungeon}
                   className="hover:text-customRed transition-all duration-200">{isInDungeon(index) ? 'Remove from dungeon' : 'Add to dungeon'}</button>
-          <DungeonButton onAddToDungeonClick={handleToggleDungeon} isInDungeon={isInDungeon(index)} />
         </div>
       </div>
     </div>
