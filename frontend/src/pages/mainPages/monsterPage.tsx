@@ -4,7 +4,7 @@ import mockup from '../../data/mockup.ts';
 import { hourglass } from 'ldrs';
 import { Button } from '@mui/material';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
-import MonsterPopUp from '../../components/MonsterPopUp/MonsterPopUp.tsx';
+import MonsterModal from '../../components/MonsterModal/MonsterModal.tsx';
 
 const monsterNameArray: string[] = mockup.results.map((result: any) => result.index);
 const monstersPerPage = 6;
@@ -107,7 +107,7 @@ export default function MonsterPage() {
           </div>
 
           <div className={'fixed top-28 left-[15%] z-10'}>
-            {modal && <MonsterPopUp closeModal={handleClose} monsterName={modal} />}
+            {modal && <MonsterModal closeModal={handleClose} monsterName={modal} />}
           </div>
 
           {totalFilteredMonsters > monstersPerPage && (
