@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import NoMonsterImageFound from '../../assets/NoMonsterImageFound.jpg';
+import NoMonsterImageFound from '../../assets/images/no_monster_image_found.jpg';
 import { DungeonContext } from '../../context/DungeonContext.tsx';
 import { MonsterCardDataProps } from '../../hooks/useMonster.ts';
 import DungeonButton from './DungeonButton.tsx';

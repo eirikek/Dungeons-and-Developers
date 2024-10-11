@@ -27,7 +27,7 @@ const DungeonMonsterGrid = () => {
         className="bg-customGray bg-opacity-80 p-8 rounded-lg shadow-lg w-2/3 tablet:w-10/12 h-auto flex flex-col items-center justify-center mt-10 mb-10"
         style={{ display: isLoading ? 'none' : 'block' }}
       >
-        <ul className="grid grid-cols-3 max-laptop:grid-cols-2 max-mobile:grid-cols-1 list-none gap-6">
+        <ul className="flex-grow gap-10 w-full grid grid-cols-3 max-laptop:grid-cols-2 max-mobile:grid-cols-1 list-none gap-6">
           {dungeonMonsters.map((monster) => (
             <li key={monster.index}>
               <MonsterCard {...monster} onLoad={handleMonsterLoad} />
