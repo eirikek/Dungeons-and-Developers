@@ -1,4 +1,3 @@
-import { Button } from '@mui/material';
 import { UseQueryResult } from '@tanstack/react-query';
 import debounce from 'lodash/debounce';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -8,6 +7,7 @@ import useMonster, { MonsterCardDataProps } from '../../hooks/useMonster.ts';
 import { hourglass } from 'ldrs';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { CiSearch } from 'react-icons/ci';
+import Pagination from '../../components/Pagination/Pagination'; // Import Pagination component
 
 const monsterIndexArray: string[] = mockup.results.map((result: Monster) => result.index);
 const monstersPerPage = 8;
@@ -43,7 +43,7 @@ export default function MonsterPage() {
   const totalFilteredMonsters = filteredMonsters.length;
   const totalPages = Math.ceil(totalFilteredMonsters / monstersPerPage);
 
-  // https://medium.com/nerd-for-tech/debounce-your-search-react-input-optimization-fd270a8042b
+  // Debounce search term updates
   const debouncedSearch = useMemo(
     () =>
       debounce((value: string) => {
@@ -64,19 +64,12 @@ export default function MonsterPage() {
 
   const allImagesLoaded = loadedImages.size === monsterData.length;
 
-  const handleNextPage = useCallback(() => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+  const handlePageChange = useCallback((direction: number) => {
+    if ((direction === 1 && currentPage < totalPages) || (direction === -1 && currentPage > 1)) {
+      setCurrentPage(currentPage + direction);
       setLoadedImages(new Set());
     }
   }, [currentPage, totalPages]);
-
-  const handlePrevPage = useCallback(() => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-      setLoadedImages(new Set());
-    }
-  }, [currentPage]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -116,12 +109,8 @@ export default function MonsterPage() {
               <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
             </div>
           )}
-          <section
-            className={
-              isLoading ? 'hidden' : ''
-            }
-            style={{ display: isLoading ? 'none' : 'block' }}
-          >
+
+          <section className={isLoading ? 'hidden' : ''} style={{ display: isLoading ? 'none' : 'block' }}>
             {isError ? (
               <p className="text-white mt-4">An error occurred while loading monsters.</p>
             ) : displayedMonsters.length > 0 ? (
@@ -131,19 +120,11 @@ export default function MonsterPage() {
                     <MonsterCard key={idx} {...monster.data!} onLoad={() => handleMonsterLoad(idx)} />
                   ))}
                 </div>
-                {totalFilteredMonsters > monstersPerPage && (
-                  <div className="mt-4 flex items-center space-x-4">
-                    <Button onClick={handlePrevPage} disabled={currentPage === 1}>
-                      Previous Page
-                    </Button>
-                    <p className="text-white">
-                      Page: {currentPage}/{totalPages}
-                    </p>
-                    <Button onClick={handleNextPage} disabled={currentPage === totalPages}>
-                      Next Page
-                    </Button>
-                  </div>
-                )}
+                <Pagination
+                  currentPage={currentPage}
+                  onPageChange={handlePageChange}
+                  totalPages={totalPages}
+                />
               </>
             ) : (
               <p className="text-white mt-4">No monsters found.</p>
