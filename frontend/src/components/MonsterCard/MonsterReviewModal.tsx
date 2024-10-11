@@ -1,15 +1,21 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Slider, TextField } from '@mui/material';
-import { LuSwords } from 'react-icons/lu';
-import { GiRoundShield } from 'react-icons/gi';
-import { GiGoblinHead } from 'react-icons/gi';
-import { GiSpikedDragonHead } from 'react-icons/gi';
-import { GiDaemonSkull } from 'react-icons/gi';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  Slider,
+  TextField,
+} from '@mui/material';
 import React, { useState } from 'react';
-import useMonsters from '../../hooks/useMonsters.ts';
-import NoMonsterImageFound from '../../assets/images/no_monster_image_found.jpg';
+import { GiDaemonSkull, GiGoblinHead, GiRoundShield, GiSpikedDragonHead } from 'react-icons/gi';
+import { LuSwords } from 'react-icons/lu';
 
-type MonsterReviewModal = {
+type ReviewType = {
+  monsterIndex: string;
   name: string;
+  image: string;
 };
 
 const marks = [
@@ -35,25 +41,28 @@ const marks = [
   },
 ];
 
-const MonsterCardInfo = ({ name }: MonsterReviewModal) => {
+const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [difficulty, setDifficulty] = useState<number>(0);
   const [description, setDescription] = useState('');
-  const image = useMonsters(name).img;
-  const monsterImageURL = image ? `https://www.dnd5eapi.co${image}` : NoMonsterImageFound;
-  const monsterInfo = useMonsters(name);
-
-  const getStringValue = (value: number) => {
-    return `${value}`;
-  };
 
   const handleClickOpen = () => {
+    const savedReview = localStorage.getItem(`Review: ${monsterIndex}`);
+    if (savedReview) {
+      const parsedReview = JSON.parse(savedReview);
+      setDifficulty(parsedReview.difficulty);
+      setDescription(parsedReview.description);
+    }
     setIsOpen(true);
   };
 
   const handleClose = () => {
     setIsOpen(false);
+  };
+
+  const getStringValue = (value: number) => {
+    return `${value}`;
   };
 
   return (
@@ -107,8 +116,8 @@ const MonsterCardInfo = ({ name }: MonsterReviewModal) => {
             alignItems: 'center',
             gap: '50px',
           }}>
-            <img src={monsterImageURL} alt="Image of selected monster" className="w-1/2 rounded" />
-            <h2 className="text-white text-3xl">{monsterInfo.name}</h2>
+            <img src={image} alt="Image of selected monster" className="w-1/2 rounded" />
+            <h2 className="text-white text-3xl">{name}</h2>
           </Box>
           <article className="flex flex-col gap-4 w-1/2">
             <DialogContentText sx={{ color: 'white', fontSize: '24px', fontFamily: 'MedievalSharp' }}>
@@ -181,7 +190,6 @@ const MonsterCardInfo = ({ name }: MonsterReviewModal) => {
                   padding: '16px',
                   fontFamily: 'MedievalSharp',
                 },
-
                 '& .MuiInputLabel-root': {
                   color: 'white',
                   fontFamily: 'MedievalSharp',
@@ -195,7 +203,6 @@ const MonsterCardInfo = ({ name }: MonsterReviewModal) => {
                 '& .MuiInput-underline:before': {
                   borderBottomColor: 'white',
                 },
-
                 '& .MuiInput-underline:after': {
                   borderBottomColor: '#DB3232',
                 },
@@ -239,4 +246,4 @@ const MonsterCardInfo = ({ name }: MonsterReviewModal) => {
   );
 };
 
-export default MonsterCardInfo;
+export default MonsterReviewModal;

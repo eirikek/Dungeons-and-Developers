@@ -1,30 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import useMonsters from '../../hooks/useMonsters.ts';
+import { useContext, useEffect, useState } from 'react';
 import NoMonsterImageFound from '../../assets/images/no_monster_image_found.jpg';
-import MonsterCardInfo from './MonsterReviewModal.tsx';
-import unfavoriteIcon from '../../assets/images/unfavorite.png';
-import favoriteIcon from '../../assets/images/favorite.png';
+import { DungeonContext } from '../../context/DungeonContext.tsx';
+import { MonsterCardDataProps } from '../../hooks/useMonster.ts';
+import DungeonButton from './DungeonButton.tsx';
+import MonsterReviewModal from './MonsterReviewModal.tsx';
 
-interface MonsterCardProps {
-  monsterName: string;
+export interface MonsterCardProps extends MonsterCardDataProps {
   onLoad: () => void;
 }
 
-const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
-  const monsterInfo = useMonsters(monsterName);
+const MonsterCard = ({ index, name, type, hp, alignment, size, img, onLoad }: MonsterCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  const { toggleDungeon, isInDungeon } = useContext(DungeonContext);
 
   useEffect(() => {
-    if (monsterInfo.name && !monsterInfo.img) {
+    if (index && !img) {
       setImageLoaded(true);
       onLoad();
     }
-  }, [monsterInfo.name, monsterInfo.img, onLoad]);
-
-  const handleToggleFavorite = () => {
-    setIsFavorite((prev) => !prev); // Toggle favorite state
-  };
+  }, [img, index]);
 
   const handleImageLoad = () => {
     setImageLoaded(true);
@@ -32,59 +28,52 @@ const MonsterCard: React.FC<MonsterCardProps> = ({ monsterName, onLoad }) => {
   };
 
   const handleImageError = () => {
-    console.log('Image failed to load');
+    setImageError(true);
     setImageLoaded(true);
     onLoad();
   };
 
-  if (!monsterInfo.name) {
-    return <div>Loading...</div>;
-  }
+  const monsterImageURL = img ? img : NoMonsterImageFound;
 
-  const monsterImageURL = monsterInfo.img ? `https://www.dnd5eapi.co${monsterInfo.img}` : NoMonsterImageFound;
+  const handleToggleDungeon = () => {
+    toggleDungeon({ index, name, type, hp, alignment, size, img });
+  };
 
   return (
     <div
       className="flex flex-col items-center justify-between bg-black shadow-black shadow-2xl pb-5 w-72 h-[340px] rounded-lg overflow-hidden"
     >
       <div className="relative w-full h-52 overflow-hidden">
+        {!imageLoaded && <div>Loading image...</div>}
+        {imageError ? (
+          <img
+            src={NoMonsterImageFound}
+            alt="No monster image found"
+            className="max-w-[15vw] rounded-[15px] shadow-[0_2px_2px_0_rgba(0,0,0,1) top-0 pt-0 mt-0]"
+          />
+        ) : (
         <img
           src={monsterImageURL}
-          alt={monsterInfo.img ? 'Image of the monster' : 'No monster image found'}
+          alt={img ? 'Image of the monster' : 'No monster image found'}
           className="object-cover h-full w-full object-top"
           onLoad={handleImageLoad}
           onError={handleImageError}
           style={{ display: imageLoaded ? 'block' : 'none' }}
         />
+        )}
         {!imageLoaded && <div className="flex justify-center w-full py-24">Loading image...</div>}
 
-        <button
-          className="absolute top-0 right-2"
-          onClick={handleToggleFavorite}
-        >
-          <img
-            src={
-              isFavorite
-                ? favoriteIcon
-                : unfavoriteIcon
-            }
-            alt="favorite-icon"
-            className="w-20 h-20"
-            style={{
-              objectFit: 'contain',
-            }}
-          />
-        </button>
 
       </div>
       <div className="flex flex-col gap-1 w-full p-3">
-        <h2 className="text-white text-xl bold">{monsterInfo.name}</h2>
-        <p className="text-md">Type: {monsterInfo.type}</p>
-        <p className="text-md">HP: {monsterInfo.hp}</p>
+        <h2 className="text-white text-xl bold">{name}</h2>
+        <p className="text-md">Type: {type}</p>
+        <p className="text-md">HP: {hp}</p>
         <div className="flex w-full justify-between">
-          <MonsterCardInfo name={monsterName} />
-          <button onClick={handleToggleFavorite}
-                  className="hover:text-customRed transition-all duration-200">{isFavorite ? 'Remove from dungeon' : 'Add to dungeon'}</button>
+          <MonsterReviewModal name={name} monsterIndex={index} image={monsterImageURL}/>
+          <button onClick={handleToggleDungeon}
+                  className="hover:text-customRed transition-all duration-200">{isInDungeon(index) ? 'Remove from dungeon' : 'Add to dungeon'}</button>
+          <DungeonButton onAddToDungeonClick={handleToggleDungeon} isInDungeon={isInDungeon(index)} />
         </div>
       </div>
     </div>
