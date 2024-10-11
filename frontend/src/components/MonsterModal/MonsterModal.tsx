@@ -12,7 +12,7 @@ const MonsterModal: React.FC<MonsterPopUpProps> = ({ monsterName, closeModal }) 
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50">
-      <div className="relative bg-black rounded-lg shadow-lg w-[40vw] h-[55vh] p-6">
+      <div className="relative bg-black rounded-lg shadow-lg w-[40vw] h-fit p-6">
         <button
           className="absolute top-2 right-2 text-xl text-white bg-red-600 m-1 w-8 h-8 flex items-center justify-center"
           onClick={closeModal}
@@ -27,9 +27,15 @@ const MonsterModal: React.FC<MonsterPopUpProps> = ({ monsterName, closeModal }) 
           />
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-2">{monsterInfo.name}</h2>
-            <p className="text-lg mb-1">Type: {monsterInfo.type}</p>
-            <p className="text-lg mb-1">HP: {monsterInfo.hp}</p>
-            <p className="text-lg mb-1">Alignment: {monsterInfo.alignment}</p>
+            <p className="text-lg mb-1">
+              <span className="font-bold">Type:</span> {monsterInfo.type}
+            </p>
+            <p className="text-lg mb-1">
+              <span className="font-bold">HP:</span> {monsterInfo.hp}
+            </p>
+            <p className="text-lg mb-1">
+              <span className="font-bold">Alignment:</span> {monsterInfo.alignment}
+            </p>
           </div>
         </main>
       </div>
