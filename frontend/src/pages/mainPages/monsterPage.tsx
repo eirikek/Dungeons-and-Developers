@@ -94,16 +94,8 @@ export default function MonsterPage() {
         className="relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-monsters before:bg-cover before:bg-center before:z-0">
         <div className="absolute inset-0 w-full h-full bg-black opacity-70" />
 
-        {isLoading && (
-          <div className="flex flex-col items-center justify-center h-full">
-            <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
-          </div>
-        )}
         <section
-          className={`flex flex-col py-10 text-white min-h-[calc(100vh-100px)] min-w-[70%] z-10 mt-24 ${
-            isLoading ? 'hidden' : ''
-          }`}
-          style={{ display: isLoading ? 'none' : 'block' }}
+          className="flex flex-col py-10 text-white min-h-[calc(100vh-100px)] min-w-[70%] z-10 mt-24"
         >
           <div className="relative w-full flex items-center justify-center mb-10">
             <div className="absolute left-0">
@@ -118,32 +110,45 @@ export default function MonsterPage() {
             </div>
             <h2 className="text-4xl text-center">Monsters</h2>
           </div>
-          {isError ? (
-            <p className="text-white mt-4">An error occurred while loading monsters.</p>
-          ) : displayedMonsters.length > 0 ? (
-            <>
-              <div className="grid grid-cols-4 gap-8 mt-8">
-                {displayedMonsters.map((monster, idx) => (
-                  <MonsterCard key={idx} {...monster.data!} onLoad={() => handleMonsterLoad(idx)} />
-                ))}
-              </div>
-              {totalFilteredMonsters > monstersPerPage && (
-                <div className="mt-4 flex items-center space-x-4">
-                  <Button onClick={handlePrevPage} disabled={currentPage === 1}>
-                    Previous Page
-                  </Button>
-                  <p className="text-white">
-                    Page: {currentPage}/{totalPages}
-                  </p>
-                  <Button onClick={handleNextPage} disabled={currentPage === totalPages}>
-                    Next Page
-                  </Button>
-                </div>
-              )}
-            </>
-          ) : (
-            <p className="text-white mt-4">No monsters found.</p>
+
+          {isLoading && (
+            <div className="flex flex-col items-center justify-center h-full">
+              <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
+            </div>
           )}
+          <section
+            className={
+              isLoading ? 'hidden' : ''
+            }
+            style={{ display: isLoading ? 'none' : 'block' }}
+          >
+            {isError ? (
+              <p className="text-white mt-4">An error occurred while loading monsters.</p>
+            ) : displayedMonsters.length > 0 ? (
+              <>
+                <div className="grid grid-cols-4 gap-8 mt-8">
+                  {displayedMonsters.map((monster, idx) => (
+                    <MonsterCard key={idx} {...monster.data!} onLoad={() => handleMonsterLoad(idx)} />
+                  ))}
+                </div>
+                {totalFilteredMonsters > monstersPerPage && (
+                  <div className="mt-4 flex items-center space-x-4">
+                    <Button onClick={handlePrevPage} disabled={currentPage === 1}>
+                      Previous Page
+                    </Button>
+                    <p className="text-white">
+                      Page: {currentPage}/{totalPages}
+                    </p>
+                    <Button onClick={handleNextPage} disabled={currentPage === totalPages}>
+                      Next Page
+                    </Button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="text-white mt-4">No monsters found.</p>
+            )}
+          </section>
         </section>
       </main>
     </MainPageLayout>
