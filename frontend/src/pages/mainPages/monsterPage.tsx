@@ -4,6 +4,7 @@ import mockup from '../../data/mockup.ts';
 import { hourglass } from 'ldrs';
 import { Button } from '@mui/material';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
+import MonsterPopUp from '../../components/MonsterPopUp/MonsterPopUp.tsx';
 
 const monsterNameArray: string[] = mockup.results.map((result: any) => result.index);
 const monstersPerPage = 6;
@@ -12,13 +13,14 @@ export default function MonsterPage() {
   const [loadedCount, setLoadedCount] = useState<number>(0);
   const [searchTerm, setSearchTerm] = useState<string>(''); // State for the search term
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [modal, setModal] = useState<string>('');
 
   // Used for loading screen
   hourglass.register();
 
   const normalizedSearchTerm = searchTerm.toLowerCase().replace(/-/g, ' ');
   const filteredMonsters = monsterNameArray.filter((monsterName) =>
-    monsterName.toLowerCase().replace(/-/g, ' ').includes(normalizedSearchTerm),
+    monsterName.toLowerCase().replace(/-/g, ' ').includes(normalizedSearchTerm)
   );
 
   // Apply pagination to filtered results
@@ -27,24 +29,38 @@ export default function MonsterPage() {
 
   const displayedMonsters = filteredMonsters.slice(
     (currentPage - 1) * monstersPerPage,
-    (currentPage - 1) * monstersPerPage + monstersPerPage,
+    (currentPage - 1) * monstersPerPage + monstersPerPage
   );
 
   const handleMonsterLoad = () => {
     setLoadedCount((prevCount) => prevCount + 1);
   };
 
+  const handleClose = () => {
+    setModal('');
+  };
+
+  const handleModalClick = (monsterIndex: string) => {
+    setModal(monsterIndex);
+  };
+
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
+    } else if (currentPage == Math.ceil(monsterNameArray.length / monstersPerPage)) {
+      setCurrentPage(1);
     }
+
     setLoadedCount(0);
   };
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
+    } else if (currentPage === 1) {
+      setCurrentPage(Math.ceil(monsterNameArray.length / monstersPerPage));
     }
+
     setLoadedCount(0);
   };
 
@@ -56,9 +72,7 @@ export default function MonsterPage() {
 
   return (
     <MainPageLayout>
-      <div
-        className="bg-monsters bg-center bg-cover bg-no-repeat min-h-screen flex flex-col items-center justify-center">
-
+      <div className="bg-monsters bg-center bg-cover bg-no-repeat min-h-screen flex flex-col items-center justify-center">
         <div className="mt-5"></div>
 
         <div
@@ -83,8 +97,17 @@ export default function MonsterPage() {
 
           <div className="grid grid-cols-3 gap-8 mt-8">
             {displayedMonsters.map((monsterName) => (
-              <MonsterCard key={monsterName} monsterName={monsterName} onLoad={handleMonsterLoad} />
+              <MonsterCard
+                key={monsterName}
+                monsterName={monsterName}
+                onLoad={handleMonsterLoad}
+                onClickFunc={() => handleModalClick(monsterName)}
+              />
             ))}
+          </div>
+
+          <div className={'fixed top-28 left-[15%] z-10'}>
+            {modal && <MonsterPopUp closeModal={handleClose} monsterName={modal} />}
           </div>
 
           {totalFilteredMonsters > monstersPerPage && (
