@@ -104,7 +104,7 @@ const Navbar = () => {
           {/* Menu for large screens */}
           <div className="hidden xl:flex justify-between items-center w-11/12">
             <Link to={'/project2/home'}>
-              <img src={logo} alt="Dungeons & Developers logo" className="w-[3.5vw] xl:block hidden shadow-none" />
+              <img src={logo} alt="Dungeons & Developers logo" className="w-[3vw] xl:block hidden shadow-none" />
             </Link>
             <section className="flex justify-between 4xl:w-3/5 w-3/5 ">
               <CustomButton text={'Monsters'} linkTo={'/project2/monsters'}

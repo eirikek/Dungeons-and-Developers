@@ -104,12 +104,12 @@ const CustomInput = ({ placeholder, inputName, value, onSave }: InputProps) => {
               onChange={handleChange}
               onBlur={handleBlur}
               autoFocus
-              className="outline-none rounded-lg focus:outline-white bg-transparent focus:ring-customRed w-[65vw] lg:w-fit lg:p-y-5 text-6xl md:text-5xl lg:text-4xl xl:text-3xl 2xl:text-2xl text-center"
+              className="border-none rounded-lg outline-none focus:outline-none focus:ring-2 focus:ring-red-500 bg-transparent w-[65vw] lg:w-fit lg:p-y-5 text-6xl md:text-5xl lg:text-4xl xl:text-3xl 2xl:text-2xl text-center"
             />
           </>
         ) : (
           <h2
-            className="text-6xl md:text-5xl lg:text-4xl xl:text-3xl 2xl:text-2xl"
+            className=" text-6xl md:text-5xl lg:text-4xl xl:text-3xl 2xl:text-2xl"
             aria-label={isEditing ? `Save ${inputName}` : `Edit ${inputName}`}
           >
             {inputValue}
