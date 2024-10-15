@@ -8,14 +8,15 @@ type Stats = {
 const DungeonStats = ({ monsters }: Stats) => {
   const totalHp = monsters.reduce((sum, monster) => sum + monster.hp, 0);
 
-  const alignmentCounts = monsters.reduce(
+  {/*const alignmentCounts = monsters.reduce(
     (counts, monster) => {
       const alignment = monster.alignment || 'unknown';
       counts[alignment] = (counts[alignment] || 0) + 1;
       return counts;
     },
     {} as Record<string, number>,
-  );
+  );*/
+  }
 
   return (
     <aside className="flex gap-20 justify-between my-2">

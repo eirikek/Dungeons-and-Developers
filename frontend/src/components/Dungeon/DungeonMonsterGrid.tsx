@@ -30,7 +30,7 @@ const DungeonMonsterGrid = () => {
 
       {dungeonMonsters.length === 0 && (
         <div
-          className="absolute inset-0 flex items-center justify-center h-1/2 text-5xl lg:text-4xl xl:text-3xl 2xl:text-2xl">
+          className="absolute inset-0 flex items-center justify-center h-1/2 sub-header">
           <p>No monsters in dungeon</p>
         </div>
       )}

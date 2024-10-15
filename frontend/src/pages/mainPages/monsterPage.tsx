@@ -6,8 +6,8 @@ import mockup, { Monster } from '../../data/mockup';
 import useMonster, { MonsterCardDataProps } from '../../hooks/useMonster.ts';
 import { hourglass } from 'ldrs';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
-import { CiSearch } from 'react-icons/ci';
 import Pagination from '../../components/Pagination/Pagination';
+import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 
 const monsterIndexArray: string[] = mockup.results.map((result: Monster) => result.index);
 const monstersPerPage = 8;
@@ -84,23 +84,17 @@ export default function MonsterPage() {
   return (
     <MainPageLayout>
       <main
-        className="relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-monsters before:bg-cover before:bg-center before:z-0 xl:h-screen xl:overflow-hidden">
-        <div className="absolute inset-0 w-full h-full bg-black opacity-70" />
+        className="main before:bg-monsters xl:h-screen xl:overflow-hidden">
+        <div className="black-overlay" />
 
-        {/* Fixed section to prevent movement during search */}
         <section
-          className="flex flex-col py-10 text-white min-h-[calc(100vh-100px)] w-[90%] z-10 mt-[5vh] items-center gap-[3vh]"
+          className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start"
         >
-          <div className="relative flex justify-center items-center">
-            <CiSearch size="25" className="absolute left-3 top-1/2 transform -translate-y-[60%] text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search for a monster..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="pl-12 px-[1vw] py-[0.5vh] w-[75vw] sm:w-[60vw] md:w-[40vw] xl:w-[30vw] 2xl:w-[20vw] rounded-lg border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 w-text-2xl xl:text-lg 2xl:text-md"
-            />
-          </div>
+          <SearchBar
+            searchTerm={searchTerm}
+            handleSearchChange={handleSearchChange}
+            placeholder="Search for a monster..."
+          />
 
           {isLoading && (
             <div className="flex flex-col items-center justify-center h-[79.5vh]">
@@ -110,7 +104,7 @@ export default function MonsterPage() {
 
           <section className={isLoading ? 'hidden' : ''} style={{ display: isLoading ? 'none' : 'block' }}>
             {isError ? (
-              <p className="text-white mt-4">An error occurred while loading monsters.</p>
+              <p>An error occurred while loading monsters.</p>
             ) : displayedMonsters.length > 0 ? (
               <>
                 <div
@@ -127,7 +121,7 @@ export default function MonsterPage() {
               </>
             ) : (
               <div className="flex h-[79.5vh] items-center justify-center">
-                <p className="text-center text-xl">No monsters found.</p>
+                <h2 className="text-center sub-header">No monsters found</h2>
               </div>
             )}
           </section>

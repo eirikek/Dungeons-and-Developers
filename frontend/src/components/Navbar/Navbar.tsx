@@ -106,9 +106,10 @@ const Navbar = () => {
             <Link to={'/project2/home'}>
               <img src={logo} alt="Dungeons & Developers logo" className="w-[3.5vw] xl:block hidden shadow-none" />
             </Link>
-            <section className="flex justify-between 4xl:w-3/5 w-3/5">
+            <section className="flex justify-between 4xl:w-3/5 w-3/5 ">
               <CustomButton text={'Monsters'} linkTo={'/project2/monsters'}
-                            isActive={location.pathname === '/project2/monsters'} />
+                            isActive={location.pathname === '/project2/monsters'}
+                            className="sub-header" />
               <CustomButton text={'Dungeon'} linkTo={'/project2/dungeon'}
                             isActive={location.pathname === '/project2/dungeon'} />
 
@@ -120,7 +121,7 @@ const Navbar = () => {
                 <CustomButton
                   text={'My character'}
                   linkTo={'/project2/mycharacter'}
-                  className={`flex items-center space-x-3`}
+                  className={`flex items-center space-x-3 sub-header`}
                   isActive={location.pathname.startsWith('/project2/mycharacter')}
                 >
                   <FaChevronDown
@@ -167,7 +168,7 @@ const Navbar = () => {
 
       {/* Slide-in Menu for small screens */}
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-customRed text-white transition-transform transform ${
+        className={`fixed top-0 right-0 h-full max-w-full w-64 sm:w-72 bg-customRed text-white transition-transform transform ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         } xl:hidden pl-4 pt-10 z-50`}
       >
@@ -176,17 +177,17 @@ const Navbar = () => {
         </button>
         <ul className="mt-16 space-y-10">
           <li>
-            <CustomButton text={'Monsters'} linkTo={'/project2/monsters'} className="text-xl" noUnderline={true}
+            <CustomButton text={'Monsters'} linkTo={'/project2/monsters'} className="sub-header" noUnderline={true}
                           isActive={location.pathname === '/project2/monsters'} />
           </li>
           <li>
-            <CustomButton text={'Dungeon'} linkTo={'/project2/dungeon'} className="text-xl" noUnderline={true}
+            <CustomButton text={'Dungeon'} linkTo={'/project2/dungeon'} className="sub-header" noUnderline={true}
                           isActive={location.pathname === '/project2/dungeon'} />
           </li>
           <li>
             <div className="space-y-2">
               <div className="flex">
-                <CustomButton text={'My character'} linkTo={'/project2/mycharacter'} className="text-xl"
+                <CustomButton text={'My character'} linkTo={'/project2/mycharacter'} className="sub-header"
                               noUnderline={true}
                               isActive={location.pathname.startsWith('/project2/mycharacter')} />
                 <FaChevronDown
@@ -199,27 +200,27 @@ const Navbar = () => {
 
               <div
                 className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                  isMobileDropdownOpen ? 'max-h-52 opacity-100' : 'max-h-0 opacity-0'
+                  isMobileDropdownOpen ? 'max-h-[60vw] opacity-100' : 'max-h-0 opacity-0'
                 }`}
               >
                 <ul className="space-y-2 pl-4">
                   <li>
-                    <CustomButton text={'Races'} linkTo={'/project2/race'} className="px-4 py-2 text-xl"
+                    <CustomButton text={'Races'} linkTo={'/project2/race'} className="px-4 py-2 sub-header"
                                   noUnderline={true}
                                   isActive={location.pathname === '/project2/race'} />
                   </li>
                   <li>
-                    <CustomButton text={'Classes'} linkTo={'/project2/class'} className="px-4 py-2 text-xl"
+                    <CustomButton text={'Classes'} linkTo={'/project2/class'} className="px-4 py-2 sub-header"
                                   noUnderline={true}
                                   isActive={location.pathname === '/project2/class'} />
                   </li>
                   <li>
                     <CustomButton text={'Ability Scores'} linkTo={'/project2/abilityscore'}
-                                  className="px-4 py-2 text-xl"
+                                  className="px-4 py-2 sub-header"
                                   noUnderline={true} isActive={location.pathname === '/project2/abilityscore'} />
                   </li>
                   <li>
-                    <CustomButton text={'Equipments'} linkTo={'/project2/equipment'} className="px-4 py-2 text-xl"
+                    <CustomButton text={'Equipments'} linkTo={'/project2/equipment'} className="px-4 py-2 sub-header"
                                   noUnderline={true} isActive={location.pathname === '/project2/equipment'} />
                   </li>
                 </ul>
@@ -228,7 +229,7 @@ const Navbar = () => {
           </li>
 
           <li>
-            <CustomButton text={'Log out'} linkTo={'/project2'} className="text-xl flex items-center"
+            <CustomButton text={'Log out'} linkTo={'/project2'} className="sub-header flex items-center"
                           noUnderline={true} isActive={location.pathname === '/project2'}>
               <IoIosLogOut className="ml-2" />
             </CustomButton>
