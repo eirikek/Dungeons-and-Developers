@@ -84,7 +84,7 @@ export default function MonsterPage() {
   return (
     <MainPageLayout>
       <main
-        className="relative flex flex-col items-center justify-center h-screen w-full z-0 before:absolute before:inset-0 before:bg-monsters before:bg-cover before:bg-center before:z-0">
+        className="relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-monsters before:bg-cover before:bg-center before:z-0 xl:h-screen xl:overflow-hidden">
         <div className="absolute inset-0 w-full h-full bg-black opacity-70" />
 
         {/* Fixed section to prevent movement during search */}

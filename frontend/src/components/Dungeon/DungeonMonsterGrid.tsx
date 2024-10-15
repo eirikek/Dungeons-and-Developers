@@ -23,8 +23,15 @@ const DungeonMonsterGrid = () => {
     <div className="relative flex-grow w-full overflow-y-auto">
       {/* Hourglass overlay during loading */}
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center h-1/2">
           <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
+        </div>
+      )}
+
+      {dungeonMonsters.length === 0 && (
+        <div
+          className="absolute inset-0 flex items-center justify-center h-1/2 text-5xl lg:text-4xl xl:text-3xl 2xl:text-2xl">
+          <p>No monsters in dungeon</p>
         </div>
       )}
 

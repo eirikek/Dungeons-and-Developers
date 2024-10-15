@@ -21,7 +21,7 @@ export default function DungeonPage() {
   return (
     <MainPageLayout>
       <main
-        className="relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-dungeon before:bg-cover before:bg-center before:z-0">
+        className="relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-dungeon before:bg-cover before:bg-center before:z-0 xl:h-screen xl:overflow-hidden pb-[3vh]">
         <div className="absolute inset-0 w-full h-full bg-black opacity-70" />
         <div
           className="flex flex-col text-white min-h-[calc(100vh-100px)] min-w-[70%] z-10 mt-[10vh] justify-between items-center">

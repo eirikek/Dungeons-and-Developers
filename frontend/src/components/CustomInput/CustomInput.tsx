@@ -117,16 +117,16 @@ const CustomInput = ({ placeholder, inputName, value, onSave }: InputProps) => {
         )}
 
         <button
-          className=" p-[2px] lg:p-[5px] rounded-lg bg-customRed hover:bg-transparent border-2 border-customRed hover:border-customRed transition-colors duration-200 group"
+          className=" p-[2px] lg:p-[5px] rounded-lg bg-customRed hover:bg-transparent border-2 border-customRed hover:border-customRed transition-colors duration-100 group"
           aria-label={`Edit ${inputName}`}
           onClick={isEditing ? handleSaveClick : handleEditClick}
         >
           {isEditing ? (
             <SaveIcon
-              className="text-white group-hover:text-customRed duration-200 lg:!w-6 lg:!h-6 xl:!w-8 xl:!h-8" />
+              className="text-white group-hover:text-customRed duration-100 lg:!w-6 lg:!h-6 xl:!w-8 xl:!h-8" />
           ) : (
             <ModeEditOutlineIcon
-              className="text-white group-hover:text-customRed duration-200 lg:!w-6 lg:!h-6 xl:!w-8 xl:!h-8" />
+              className="text-white group-hover:text-customRed duration-100 lg:!w-6 lg:!h-6 xl:!w-8 xl:!h-8" />
           )}
         </button>
       </section>

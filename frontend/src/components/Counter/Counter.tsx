@@ -61,10 +61,11 @@ export default function Counter({ value, onChange }: CounterProps) {
         onTouchStart={startIncrement}
         onTouchEnd={clearTimer}
       >
-        <FaChevronUp size={24} />
+        <FaChevronUp size={22} />
       </button>
 
-      <div className="text-2xl text-white py-2 w-12 text-center">{value}</div>
+      <div
+        className="text-5xl md:text-4xl lg:text-3xl xl:text-2xl 2xl:text-lg text-white w-12 text-center">{value}</div>
 
       <button
         className="text-white hover:text-gray-400"
@@ -74,7 +75,7 @@ export default function Counter({ value, onChange }: CounterProps) {
         onTouchStart={startDecrement}
         onTouchEnd={clearTimer}
       >
-        <FaChevronDown size={24} />
+        <FaChevronDown size={22} />
       </button>
     </div>
   );
