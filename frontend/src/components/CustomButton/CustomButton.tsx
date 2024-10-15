@@ -15,7 +15,7 @@ export default function CustomButton({
                                        text,
                                        onClick,
                                        className = '',
-                                       textSize = 'text-3xl',
+                                       textSize = 'text-xl',
                                        linkTo,
                                        noUnderline = false,
                                        isActive = false,

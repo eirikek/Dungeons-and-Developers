@@ -70,16 +70,31 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
       <Button variant="outlined" onClick={handleClickOpen}
               sx={{
                 color: 'white',
-                borderColor: 'white',
+                borderColor: '#DB3232',
+                backgroundColor: '#DB3232',
+                padding: '0.2vw 0.5vw',
+                minWidth: 'unset',
+                minHeight: 'unset',
+                height: 'auto',
+                lineHeight: 'normal',
+                borderRadius: '4px',
+                boxSizing: 'border-box',
                 '&:hover': {
                   borderColor: '#DB3232',
+                  backgroundColor: 'black',
                   color: '#DB3232',
                 },
                 fontFamily: 'MedievalSharp',
-                fontSize: '15px',
+                fontSize: {
+                  xs: '3.5vw',
+                  sm: '2vw',
+                  md: '1.3vw',
+                  lg: '1.2vw',
+                  xl: '1vw',
+                },
                 textTransform: 'none',
-                padding: '3px',
-              }}>
+              }}
+      >
         Review
       </Button>
       <Dialog

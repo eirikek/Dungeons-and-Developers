@@ -93,7 +93,7 @@ const Navbar = () => {
           <div className="flex items-center mr-6 xl:hidden">
             <button
               onClick={toggleMenu}
-              className="text-4xl "
+              className="text-[2rem]"
               aria-expanded={isOpen ? 'true' : 'false'}
               aria-label={isOpen ? 'Close menu' : 'Open menu'}
             >
@@ -104,9 +104,9 @@ const Navbar = () => {
           {/* Menu for large screens */}
           <div className="hidden xl:flex justify-between items-center w-11/12">
             <Link to={'/project2/home'}>
-              <img src={logo} alt="Dungeons & Developers logo" className="w-16 xl:block hidden shadow-none" />
+              <img src={logo} alt="Dungeons & Developers logo" className="w-[3.5vw] xl:block hidden shadow-none" />
             </Link>
-            <section className="flex justify-between 4xl:w-3/5 w-4/5">
+            <section className="flex justify-between 4xl:w-3/5 w-3/5">
               <CustomButton text={'Monsters'} linkTo={'/project2/monsters'}
                             isActive={location.pathname === '/project2/monsters'} />
               <CustomButton text={'Dungeon'} linkTo={'/project2/dungeon'}
@@ -132,7 +132,7 @@ const Navbar = () => {
 
                 {/* Dropdown menu */}
                 <div
-                  className={`absolute left-1/2 transform -translate-x-1/2 w-72 bg-customRed rounded overflow-hidden duration-300 ease-in-out max-h-0 ${
+                  className={`absolute left-1/2 transform -translate-x-1/2 w-[18vw] bg-customRed rounded overflow-hidden duration-300 ease-in-out max-h-0 ${
                     isDropdownHovered ? 'max-h-96 opacity-100' : 'opacity-0'
                   }`}
                 >
@@ -171,7 +171,7 @@ const Navbar = () => {
           isOpen ? 'translate-x-0' : 'translate-x-full'
         } xl:hidden pl-4 pt-10 z-50`}
       >
-        <button onClick={toggleMenu} className="absolute top-4 right-10 text-4xl">
+        <button onClick={toggleMenu} className="absolute top-4 right-10 text-[2rem]">
           <FiX />
         </button>
         <ul className="mt-16 space-y-10">
@@ -229,7 +229,7 @@ const Navbar = () => {
 
           <li>
             <CustomButton text={'Log out'} linkTo={'/project2'} className="text-xl flex items-center"
-                          isActive={location.pathname === '/project2'}>
+                          noUnderline={true} isActive={location.pathname === '/project2'}>
               <IoIosLogOut className="ml-2" />
             </CustomButton>
           </li>
