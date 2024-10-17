@@ -210,12 +210,12 @@ const Navbar = () => {
               >
                 <ul className="space-y-2 pl-4">
                   <li>
-                    <CustomButton text={'Races'} linkTo={'/project2/race'} className="px-4 py-2 sub-header"
+                    <CustomButton text={'Race'} linkTo={'/project2/race'} className="px-4 py-2 sub-header"
                                   noUnderline={true}
                                   isActive={location.pathname === '/project2/race'} />
                   </li>
                   <li>
-                    <CustomButton text={'Classes'} linkTo={'/project2/class'} className="px-4 py-2 sub-header"
+                    <CustomButton text={'Class'} linkTo={'/project2/class'} className="px-4 py-2 sub-header"
                                   noUnderline={true}
                                   isActive={location.pathname === '/project2/class'} />
                   </li>
