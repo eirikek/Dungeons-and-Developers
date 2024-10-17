@@ -47,11 +47,11 @@ const MyCharacterPage = () => {
   return (
     <MainPageLayout>
       <main
-        className="main before:bg-myCharacter mt-[5vh] xl:mt-0">
+        className="main before:bg-myCharacter">
 
         <div className="black-overlay" />
         <div
-          className="wrapper w-full py-10">
+          className="wrapper w-full py-[2vh] mt-[10vh] xl:mt-0">
           <h1 className="header">My Character</h1>
           {/* Race section */}
           <section className="w-full flex flex-col lg:flex-row justify-between mt-[10vh] xl:mt-0">

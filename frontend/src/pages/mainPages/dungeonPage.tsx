@@ -21,10 +21,10 @@ export default function DungeonPage() {
   return (
     <MainPageLayout>
       <main
-        className="main before:bg-dungeon xl:h-screen xl:overflow-hidden pb-[3vh]">
+        className="main before:bg-dungeon xl:h-screen xl:overflow-hidden">
         <div className="black-overlay" />
         <div
-          className="wrapper min-w-[70%] z-10 mt-[10vh]">
+          className="wrapper min-w-[70%] mt-[10vh] pb-[3vh]">
           <CustomInput
             placeholder="Enter dungeon name"
             inputName="Dungeon Name"
