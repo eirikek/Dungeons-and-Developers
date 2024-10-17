@@ -25,11 +25,13 @@ const ClassCard: React.FC<ClassCardProps> = ({ name, hit_die, index, skills }) =
         visible: { opacity: 1, y: 0 },
       }}
     >
-      <img src={classImage} alt={name} className="max-w-44 shadow-none" />
-      <div>
-        <h2 className="sub-header bold">{name}</h2>
-        <p className="text">HP: {hit_die}</p>
-        <p className="text">Skills: {skills.join(', ')}</p>
+      <div className="flex flex-col xl:flex-row gap-5 justify-center items-center">
+        <img src={classImage} alt={name} className="max-w-44 shadow-none" />
+        <div>
+          <h2 className="sub-header bold">{name}</h2>
+          <p className="text">HP: {hit_die}</p>
+          <p className="text">Skills: {skills.join(', ')}</p>
+        </div>
       </div>
       <div className="w-1/5 flex items-center justify-center xl:justify-end">
         <CustomCheckbox scale={2} />

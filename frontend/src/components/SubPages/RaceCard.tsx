@@ -21,12 +21,12 @@ const RaceCard: React.FC<RaceCardProps> = ({ name, description, imageUrl }) => {
         visible: { opacity: 1, y: 0 },
       }}
     >
-      <div>
+      <div className="flex flex-col xl:flex-row gap-5 justify-center items-center">
         <img src={imageUrl} alt={name} className="max-w-36 xl:max-w-28 shadow-none" />
-      </div>
-      <div>
-        <h2 className="sub-header bold">{name}</h2>
-        <p className="text">{description}</p>
+        <div>
+          <h2 className="sub-header bold">{name}</h2>
+          <p className="text">{description}</p>
+        </div>
       </div>
       <div className="w-1/5 flex items-center justify-center xl:justify-end">
         <CustomCheckbox scale={2} />
