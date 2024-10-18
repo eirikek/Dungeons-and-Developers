@@ -1,10 +1,11 @@
 const {MongoClient} = require('mongodb');
+const MONGODBURLPROFILE ='mongodb://admin:adminpassordetditt@it2810-20.idi.ntnu.no:27017/Profile?directConnection=true&authSource=admin&appName=mongosh+2.3.2'
 
 let dbConnection
 
 module.exports = {
   connectToDb: (cb) =>{
-    MongoClient.connect('mongodb://admin:adminpassordetditt@it2810-20.idi.ntnu.no:27017/Profile?directConnection=true&authSource=admin&appName=mongosh+2.3.2')
+    MongoClient.connect(MONGODBURLPROFILE)
       .then((client)=>{
         dbConnection = client.db()
         console.log(client.db)
