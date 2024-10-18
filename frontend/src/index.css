@@ -67,7 +67,7 @@ body {
 }
 
 .text {
-    @apply text-4xl md:text-3xl lg:text-2xl xl:text-xl 2xl:text-lg;
+    @apply text-4xl md:text-3xl lg:text-2xl xl:text-xl 2xl:text-lg leading-7 xl:leading-10;
 }
 
 .main {
