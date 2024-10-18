@@ -15,6 +15,18 @@ export default {
       '6xl': '2560px',
     },
     extend: {
+      fontSize: {
+        'xs': '0.75vw',   // Extra small text, smallest
+        'sm': '0.875vw',  // Small text
+        'md': '1vw',    // Base font size
+        'lg': '1.25vw',   // Large text
+        'xl': '1.5vw',    // Extra large text
+        '2xl': '2vw',     // 2x Extra large text
+        '3xl': '2.5vw',   // 3x Extra large text
+        '4xl': '3.5vw',     // 4x Extra large text
+        '5xl': '5vw',
+        '6xl': '7vw', // 5x Extra large text, biggest
+      },
       colors: {
         customRed: '#DB3232',
         customGray: '#1E1E1E',

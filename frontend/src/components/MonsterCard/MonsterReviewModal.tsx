@@ -70,16 +70,31 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
       <Button variant="outlined" onClick={handleClickOpen}
               sx={{
                 color: 'white',
-                borderColor: 'white',
+                borderColor: '#DB3232',
+                backgroundColor: '#DB3232',
+                padding: '0.2vw 0.5vw',
+                minWidth: 'unset',
+                minHeight: 'unset',
+                height: 'auto',
+                lineHeight: 'normal',
+                borderRadius: '4px',
+                boxSizing: 'border-box',
                 '&:hover': {
                   borderColor: '#DB3232',
+                  backgroundColor: 'black',
                   color: '#DB3232',
                 },
                 fontFamily: 'MedievalSharp',
-                fontSize: '15px',
+                fontSize: {
+                  xs: '3.5vw',
+                  sm: '2vw',
+                  md: '1.3vw',
+                  lg: '1.2vw',
+                  xl: '1vw',
+                },
                 textTransform: 'none',
-                padding: '3px',
-              }}>
+              }}
+      >
         Review
       </Button>
       <Dialog
@@ -99,31 +114,24 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
             handleClose();
           },
           sx: {
-            width: '90vw',
-            height: '80vh',
+            width: { xs: '100vw', sm: '95vw', md: '90vw', lg: '80vw', xl: '70vw' },
+            height: { xs: '100vh', sm: '85vh', md: '85vh', lg: '60vh', xl: '70vh' },
             maxWidth: 'none',
-            padding: 4,
+            padding: { xs: 0, sm: 4 },
             backgroundColor: 'black',
           },
         }}
       >
-        <DialogContent className="flex flex-row items-center bg-black gap-6">
-          <Box sx={{
-            width: '50%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '50px',
-          }}>
-            <img src={image} alt="Image of selected monster" className="w-1/2 rounded" />
-            <h2 className="text-white text-3xl">{name}</h2>
+        <DialogContent className="flex flex-col xl:flex-row xl:items-center bg-black gap-6">
+          <Box className="w-full xl:w-1/2 flex flex-col gap-[50px] xl:items-center">
+            <img src={image} alt="Image of selected monster" className="w-full sm:w-3/4 xl:w-1/2 rounded" />
+            <h2 className="sub-header text-white">Review of {name}</h2>
           </Box>
-          <article className="flex flex-col gap-4 w-1/2">
+          <article className="flex flex-col gap-4 w-full xl:w-1/2">
             <DialogContentText sx={{ color: 'white', fontSize: '24px', fontFamily: 'MedievalSharp' }}>
               Difficulty
             </DialogContentText>
-            <Box sx={{ width: 300 }}>
+            <Box>
               <Slider
                 aria-label="Monster difficulty"
                 defaultValue={50}
@@ -173,7 +181,7 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
               margin="dense"
               id="description"
               name="monster-description"
-              label="Description of monster review"
+              label="Description"
               type="text"
               fullWidth
               variant="standard"
@@ -183,20 +191,26 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               sx={{
+                marginTop: 4,
                 '& .MuiInputBase-input': {
-                  color: 'white',
+                  color: 'black',
                   fontSize: '20px',
                   height: 'auto',
-                  padding: '16px',
+                  padding: '20px',
                   fontFamily: 'MedievalSharp',
+                  backgroundColor: 'white',
+                  borderRadius: '4px',
                 },
                 '& .MuiInputLabel-root': {
                   color: 'white',
                   fontFamily: 'MedievalSharp',
-                  fontSize: '24px',
+                  fontSize: '26px',
+                  transform: 'translate(0, -20px)',
+                  transition: 'transform 0.3s ease, font-size 0.3s ease',
                 },
 
                 '& .MuiInputLabel-root.Mui-focused': {
+                  fontSize: '20px',
                   color: 'white',
                 },
 

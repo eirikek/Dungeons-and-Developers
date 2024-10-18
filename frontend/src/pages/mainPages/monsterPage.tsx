@@ -6,8 +6,8 @@ import mockup, { Monster } from '../../data/mockup';
 import useMonster, { MonsterCardDataProps } from '../../hooks/useMonster.ts';
 import { hourglass } from 'ldrs';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
-import { CiSearch } from 'react-icons/ci';
-import Pagination from '../../components/Pagination/Pagination'; // Import Pagination component
+import Pagination from '../../components/Pagination/Pagination';
+import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 
 const monsterIndexArray: string[] = mockup.results.map((result: Monster) => result.index);
 const monstersPerPage = 8;
@@ -62,7 +62,7 @@ export default function MonsterPage() {
     setLoadedImages((prev) => new Set(prev).add(index));
   }, []);
 
-  const allImagesLoaded = loadedImages.size === monsterData.length;
+  // const allImagesLoaded = loadedImages.size === monsterData.length; Bug: This makes the page just infinitely load if we change page and go back to monster page
 
   const handlePageChange = useCallback((direction: number) => {
     if ((direction === 1 && currentPage < totalPages) || (direction === -1 && currentPage > 1)) {
@@ -76,7 +76,7 @@ export default function MonsterPage() {
     setLoadedImages(new Set());
   }, [debouncedSearchTerm]);
 
-  const isLoading = monsterData.some((monster) => monster.isLoading) || !allImagesLoaded;
+  const isLoading = monsterData.some((monster) => monster.isLoading);
   const isError = monsterData.some((monster) => monster.isError);
 
   const displayedMonsters = monsterData.filter((monster) => monster.data && !monster.isLoading && !monster.isError);
@@ -84,38 +84,31 @@ export default function MonsterPage() {
   return (
     <MainPageLayout>
       <main
-        className="relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-monsters before:bg-cover before:bg-center before:z-0">
-        <div className="absolute inset-0 w-full h-full bg-black opacity-70" />
+        className="main before:bg-monsters xl:h-screen xl:overflow-hidden">
+        <div className="black-overlay" />
 
         <section
-          className="flex flex-col py-10 text-white min-h-[calc(100vh-100px)] min-w-[70%] z-10 mt-24"
+          className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start"
         >
-          <div className="relative w-full flex items-center justify-center mb-10">
-            <div className="absolute left-0">
-              <CiSearch size={25} className="absolute left-3 top-1/2 transform -translate-y-[60%] text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search for a monster..."
-                value={searchTerm}
-                onChange={handleSearchChange}
-                className="pl-12 px-4 py-3 w-72 rounded-lg border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 text-lg"
-              />
-            </div>
-            <h2 className="text-4xl text-center">Monsters</h2>
-          </div>
+          <SearchBar
+            searchTerm={searchTerm}
+            handleSearchChange={handleSearchChange}
+            placeholder="Search for a monster..."
+          />
 
           {isLoading && (
-            <div className="flex flex-col items-center justify-center h-full">
+            <div className="flex flex-col items-center justify-center h-[79.5vh]">
               <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
             </div>
           )}
 
           <section className={isLoading ? 'hidden' : ''} style={{ display: isLoading ? 'none' : 'block' }}>
             {isError ? (
-              <p className="text-white mt-4">An error occurred while loading monsters.</p>
+              <p>An error occurred while loading monsters.</p>
             ) : displayedMonsters.length > 0 ? (
               <>
-                <div className="grid grid-cols-4 gap-8 mt-8">
+                <div
+                  className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 place-items-center gap-y-[1vh] gap-x-[10vw] lg:gap-x-[4vw] min-h-[75vh]">
                   {displayedMonsters.map((monster, idx) => (
                     <MonsterCard key={idx} {...monster.data!} onLoad={() => handleMonsterLoad(idx)} />
                   ))}
@@ -127,9 +120,12 @@ export default function MonsterPage() {
                 />
               </>
             ) : (
-              <p className="text-white mt-4">No monsters found.</p>
+              <div className="flex h-[79.5vh] items-center justify-center">
+                <h2 className="text-center sub-header">No monsters found</h2>
+              </div>
             )}
           </section>
+
         </section>
       </main>
     </MainPageLayout>

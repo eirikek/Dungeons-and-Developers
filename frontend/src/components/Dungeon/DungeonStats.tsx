@@ -8,18 +8,19 @@ type Stats = {
 const DungeonStats = ({ monsters }: Stats) => {
   const totalHp = monsters.reduce((sum, monster) => sum + monster.hp, 0);
 
-  const alignmentCounts = monsters.reduce(
+  {/*const alignmentCounts = monsters.reduce(
     (counts, monster) => {
       const alignment = monster.alignment || 'unknown';
       counts[alignment] = (counts[alignment] || 0) + 1;
       return counts;
     },
     {} as Record<string, number>,
-  );
+  );*/
+  }
 
   return (
-    <aside className="flex gap-20 justify-between">
-      <h2 className="text-2xl">{`Total HP: ${totalHp}`}</h2>
+    <aside className="flex gap-20 justify-between my-2">
+      <h2 className="text-5xl md:text-4xl lg:text-3xl xl:text-2xl 2xl:text-xl">{`Total HP: ${totalHp}`}</h2>
       {/*
       <div className="flex flex-col">
         <h3 className="text-xl">Aligment distribution:</h3>
