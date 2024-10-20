@@ -1,10 +1,10 @@
 import { hourglass } from 'ldrs';
-import { useContext, useState, useEffect } from 'react';
-import { DungeonContext } from '../../context/DungeonContext.tsx';
+import { useState, useEffect } from 'react';
 import MonsterCard from '../MonsterCard/MonsterCard.tsx';
+import { useDungeonContext } from '../../context/useDungeonContext.ts';
 
 const DungeonMonsterGrid = () => {
-  const { dungeonMonsters } = useContext(DungeonContext);
+  const { dungeonMonsters } = useDungeonContext();
   const [loadedMonsters, setLoadedMonsters] = useState<number>(0);
 
   // Register the hourglass if necessary

@@ -7,7 +7,7 @@ import useMonster, { MonsterCardDataProps } from '../../hooks/useMonster.ts';
 import { hourglass } from 'ldrs';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { CiSearch } from 'react-icons/ci';
-import Pagination from '../../components/Pagination/Pagination'; // Import Pagination component
+import Pagination from '../../components/Pagination/Pagination';
 
 const monsterIndexArray: string[] = mockup.results.map((result: Monster) => result.index);
 const monstersPerPage = 8;
@@ -26,7 +26,7 @@ export default function MonsterPage() {
     debouncedSearchTerm,
     currentPage,
     monstersPerPage,
-    false,
+    false
   ) as UseQueryResult<MonsterCardDataProps, Error>[];
 
   const filteredMonsters = useMemo(
@@ -34,9 +34,9 @@ export default function MonsterPage() {
       debouncedSearchTerm === ''
         ? monsterIndexArray
         : monsterIndexArray.filter((monsterIndex) =>
-          monsterIndex.includes(debouncedSearchTerm.toLowerCase().replace(/\s+/g, '-')),
-        ),
-    [debouncedSearchTerm],
+            monsterIndex.includes(debouncedSearchTerm.toLowerCase().replace(/\s+/g, '-'))
+          ),
+    [debouncedSearchTerm]
   );
 
   // Apply pagination to filtered results
@@ -49,7 +49,7 @@ export default function MonsterPage() {
       debounce((value: string) => {
         setDebouncedSearchTerm(value);
       }, 300),
-    [],
+    []
   );
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,12 +64,15 @@ export default function MonsterPage() {
 
   const allImagesLoaded = loadedImages.size === monsterData.length;
 
-  const handlePageChange = useCallback((direction: number) => {
-    if ((direction === 1 && currentPage < totalPages) || (direction === -1 && currentPage > 1)) {
-      setCurrentPage(currentPage + direction);
-      setLoadedImages(new Set());
-    }
-  }, [currentPage, totalPages]);
+  const handlePageChange = useCallback(
+    (direction: number) => {
+      if ((direction === 1 && currentPage < totalPages) || (direction === -1 && currentPage > 1)) {
+        setCurrentPage(currentPage + direction);
+        setLoadedImages(new Set());
+      }
+    },
+    [currentPage, totalPages]
+  );
 
   useEffect(() => {
     setCurrentPage(1);
@@ -83,13 +86,10 @@ export default function MonsterPage() {
 
   return (
     <MainPageLayout>
-      <main
-        className="relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-monsters before:bg-cover before:bg-center before:z-0">
+      <main className="relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-monsters before:bg-cover before:bg-center before:z-0">
         <div className="absolute inset-0 w-full h-full bg-black opacity-70" />
 
-        <section
-          className="flex flex-col py-10 text-white min-h-[calc(100vh-100px)] min-w-[70%] z-10 mt-24"
-        >
+        <section className="flex flex-col py-10 text-white min-h-[calc(100vh-100px)] min-w-[70%] z-10 mt-24">
           <div className="relative w-full flex items-center justify-center mb-10">
             <div className="absolute left-0">
               <CiSearch size={25} className="absolute left-3 top-1/2 transform -translate-y-[60%] text-gray-400" />
@@ -120,11 +120,7 @@ export default function MonsterPage() {
                     <MonsterCard key={idx} {...monster.data!} onLoad={() => handleMonsterLoad(idx)} />
                   ))}
                 </div>
-                <Pagination
-                  currentPage={currentPage}
-                  onPageChange={handlePageChange}
-                  totalPages={totalPages}
-                />
+                <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
               </>
             ) : (
               <p className="text-white mt-4">No monsters found.</p>

@@ -1,9 +1,9 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import NoMonsterImageFound from '../../assets/images/no_monster_image_found.jpg';
-import { DungeonContext } from '../../context/DungeonContext.tsx';
 import { MonsterCardDataProps } from '../../hooks/useMonster.ts';
 import DungeonButton from './DungeonButton.tsx';
 import MonsterReviewModal from './MonsterReviewModal.tsx';
+import { useDungeonContext } from '../../context/useDungeonContext.ts';
 
 export interface MonsterCardProps extends MonsterCardDataProps {
   onLoad: () => void;
@@ -13,7 +13,7 @@ const MonsterCard = ({ index, name, type, hp, alignment, size, img, onLoad }: Mo
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  const { toggleDungeon, isInDungeon } = useContext(DungeonContext);
+  const { toggleDungeon, isInDungeon } = useDungeonContext();
 
   useEffect(() => {
     if (index && !img) {
@@ -40,9 +40,7 @@ const MonsterCard = ({ index, name, type, hp, alignment, size, img, onLoad }: Mo
   };
 
   return (
-    <div
-      className="flex flex-col items-center justify-between bg-black shadow-black shadow-2xl pb-5 w-72 h-[340px] rounded-lg overflow-hidden"
-    >
+    <div className="flex flex-col items-center justify-between bg-black shadow-black shadow-2xl pb-5 w-72 h-[340px] rounded-lg overflow-hidden">
       <div className="relative w-full h-52 overflow-hidden">
         {!imageLoaded && <div>Loading image...</div>}
         {imageError ? (
@@ -67,8 +65,6 @@ const MonsterCard = ({ index, name, type, hp, alignment, size, img, onLoad }: Mo
           </div>
         )}
         {!imageLoaded && <div className="flex justify-center w-full py-24">Loading image...</div>}
-
-
       </div>
       <div className="flex flex-col gap-1 w-full p-3">
         <h2 className="text-white text-xl bold">{name}</h2>
@@ -76,8 +72,9 @@ const MonsterCard = ({ index, name, type, hp, alignment, size, img, onLoad }: Mo
         <p className="text-md">HP: {hp}</p>
         <div className="flex w-full justify-between">
           <MonsterReviewModal name={name} monsterIndex={index} image={monsterImageURL} />
-          <button onClick={handleToggleDungeon}
-                  className="hover:text-customRed transition-all duration-200">{isInDungeon(index) ? 'Remove from dungeon' : 'Add to dungeon'}</button>
+          <button onClick={handleToggleDungeon} className="hover:text-customRed transition-all duration-200">
+            {isInDungeon(index) ? 'Remove from dungeon' : 'Add to dungeon'}
+          </button>
         </div>
       </div>
     </div>
