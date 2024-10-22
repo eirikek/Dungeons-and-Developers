@@ -1,16 +1,8 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  Slider,
-  TextField,
-} from '@mui/material';
-import React, { useState } from 'react';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Slider, TextField } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
 import { GiDaemonSkull, GiGoblinHead, GiRoundShield, GiSpikedDragonHead } from 'react-icons/gi';
 import { LuSwords } from 'react-icons/lu';
+import { toast } from 'react-toastify';
 
 type ReviewType = {
   monsterIndex: string;
@@ -18,6 +10,11 @@ type ReviewType = {
   image: string;
 };
 
+type Review = {
+  id: number;
+  difficulty: number;
+  description: string;
+};
 const marks = [
   {
     value: 10,
@@ -47,12 +44,71 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
   const [difficulty, setDifficulty] = useState<number>(0);
   const [description, setDescription] = useState('');
 
+  const toastId = useRef<null | string>(null);
+  const [reviewCount, setReviewCount] = useState(0);
+  const [previousReview, setPreviousReview] = useState<Review | null>(null);
+
+  useEffect(() => {
+    const savedReviews = localStorage.getItem(`Review: ${monsterIndex}`);
+    if (savedReviews) {
+      const parsedReview = JSON.parse(savedReviews) as Review[];
+      setReviewCount(parsedReview[parsedReview.length - 1]?.id + 1 || 0);
+    }
+  }, [monsterIndex]);
+
+  const notify = (monsterName: string, onCloseCallback: () => void) => {
+    if (!toast.isActive(toastId.current as string)) {
+      toastId.current = toast.info(
+        <>
+          <p>{monsterName}</p>
+          <button
+            onClick={() => handleUndo()}
+            className="bg-blue-400 text-white px-3 py-1 rounded-md hover:bg-blue-800 transition duration-200 ease-in-out mt-8"
+          >
+            Undo
+          </button>
+        </>,
+        {
+          position: 'top-center',
+          autoClose: 3000,
+          onClose: onCloseCallback,
+        }
+      ) as string;
+    }
+  };
+
+  const handleUndo = () => {
+    // claude.ai :How to store previous reviews in array and undo the newest one
+    if (previousReview) {
+      const savedReviews = localStorage.getItem(`Review: ${monsterIndex}`);
+      if (savedReviews) {
+        const parsedReviews = JSON.parse(savedReviews) as Review[];
+
+        parsedReviews.pop();
+        localStorage.setItem(`Review: ${monsterIndex}`, JSON.stringify(parsedReviews));
+
+        setDifficulty(previousReview.difficulty);
+        setDescription(previousReview.description);
+        setReviewCount((prev) => prev - 1);
+        setPreviousReview(null);
+
+        toast.success('Previous review restored!', {
+          position: 'top-center',
+          autoClose: 2000,
+        });
+      }
+    }
+  };
+
   const handleClickOpen = () => {
-    const savedReview = localStorage.getItem(`Review: ${monsterIndex}`);
-    if (savedReview) {
-      const parsedReview = JSON.parse(savedReview);
-      setDifficulty(parsedReview.difficulty);
-      setDescription(parsedReview.description);
+    const savedReviews = localStorage.getItem(`Review: ${monsterIndex}`);
+    if (savedReviews) {
+      const parsedReviews = JSON.parse(savedReviews) as Review[];
+      const latestReview = parsedReviews[parsedReviews.length - 1];
+      if (latestReview) {
+        setDifficulty(latestReview.difficulty);
+        setDescription(latestReview.description);
+      }
     }
     setIsOpen(true);
   };
@@ -65,21 +121,48 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
     return `${value}`;
   };
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const savedReviews = localStorage.getItem(`Review: ${monsterIndex}`);
+    const newReview: Review = {
+      id: reviewCount,
+      difficulty,
+      description,
+    };
+
+    let reviews: Review[] = [];
+
+    if (savedReviews) {
+      reviews = JSON.parse(savedReviews);
+      setPreviousReview(reviews[reviews.length - 1]);
+      if (reviews.length >= 2) {
+        reviews = reviews.slice(-1);
+      }
+    }
+    reviews.push(newReview);
+    localStorage.setItem(`Review: ${monsterIndex}`, JSON.stringify(reviews));
+    setReviewCount((prev) => prev + 1);
+    notify(name, handleClose);
+  };
+
   return (
     <>
-      <Button variant="outlined" onClick={handleClickOpen}
-              sx={{
-                color: 'white',
-                borderColor: 'white',
-                '&:hover': {
-                  borderColor: '#DB3232',
-                  color: '#DB3232',
-                },
-                fontFamily: 'MedievalSharp',
-                fontSize: '15px',
-                textTransform: 'none',
-                padding: '3px',
-              }}>
+      <Button
+        variant="outlined"
+        onClick={handleClickOpen}
+        sx={{
+          color: 'white',
+          borderColor: 'white',
+          '&:hover': {
+            borderColor: '#DB3232',
+            color: '#DB3232',
+          },
+          fontFamily: 'MedievalSharp',
+          fontSize: '15px',
+          textTransform: 'none',
+          padding: '3px',
+        }}
+      >
         Review
       </Button>
       <Dialog
@@ -87,17 +170,7 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
         onClose={handleClose}
         PaperProps={{
           component: 'form',
-          onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-            localStorage.setItem(
-              name,
-              JSON.stringify({
-                difficulty: difficulty,
-                description: description,
-              }),
-            );
-            handleClose();
-          },
+          onSubmit: handleSubmit,
           sx: {
             width: '90vw',
             height: '80vh',
@@ -108,14 +181,16 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
         }}
       >
         <DialogContent className="flex flex-row items-center bg-black gap-6">
-          <Box sx={{
-            width: '50%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '50px',
-          }}>
+          <Box
+            sx={{
+              width: '50%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '50px',
+            }}
+          >
             <img src={image} alt="Image of selected monster" className="w-1/2 rounded" />
             <h2 className="text-white text-3xl">{name}</h2>
           </Box>
@@ -209,35 +284,42 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
                 '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
                   borderBottomColor: '#DB3232',
                 },
-
               }}
             ></TextField>
           </article>
         </DialogContent>
 
         <DialogActions className="bg-black">
-          <Button onClick={handleClose} aria-label="Cancel-button" sx={{
-            color: 'white',
-            borderColor: 'white',
-            '&:hover': {
-              borderColor: '#DB3232',
-              color: '#DB3232',
-            },
-            fontFamily: 'MedievalSharp',
-            fontSize: '1.5rem',
-          }}>
+          <Button
+            onClick={handleClose}
+            aria-label="Cancel-button"
+            sx={{
+              color: 'white',
+              borderColor: 'white',
+              '&:hover': {
+                borderColor: '#DB3232',
+                color: '#DB3232',
+              },
+              fontFamily: 'MedievalSharp',
+              fontSize: '1.5rem',
+            }}
+          >
             Cancel
           </Button>
-          <Button type="submit" aria-label="Save-button" sx={{
-            color: 'white',
-            borderColor: 'white',
-            '&:hover': {
-              borderColor: '#DB3232',
-              color: '#DB3232',
-            },
-            fontFamily: 'MedievalSharp',
-            fontSize: '1.5rem',
-          }}>
+          <Button
+            type="submit"
+            aria-label="Save-button"
+            sx={{
+              color: 'white',
+              borderColor: 'white',
+              '&:hover': {
+                borderColor: '#DB3232',
+                color: '#DB3232',
+              },
+              fontFamily: 'MedievalSharp',
+              fontSize: '1.5rem',
+            }}
+          >
             SUBMIT
           </Button>
         </DialogActions>
