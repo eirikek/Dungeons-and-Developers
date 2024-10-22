@@ -7,6 +7,7 @@ import useRaces from '../../hooks/useRaces.ts';
 import useClasses from '../../hooks/useClasses.ts';
 import useAbilityScores from '../../hooks/useAbilityScores.ts';
 import Counter from '../../components/Counter/Counter.tsx';
+import TutorialModal from '../../components/MyCharacter/TutorialModal.tsx';
 
 const MyCharacterPage = () => {
   const raceNames = ['dragonborn', 'dwarf', 'elf', 'gnome', 'half-elf', 'half-orc', 'halfling', 'human', 'tiefling'];
@@ -51,10 +52,11 @@ const MyCharacterPage = () => {
 
         <div className="black-overlay" />
         <div
-          className="wrapper w-full py-[2vh] mt-[10vh] xl:mt-0">
+          className="wrapper w-full py-[15vh] gap-32">
           <h1 className="header">My Character</h1>
+          <TutorialModal />
           {/* Race section */}
-          <section className="w-full flex flex-col lg:flex-row justify-between mt-[10vh] xl:mt-0">
+          <section className="w-full flex flex-col lg:flex-row justify-between">
             <article className="w-full xl:w-1/2 flex flex-col items-center">
               <h2 className="header">Race:</h2>
               <div className="flex items-center">
@@ -122,36 +124,35 @@ const MyCharacterPage = () => {
           </section>
 
           {/* Ability scores section */}
-          <section className="w-full flex flex-col xl:flex-row justify-around mt-[10vh] xl:mt-[2vh]">
-            <article className="flex flex-col items-center w-full xl:w-1/2">
-              <h2 className="header mb-[2vh]">Ability Scores:</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-[2vh] gap-x-[30vw] xl:gap-x-[10vw]">
-                {abilityData.map((ability, index) => (
-                  <div key={index} className="flex items-center">
-                    <label
-                      className="sub-header w-32 sm:mr-16 md:mr-6 xl:mr-4 3xl:mr-12">{ability.full_name}:</label>
-                    <Counter
-                      value={abilityValue[index]}
-                      onChange={(newValue) => handleAbilityChange(index, newValue)}
-                    />
-                  </div>
-                ))}
-              </div>
-            </article>
+          <article className="flex flex-col items-center w-full">
+            <h2 className="header mb-[8vh]">Ability Scores:</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[12vh] gap-x-[25vw]">
+              {abilityData.map((ability, index) => (
+                <div key={index} className="flex items-center">
+                  <label
+                    className="sub-header w-32 mr-[85px]">{ability.full_name}:</label>
+                  <Counter
+                    scale={1.5}
+                    value={abilityValue[index]}
+                    onChange={(newValue) => handleAbilityChange(index, newValue)}
+                  />
+                </div>
+              ))}
+            </div>
+          </article>
 
-            {/* Equipemnt section */}
-            <article className="flex flex-col items-center w-full xl:w-1/2 mt-[10vh] xl:mt-0">
-              <h2 className="header mb-[2vh]">Equipments:</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-[3vh] gap-x-[50vw] xl:gap-y-[3vh] xl:gap-x-[15vw]">
-                {['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8', 'Item 9', 'Item 10'].map((item, index) => (
-                  <li key={index}
-                      className="list-disc list-inside sub-header">
-                    {item}
-                  </li>
-                ))}
-              </div>
-            </article>
-          </section>
+          {/* Equipemnt section */}
+          <article className="flex flex-col items-center w-full mt-10">
+            <h2 className="header mb-[5vh]">Equipments:</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[5vh] gap-x-[40vw] xl:gap-y-[10vh]">
+              {['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8', 'Item 9', 'Item 10'].map((item, index) => (
+                <li key={index}
+                    className="list-disc list-inside sub-header">
+                  {item}
+                </li>
+              ))}
+            </div>
+          </article>
         </div>
       </main>
     </MainPageLayout>
