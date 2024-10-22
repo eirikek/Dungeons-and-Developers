@@ -1,10 +1,11 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "app.ts",
+  "main": "src/app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.ts"
+    "start": "nodemon",
+    "build": "tsc"
   },
   "type": "module",
   "keywords": [],
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@swc/core": "^1.7.39",
     "@swc/helpers": "^0.5.13",
+    "@types/node": "^22.7.8",
     "nodemon": "^3.1.7",
     "regenerator-runtime": "^0.14.1",
     "ts-node": "^10.9.2",

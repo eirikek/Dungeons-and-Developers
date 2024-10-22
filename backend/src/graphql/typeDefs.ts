@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server';
 
-module.exports = gql`
+export default  gql`
   type Player{
     username: String!
     userID: Int!

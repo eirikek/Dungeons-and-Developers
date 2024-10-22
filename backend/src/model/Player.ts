@@ -9,4 +9,4 @@ const playerSchema = new Schema({
   abilityScores: []
 });
 
-module.exports = model("User", playerSchema);
+export default model("User", playerSchema);
