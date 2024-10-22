@@ -1,4 +1,4 @@
-const Player = require('../model/Player.cjs');
+const Player = require('../model/Player.js');
 
 module.exports = {
   Query: {

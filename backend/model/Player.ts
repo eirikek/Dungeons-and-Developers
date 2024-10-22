@@ -1,4 +1,4 @@
-const {model, Schema} = require("mongoose");
+import { model, Schema } from 'mongoose';
 
 const playerSchema = new Schema({
   username: String,
