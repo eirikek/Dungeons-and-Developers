@@ -9,6 +9,21 @@ export default  gql`
     race: String!
     abilityScores: [Int!]!
    }
+   
+   input RegisterInput{
+      username: String!
+   }
+   
+   input LoginInput{
+      username: String!
+      }
+   type Query {
+      user(id: ID!): User    
+      }
+   type Mutation {
+      registerUser(registerInput: RegisterInput): User
+      loginUser(loginInput: LoginInput): User
+      }
     
    input PlayerInput {
      username: String!
