@@ -128,7 +128,7 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
             <h2 className="sub-header text-white">Review of {name}</h2>
           </Box>
           <article className="flex flex-col gap-4 w-full xl:w-1/2">
-            <DialogContentText sx={{ color: 'white', fontSize: '24px', fontFamily: 'MedievalSharp' }}>
+            <DialogContentText sx={{ color: 'white', fontSize: '1.5rem', fontFamily: 'MedievalSharp' }}>
               Difficulty
             </DialogContentText>
             <Box>
@@ -143,7 +143,7 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
                 min={0}
                 max={100}
                 value={difficulty}
-                onChange={(_, value) => setDifficulty(value as number)} // Use the second argument directly for value
+                onChange={(_, value) => setDifficulty(value as number)}
                 sx={{
                   '& .MuiSlider-markLabel': {
                     color: 'white',
@@ -194,7 +194,7 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
                 marginTop: 4,
                 '& .MuiInputBase-input': {
                   color: 'black',
-                  fontSize: '20px',
+                  fontSize: '1.25rem',
                   height: 'auto',
                   padding: '20px',
                   fontFamily: 'MedievalSharp',
@@ -204,13 +204,13 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
                 '& .MuiInputLabel-root': {
                   color: 'white',
                   fontFamily: 'MedievalSharp',
-                  fontSize: '26px',
+                  fontSize: '1.5rem',
                   transform: 'translate(0, -20px)',
                   transition: 'transform 0.3s ease, font-size 0.3s ease',
                 },
 
                 '& .MuiInputLabel-root.Mui-focused': {
-                  fontSize: '20px',
+                  fontSize: '1.25rem',
                   color: 'white',
                 },
 

@@ -22,8 +22,8 @@ const Review = ({ review }: ReviewProps) => {
   const { user, difficulty, description } = review;
 
   return (
-    <Box className="bg-gray-800 p-4 rounded mb-4">
-      <h4 className="text-white">{user}</h4>
+    <Box className="bg-[#180000] p-4 rounded mb-4 gap-2 flex flex-col">
+      <h4 className="sub-header">{user}</h4>
       <Slider
         value={difficulty}
         marks={marks}
@@ -43,7 +43,8 @@ const Review = ({ review }: ReviewProps) => {
           },
         }}
       />
-      <p className="text-white">{description}</p>
+      <p className="text">Difficulty: {difficulty}</p>
+      <p className="text">{description}</p>
     </Box>
   );
 };

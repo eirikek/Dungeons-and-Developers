@@ -19,10 +19,14 @@ const MonsterCard = ({ index, name, type, hp, alignment, size, img, onLoad }: Mo
 
   //Dummy reviews
   const reviews = [
-    { user: 'User1', difficulty: 50, description: 'Very challenging!' },
+    { user: 'Eirik', difficulty: 50, description: 'Very challenging!' },
     { user: 'User2', difficulty: 30, description: 'Not so hard, but cool monster' },
     { user: 'User3', difficulty: 90, description: 'Extremly hard, do not use' },
     { user: 'User4', difficulty: 10, description: 'Very easy!' },
+    { user: 'User5', difficulty: 50, description: 'Very challenging!' },
+    { user: 'User6', difficulty: 60, description: 'Blah blah' },
+    { user: 'User7', difficulty: 100, description: 'Extremly hard, do not use' },
+    { user: 'User8', difficulty: 15, description: 'Very easy!' },
   ];
 
   useEffect(() => {
