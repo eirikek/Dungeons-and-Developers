@@ -66,7 +66,7 @@ const MonsterDetailsModal = ({ name, hp, type, image, reviews, onClose }: Monste
             <h2 className="header">Reviews</h2>
           </div>
 
-          <div className="overflow-y-auto flex-1 flex flex-col gap-5">
+          <div className="overflow-y-auto flex-1 flex flex-col gap-5 p-1">
             {reviews.length > 0 ? (
               reviews.map((review, index) => (
                 <>

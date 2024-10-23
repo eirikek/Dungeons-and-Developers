@@ -22,7 +22,7 @@ const Review = ({ review }: ReviewProps) => {
   const { user, difficulty, description } = review;
 
   return (
-    <Box className="bg-[#1c0505] border-white p-4 rounded mb-4 gap-6 flex flex-col">
+    <Box className="border-[1px] border-white p-4 rounded mb-4 gap-6 flex flex-col">
       <h4 className="sub-header">{user}</h4>
       <Slider
         value={difficulty}
