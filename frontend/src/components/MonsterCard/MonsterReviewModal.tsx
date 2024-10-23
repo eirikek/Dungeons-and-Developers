@@ -189,7 +189,7 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
               minRows={4}
               maxRows={12}
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => setDescription(e.target.value.slice(0, 300))} // Limit to 300 characters
               sx={{
                 marginTop: 4,
                 '& .MuiInputBase-input': {

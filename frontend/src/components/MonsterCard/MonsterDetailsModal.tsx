@@ -52,17 +52,19 @@ const MonsterDetailsModal = ({ name, hp, type, image, reviews, onClose }: Monste
         <Box className="w-full xl:w-1/2 flex flex-col xl:items-center justify-center gap-2 flex-shrink-0">
           <img src={image} alt={name} className="w-full sm:w-3/4 xl:w-1/2 rounded" />
           <h2 className="header">{name}</h2>
-          <p className="text">Type: {type}</p>
-          <p className="text">HP: {hp}</p>
-          {/* Display the Average Difficulty */}
-          <p className="text">Average Difficulty: {averageDifficulty}</p>
+
+          <div className="flex flex-col gap-2">
+            <p className="text">Type: {type}</p>
+            <p className="text">HP: {hp}</p>
+            <p className="text">Average Difficulty: {averageDifficulty}</p>
+          </div>
         </Box>
 
         {/* Scrollable Reviews Section */}
         <Box className="w-full xl:w-1/2 rounded h-full flex flex-col gap-3">
           {/* Sticky header */}
           <div className="sticky top-0 z-10 bg-black py-4">
-            <h3 className="sub-header">Reviews</h3>
+            <h2 className="header">Reviews</h2>
           </div>
 
           {/* Scrollable content for reviews */}

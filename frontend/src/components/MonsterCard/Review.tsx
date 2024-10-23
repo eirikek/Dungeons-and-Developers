@@ -22,7 +22,7 @@ const Review = ({ review }: ReviewProps) => {
   const { user, difficulty, description } = review;
 
   return (
-    <Box className="bg-[#180000] p-4 rounded mb-4 gap-2 flex flex-col">
+    <Box className="bg-[#1c0505] border-white p-4 rounded mb-4 gap-6 flex flex-col">
       <h4 className="sub-header">{user}</h4>
       <Slider
         value={difficulty}
@@ -31,15 +31,28 @@ const Review = ({ review }: ReviewProps) => {
         sx={{
           '& .MuiSlider-markLabel': {
             color: 'white',
+            fontFamily: 'MedievalSharp',
+            fontSize: '1.5rem',
           },
+
+          '& .MuiSlider-mark': {
+            color: 'white',
+            width: 5,
+            height: 5,
+            borderRadius: '50%',
+            transform: 'translateX(-50%) translateY(-50%)',
+          },
+
           '& .MuiSlider-thumb': {
             display: 'none',
           },
           '& .MuiSlider-track': {
             color: '#DB3232',
+            height: 10,
           },
           '& .MuiSlider-rail': {
             color: '#DB3232',
+            height: 10,
           },
         }}
       />
