@@ -68,7 +68,7 @@ const MonsterCard = ({ index, name, type, hp, alignment, size, img, onLoad }: Mo
       <div
         onClick={handleCardClick}
         className="flex flex-col items-center justify-between bg-black pb-5 w-[75vw] md:w-[42vw] xl:w-[22vw] 2xl:w-[18vw] h-[40vh] sm:h-[45vh] md:h-[35vh] rounded-lg overflow-hidden
-           transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer"
+           transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-black cursor-pointer"
       >
         <div className="relative w-full h-[30vh] overflow-hidden">
           {!imageLoaded && <div>Loading image...</div>}

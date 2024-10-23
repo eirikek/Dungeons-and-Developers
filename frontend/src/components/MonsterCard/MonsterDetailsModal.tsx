@@ -45,7 +45,6 @@ const MonsterDetailsModal = ({ name, hp, type, image, reviews, onClose }: Monste
         },
       }}
     >
-      {/* Modal Content */}
       <DialogContent className="flex flex-col xl:flex-row bg-black gap-6 h-full">
 
         {/* Monster Info Section */}
@@ -67,7 +66,6 @@ const MonsterDetailsModal = ({ name, hp, type, image, reviews, onClose }: Monste
             <h2 className="header">Reviews</h2>
           </div>
 
-          {/* Scrollable content for reviews */}
           <div className="overflow-y-auto flex-1 flex flex-col gap-5">
             {reviews.length > 0 ? (
               reviews.map((review, index) => (

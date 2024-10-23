@@ -23,7 +23,7 @@ export default {
         'xl': '1.5vw',    // Extra large text
         '2xl': '2vw',     // 2x Extra large text
         '3xl': '2.5vw',   // 3x Extra large text
-        '4xl': '3.5vw',     // 4x Extra large text
+        '4xl': '3.75vw',     // 4x Extra large text
         '5xl': '5vw',
         '6xl': '7vw', // 5x Extra large text, biggest
       },
