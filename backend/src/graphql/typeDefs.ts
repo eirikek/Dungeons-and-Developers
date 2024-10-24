@@ -73,9 +73,14 @@ export default gql`
     type Query {
         player(ID: ID!): Player!
         getPlayer(amount: Int): [Player]
-        monsters(searchTerm: String, offset: Int, limit: Int): [Monster!]!
+        monsters(searchTerm: String, offset: Int, limit: Int): MonsterResult!
         monster(id: String!): Monster!
         user(id: ID!): User!
+    }
+
+    type MonsterResult {
+        monsters: [Monster!]!
+        totalMonsters: Int!
     }
 
     type Mutation {

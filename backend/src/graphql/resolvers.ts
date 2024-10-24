@@ -14,11 +14,18 @@ export default {
       const query = searchTerm
         ? { name: { $regex: searchTerm, $options: 'i' } }
         : {};
-      return Monster.find(query)
+
+      const totalMonsters = await Monster.countDocuments(query);
+
+      const monsters = await Monster.find(query)
         .skip(offset)
         .limit(limit);
-    },
 
+      return {
+        monsters,
+        totalMonsters,
+      };
+    },
 
     async monster(_, { id }) {
       return Monster.findOne({ index: id }); // Hent et spesifikt monster basert på ID

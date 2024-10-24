@@ -19,7 +19,7 @@ export default function MonsterPage() {
   hourglass.register();
 
   // Får ut `monsters`, `loading`, og `error` fra hooken.
-  const { monsters, loading, error } = useMonster(
+  const { monsters, totalMonsters, loading, error } = useMonster(
     debouncedSearchTerm,
     currentPage,
     monstersPerPage,
@@ -40,15 +40,19 @@ export default function MonsterPage() {
     setLoadedImages((prev) => new Set(prev).add(index));
   }, []);
 
-  // Paginering av monstre
+  const totalPages = Math.min(Math.ceil(totalMonsters / monstersPerPage), 12);
+
   const handlePageChange = useCallback((direction: number) => {
-    setCurrentPage((prev) => prev + direction);
-  }, []);
-
-  const totalMonsters = monsters.length;
-  const totalPages = Math.ceil(totalMonsters / monstersPerPage);
-
-  console.log('Monsters:', monsters);
+    setCurrentPage((prev) => {
+      if (direction === 1 && prev < totalPages) {
+        return prev + direction;
+      }
+      if (direction === -1 && prev > 1) {
+        return prev + direction;
+      }
+      return prev;
+    });
+  }, [totalPages]);
 
   return (
     <MainPageLayout>
