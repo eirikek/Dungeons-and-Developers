@@ -40,7 +40,7 @@ export default function MonsterPage() {
     setLoadedImages((prev) => new Set(prev).add(index));
   }, []);
 
-  const totalPages = Math.min(Math.ceil(totalMonsters / monstersPerPage), 12);
+  const totalPages = Math.min(Math.ceil(totalMonsters / monstersPerPage), 10);
 
   const handlePageChange = useCallback((direction: number) => {
     setCurrentPage((prev) => {

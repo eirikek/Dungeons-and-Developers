@@ -18,21 +18,23 @@ async function fetchMonsters() {
     for (const monster of monsters) {
       const monsterDetails = await axios.get(`${monstersURL}/${monster.index}`);
 
-      // Oppdatering av riktig base-URL for bilder
-      const imageUrl = monsterDetails.data.image ? `${imageBaseURL}/${monsterDetails.data.index}.png` : undefined;
+      if (monsterDetails.data.image) {
+        // Oppdatering av riktig base-URL for bilder
+        const imageUrl = monsterDetails.data.image ? `${imageBaseURL}/${monsterDetails.data.index}.png` : undefined;
 
-      const monsterDocument = new Monster({
-        index: monsterDetails.data.index,
-        name: monsterDetails.data.name,
-        size: monsterDetails.data.size,
-        type: monsterDetails.data.type,
-        alignment: monsterDetails.data.alignment,
-        hit_points: monsterDetails.data.hit_points,
-        image: imageUrl, // Lagre hele bilde-URLen i stedet for relativ sti
-      });
+        const monsterDocument = new Monster({
+          index: monsterDetails.data.index,
+          name: monsterDetails.data.name,
+          size: monsterDetails.data.size,
+          type: monsterDetails.data.type,
+          alignment: monsterDetails.data.alignment,
+          hit_points: monsterDetails.data.hit_points,
+          image: imageUrl, // Lagre hele bilde-URLen i stedet for relativ sti
+        });
 
-      await monsterDocument.save();
-      console.log(`Monster saved: ${monsterDetails.data.name}`);
+        await monsterDocument.save();
+        console.log(`Monster saved: ${monsterDetails.data.name}`);
+      }
     }
 
     console.log('All monsters saved to MongoDB!');
