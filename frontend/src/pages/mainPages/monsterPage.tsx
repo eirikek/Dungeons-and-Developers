@@ -13,7 +13,6 @@ export default function MonsterPage() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
 
   // Used for loading screen
   hourglass.register();
@@ -35,10 +34,6 @@ export default function MonsterPage() {
     setSearchTerm(value);
     debouncedSearch(value);
   };
-
-  const handleMonsterLoad = useCallback((index: number) => {
-    setLoadedImages((prev) => new Set(prev).add(index));
-  }, []);
 
   const totalPages = Math.min(Math.ceil(totalMonsters / monstersPerPage), 10);
 
@@ -79,7 +74,7 @@ export default function MonsterPage() {
                   <div
                     className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 place-items-center gap-y-[10vh] lg:gap-y-[1vh] gap-x-[10vw] lg:gap-x-[4vw] min-h-[75vh]">
                     {monsters.map((monster, idx) => (
-                      <MonsterCard key={idx} {...monster} onLoad={() => handleMonsterLoad(idx)} />
+                      <MonsterCard key={idx} {...monster} />
                     ))}
                   </div>
                   <Pagination
