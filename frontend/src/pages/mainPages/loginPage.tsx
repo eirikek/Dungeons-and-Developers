@@ -1,6 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
+import { AuthContext } from '../../context/authContext.tsx';
+import { useForm } from '../../hooks/useForm';
+import {useMutation} from '@apollo/react-hooks';
+import {gql} from 'graphql-tag'
+import {useNavigate} from 'react-router-dom'
+
+//Register & Login
+const REGISTER = gql`
+    mutation Mutation($registerInput: RegisterInput){
+      registerUser(input: $registerInput){
+          username
+          token
+      }
+    }
+  `
 
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',
@@ -31,6 +46,37 @@ export default function LoginPage() {
     return () => clearInterval(interval);
   }, []);
 
+  //Login & Register
+  const context = useContext(AuthContext);
+  const navigate = useNavigate();
+  const {onChange, onClick, values} = useForm(registerUserCallback, {
+    username: ""
+  });
+
+  const [registerUser] = useMutation(REGISTER, {
+    update(_,{data}){
+      if(data && data.registerUser){
+        const userData = data.registerUser;
+        context.login(userData);
+        navigate('/home')
+      }
+    },
+    onError(error){
+      console.log(error)
+    },
+    variables: {registerInput: values}
+
+  })
+  function registerUserCallback(){
+    console.log("callback hit");
+    registerUser({variables: {registerInput: values}}).catch((error)=>{
+      console.log(error);
+    })
+  }
+
+
+
+
   return (
     <MainPageLayout isLoginTransition={true}>
       <main
@@ -57,12 +103,18 @@ export default function LoginPage() {
               id="register-input"
               className="text-2xl w-96 p-2 border-2 rounded bg-transparent text-center"
               placeholder="Username"
+              name="username"
+              onChange={onChange}
             ></input>
-            <button className="relative group text-3xl pb-1">
+            <button
+              className="relative group text-3xl pb-1"
+              onClick={onClick}
+            >
               Register
               <span
                 className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
             </button>
+
           </section>
         </section>
       </main>

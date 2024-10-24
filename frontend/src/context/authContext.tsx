@@ -1,43 +1,45 @@
-import { createContext, useReducer } from 'react';
-
-
+import { createContext, ReactNode, useReducer } from 'react';
 
 const initialState = {
-  user: ""
+  user: localStorage.getItem("token")? JSON.parse(localStorage.getItem("token") !): "",
 };
 
 interface LoginState{
   user: string
 }
 
-if (localStorage.getItem('token')) {
-  initialState.user = JSON.parse(localStorage.getItem('token')!);
-}
 
-const AuthContext = createContext({
-  user: "",
-  login: (useData) => {
-  },
+const AuthContext = createContext<{
+  user: string;
+  login: (data: { token: string }) => void;
+}>
+({
+  user:"",
+  login: () => {},
 });
+
+
 
 function authReducer( state: LoginState, action: any ) {
   switch (action.type) {
     case 'LOGIN':
       return {
         ...state,
-        user: action.payload,
+        user: action.payload.token,
       };
     default:
       return state;
   }
 }
+interface AuthProviderProps{
+  children: ReactNode;
+}
 
-function AuthProvider() {
-  const [state, dispatch] = useReducer(authReducer, { user: "" })
+function AuthProvider({children}:AuthProviderProps) {
+  const [state, dispatch] = useReducer(authReducer, initialState)
 
   const login = (useData: { token: string; }) => {
-    localStorage.setItem('token', useData.token);
-
+    localStorage.setItem('token', JSON.stringify(useData.token));
     dispatch({ type: 'LOGIN', payload: useData})}
 
 
@@ -45,8 +47,9 @@ function AuthProvider() {
   return(
     <>
       <AuthContext.Provider
-      value={{user: state.user, login}}
-      />
+      value={{user: state.user, login}}>
+        {children}
+      </AuthContext.Provider>
     </>
   )
 }
