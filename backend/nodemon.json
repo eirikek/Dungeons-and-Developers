@@ -1,6 +1,6 @@
 {
-  "watch": ["backend"],
+  "watch": ["./"],
   "ext": "ts,json",
-  "ignore": ["app.ts"],
-  "exec": "ts-node app.ts"
+  "ignore": ["node_modules"],
+  "exec": "node --loader ts-node/esm ./src/main.ts"
 }

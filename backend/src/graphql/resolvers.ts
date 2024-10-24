@@ -1,12 +1,12 @@
-const Player = require('../model/Player.js');
+import Player from '../model/Player.js';
 
-module.exports = {
+export default {
   Query: {
     async player(_, {ID}){
-      return await Player.findById(ID)
+      return Player.findById(ID);
     },
     async getPlayer(_, {amount}){
-      return await Player.find().limit(amount)
+      return Player.find().limit(amount);
     }
   },
   Mutation: {
@@ -20,9 +20,10 @@ module.exports = {
         abilityScores: [abilityScores[0]],
       });
       const res = await createdPlayer.save();
+      const playerObject = res.toObject();
       return {
         id : res.id,
-        ...res._doc
+        ...playerObject,
       }
     },
     async deletePlayer(_, {ID}){

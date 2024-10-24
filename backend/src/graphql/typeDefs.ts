@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server';
 
-module.exports = gql`
+export default  gql`
   type Player{
     username: String!
     userID: Int!
@@ -9,6 +9,21 @@ module.exports = gql`
     race: String!
     abilityScores: [Int!]!
    }
+   
+   input RegisterInput{
+      username: String!
+   }
+   
+   input LoginInput{
+      username: String!
+      }
+   type Query {
+      user(id: ID!): User    
+      }
+   type Mutation {
+      registerUser(registerInput: RegisterInput): User
+      loginUser(loginInput: LoginInput): User
+      }
     
    input PlayerInput {
      username: String!
