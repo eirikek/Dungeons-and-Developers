@@ -1,21 +1,7 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
-import { AuthContext } from '../../context/authContext.tsx';
-import { useButton } from '../../hooks/useButton.ts';
-import {useMutation} from '@apollo/react-hooks';
-import {gql} from 'graphql-tag'
-import {useNavigate} from 'react-router-dom'
-
-//Register & Login
-const REGISTER = gql`
-    mutation Mutation($registerInput: RegisterInput){
-      registerUser(input: $registerInput){
-          username
-          token
-      }
-    }
-  `
 
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',
@@ -30,15 +16,26 @@ const quotes = [
   'Cunning, bravery, and the right spell can turn the tide of any battle.',
 ];
 
+const formVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? 300 : -300, // Slide from left if next (positive direction), right if previous
+    opacity: 0,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction: number) => ({
+    x: direction > 0 ? -300 : 300, // Exit to the left if switching forward
+    opacity: 0,
+  }),
+};
+
 export default function LoginPage() {
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
   const [fade, setFade] = useState(true);
-  //Login & Register
-  const context = useContext(AuthContext);
-  const navigate = useNavigate();
-  const {onChange, onClick, values} = useButton(registerUserCallback, {
-    username: ""
-  });
+  const [isLogin, setIsLogin] = useState(true);
+  const [direction, setDirection] = useState(1);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -52,70 +49,79 @@ export default function LoginPage() {
     return () => clearInterval(interval);
   }, []);
 
-
-
-  const [registerUser] = useMutation(REGISTER, {
-    update(_,{data}){
-      if(data && data.registerUser){
-        context.login(data);
-        navigate('/home')
-      }
-    },
-    onError(error){
-      console.log(error)
-    },
-    variables: {registerInput: values}
-
-  })
-  function registerUserCallback(){
-    console.log("callback hit");
-    registerUser({variables: {registerInput: values}})
-      .catch((error)=>{
-      console.log(error);
-    })
-  }
-
-
-
+  const toggleForm = () => {
+    setDirection(isLogin ? 1 : -1);
+    setIsLogin(!isLogin);
+  };
 
   return (
     <MainPageLayout isLoginTransition={true}>
       <main
         className="relative flex items-center justify-center h-screen overflow-hidden z-0 before:absolute before:inset-0 before:bg-login before:bg-cover before:bg-center before:animate-background-zoom  before:z-0">
-        <div className="absolute inset-0 bg-black opacity-70 z-10"></div>
-        <section className="w-full h-3/4 relative z-10 flex flex-col items-center justify-around">
-          <header>
-            <h1 className={`text-5xl text-white transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`}>
+        <div className="black-overlay"></div>
+        <section className="w-[90%] h-3/4 relative z-10 flex flex-col items-center justify-center">
+          <header className="absolute top-0 w-full">
+            <h1
+              className={`sub-header xl:text-2xl text-center transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`}>
               {quotes[currentQuoteIndex]}
             </h1>
           </header>
-          <section className="flex flex-col items-center gap-5">
-            <h2 className="text-3xl text-white mb-5">Log in to continue your adventure</h2>
-            <input
-              id="log-in-input"
-              className="text-2xl w-96 p-2 border-2 rounded bg-transparent text-center"
-              placeholder="Username"
-            ></input>
-            <CustomButton text="Log in" linkTo="/project2/home" />
-          </section>
-          <section className="flex flex-col items-center gap-5">
-            <h2 className="text-3xl text-white mb-5">Or register to start a new one</h2>
-            <input
-              id="register-input"
-              className="text-2xl w-96 p-2 border-2 rounded bg-transparent text-center"
-              placeholder="Username"
-              name="username"
-              onChange={onChange}
-            ></input>
-            <button
-              className="relative group text-3xl pb-1"
-              onClick={onClick}
-            >
-              Register
-              <span
-                className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
-            </button>
 
+          <section className="flex flex-col items-center">
+            <AnimatePresence mode={'wait'} custom={direction}>
+              <motion.div
+                key={isLogin ? 'login' : 'register'}
+                custom={direction}
+                variants={formVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.15 }}
+                className="flex flex-col items-center gap-10"
+              >
+                {isLogin ? (
+                  <>
+                    <h2 className="sub-header mb-5">Log in to continue your adventure</h2>
+                    <div className="flex flex-col items-center gap-5">
+                      <input
+                        id="log-in-input"
+                        className="text w-60 xs:w-72 p-2 border-2 focus:border-transparent rounded bg-transparent text-center focus:outline-none focus:ring-2 focus:ring-red-500"
+                        placeholder="Username"
+                      ></input>
+                      <CustomButton text="Log in" linkTo="/project2/home" />
+                    </div>
+                    <div className="text">
+                      Don't have an account?{' '}
+                      <button
+                        className="underline transition-all hover:text-gray-300 outline-none"
+                        onClick={toggleForm}
+                      >
+                        Register
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <h2 className="sub-header mb-5">Or register to start a new adventure</h2>
+                    <input
+                      id="register-input"
+                      className="text w-60 xs:w-72 p-2 border-2 focus:border-transparent rounded bg-transparent text-center focus:outline-none focus:ring-2 focus:ring-red-500"
+                      placeholder="Username"
+                    ></input>
+                    <CustomButton text="Register" linkTo="/project2/home" />
+                    <div className="text">
+                      Already have an account?{' '}
+                      <button
+                        className="underline transition-all hover:text-gray-300 outline-none"
+                        onClick={toggleForm}
+                      >
+                        Log in
+                      </button>
+                    </div>
+                  </>
+                )}
+              </motion.div>
+            </AnimatePresence>
           </section>
         </section>
       </main>

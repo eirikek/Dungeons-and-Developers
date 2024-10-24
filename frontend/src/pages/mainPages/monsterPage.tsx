@@ -1,53 +1,33 @@
-import { Button } from '@mui/material';
-import { UseQueryResult } from '@tanstack/react-query';
-import { hourglass } from 'ldrs';
 import debounce from 'lodash/debounce';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import MonsterCard from '../../components/MonsterCard/MonsterCard';
-import Navbar from '../../components/Navbar/Navbar';
-import mockup, { Monster } from '../../data/mockup';
-import useMonsters, { MonsterCardDataProps } from '../../hooks/useMonster';
+import useMonster from '../../hooks/useMonster.ts';
+import { hourglass } from 'ldrs';
+import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
+import Pagination from '../../components/Pagination/Pagination';
+import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 
-const monsterIndexArray: string[] = mockup.results.map((result: Monster) => result.index);
-const monstersPerPage = 6;
+const monstersPerPage = 8;
 
 export default function MonsterPage() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
 
+  // Used for loading screen
   hourglass.register();
 
-  const monsterData = useMonsters(
-    monsterIndexArray,
+  // Får ut `monsters`, `loading`, og `error` fra hooken.
+  const { monsters, totalMonsters, loading, error } = useMonster(
     debouncedSearchTerm,
     currentPage,
     monstersPerPage,
-    false
-  ) as UseQueryResult<MonsterCardDataProps, Error>[];
-
-  const filteredMonsters = useMemo(
-    () =>
-      debouncedSearchTerm === ''
-        ? monsterIndexArray
-        : monsterIndexArray.filter((monsterIndex) =>
-            monsterIndex.includes(debouncedSearchTerm.toLowerCase().replace(/\s+/g, '-'))
-          ),
-    [debouncedSearchTerm]
   );
 
-  const totalFilteredMonsters = filteredMonsters.length;
-  const totalPages = Math.ceil(totalFilteredMonsters / monstersPerPage);
-
-  // https://medium.com/nerd-for-tech/debounce-your-search-react-input-optimization-fd270a8042b
-  const debouncedSearch = useMemo(
-    () =>
-      debounce((value: string) => {
-        setDebouncedSearchTerm(value);
-      }, 300),
-    []
-  );
+  // Debounce søketerm oppdateringer
+  const debouncedSearch = useMemo(() => debounce((value: string) => {
+    setDebouncedSearchTerm(value);
+  }, 300), []);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -55,86 +35,63 @@ export default function MonsterPage() {
     debouncedSearch(value);
   };
 
-  const handleMonsterLoad = useCallback((index: number) => {
-    setLoadedImages((prev) => new Set(prev).add(index));
-  }, []);
+  const totalPages = Math.min(Math.ceil(totalMonsters / monstersPerPage), 10);
 
-  const allImagesLoaded = loadedImages.size === monsterData.length;
-
-  const handleNextPage = useCallback(() => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-      setLoadedImages(new Set());
-    }
-  }, [currentPage, totalPages]);
-
-  const handlePrevPage = useCallback(() => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-      setLoadedImages(new Set());
-    }
-  }, [currentPage]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-    setLoadedImages(new Set());
-  }, [debouncedSearchTerm]);
-
-  const isLoading = monsterData.some((monster) => monster.isLoading) || !allImagesLoaded;
-  const isError = monsterData.some((monster) => monster.isError);
-
-  const displayedMonsters = monsterData.filter((monster) => monster.data && !monster.isLoading && !monster.isError);
+  const handlePageChange = useCallback((direction: number) => {
+    setCurrentPage((prev) => {
+      if (direction === 1 && prev < totalPages) {
+        return prev + direction;
+      }
+      if (direction === -1 && prev > 1) {
+        return prev + direction;
+      }
+      return prev;
+    });
+  }, [totalPages]);
 
   return (
-    <div className="bg-madmage bg-center bg-cover bg-no-repeat min-h-screen flex flex-col items-center justify-center">
-      <Navbar />
-      <div className="mt-5"></div>
-      {isLoading && (
-        <div className="flex flex-col items-center justify-center h-full">
-          <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
-        </div>
-      )}
-      <div
-        className={`bg-customGray bg-opacity-80 p-8 rounded-lg shadow-lg w-2/3 tablet:w-10/12 h-auto flex flex-col items-center justify-center mt-10 mb-10 ${
-          isLoading ? 'hidden' : ''
-        }`}
-        style={{ display: isLoading ? 'none' : 'block' }}
-      >
-        <h2 className="text-2xl text-white font-bold mt-10">Monsters</h2>
-        <input
-          type="text"
-          placeholder="Search for a monster..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black bg-white"
-        />
-        {isError ? (
-          <p className="text-white mt-4">An error occurred while loading monsters.</p>
-        ) : displayedMonsters.length > 0 ? (
-          <>
-            <div className="grid grid-cols-3 gap-8 mt-8">
-              {displayedMonsters.map((monster, idx) => (
-                <MonsterCard key={idx} {...monster.data!} onLoad={() => handleMonsterLoad(idx)} />
-              ))}
+    <MainPageLayout>
+      <main className="main before:bg-monsters xl:h-screen xl:overflow-hidden">
+        <div className="black-overlay" />
+
+        <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start">
+          <SearchBar
+            searchTerm={searchTerm}
+            handleSearchChange={handleSearchChange}
+            placeholder="Search for a monster..."
+          />
+
+          {loading ? (
+            <div className="flex flex-col items-center justify-center h-[79.5vh]">
+              <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
             </div>
-            {totalFilteredMonsters > monstersPerPage && (
-              <div className="mt-4 flex items-center space-x-4">
-                <Button onClick={handlePrevPage} disabled={currentPage === 1}>
-                  Previous Page
-                </Button>
-                <p className="text-white">
-                  Page: {currentPage}/{totalPages}
-                </p>
-                <Button onClick={handleNextPage} disabled={currentPage === totalPages}>
-                  Next Page
-                </Button>
-              </div>
-            )}
-          </>
-        ) : (
-          <p className="text-white mt-4">No monsters found.</p>
-        )}
-      </div>
-    </div>
+          ) : (
+            <section>
+              {error ? (
+                <p>An error occurred while loading monsters.</p>
+              ) : monsters.length > 0 ? (
+                <>
+                  <div
+                    className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 place-items-center gap-y-[10vh] lg:gap-y-[1vh] gap-x-[10vw] lg:gap-x-[4vw] min-h-[75vh]">
+                    {monsters.map((monster, idx) => (
+                      <MonsterCard key={idx} {...monster} />
+                    ))}
+                  </div>
+                  <Pagination
+                    currentPage={currentPage}
+                    onPageChange={handlePageChange}
+                    totalPages={totalPages}
+                  />
+                </>
+              ) : (
+                <div className="flex h-[79.5vh] items-center justify-center">
+                  <h2 className="text-center sub-header">No monsters found</h2>
+                </div>
+              )}
+            </section>
+          )}
+        </section>
+      </main>
+    </MainPageLayout>
   );
 }
