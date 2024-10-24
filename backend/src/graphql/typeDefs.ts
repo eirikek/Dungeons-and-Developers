@@ -73,7 +73,7 @@ export default gql`
     type Query {
         player(ID: ID!): Player!
         getPlayer(amount: Int): [Player]
-        monsters: [Monster!]!
+        monsters(searchTerm: String, offset: Int, limit: Int): [Monster!]!
         monster(id: String!): Monster!
         user(id: ID!): User!
     }

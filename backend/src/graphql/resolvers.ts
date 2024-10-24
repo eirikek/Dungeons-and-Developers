@@ -10,9 +10,15 @@ export default {
     async getPlayer(_, { amount }) {
       return Player.find().limit(amount);
     },
-    async monsters() {
-      return Monster.find(); // Hent alle monstre fra databasen
+    async monsters(_, { searchTerm = '', offset = 0, limit = 8 }) {
+      const query = searchTerm
+        ? { name: { $regex: searchTerm, $options: 'i' } }
+        : {};
+      return Monster.find(query)
+        .skip(offset)
+        .limit(limit);
     },
+
 
     async monster(_, { id }) {
       return Monster.findOne({ index: id }); // Hent et spesifikt monster basert på ID
@@ -24,7 +30,7 @@ export default {
       await fetchMonsters(); // Kjør funksjonen som henter monstre fra API og lagrer dem i databasen
       return 'Monsters fetched and stored successfully!';
     },
-    
+
     async createPlayer(_, { playerInput: { username, userID, characterName, characterClass, race, abilityScores } }) {
       const createdPlayer = new Player({
         username: username,

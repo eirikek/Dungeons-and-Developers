@@ -1,12 +1,10 @@
 import { useQuery, gql } from '@apollo/client';
 import { useMemo } from 'react';
 
-/**
- * GraphQL query for getting all monsters from the database
- */
+// GraphQL query med søkeord og paginering
 const GET_MONSTERS = gql`
-    query GetMonsters {
-        monsters {
+    query GetMonsters($searchTerm: String, $offset: Int, $limit: Int) {
+        monsters(searchTerm: $searchTerm, offset: $offset, limit: $limit) {
             index
             name
             size
@@ -18,9 +16,6 @@ const GET_MONSTERS = gql`
     }
 `;
 
-/**
- * Interface representing the structure of a Monster object.
- */
 export interface Monster {
   index: string;
   name: string;
@@ -31,9 +26,6 @@ export interface Monster {
   image?: string;
 }
 
-/**
- * Interface representing the structure of MonsterCardDataProps.
- */
 export interface MonsterCardDataProps {
   index: string;
   name: string;
@@ -44,54 +36,32 @@ export interface MonsterCardDataProps {
   img?: string;
 }
 
-/**
- * Custom hook to fetch and filter multiple monsters' data using Apollo Client and React.
- * @param {string} searchTerm - The search term to filter monsters.
- * @param {number} currentPage - The current page number.
- * @param {number} monstersPerPage - The number of monsters to display per page.
- * @returns An object containing the filtered and paginated monsters.
- */
-function useMonster(
-  searchTerm: string,
-  currentPage: number,
-  monstersPerPage: number,
-) {
-  const { data, error, loading } = useQuery<{ monsters: Monster[] }>(GET_MONSTERS);
+function useMonster(searchTerm: string, currentPage: number, monstersPerPage: number) {
+  const offset = (currentPage - 1) * monstersPerPage;
 
-  // Map the Monster object to MonsterCardDataProps
+  // Utfør queryen med Apollo Client og send inn nødvendige variabler
+  const { data, error, loading } = useQuery<{ monsters: Monster[] }>(GET_MONSTERS, {
+    variables: { searchTerm, offset, limit: monstersPerPage },
+    fetchPolicy: 'network-only',  // Hent alltid ferske data fra serveren
+  });
+
+  console.log('Data from server: ', data); // For å se hva som returneres fra serveren
+
   const transformedMonsters = useMemo(() => {
-    if (!data) return [];
+    if (!data || !data.monsters) return [];
     return data.monsters.map(monster => ({
       index: monster.index,
       name: monster.name,
       type: monster.type,
-      hp: monster.hit_points, // map hit_points to hp
+      hp: monster.hit_points,
       alignment: monster.alignment,
       size: monster.size,
-      img: monster.image, // map image to img
+      img: monster.image,
     }));
   }, [data]);
 
-  // Filter monsters based on the search term
-  const filteredMonsters = useMemo(() => {
-    if (!transformedMonsters) return [];
-    return searchTerm === ''
-      ? transformedMonsters
-      : transformedMonsters.filter((monster) =>
-        monster.name.toLowerCase().includes(searchTerm.toLowerCase()),
-      );
-  }, [transformedMonsters, searchTerm]);
-
-  // Paginate the filtered monsters
-  const paginatedMonsters = useMemo(() => {
-    return filteredMonsters.slice(
-      (currentPage - 1) * monstersPerPage,
-      currentPage * monstersPerPage,
-    );
-  }, [filteredMonsters, currentPage, monstersPerPage]);
-
   return {
-    monsters: paginatedMonsters,
+    monsters: transformedMonsters,
     loading,
     error,
   };

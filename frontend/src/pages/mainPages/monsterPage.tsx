@@ -1,14 +1,12 @@
 import debounce from 'lodash/debounce';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import MonsterCard from '../../components/MonsterCard/MonsterCard';
-import mockup, { Monster } from '../../data/mockup';
-import useMonster, { MonsterCardDataProps } from '../../hooks/useMonster.ts';
+import useMonster from '../../hooks/useMonster.ts';
 import { hourglass } from 'ldrs';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import Pagination from '../../components/Pagination/Pagination';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 
-const monsterIndexArray: string[] = mockup.results.map((result: Monster) => result.index);
 const monstersPerPage = 8;
 
 export default function MonsterPage() {
@@ -20,34 +18,17 @@ export default function MonsterPage() {
   // Used for loading screen
   hourglass.register();
 
+  // Får ut `monsters`, `loading`, og `error` fra hooken.
   const { monsters, loading, error } = useMonster(
     debouncedSearchTerm,
     currentPage,
     monstersPerPage,
   );
 
-  const filteredMonsters = useMemo(
-    () =>
-      debouncedSearchTerm === ''
-        ? monsterIndexArray
-        : monsterIndexArray.filter((monsterIndex) =>
-          monsterIndex.includes(debouncedSearchTerm.toLowerCase().replace(/\s+/g, '-')),
-        ),
-    [debouncedSearchTerm],
-  );
-
-  // Apply pagination to filtered results
-  const totalFilteredMonsters = filteredMonsters.length;
-  const totalPages = Math.ceil(totalFilteredMonsters / monstersPerPage);
-
-  // Debounce search term updates
-  const debouncedSearch = useMemo(
-    () =>
-      debounce((value: string) => {
-        setDebouncedSearchTerm(value);
-      }, 300),
-    [],
-  );
+  // Debounce søketerm oppdateringer
+  const debouncedSearch = useMemo(() => debounce((value: string) => {
+    setDebouncedSearchTerm(value);
+  }, 300), []);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -59,47 +40,35 @@ export default function MonsterPage() {
     setLoadedImages((prev) => new Set(prev).add(index));
   }, []);
 
-  // const allImagesLoaded = loadedImages.size === monsterData.length; Bug: This makes the page just infinitely load if we change page and go back to monster page
-
+  // Paginering av monstre
   const handlePageChange = useCallback((direction: number) => {
-    if ((direction === 1 && currentPage < totalPages) || (direction === -1 && currentPage > 1)) {
-      setCurrentPage(currentPage + direction);
-      setLoadedImages(new Set());
-    }
-  }, [currentPage, totalPages]);
+    setCurrentPage((prev) => prev + direction);
+  }, []);
 
-  useEffect(() => {
-    setCurrentPage(1);
-    setLoadedImages(new Set());
-  }, [debouncedSearchTerm]);
+  const totalMonsters = monsters.length;
+  const totalPages = Math.ceil(totalMonsters / monstersPerPage);
 
-  const isLoading = loading;
-  const isError = error !== undefined;
+  console.log('Monsters:', monsters);
 
   return (
     <MainPageLayout>
-      <main
-        className="main before:bg-monsters xl:h-screen xl:overflow-hidden">
+      <main className="main before:bg-monsters xl:h-screen xl:overflow-hidden">
         <div className="black-overlay" />
 
-        <section
-          className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start"
-        >
+        <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start">
           <SearchBar
             searchTerm={searchTerm}
             handleSearchChange={handleSearchChange}
             placeholder="Search for a monster..."
           />
 
-          {isLoading && (
+          {loading ? (
             <div className="flex flex-col items-center justify-center h-[79.5vh]">
               <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
             </div>
-          )}
-
-          {!isLoading && (
+          ) : (
             <section>
-              {isError ? (
+              {error ? (
                 <p>An error occurred while loading monsters.</p>
               ) : monsters.length > 0 ? (
                 <>
