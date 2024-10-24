@@ -3,7 +3,7 @@ import characterImg from '../../assets/images/characters.webp';
 import monstersImg from '../../assets/images/monsters.jpg';
 import hammerImg from '../../assets/images/hammer.png';
 import dragonGif from '../../assets/images/dragon.gif';
-import favoriteImg from '../../assets/images/favorite.png';
+import favoriteImg from '../../assets/images/dungeon-gate.svg';
 import Tilt from 'react-parallax-tilt';
 import HomeSection from '../../components/Home/HomeSection.tsx';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -30,14 +30,14 @@ export default function HomePage() {
 
   const dragon1X = useTransform(
     scrollYProgress,
-    isMobile ? [0.35, 0.6] : [0.35, 0.65],
-    isMobile ? ['-300%', '300%'] : ['-600%', '600%'],
+    isMobile ? [0.35, 0.7] : [0.35, 0.65],
+    isMobile ? ['-300%', '300%'] : ['-800%', '800%'],
   );
 
   const dragon2X = useTransform(
     scrollYProgress,
-    isMobile ? [0.65, 0.9] : [0.7, 1.0],
-    isMobile ? ['300%', '-300%'] : ['600%', '-600%'],
+    isMobile ? [0.65, 1] : [0.7, 1.0],
+    isMobile ? ['300%', '-300%'] : ['800%', '-800%'],
   );
 
   return (
@@ -148,7 +148,7 @@ export default function HomePage() {
                 In this section, you can create your own dungeon by selecting monsters to defend it. While exploring the
                 monster database, you can click the
                 <span className="inline-block"><img src={favoriteImg} alt="favorite"
-                                                    className="shadow-none md:w-14 w-10 mx-2"></img></span>
+                                                    className="shadow-none md:w-8 w-6 mx-3"></img></span>
                 button next to any monster to add it to your dungeon. If you change your mind, you can also easily
                 remove monsters from your dungeon to adjust your selection.
               </p>

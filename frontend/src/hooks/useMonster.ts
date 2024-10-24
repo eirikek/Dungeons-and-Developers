@@ -1,11 +1,6 @@
-import { useQueries, UseQueryResult } from '@tanstack/react-query';
-import axios from 'axios';
+import { useQuery, gql } from '@apollo/client';
 import { useMemo } from 'react';
-import { defaultURL, monstersURL } from '../constants';
 
-/**
- * Interface representing the structure of a Monster object.
- */
 export interface Monster {
   index: string;
   name: string;
@@ -13,103 +8,58 @@ export interface Monster {
   type: string;
   alignment: string;
   hit_points: number;
-  hit_dice: string;
-  strength: number;
-  dexterity: number;
-  intelligence: number;
-  wisdom: number;
-  charisma: number;
-  image: string;
+  image?: string;
 }
 
-/**
- * Interface representing the structure of MonsterCardDataProps.
- */
-export interface MonsterCardDataProps {
-  index: string;
-  name: string;
-  type: string;
-  hp: number;
-  alignment: string;
-  size: string;
-  img?: string;
-}
+// GraphQL query med søkeord og paginering
+const GET_MONSTERS = gql`
+    query GetMonsters($searchTerm: String, $offset: Int, $limit: Int) {
+        monsters(searchTerm: $searchTerm, offset: $offset, limit: $limit) {
+            monsters {
+                index
+                name
+                size
+                type
+                alignment
+                hit_points
+                image
+            }
+            totalMonsters
+        }
+    }
+`;
 
-/**
- * Fetches the details of a monster from the API.
- * @param {string} monsterIndex - The index of the monster to fetch.
- * @returns {Promise<Monster>} - A promise that resolves to the monster data.
- * @throws Will throw an error if the request fails.
- */
-export const fetchMonster = async (monsterIndex: string): Promise<Monster> => {
-  try {
-    const { data } = await axios.get(`${monstersURL}/${monsterIndex}`);
-    return data;
-  } catch (error) {
-    console.error('Error fetching monster:', monsterIndex, error);
-    throw error;
-  }
-};
+function useMonster(searchTerm: string, currentPage: number, monstersPerPage: number) {
+  const offset = (currentPage - 1) * monstersPerPage;
 
-/**
- * Maps the Monster data to MonsterCardDataProps.
- * @param {Monster} data - The monster data to map.
- * @returns {MonsterCardDataProps} - The mapped monster card data.
- */
-const mapToCard = (data: Monster): MonsterCardDataProps => {
+  const { data, error, loading } = useQuery<{
+    monsters: { monsters: Monster[], totalMonsters: number }
+  }>(GET_MONSTERS, {
+    variables: { searchTerm, offset, limit: monstersPerPage },
+    fetchPolicy: 'network-only',  // Alltid hente ferske data fra serveren
+  });
+
+  console.log('Data from server: ', data);
+
+  const transformedMonsters = useMemo(() => {
+    if (!data || !data.monsters) return [];
+    return data.monsters.monsters.map(monster => ({
+      index: monster.index,
+      name: monster.name,
+      type: monster.type,
+      hp: monster.hit_points,
+      alignment: monster.alignment,
+      size: monster.size,
+      img: monster.image,
+    }));
+  }, [data]);
+
   return {
-    index: data.index,
-    name: data.name,
-    type: data.type,
-    hp: data.hit_points,
-    alignment: data.alignment,
-    size: data.size,
-    img: data.image ? `${defaultURL}${data.image}` : undefined,
+    monsters: transformedMonsters,
+    totalMonsters: data?.monsters.totalMonsters || 0,
+    loading,
+    error,
   };
-};
-
-/**
- * Custom hook to fetch and filter multiple monsters' data using React Query.
- * @param {string[]} monsterIndexes - The indices of all available monsters.
- * @param {string} searchTerm - The search term to filter monsters.
- * @param {number} currentPage - The current page number.
- * @param {number} monstersPerPage - The number of monsters to display per page.
- * @param {boolean} [fullDetails=false] - Whether to fetch full details or just card data.
- * @returns {UseQueryResult<Monster | MonsterCardDataProps, Error>[]} - An array of query results.
- */
-function useMonsters(
-  monsterIndexes: string[],
-  searchTerm: string,
-  currentPage: number,
-  monstersPerPage: number,
-  fullDetails: boolean = false
-): UseQueryResult<Monster | MonsterCardDataProps, Error>[] {
-  const filteredMonsters = useMemo(
-    () => searchTerm === '' 
-      ? monsterIndexes 
-      : monsterIndexes.filter((monsterIndex) => 
-          monsterIndex.toLowerCase().includes(searchTerm.toLowerCase().replace(/\s+/g, '-'))
-        ),
-    [monsterIndexes, searchTerm]
-  );
-
-  const paginatedMonsters = useMemo(
-    () => filteredMonsters.slice(
-      (currentPage - 1) * monstersPerPage,
-      currentPage * monstersPerPage
-    ),
-    [filteredMonsters, currentPage, monstersPerPage]
-  );
-
-  const queries = paginatedMonsters.map((index) => ({
-    queryKey: ['monster', index, searchTerm],
-    queryFn: () => fetchMonster(index),
-    staleTime: Infinity,
-    gcTime: Infinity,
-    select: (data: Monster) => (fullDetails ? data : mapToCard(data)),
-  }));
-
-  return useQueries({ queries });
 }
 
-export default useMonsters;
+export default useMonster;

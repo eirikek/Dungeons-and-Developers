@@ -90,7 +90,7 @@ const CustomInput = ({ placeholder, inputName, value, onSave }: InputProps) => {
 
   return (
     <>
-      <section className="flex flex-row items-center justify-center gap-4 mb-8">
+      <section className="flex flex-row items-center justify-center gap-4 ">
         {isEditing ? (
           <>
             <label htmlFor={inputName} className="sr-only">
@@ -104,12 +104,12 @@ const CustomInput = ({ placeholder, inputName, value, onSave }: InputProps) => {
               onChange={handleChange}
               onBlur={handleBlur}
               autoFocus
-              className="focus:outline-customRed focus:ring-customRed  text-xl font-bold text-center"
+              className="border-none rounded-lg outline-none focus:outline-none focus:ring-2 focus:ring-red-500 bg-transparent w-[65vw] lg:w-fit lg:p-y-5 text-6xl md:text-5xl lg:text-4xl xl:text-3xl 2xl:text-2xl text-center"
             />
           </>
         ) : (
           <h2
-            className="text-3xl md:text-4xl text-white font-semibold"
+            className=" text-6xl md:text-5xl lg:text-4xl xl:text-3xl 2xl:text-2xl"
             aria-label={isEditing ? `Save ${inputName}` : `Edit ${inputName}`}
           >
             {inputValue}
@@ -117,14 +117,16 @@ const CustomInput = ({ placeholder, inputName, value, onSave }: InputProps) => {
         )}
 
         <button
-          className="p-2 rounded-lg hover:bg-white transition-colors duration-300 group"
+          className=" p-[2px] lg:p-[5px] rounded-lg bg-customRed hover:bg-transparent border-2 border-customRed hover:border-customRed transition-colors duration-100 group"
           aria-label={`Edit ${inputName}`}
           onClick={isEditing ? handleSaveClick : handleEditClick}
         >
           {isEditing ? (
-            <SaveIcon fontSize="large" className="text-white group-hover:text-black duration-100" />
+            <SaveIcon
+              className="text-white group-hover:text-customRed duration-100 lg:!w-6 lg:!h-6 xl:!w-8 xl:!h-8" />
           ) : (
-            <ModeEditOutlineIcon fontSize="large" className="text-white group-hover:text-black duration-100" />
+            <ModeEditOutlineIcon
+              className="text-white group-hover:text-customRed duration-100 lg:!w-6 lg:!h-6 xl:!w-8 xl:!h-8" />
           )}
         </button>
       </section>

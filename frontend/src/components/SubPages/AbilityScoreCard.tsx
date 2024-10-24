@@ -23,7 +23,7 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps> = ({ name, description, 
 
   return (
     <motion.section
-      className="flex flex-row gap-10 h-60 w-full justify-between items-center p-12 rounded-lg bg-black bg-opacity-80"
+      className="flex flex-col xl:flex-row xl:h-[400px] 2xl:h-[350px] w-full justify-between items-center p-8 xl:p-12 rounded-lg bg-black bg-opacity-80 gap-10"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
@@ -34,19 +34,19 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps> = ({ name, description, 
       }}
     >
       {/* Display the ability name */}
-      <h2 className="text-3xl">{name}</h2>
+      <h2 className="sub-header">{name}</h2>
 
       {/* Counter component */}
-      <Counter value={score} onChange={handleCounterChange} />
+      <Counter value={score} onChange={handleCounterChange} scale={1.5} />
 
       {/* Display the ability description */}
-      <p className="text-lg">"{description}"</p>
+      <p className="text">"{description}"</p>
 
       {/* Display the skills associated with the ability */}
-      <ul className="text-white min-w-32">
-        <li className="bold text-lg">Skills:</li>
+      <ul className="w-full justify-start xl:w-auto xl:justify-center xl:min-w-[15vw] 2xl:min-w-[10vw]">
+        <li className="bold text">Skills required:</li>
         {skills.map((skill, index) => (
-          <li key={index}>{skill.name}</li>
+          <li key={index} className="text">{skill.name}</li>
         ))}
       </ul>
     </motion.section>

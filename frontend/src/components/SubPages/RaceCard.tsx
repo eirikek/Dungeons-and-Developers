@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
 
 interface RaceCardProps {
   name: string;
@@ -10,7 +11,7 @@ interface RaceCardProps {
 const RaceCard: React.FC<RaceCardProps> = ({ name, description, imageUrl }) => {
   return (
     <motion.section
-      className="flex flex-row h-60 w-full justify-between items-center p-12 rounded-lg bg-black bg-opacity-80"
+      className="flex flex-col xl:flex-row xl:h-60 w-full justify-between items-center p-8 xl:p-12 rounded-lg bg-black bg-opacity-80 gap-10"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.1 }}
@@ -20,15 +21,15 @@ const RaceCard: React.FC<RaceCardProps> = ({ name, description, imageUrl }) => {
         visible: { opacity: 1, y: 0 },
       }}
     >
-      <div className="flex items-center gap-5">
-        <img src={imageUrl} alt={name} className="max-w-28 shadow-none" />
+      <div className="flex flex-col xl:flex-row gap-5 justify-center items-center">
+        <img src={imageUrl} alt={name} className="max-w-36 xl:max-w-28 shadow-none" />
         <div>
-          <h2 className="text-3xl">{name}</h2>
-          <p className="text-lg">{description}</p>
+          <h2 className="sub-header bold">{name}</h2>
+          <p className="text">{description}</p>
         </div>
       </div>
-      <div>
-        <input type="checkbox" className="cursor-pointer w-32 h-12 accent-customRed " />
+      <div className="w-1/5 flex items-center justify-center xl:justify-end">
+        <CustomCheckbox scale={2} />
       </div>
     </motion.section>
   );
