@@ -1,4 +1,3 @@
-import { UseQueryResult } from '@tanstack/react-query';
 import debounce from 'lodash/debounce';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import MonsterCard from '../../components/MonsterCard/MonsterCard';
@@ -21,13 +20,11 @@ export default function MonsterPage() {
   // Used for loading screen
   hourglass.register();
 
-  const monsterData = useMonster(
-    monsterIndexArray,
+  const { monsters, loading, error } = useMonster(
     debouncedSearchTerm,
     currentPage,
     monstersPerPage,
-    false,
-  ) as UseQueryResult<MonsterCardDataProps, Error>[];
+  );
 
   const filteredMonsters = useMemo(
     () =>
@@ -76,10 +73,8 @@ export default function MonsterPage() {
     setLoadedImages(new Set());
   }, [debouncedSearchTerm]);
 
-  const isLoading = monsterData.some((monster) => monster.isLoading);
-  const isError = monsterData.some((monster) => monster.isError);
-
-  const displayedMonsters = monsterData.filter((monster) => monster.data && !monster.isLoading && !monster.isError);
+  const isLoading = loading;
+  const isError = error !== undefined;
 
   return (
     <MainPageLayout>
@@ -102,30 +97,31 @@ export default function MonsterPage() {
             </div>
           )}
 
-          <section className={isLoading ? 'hidden' : ''} style={{ display: isLoading ? 'none' : 'block' }}>
-            {isError ? (
-              <p>An error occurred while loading monsters.</p>
-            ) : displayedMonsters.length > 0 ? (
-              <>
-                <div
-                  className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 place-items-center gap-y-[10vh] lg:gap-y-[1vh] gap-x-[10vw] lg:gap-x-[4vw] min-h-[75vh]">
-                  {displayedMonsters.map((monster, idx) => (
-                    <MonsterCard key={idx} {...monster.data!} onLoad={() => handleMonsterLoad(idx)} />
-                  ))}
+          {!isLoading && (
+            <section>
+              {isError ? (
+                <p>An error occurred while loading monsters.</p>
+              ) : monsters.length > 0 ? (
+                <>
+                  <div
+                    className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 place-items-center gap-y-[10vh] lg:gap-y-[1vh] gap-x-[10vw] lg:gap-x-[4vw] min-h-[75vh]">
+                    {monsters.map((monster, idx) => (
+                      <MonsterCard key={idx} {...monster} onLoad={() => handleMonsterLoad(idx)} />
+                    ))}
+                  </div>
+                  <Pagination
+                    currentPage={currentPage}
+                    onPageChange={handlePageChange}
+                    totalPages={totalPages}
+                  />
+                </>
+              ) : (
+                <div className="flex h-[79.5vh] items-center justify-center">
+                  <h2 className="text-center sub-header">No monsters found</h2>
                 </div>
-                <Pagination
-                  currentPage={currentPage}
-                  onPageChange={handlePageChange}
-                  totalPages={totalPages}
-                />
-              </>
-            ) : (
-              <div className="flex h-[79.5vh] items-center justify-center">
-                <h2 className="text-center sub-header">No monsters found</h2>
-              </div>
-            )}
-          </section>
-
+              )}
+            </section>
+          )}
         </section>
       </main>
     </MainPageLayout>

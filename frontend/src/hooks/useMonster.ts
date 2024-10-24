@@ -1,7 +1,22 @@
-import { useQueries, UseQueryResult } from '@tanstack/react-query';
-import axios from 'axios';
+import { useQuery, gql } from '@apollo/client';
 import { useMemo } from 'react';
-import { defaultURL, monstersURL } from '../constants';
+
+/**
+ * GraphQL query for getting all monsters from the database
+ */
+const GET_MONSTERS = gql`
+    query GetMonsters {
+        monsters {
+            index
+            name
+            size
+            type
+            alignment
+            hit_points
+            image
+        }
+    }
+`;
 
 /**
  * Interface representing the structure of a Monster object.
@@ -13,13 +28,7 @@ export interface Monster {
   type: string;
   alignment: string;
   hit_points: number;
-  hit_dice: string;
-  strength: number;
-  dexterity: number;
-  intelligence: number;
-  wisdom: number;
-  charisma: number;
-  image: string;
+  image?: string;
 }
 
 /**
@@ -36,80 +45,56 @@ export interface MonsterCardDataProps {
 }
 
 /**
- * Fetches the details of a monster from the API.
- * @param {string} monsterIndex - The index of the monster to fetch.
- * @returns {Promise<Monster>} - A promise that resolves to the monster data.
- * @throws Will throw an error if the request fails.
- */
-export const fetchMonster = async (monsterIndex: string): Promise<Monster> => {
-  try {
-    const { data } = await axios.get(`${monstersURL}/${monsterIndex}`);
-    return data;
-  } catch (error) {
-    console.error('Error fetching monster:', monsterIndex, error);
-    throw error;
-  }
-};
-
-/**
- * Maps the Monster data to MonsterCardDataProps.
- * @param {Monster} data - The monster data to map.
- * @returns {MonsterCardDataProps} - The mapped monster card data.
- */
-const mapToCard = (data: Monster): MonsterCardDataProps => {
-  return {
-    index: data.index,
-    name: data.name,
-    type: data.type,
-    hp: data.hit_points,
-    alignment: data.alignment,
-    size: data.size,
-    img: data.image ? `${defaultURL}${data.image}` : undefined,
-  };
-};
-
-/**
- * Custom hook to fetch and filter multiple monsters' data using React Query.
- * @param {string[]} monsterIndexes - The indices of all available monsters.
+ * Custom hook to fetch and filter multiple monsters' data using Apollo Client and React.
  * @param {string} searchTerm - The search term to filter monsters.
  * @param {number} currentPage - The current page number.
  * @param {number} monstersPerPage - The number of monsters to display per page.
- * @param {boolean} [fullDetails=false] - Whether to fetch full details or just card data.
- * @returns {UseQueryResult<Monster | MonsterCardDataProps, Error>[]} - An array of query results.
+ * @returns An object containing the filtered and paginated monsters.
  */
 function useMonster(
-  monsterIndexes: string[],
   searchTerm: string,
   currentPage: number,
   monstersPerPage: number,
-  fullDetails: boolean = false,
-): UseQueryResult<Monster | MonsterCardDataProps, Error>[] {
-  const filteredMonsters = useMemo(
-    () => searchTerm === ''
-      ? monsterIndexes
-      : monsterIndexes.filter((monsterIndex) =>
-        monsterIndex.toLowerCase().includes(searchTerm.toLowerCase().replace(/\s+/g, '-')),
-      ),
-    [monsterIndexes, searchTerm],
-  );
+) {
+  const { data, error, loading } = useQuery<{ monsters: Monster[] }>(GET_MONSTERS);
 
-  const paginatedMonsters = useMemo(
-    () => filteredMonsters.slice(
+  // Map the Monster object to MonsterCardDataProps
+  const transformedMonsters = useMemo(() => {
+    if (!data) return [];
+    return data.monsters.map(monster => ({
+      index: monster.index,
+      name: monster.name,
+      type: monster.type,
+      hp: monster.hit_points, // map hit_points to hp
+      alignment: monster.alignment,
+      size: monster.size,
+      img: monster.image, // map image to img
+    }));
+  }, [data]);
+
+  // Filter monsters based on the search term
+  const filteredMonsters = useMemo(() => {
+    if (!transformedMonsters) return [];
+    return searchTerm === ''
+      ? transformedMonsters
+      : transformedMonsters.filter((monster) =>
+        monster.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
+  }, [transformedMonsters, searchTerm]);
+
+  // Paginate the filtered monsters
+  const paginatedMonsters = useMemo(() => {
+    return filteredMonsters.slice(
       (currentPage - 1) * monstersPerPage,
       currentPage * monstersPerPage,
-    ),
-    [filteredMonsters, currentPage, monstersPerPage],
-  );
+    );
+  }, [filteredMonsters, currentPage, monstersPerPage]);
 
-  const queries = paginatedMonsters.map((index) => ({
-    queryKey: ['monster', index, searchTerm],
-    queryFn: () => fetchMonster(index),
-    staleTime: Infinity,
-    gcTime: Infinity,
-    select: (data: Monster) => (fullDetails ? data : mapToCard(data)),
-  }));
-
-  return useQueries({ queries });
+  return {
+    monsters: paginatedMonsters,
+    loading,
+    error,
+  };
 }
 
 export default useMonster;
