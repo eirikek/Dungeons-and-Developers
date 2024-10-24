@@ -18,9 +18,15 @@ export default  gql`
       username: String!
       }
    type Query {
-      user(id: ID!): User    
-      }
+     player(ID: ID!): Player!
+     getPlayer(amount: Int): [Player]
+     user(id: ID!): User!
+      monster(id: String!): Monster!
+   }
    type Mutation {
+      createPlayer(playerInput: PlayerInput): Player!
+      deletePlayer(ID: ID!): Boolean
+      editPlayer(ID: ID!, editRecipeInput: EditPlayerInput): Boolean
       registerUser(registerInput: RegisterInput): User
       loginUser(loginInput: LoginInput): User
       }
@@ -42,18 +48,6 @@ export default  gql`
      race: String!
      abilityScores: [Int!]!
    }
-   
-   type Query {
-     player(ID: ID!): Player!
-     getPlayer(amount: Int): [Player]
-   }
-    
-   type Mutation {
-    createPlayer(playerInput: PlayerInput): Player!
-    deletePlayer(ID: ID!): Boolean
-    editPlayer(ID: ID!, editRecipeInput: EditPlayerInput): Boolean
-  }
-    
     
   type Monster {
     name: String!
@@ -85,8 +79,5 @@ export default  gql`
     character: Character!
   }
 
-  type Query {
-    user(id: ID!): User!
-    monster(id: String!): Monster!
-  }
+  
 `;

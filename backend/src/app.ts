@@ -4,12 +4,13 @@
 
   import typeDefs from './graphql/typeDefs.js';
   import resolvers from './graphql/resolvers.js';
+
+
   const app = express();
   app.use(express.json());
+
+
   const MONGODBURLPROFILE ='mongodb://admin:adminpassordetditt@it2810-20.idi.ntnu.no:27017/Profile?directConnection=true&authSource=admin&appName=mongosh+2.3.2'
-
-
-
 
 
   const server = new ApolloServer({
@@ -19,9 +20,14 @@
 
   mongoose.connect(MONGODBURLPROFILE)
   .then(()=>{
-    console.log(("mongoDB connection connected"))
-    return server.listen({port: 5000})
-    }
-  ).then((result)=>{
-    console.log(result.url)
+    console.log('MongoDB Connected');
+    return server.start()
+    })
+    .then(()=>{
+      server.applyMiddleware();
+      app.listen({port: 5000});
+      console.log("server 500 connected");
+  })
+    .catch(err=>{
+    console.log(err, "mongodb error");
   })

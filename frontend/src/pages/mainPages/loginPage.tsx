@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { AuthContext } from '../../context/authContext.tsx';
-import { useForm } from '../../hooks/useForm';
+import { useButton } from '../../hooks/useButton.ts';
 import {useMutation} from '@apollo/react-hooks';
 import {gql} from 'graphql-tag'
 import {useNavigate} from 'react-router-dom'
@@ -33,6 +33,12 @@ const quotes = [
 export default function LoginPage() {
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
   const [fade, setFade] = useState(true);
+  //Login & Register
+  const context = useContext(AuthContext);
+  const navigate = useNavigate();
+  const {onChange, onClick, values} = useButton(registerUserCallback, {
+    username: ""
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -46,18 +52,12 @@ export default function LoginPage() {
     return () => clearInterval(interval);
   }, []);
 
-  //Login & Register
-  const context = useContext(AuthContext);
-  const navigate = useNavigate();
-  const {onChange, onClick, values} = useForm(registerUserCallback, {
-    username: ""
-  });
+
 
   const [registerUser] = useMutation(REGISTER, {
     update(_,{data}){
       if(data && data.registerUser){
-        const userData = data.registerUser;
-        context.login(userData);
+        context.login(data);
         navigate('/home')
       }
     },
@@ -69,7 +69,8 @@ export default function LoginPage() {
   })
   function registerUserCallback(){
     console.log("callback hit");
-    registerUser({variables: {registerInput: values}}).catch((error)=>{
+    registerUser({variables: {registerInput: values}})
+      .catch((error)=>{
       console.log(error);
     })
   }
