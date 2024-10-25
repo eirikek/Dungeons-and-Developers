@@ -97,6 +97,7 @@ export default function LoginPage() {
   const [registerUsername, setRegisterUsername] = useState('');
   const [logInUsername, setLogInUsername] = useState('');
   const [isUsernameAvailable, setIsUsernameAvailable] = useState<boolean | null>(null);
+  const [shakeInput, setShakeInput] = useState(false);
 
   const [createUser] = useMutation(CREATE_USER, {
     onCompleted: (data) => {
@@ -104,7 +105,9 @@ export default function LoginPage() {
       localStorage.setItem('token', token);
       window.location.href = '/project2/home';
     },
-    onError: () => setIsUsernameAvailable(false),
+    onError: () => {
+      setShakeInput(true);
+    },
   });
 
   const [loginUser] = useMutation(LOGIN_USER, {
@@ -113,9 +116,7 @@ export default function LoginPage() {
       localStorage.setItem('token', token);
       window.location.href = '/project2/home';
     },
-    onError: (error) => {
-      console.error('Login failed:', error.message);
-    },
+    onError: () => setShakeInput(true),
   });
 
   useEffect(() => {
@@ -133,17 +134,23 @@ export default function LoginPage() {
   const toggleForm = () => {
     setDirection(isLogin ? 1 : -1);
     setIsLogin(!isLogin);
+    setShakeInput(false);
+    setIsUsernameAvailable(null);
   };
 
   const handleRegister = async () => {
-    if (isUsernameAvailable === false) {
-      console.log('Username is already taken.');
+    if (!registerUsername) {
+      setShakeInput(true);
       return;
     }
-    try {
-      await createUser({ variables: { userName: registerUsername } });
-    } catch (error) {
-      console.error('Error registering user:', error);
+    if (isUsernameAvailable) {
+      try {
+        await createUser({ variables: { userName: registerUsername } });
+      } catch (error) {
+        console.error('Error registering user:', error);
+      }
+    } else {
+      setShakeInput(true);
     }
   };
 
@@ -151,9 +158,16 @@ export default function LoginPage() {
     onCompleted: (data) => setIsUsernameAvailable(data.checkUsername),
   });
 
+  useEffect(() => {
+    if (!registerUsername) {
+      setIsUsernameAvailable(null);
+    }
+  }, [registerUsername]);
+
   const handleRegisterUsernameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setRegisterUsername(value);
+    setShakeInput(false);
     if (value) {
       await checkUsername({ variables: { userName: value } });
     }
@@ -161,9 +175,16 @@ export default function LoginPage() {
 
   const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLogInUsername(e.target.value);
+    setShakeInput(false);
   };
 
   const handleLogin = async () => {
+    if (!logInUsername) {
+      setShakeInput(true);
+      setTimeout(() => setShakeInput(false), 500);
+      return;
+    }
+
     try {
       await loginUser({ variables: { userName: logInUsername } });
     } catch (error) {
@@ -202,10 +223,12 @@ export default function LoginPage() {
                     <div className="flex flex-col items-center gap-5">
                       <input
                         id="log-in-input"
-                        className="text w-60 xs:w-72 p-2 border-2 focus:border-transparent rounded bg-transparent text-center focus:outline-none focus:ring-2 focus:ring-gray-500"
+                        className={`text w-60 xs:w-72 p-2 border-2 border-gray-500 rounded bg-transparent text-center focus:outline-none 
+                          ${shakeInput ? 'animate-shake border-red-500' : 'focus:border-white'}`}
                         placeholder="Username"
                         value={logInUsername}
                         onChange={handleLoginChange}
+                        onAnimationEnd={() => setShakeInput(false)}
                       />
                       <CustomButton text="Log in" onClick={handleLogin} />
                     </div>
@@ -219,19 +242,28 @@ export default function LoginPage() {
                   </>
                 ) : (
                   <>
-                    <h2 className="sub-header mb-5">Or register to start a new adventure</h2>
+                    <h2 className="sub-header mb-10">Or register to start a new adventure</h2>
                     <input
                       id="register-input"
                       value={registerUsername}
                       onChange={handleRegisterUsernameChange}
-                      className={`text w-60 xs:w-72 p-2 border-2 rounded bg-transparent text-center focus:outline-none 
-                        ${isUsernameAvailable === false
-                        ? 'border-red-500 focus:ring-2 focus:ring-red-500'
-                        : isUsernameAvailable === true
-                          ? 'border-green-500 focus:ring-2 focus:ring-green-500'
-                          : 'focus:ring-2 focus:ring-gray-500'}`}
+                      onFocus={() => setShakeInput(false)}
+                      className={`text w-60 xs:w-72 p-2 border-2 rounded bg-transparent text-center focus:outline-none
+    ${shakeInput ? 'animate-shake border-red-500' :
+                        isUsernameAvailable === false ? 'border-red-500' :
+                          isUsernameAvailable === true ? 'border-green-500' : 'border-gray-500 focus:border-white'}`}
                       placeholder="Username"
                     />
+                    <p
+                      className={`absolute left-1/2 transform -translate-x-1/2 translate-y-12 text px-2 rounded inline-flex whitespace-nowrap
+                        ${isUsernameAvailable === false ? 'bg-red-500' :
+                        isUsernameAvailable === true ? 'bg-green-500' : 'bg-transparent'}`}>
+                      {isUsernameAvailable === false
+                        ? 'Username is taken'
+                        : isUsernameAvailable === true
+                          ? 'Username is available'
+                          : ''}
+                    </p>
                     <CustomButton text="Register" onClick={handleRegister} />
                     <div className="text">
                       Already have an account?{' '}
