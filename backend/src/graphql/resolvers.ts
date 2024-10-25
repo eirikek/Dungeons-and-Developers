@@ -2,6 +2,8 @@ import Monster from '../model/Monsters.ts';
 import fetchMonsters from '../scripts/fetchMonsters.ts';
 import Race from '../model/Race.ts';
 import fetchRaces from '../scripts/fetchRaces.ts'
+import Class from '../model/Class.js';
+import fetchClasses from '../scripts/fetchClasses.js';
 
 
 
@@ -11,6 +13,12 @@ export default {
       const totalRaces = await Race.countDocuments();
       const races = await Race.find().skip(offset).limit(limit)
       return {races, totalRaces};
+    },
+
+    async classes(_: any, offset = 0, limit = 1) {
+      const totalClasses = await Class.countDocuments();
+      const classes= await Class.find().skip(offset).limit(limit)
+      return {classes, totalClasses};
     },
 
     async monsters(_:any, {searchTerm = '', offset = 0, limit = 8 }) {
@@ -38,6 +46,10 @@ export default {
 
     async race(_:any,{id}:any){
       return Race.findOne({index:id})
+    },
+
+    async class(_:any, {id}:any){
+      return Class.findOne({index:id})
     }
   },
 
@@ -49,7 +61,11 @@ export default {
 
     async fetchRaces(){
       await fetchRaces();
-      return 'Races fetched'
+      return 'Races fetched';
+    },
+    async fetchClasses(){
+      await fetchClasses();
+      return 'Classes fetched';
     }
 
 

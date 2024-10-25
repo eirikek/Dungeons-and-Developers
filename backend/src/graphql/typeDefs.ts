@@ -16,6 +16,7 @@ export default gql`
          index: String!
          name: String!
          hit_die: Int!
+         proficiency_choices: [String!]
     
     }
 
@@ -59,6 +60,8 @@ export default gql`
         user(id: ID!): User!
         races(offset: Int, limit: Int): RaceResult!
         race(id: ID!): Race!
+        classes(offset: Int, limit: Int): ClassResult! 
+        class(id: ID!): Class!
         
     }
 
@@ -69,11 +72,16 @@ export default gql`
     type RaceResult{
         races: [Race!]!
         totalRaces: Int!
-        }
+    }
+    
+    type ClassResult {
+    classes: [Class!]!
+    totalClasses: Int!
+    }
 
     type Mutation {
         fetchRaces: String!
-
+        fetchClasses: String!
         fetchMonsters: String!
     }
 `;

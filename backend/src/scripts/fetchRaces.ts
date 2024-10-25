@@ -1,6 +1,5 @@
 import axios from 'axios';
 import mongoose from 'mongoose';
-import imageMapping from '../utilityBackend/RaceMapping.ts';
 import Race from '../model/Race.js';
 
 const racesURL = 'https://www.dnd5eapi.co/api/races';
@@ -25,8 +24,9 @@ async function fetchRaces() {
       //console.log(raceImage, "RaceImage");
 
       //if (raceDetails.data.image) {
-
+      const inDB = await Race.findOne({index: raceDetails.data.index})
         //const imageUrl =  raceImage || undefined;
+      if(!inDB) {
 
         const raceDocument = new Race({
           index: raceDetails.data.index,
@@ -42,6 +42,7 @@ async function fetchRaces() {
         console.log(`race saved: ${raceDetails.data.name}`);
       }
     //}
+    }
 
     console.log('All race saved to MongoDB!');
   } catch (error) {
