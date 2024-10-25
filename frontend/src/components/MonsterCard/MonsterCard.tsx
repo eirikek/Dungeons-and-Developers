@@ -1,12 +1,18 @@
 import { useContext, useEffect, useState } from 'react';
 import NoMonsterImageFound from '../../assets/images/no_monster_image_found.jpg';
 import { DungeonContext } from '../../context/DungeonContext.tsx';
-import { MonsterCardDataProps } from '../../hooks/useMonster.ts';
 import DungeonButton from './DungeonButton.tsx';
 import MonsterReviewModal from './MonsterReviewModal.tsx';
 import MonsterDetailsModal from './MonsterDetailsModal.tsx';
 
-export interface MonsterCardProps extends MonsterCardDataProps {
+export interface MonsterCardProps {
+  index: string;
+  name: string;
+  type: string;
+  hp: number;
+  alignment: string;
+  size: string;
+  img?: string;
   onLoad: () => void;
 }
 
