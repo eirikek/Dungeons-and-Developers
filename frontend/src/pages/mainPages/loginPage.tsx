@@ -18,8 +18,12 @@ const CREATE_USER = gql`
             user {
                 id
                 userName
-                class
-                race
+                class {
+                    name
+                }
+                race {
+                    name
+                }
                 abilityScores {
                     name
                     score
@@ -39,8 +43,12 @@ const LOGIN_USER = gql`
             user {
                 id
                 userName
-                class
-                race
+                class {
+                    name
+                }
+                race {
+                    name
+                }
                 abilityScores {
                     name
                     score

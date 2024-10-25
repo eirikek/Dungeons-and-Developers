@@ -1,78 +1,68 @@
-import { useEffect, useState } from 'react';
+import { useMemo} from 'react';
+import { gql, useQuery } from '@apollo/client';
 
-interface ProficiencyOption {
-  item: {
-    index: string;
-    name: string;
-    url: string;
-  };
-}
 
-interface ProficiencyChoice {
-  desc: string;
-  choose: number;
-  type: string;
-  from: {
-    options: ProficiencyOption[];
-  };
-}
+
+const GET_CLASSES = gql`
+    query GetClasses($offset: Int, $limit: Int) {
+        classes(offset: $offset, limit: $limit) {
+            classes {
+                index
+                name
+                hit_die
+            }
+            totalClasses
+        }
+    }
+`;
+
+
+
+//interface ProficiencyChoice {
+  //desc: string;
+
+//}
 
 interface ClassData {
   name: string;
   hit_die: number;
   index: string;
-  skills: string[];
+  //proficiency_choices: ProficiencyChoice[];
 }
 
-function useClasses(className: string) {
-  const [data, setData] = useState<ClassData>({
-    name: '',
-    hit_die: 0,
-    index: '',
-    skills: [],
+function useClass(currentPage: number, classesPerPage: number) {
+  const offset = (currentPage - 1) * classesPerPage;
+
+  const { data, error, loading } = useQuery<{
+    classes: { classes: ClassData[], totalClasses: number }
+  }>(GET_CLASSES, {
+    variables: { offset, limit: classesPerPage },
+    fetchPolicy: 'network-only',
   });
 
-  useEffect(() => {
-    let isMounted = true;  // To avoid setting state on unmounted component
+  console.log('Data from server: ', data);
+  console.log(data)
 
-    // Fetch data only if the className changes
-    if (className) {
-      fetch(`https://www.dnd5eapi.co/api/classes/${className}`)
-        .then((response) => response.json())
-        .then((json) => {
-          if (isMounted) {
-            const proficiencyChoices: ProficiencyChoice | undefined = json.proficiency_choices?.find(
-              (choice: ProficiencyChoice) => choice.type === 'proficiencies',
-            );
+  const transformedClasses = useMemo(() => {
+    if (!data || !data.classes) return [];
+    return data.classes.classes.map(classs => ({
+      index: classs.index,
+      name: classs.name,
+      hit_die: classs.hit_die,
+      //Chatgpt, line 53, to 56
+      //proficiency_choices: Array.isArray(classs.proficiency_choices)
+      //? classs.proficiency_choices.map((choice: ProficiencyChoice) => choice.desc)
+       // : []
+    }));
+  }, [data]);
 
-            const skills = proficiencyChoices
-              ? proficiencyChoices.from.options.map((option: ProficiencyOption) =>
-                option.item.name.replace('Skill: ', ''),
-              )
-              : [];
-
-            setData({
-              name: json.name,
-              hit_die: json.hit_die,
-              index: json.index,
-              skills,
-            });
-          }
-        })
-        .catch((error) => console.log(error));
-    }
-
-    return () => {
-      isMounted = false;  // Cleanup function
-    };
-  }, [className]);
 
   return {
-    name: data.name,
-    hit_die: data.hit_die,
-    index: data.index,
-    skills: data.skills,
+    classes: transformedClasses,
+    totalClasses: data?.classes.totalClasses || 0,
+    loading,
+    error,
   };
 }
 
-export default useClasses;
+export default useClass;

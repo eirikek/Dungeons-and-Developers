@@ -1,53 +1,64 @@
-import { createContext, useReducer } from 'react';
+import { createContext, ReactNode, useReducer } from 'react';
 
-
-
-const initialState = {
-  user: ""
+// Define the initial state with proper typing
+const initialState: LoginState = {
+  user: localStorage.getItem('token') || '',
 };
 
-interface LoginState{
-  user: string
+// Define the structure of the state
+interface LoginState {
+  user: string;
 }
 
-if (localStorage.getItem('token')) {
-  initialState.user = JSON.parse(localStorage.getItem('token')!);
+// Define the structure of the action (in this case, only 'LOGIN')
+interface LoginAction {
+  type: 'LOGIN';
+  payload: {
+    token: string;
+  };
 }
 
-const AuthContext = createContext({
-  user: "",
-  login: (useData) => {
+type AuthAction = LoginAction;
+
+const AuthContext = createContext<{
+  user: string;
+  login: (data: { token: string }) => void;
+}>({
+  user: '',
+  login: () => {
+
   },
 });
 
-function authReducer( state: LoginState, action: any ) {
+function authReducer(state: LoginState, action: AuthAction): LoginState {
   switch (action.type) {
     case 'LOGIN':
       return {
         ...state,
-        user: action.payload,
+        user: action.payload.token,
       };
     default:
       return state;
   }
 }
 
-function AuthProvider() {
-  const [state, dispatch] = useReducer(authReducer, { user: "" })
-
-  const login = (useData: { token: string; }) => {
-    localStorage.setItem('token', useData.token);
-
-    dispatch({ type: 'LOGIN', payload: useData})}
-
-
-
-  return(
-    <>
-      <AuthContext.Provider
-      value={{user: state.user, login}}
-      />
-    </>
-  )
+interface AuthProviderProps {
+  children: ReactNode;
 }
-export {AuthContext, AuthProvider}
+
+function AuthProvider({ children }: AuthProviderProps) {
+  const [state, dispatch] = useReducer(authReducer, initialState);
+
+  const login = (userData: { token: string }) => {
+    localStorage.setItem('token', userData.token);
+    dispatch({ type: 'LOGIN', payload: userData });
+  };
+
+  return (
+    <AuthContext.Provider value={{ user: state.user, login }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export { AuthContext, AuthProvider };
