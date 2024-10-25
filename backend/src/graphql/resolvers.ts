@@ -1,6 +1,9 @@
 import User from './../model/User.ts';
 import Monster from '../model/Monsters.ts';
 import fetchMonsters from '../scripts/fetchMonsters.ts';
+import jwt from 'jsonwebtoken';
+
+const SECRET_KEY = process.env.SECRET_KEY || 'secret_key';
 
 export default {
   Query: {
@@ -37,15 +40,47 @@ export default {
 
   Mutation: {
     async createUser(_, { userName }) {
+      const existingUser = await User.findOne({ userName });
+      if (existingUser) {
+        throw new Error('Username is already taken');
+      }
+
       const user = new User({ userName });
       await user.save();
+
+      const token = jwt.sign({ id: user._id, userName: user.userName }, SECRET_KEY, { expiresIn: '2h' });
+
       return {
-        id: user._id,
-        userName: user.userName,
-        class: user.class,
-        race: user.race,
-        abilityScores: user.abilityScores,
-        equipments: user.equipments,
+        user: {
+          id: user._id,
+          userName: user.userName,
+          class: user.class,
+          race: user.race,
+          abilityScores: user.abilityScores,
+          equipments: user.equipments,
+        },
+        token,
+      };
+    },
+
+    async loginUser(_, { userName }) {
+      const user = await User.findOne({ userName });
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      const token = jwt.sign({ id: user._id, userName: user.userName }, SECRET_KEY, { expiresIn: '2h' });
+
+      return {
+        user: {
+          id: user._id,
+          userName: user.userName,
+          class: user.class,
+          race: user.race,
+          abilityScores: user.abilityScores,
+          equipments: user.equipments,
+        },
+        token,
       };
     },
 

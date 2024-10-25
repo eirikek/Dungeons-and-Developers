@@ -14,16 +14,40 @@ const CHECK_USERNAME = gql`
 const CREATE_USER = gql`
     mutation createUser($userName: String!) {
         createUser(userName: $userName) {
-            id
-            userName
-            class
-            race
-            abilityScores {
-                name
-                score
+            token
+            user {
+                id
+                userName
+                class
+                race
+                abilityScores {
+                    name
+                    score
+                }
+                equipments {
+                    name
+                }
             }
-            equipments {
-                name
+        }
+    }
+`;
+
+const LOGIN_USER = gql`
+    mutation loginUser($userName: String!) {
+        loginUser(userName: $userName) {
+            token
+            user {
+                id
+                userName
+                class
+                race
+                abilityScores {
+                    name
+                    score
+                }
+                equipments {
+                    name
+                }
             }
         }
     }
@@ -63,7 +87,28 @@ export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [direction, setDirection] = useState(1);
   const [registerUsername, setRegisterUsername] = useState('');
+  const [logInUsername, setLogInUsername] = useState('');
   const [isUsernameAvailable, setIsUsernameAvailable] = useState<boolean | null>(null);
+
+  const [createUser] = useMutation(CREATE_USER, {
+    onCompleted: (data) => {
+      const { token } = data.createUser;
+      localStorage.setItem('token', token);
+      window.location.href = '/project2/home';
+    },
+    onError: () => setIsUsernameAvailable(false),
+  });
+
+  const [loginUser] = useMutation(LOGIN_USER, {
+    onCompleted: (data) => {
+      const { token } = data.loginUser;
+      localStorage.setItem('token', token);
+      window.location.href = '/project2/home';
+    },
+    onError: (error) => {
+      console.error('Login failed:', error.message);
+    },
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -82,15 +127,13 @@ export default function LoginPage() {
     setIsLogin(!isLogin);
   };
 
-  const [createUser] = useMutation(CREATE_USER, {
-    onCompleted: () => setIsUsernameAvailable(true),
-    onError: () => setIsUsernameAvailable(false),
-  });
-
   const handleRegister = async () => {
+    if (isUsernameAvailable === false) {
+      console.log('Username is already taken.');
+      return;
+    }
     try {
-      const { data } = await createUser({ variables: { userName: registerUsername } });
-      console.log('User created:', data);
+      await createUser({ variables: { userName: registerUsername } });
     } catch (error) {
       console.error('Error registering user:', error);
     }
@@ -105,6 +148,18 @@ export default function LoginPage() {
     setRegisterUsername(value);
     if (value) {
       await checkUsername({ variables: { userName: value } });
+    }
+  };
+
+  const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLogInUsername(e.target.value);
+  };
+
+  const handleLogin = async () => {
+    try {
+      await loginUser({ variables: { userName: logInUsername } });
+    } catch (error) {
+      console.error('Error logging in:', error);
     }
   };
 
@@ -141,8 +196,10 @@ export default function LoginPage() {
                         id="log-in-input"
                         className="text w-60 xs:w-72 p-2 border-2 focus:border-transparent rounded bg-transparent text-center focus:outline-none focus:ring-2 focus:ring-gray-500"
                         placeholder="Username"
+                        value={logInUsername}
+                        onChange={handleLoginChange}
                       />
-                      <CustomButton text="Log in" linkTo="/project2/home" />
+                      <CustomButton text="Log in" onClick={handleLogin} />
                     </div>
                     <div className="text">
                       Don't have an account?{' '}

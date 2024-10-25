@@ -49,8 +49,14 @@ export default gql`
         totalMonsters: Int!
     }
 
+    type AuthPayload {
+        token: String!
+        user: User!
+    }
+
     type Mutation {
         fetchMonsters: String!
-        createUser(userName: String!): User!
+        createUser(userName: String!): AuthPayload!
+        loginUser(userName: String!): AuthPayload!
     }
 `;
