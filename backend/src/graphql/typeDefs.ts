@@ -35,6 +35,11 @@ export default gql`
         charisma: Int!
         image: String
     }
+    type AbilityScore{
+        name: String!
+        index: String!
+        desc: [String!]!
+         }
 
     type Ability {
         name: String!
@@ -62,8 +67,16 @@ export default gql`
         race(id: ID!): Race!
         classes(offset: Int, limit: Int): ClassResult! 
         class(id: ID!): Class!
+        abilities(offset: Int, limit: Int): AbilityResult! 
+        ability(id: ID!): AbilityScore!
+        
         
     }
+    
+    type AbilityResult {
+        abilities: [AbilityScore!]!
+        totalAbilities: Int!
+        }
 
     type MonsterResult {
         monsters: [Monster!]!
@@ -83,5 +96,6 @@ export default gql`
         fetchRaces: String!
         fetchClasses: String!
         fetchMonsters: String!
+        fetchAbilityScores: String!
     }
 `;

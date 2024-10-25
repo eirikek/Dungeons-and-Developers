@@ -4,6 +4,8 @@ import Race from '../model/Race.ts';
 import fetchRaces from '../scripts/fetchRaces.ts'
 import Class from '../model/Class.js';
 import fetchClasses from '../scripts/fetchClasses.js';
+import AbilityScore from '../model/AbilityScore.js';
+import fetchAbilityScores from '../scripts/fetchAbilityScores.js';
 
 
 
@@ -13,6 +15,12 @@ export default {
       const totalRaces = await Race.countDocuments();
       const races = await Race.find().skip(offset).limit(limit)
       return {races, totalRaces};
+    },
+
+    async abilities(_: any, offset = 0, limit = 1) {
+      const totalAbilities = await AbilityScore.countDocuments();
+      const abilities = await AbilityScore.find().skip(offset).limit(limit)
+      return {abilities, totalAbilities};
     },
 
     async classes(_: any, offset = 0, limit = 1) {
@@ -44,6 +52,10 @@ export default {
       return Monster.findOne({ index: id }); // Hent et spesifikt monster basert på ID
     },
 
+    async ability(_:any, {id}:any){
+      return AbilityScore.findOne({index:id})
+    },
+
     async race(_:any,{id}:any){
       return Race.findOne({index:id})
     },
@@ -66,6 +78,11 @@ export default {
     async fetchClasses(){
       await fetchClasses();
       return 'Classes fetched';
+    },
+
+    async fetchAbilityScores(){
+      await fetchAbilityScores()
+      return 'Abilities fetched';
     }
 
 
