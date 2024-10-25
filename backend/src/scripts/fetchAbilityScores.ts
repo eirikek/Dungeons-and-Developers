@@ -15,34 +15,36 @@ async function fetchAbilityScores() {
 
     const { data } = await axios.get(abilitiesURL);
     const abilities = data.results;
+    console.log(abilities);
 
 
     for (const ability of abilities) {
       const abilityDetails = await axios.get(`${abilitiesURL}/${ability.index}`);
+      console.log(abilityDetails, "this is testing");
 
       const inDB = await AbilityScore.findOne({index: abilityDetails.data.index})
+
 
       if(!inDB) {
 
         const abilityDocument = new AbilityScore({
           index: abilityDetails.data.index,
           name: abilityDetails.data.name,
-          desc: abilityDetails.data.desc
-
+          desc: Array.isArray(abilityDetails.data.desc) ? abilityDetails.data.desc : []
         });
 
         await abilityDocument.save();
-        console.log(`race saved: ${abilityDetails.data.name}`);
+        console.log(`ability saved: ${abilityDetails.data.name}`);
       }
 
     }
 
-    console.log('All race saved to MongoDB!');
+    console.log('All abilities saved to MongoDB!');
   } catch (error) {
-    console.error('Error fetching or saving race:', error);
+    console.error('Error fetching or saving abilities:', error);
   }
 }
 
-fetchAbilityScores().then(() => console.log('Race is fetched'));
+fetchAbilityScores().then(() => console.log('Abilities is fetched'));
 
 export default fetchAbilityScores;

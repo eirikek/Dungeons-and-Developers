@@ -9,6 +9,7 @@ const GET_ABILITYSCORES = gql`
             abilities {
                 index
                 name
+                desc
             }
             totalAbilities
         }
@@ -31,15 +32,15 @@ function useAbilityScores(currentPage: number, abilitiesPerPage: number) {
     variables: { offset, limit: abilitiesPerPage },
     fetchPolicy: 'network-only',
   });
+  console.log('GraphQL Response:', data);
 
 
   const transformedAbilities = useMemo(() => {
     if (!data || !data.abilities) return [];
-    return data.abilities.abilities.map(abilities => ({
-      index: abilities.index,
-      name: abilities.name,
-      desc: abilities.desc
-
+    return data.abilities.abilities.map(ability => ({
+      index: ability.index,
+      name: ability.name,
+      desc: Array.isArray(ability.desc) ? ability.desc : []
     }));
   }, [data]);
 

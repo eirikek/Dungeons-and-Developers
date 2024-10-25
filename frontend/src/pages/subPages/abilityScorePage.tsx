@@ -8,17 +8,25 @@ export default function AbilityScorePage() {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error loading abilities.</div>;
+  console.log(abilities);
+
 
   return (
     <SubPageLayout>
       <section className="flex flex-col items-center w-full gap-10">
-        {abilities.map((ability) => (
+        {
+          abilities.map((ability) =>
+
+          (
+
           <AbilityScoreCard
+
             key={ability.index}
             name={ability.name}
             description={Array.isArray(ability.desc) ? ability.desc.join(', ') : ''}
           />
         ))}
+
       </section>
     </SubPageLayout>
   );
