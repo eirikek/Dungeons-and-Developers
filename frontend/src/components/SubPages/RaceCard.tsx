@@ -2,11 +2,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
 
+
 interface RaceCardProps {
   name: string;
   description: string;
   imageUrl: string;
 }
+
 
 const RaceCard: React.FC<RaceCardProps> = ({ name, description, imageUrl }) => {
   return (

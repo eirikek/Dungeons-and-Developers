@@ -3,9 +3,9 @@ import { model, Schema } from 'mongoose';
 const RaceSchema = new Schema({
   index: String,
   name: String,
-  speed: String,
+  speed: Number,
   alignment: String,
-  size: Number,
+  size: String,
   size_description: String,
   img: String
 });

@@ -1,18 +1,13 @@
 import { gql } from 'apollo-server';
 
 export default gql`
-    type Player {
-        characterName: String!
-        characterClass: String!
-        race: String!
-    }
     
     type Race{
          index: String!
          name: String!
-         speed: String!
+         speed: Int!
          alignment: String!
-         size: Int!
+         size: String!
          size_description: String!
          img: String!
     }
@@ -20,7 +15,7 @@ export default gql`
     type Class{
          index: String!
          name: String!
-         hit_die: int!
+         hit_die: Int!
     
     }
 
@@ -58,13 +53,13 @@ export default gql`
         character: Character!
     }
 
-    type Query {
-        player(ID: ID!): Player!
-        getPlayer(amount: Int): [Player]
+    type Query {  
         monsters(searchTerm: String, offset: Int, limit: Int): MonsterResult!
         monster(id: String!): Monster!
         user(id: ID!): User!
+        races(offset: Int, limit: Int): Race!
         race(id: ID!): Race!
+        
     }
 
     type MonsterResult {
@@ -77,13 +72,6 @@ export default gql`
         }
 
     type Mutation {
-        createPlayer(playerInput: PlayerInput): Player!
-        deletePlayer(ID: ID!): Boolean
-        editPlayer(ID: ID!, editRecipeInput: EditPlayerInput): Boolean
-
-        registerUser(registerInput: RegisterInput): User
-        loginUser(loginInput: LoginInput): User
-        
         fetchRaces: String!
 
         fetchMonsters: String!
