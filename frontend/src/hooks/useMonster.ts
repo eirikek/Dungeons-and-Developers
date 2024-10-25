@@ -36,10 +36,8 @@ function useMonster(searchTerm: string, currentPage: number, monstersPerPage: nu
     monsters: { monsters: Monster[], totalMonsters: number }
   }>(GET_MONSTERS, {
     variables: { searchTerm, offset, limit: monstersPerPage },
-    fetchPolicy: 'network-only',  // Alltid hente ferske data fra serveren
+    fetchPolicy: 'network-only',
   });
-
-  console.log('Data from server: ', data);
 
   const transformedMonsters = useMemo(() => {
     if (!data || !data.monsters) return [];
