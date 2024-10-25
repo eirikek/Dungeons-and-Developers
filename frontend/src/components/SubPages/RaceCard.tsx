@@ -7,10 +7,14 @@ interface RaceCardProps {
   name: string;
   description: string;
   imageUrl: string;
+  alignment: string;
+  size: string;
+  size_description: string;
+  speed: number;
 }
 
 
-const RaceCard: React.FC<RaceCardProps> = ({ name, description, imageUrl }) => {
+const RaceCard: React.FC<RaceCardProps> = ({ name, description, imageUrl, alignment, size, size_description, speed }) => {
   return (
     <motion.section
       className="flex flex-col xl:flex-row xl:h-60 w-full justify-between items-center p-8 xl:p-12 rounded-lg bg-black bg-opacity-80 gap-10"
@@ -28,6 +32,10 @@ const RaceCard: React.FC<RaceCardProps> = ({ name, description, imageUrl }) => {
         <div>
           <h2 className="sub-header bold">{name}</h2>
           <p className="text">{description}</p>
+          <p className="text">{alignment}</p>
+          <p className="text">{size_description}</p>
+          <p className="text">Size: {size}</p>
+          <p className="text">Speed: {speed}</p>
         </div>
       </div>
       <div className="w-1/5 flex items-center justify-center xl:justify-end">

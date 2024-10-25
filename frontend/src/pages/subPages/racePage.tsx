@@ -18,12 +18,16 @@ export default function RacePage() {
     return (
       <SubPageLayout>
         <section className="flex flex-col items-center w-full gap-10">
-          {races.map((race, index) => (
+          {races.map((race) => (
             <RaceCard
-              key={index}
+              key={race.index}
               name={race.name}
               description={`${race.alignment}`}
+              size={`${race.size}`}
+              speed={race.speed}
+              size_description={`${race.size_description}`}
               imageUrl={imageMapping[race.index]}
+
             />
           ))}
         </section>

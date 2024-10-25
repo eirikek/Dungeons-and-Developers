@@ -9,7 +9,7 @@ export default gql`
          alignment: String!
          size: String!
          size_description: String!
-         img: String!
+         img: String
     }
     
     type Class{
@@ -57,7 +57,7 @@ export default gql`
         monsters(searchTerm: String, offset: Int, limit: Int): MonsterResult!
         monster(id: String!): Monster!
         user(id: ID!): User!
-        races(offset: Int, limit: Int): Race!
+        races(offset: Int, limit: Int): RaceResult!
         race(id: ID!): Race!
         
     }
