@@ -6,6 +6,7 @@ import { DungeonProvider } from './context/DungeonContext.tsx';
 import './index.css';
 import client from './client/apollo.ts';
 import {ApolloProvider} from '@apollo/react-hooks';
+import { AuthProvider } from './context/authContext.tsx';
 
 
 const queryClient = new QueryClient();
@@ -16,7 +17,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
     <DungeonProvider>
+      <AuthProvider>
       <App />
+      </AuthProvider>
     </DungeonProvider>
     </QueryClientProvider>
     

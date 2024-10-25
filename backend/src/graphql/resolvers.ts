@@ -1,16 +1,27 @@
-import Player from './../model/Player.ts';
 import Monster from '../model/Monsters.ts';
 import fetchMonsters from '../scripts/fetchMonsters.ts';
+import Race from '../model/Race.ts';
+import fetchRaces from '../scripts/fetchRaces.ts'
+import Class from '../model/Class.js';
+import fetchClasses from '../scripts/fetchClasses.js';
+
+
 
 export default {
   Query: {
-    async player(_, { ID }) {
-      return Player.findById(ID);
+    async races(_: any, offset = 0, limit= 1) {
+      const totalRaces = await Race.countDocuments();
+      const races = await Race.find().skip(offset).limit(limit)
+      return {races, totalRaces};
     },
-    async getPlayer(_, { amount }) {
-      return Player.find().limit(amount);
+
+    async classes(_: any, offset = 0, limit = 1) {
+      const totalClasses = await Class.countDocuments();
+      const classes= await Class.find().skip(offset).limit(limit)
+      return {classes, totalClasses};
     },
-    async monsters(_, { searchTerm = '', offset = 0, limit = 8 }) {
+
+    async monsters(_:any, {searchTerm = '', offset = 0, limit = 8 }) {
       const query = searchTerm
         ? { name: { $regex: searchTerm, $options: 'i' } }
         : {};
@@ -25,11 +36,21 @@ export default {
         monsters,
         totalMonsters,
       };
+
+
     },
 
-    async monster(_, { id }) {
+    async monster(_:any, { id }:any) {
       return Monster.findOne({ index: id }); // Hent et spesifikt monster basert på ID
     },
+
+    async race(_:any,{id}:any){
+      return Race.findOne({index:id})
+    },
+
+    async class(_:any, {id}:any){
+      return Class.findOne({index:id})
+    }
   },
 
   Mutation: {
@@ -38,49 +59,16 @@ export default {
       return 'Monsters fetched and stored successfully!';
     },
 
-    async createPlayer(_, { playerInput: { username, userID, characterName, characterClass, race, abilityScores } }) {
-      const createdPlayer = new Player({
-        username: username,
-        userID: userID,
-        characterName: characterName,
-        characterClass: characterClass,
-        race: race,
-        abilityScores: [abilityScores[0]],
-      });
-      const res = await createdPlayer.save();
-      const playerObject = res.toObject();
-      return {
-        id: res.id,
-        ...playerObject,
-      };
+    async fetchRaces(){
+      await fetchRaces();
+      return 'Races fetched';
     },
-    async deletePlayer(_, { ID }) {
-      const deleted = (await Player.deleteOne({
-        _id: ID,
-      })).deletedCount;
-      return deleted;
-    },
-    async editPlayer(_, { ID }, {
-      playerInput: {
-        username,
-        userID,
-        characterName,
-        characterClass,
-        race,
-        abilityScores,
-      },
-    }) {
-      const wasEdited = (await Player.updateOne({ _id: ID },
-        {
-          username: username,
-          userID: userID,
-          characterName: characterName,
-          characterClass: characterClass,
-          race: race,
-          abilityScores: abilityScores,
-        })).modifiedCount;
-      return wasEdited;
-    },
+    async fetchClasses(){
+      await fetchClasses();
+      return 'Classes fetched';
+    }
+
+
 
   },
 };

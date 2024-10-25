@@ -1,39 +1,23 @@
 import { gql } from 'apollo-server';
 
 export default gql`
-    type Player {
-        username: String!
-        userID: Int!
-        characterName: String!
-        characterClass: String!
-        race: String!
-        abilityScores: [Int!]!
+    
+    type Race{
+         index: String!
+         name: String!
+         speed: Int!
+         alignment: String!
+         size: String!
+         size_description: String!
+         img: String
     }
-
-    input RegisterInput {
-        username: String!
-    }
-
-    input LoginInput {
-        username: String!
-    }
-
-    input PlayerInput {
-        username: String!
-        userID: Int!
-        characterName: String!
-        characterClass: String!
-        race: String!
-        abilityScores: [Int!]!
-    }
-
-    input EditPlayerInput {
-        username: String!
-        userID: Int!
-        characterName: String!
-        characterClass: String!
-        race: String!
-        abilityScores: [Int!]!
+    
+    type Class{
+         index: String!
+         name: String!
+         hit_die: Int!
+         proficiency_choices: [String!]
+    
     }
 
     type Monster {
@@ -70,27 +54,34 @@ export default gql`
         character: Character!
     }
 
-    type Query {
-        player(ID: ID!): Player!
-        getPlayer(amount: Int): [Player]
+    type Query {  
         monsters(searchTerm: String, offset: Int, limit: Int): MonsterResult!
         monster(id: String!): Monster!
         user(id: ID!): User!
+        races(offset: Int, limit: Int): RaceResult!
+        race(id: ID!): Race!
+        classes(offset: Int, limit: Int): ClassResult! 
+        class(id: ID!): Class!
+        
     }
 
     type MonsterResult {
         monsters: [Monster!]!
         totalMonsters: Int!
     }
+    type RaceResult{
+        races: [Race!]!
+        totalRaces: Int!
+    }
+    
+    type ClassResult {
+    classes: [Class!]!
+    totalClasses: Int!
+    }
 
     type Mutation {
-        createPlayer(playerInput: PlayerInput): Player!
-        deletePlayer(ID: ID!): Boolean
-        editPlayer(ID: ID!, editRecipeInput: EditPlayerInput): Boolean
-
-        registerUser(registerInput: RegisterInput): User
-        loginUser(loginInput: LoginInput): User
-
+        fetchRaces: String!
+        fetchClasses: String!
         fetchMonsters: String!
     }
 `;
