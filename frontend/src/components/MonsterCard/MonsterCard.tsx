@@ -13,10 +13,9 @@ export interface MonsterCardProps {
   alignment: string;
   size: string;
   img?: string;
-  onLoad: () => void;
 }
 
-const MonsterCard = ({ index, name, type, hp, alignment, size, img, onLoad }: MonsterCardProps) => {
+const MonsterCard = ({ index, name, type, hp, alignment, size, img }: MonsterCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,19 +37,16 @@ const MonsterCard = ({ index, name, type, hp, alignment, size, img, onLoad }: Mo
   useEffect(() => {
     if (index && !img) {
       setImageLoaded(true);
-      onLoad();
     }
   }, [img, index]);
 
   const handleImageLoad = () => {
     setImageLoaded(true);
-    onLoad();
   };
 
   const handleImageError = () => {
     setImageError(true);
     setImageLoaded(true);
-    onLoad();
   };
 
   const monsterImageURL = img ? img : NoMonsterImageFound;

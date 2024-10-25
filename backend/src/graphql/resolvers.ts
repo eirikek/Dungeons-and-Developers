@@ -1,15 +1,18 @@
-import Player from './../model/Player.ts';
+import User from './../model/User.ts';
 import Monster from '../model/Monsters.ts';
 import fetchMonsters from '../scripts/fetchMonsters.ts';
 
 export default {
   Query: {
-    async player(_, { ID }) {
-      return Player.findById(ID);
+    async user(_, { ID }) {
+      return User.findById(ID);
     },
-    async getPlayer(_, { amount }) {
-      return Player.find().limit(amount);
+
+    async checkUsername(_, { userName }) {
+      const existingUser = await User.findOne({ userName: userName });
+      return !existingUser; // Return true if available, false if taken
     },
+
     async monsters(_, { searchTerm = '', offset = 0, limit = 8 }) {
       const query = searchTerm
         ? { name: { $regex: searchTerm, $options: 'i' } }
@@ -33,54 +36,22 @@ export default {
   },
 
   Mutation: {
-    async fetchMonsters() {
-      await fetchMonsters(); // Kjør funksjonen som henter monstre fra API og lagrer dem i databasen
-      return 'Monsters fetched and stored successfully!';
-    },
-
-    async createPlayer(_, { playerInput: { username, userID, characterName, characterClass, race, abilityScores } }) {
-      const createdPlayer = new Player({
-        username: username,
-        userID: userID,
-        characterName: characterName,
-        characterClass: characterClass,
-        race: race,
-        abilityScores: [abilityScores[0]],
-      });
-      const res = await createdPlayer.save();
-      const playerObject = res.toObject();
+    async createUser(_, { userName }) {
+      const user = new User({ userName });
+      await user.save();
       return {
-        id: res.id,
-        ...playerObject,
+        id: user._id,
+        userName: user.userName,
+        class: user.class,
+        race: user.race,
+        abilityScores: user.abilityScores,
+        equipments: user.equipments,
       };
     },
-    async deletePlayer(_, { ID }) {
-      const deleted = (await Player.deleteOne({
-        _id: ID,
-      })).deletedCount;
-      return deleted;
-    },
-    async editPlayer(_, { ID }, {
-      playerInput: {
-        username,
-        userID,
-        characterName,
-        characterClass,
-        race,
-        abilityScores,
-      },
-    }) {
-      const wasEdited = (await Player.updateOne({ _id: ID },
-        {
-          username: username,
-          userID: userID,
-          characterName: characterName,
-          characterClass: characterClass,
-          race: race,
-          abilityScores: abilityScores,
-        })).modifiedCount;
-      return wasEdited;
-    },
 
+    async fetchMonsters() {
+      await fetchMonsters();
+      return 'Monsters fetched!';
+    },
   },
 };
