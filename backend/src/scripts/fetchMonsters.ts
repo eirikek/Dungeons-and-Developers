@@ -1,6 +1,6 @@
 import axios from 'axios';
 import mongoose from 'mongoose';
-import Monster from '../model/Monsters.ts';
+import Monster from '../graphql/model/Monsters.ts';
 
 const imageBaseURL = 'https://www.dnd5eapi.co/api/images/monsters';
 const monstersURL = 'https://www.dnd5eapi.co/api/monsters';

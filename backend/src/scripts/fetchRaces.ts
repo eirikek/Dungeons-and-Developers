@@ -1,11 +1,9 @@
 import axios from 'axios';
 import mongoose from 'mongoose';
-import Race from '../model/Race.js';
+import Race from '../graphql/model/Race.js';
 
 const racesURL = 'https://www.dnd5eapi.co/api/races';
 const mongoUri = 'mongodb://admin:adminpassordetditt@it2810-20.idi.ntnu.no:27017/Profile?directConnection=true&authSource=admin&appName=mongosh+2.3.2';
-
-
 
 
 async function fetchRaces() {
@@ -24,9 +22,9 @@ async function fetchRaces() {
       //console.log(raceImage, "RaceImage");
 
       //if (raceDetails.data.image) {
-      const inDB = await Race.findOne({index: raceDetails.data.index})
-        //const imageUrl =  raceImage || undefined;
-      if(!inDB) {
+      const inDB = await Race.findOne({ index: raceDetails.data.index });
+      //const imageUrl =  raceImage || undefined;
+      if (!inDB) {
 
         const raceDocument = new Race({
           index: raceDetails.data.index,
@@ -41,7 +39,7 @@ async function fetchRaces() {
         await raceDocument.save();
         console.log(`race saved: ${raceDetails.data.name}`);
       }
-    //}
+      //}
     }
 
     console.log('All race saved to MongoDB!');

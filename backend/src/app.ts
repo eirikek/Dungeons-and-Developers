@@ -3,8 +3,8 @@ import { ApolloServer } from 'apollo-server';
 import mongoose from 'mongoose';
 import cors from 'cors';
 
-import typeDefs from './graphql/typeDefs.js';
-import resolvers from './graphql/resolvers.js';
+import typeDefs from './graphql/typeDefs/index.ts';
+import resolvers from './graphql/resolvers/index.ts';
 
 const app = express();
 app.use(express.json());

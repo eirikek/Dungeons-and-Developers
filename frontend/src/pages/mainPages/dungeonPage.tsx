@@ -1,8 +1,6 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import CustomInput from '../../components/CustomInput/CustomInput.tsx';
 import DungeonMonsterGrid from '../../components/Dungeon/DungeonMonsterGrid.tsx';
-import DungeonStats from '../../components/Dungeon/DungeonStats.tsx';
-import { DungeonContext } from '../../context/DungeonContext.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 
 export default function DungeonPage() {
@@ -11,7 +9,6 @@ export default function DungeonPage() {
     return savedName || 'Enter dungeon name';
   });
 
-  const { dungeonMonsters } = useContext(DungeonContext);
 
   const handleSaveDungeonName = (newName: string) => {
     setDungeonName(newName);
@@ -31,7 +28,6 @@ export default function DungeonPage() {
             value={dungeonName}
             onSave={handleSaveDungeonName}
           />
-          <DungeonStats monsters={dungeonMonsters} />
 
           <DungeonMonsterGrid />
         </div>
