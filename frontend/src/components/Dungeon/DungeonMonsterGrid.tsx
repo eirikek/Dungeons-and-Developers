@@ -1,50 +1,23 @@
-import { hourglass } from 'ldrs';
-import { useContext, useState, useEffect } from 'react';
-import { DungeonContext } from '../../context/DungeonContext.tsx';
-import MonsterCard from '../MonsterCard/MonsterCard.tsx';
+import { useContext } from 'react';
+import { DungeonContext } from '../../context/DungeonContext';
+import MonsterCard from '../MonsterCard/MonsterCard';
 
 const DungeonMonsterGrid = () => {
   const { dungeonMonsters } = useContext(DungeonContext);
-  const [loadedMonsters, setLoadedMonsters] = useState<number>(0);
-
-  // Register the hourglass if necessary
-  useEffect(() => {
-    hourglass.register();
-  }, []);
-
-  const totalMonsters = dungeonMonsters.length;
-  const isLoading = loadedMonsters < totalMonsters;
-
-  const handleMonsterLoad = () => {
-    setLoadedMonsters((prevCount) => prevCount + 1);
-  };
 
   return (
-    <div className="relative flex-grow w-full overflow-y-auto">
-      {/* Hourglass overlay during loading */}
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center h-1/2">
-          <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
-        </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-10 gap-y-5 place-items-center">
+      {dungeonMonsters.length === 0 ? (
+        <p>No monsters in dungeon</p>
+      ) : (
+        dungeonMonsters.map((monster, idx) => (
+          <MonsterCard
+            key={idx}
+            {...monster}
+            hp={monster.hit_points} // Map hit_points to hp
+          />
+        ))
       )}
-
-      {dungeonMonsters.length === 0 && (
-        <div
-          className="absolute inset-0 flex items-center justify-center h-1/2 sub-header">
-          <p>No monsters in dungeon</p>
-        </div>
-      )}
-
-      {/* MonsterCards rendered but hidden until loading completes */}
-      <div
-        className={`grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-10 gap-y-5 place-items-center transition-opacity duration-500 p-5 ${
-          isLoading ? 'opacity-0 pointer-events-none' : 'opacity-100'
-        }`}
-      >
-        {dungeonMonsters.map((monster, idx) => (
-          <MonsterCard key={idx} {...monster} onLoad={handleMonsterLoad} />
-        ))}
-      </div>
     </div>
   );
 };

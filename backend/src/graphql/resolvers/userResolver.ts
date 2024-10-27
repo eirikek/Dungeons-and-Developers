@@ -1,7 +1,9 @@
 import User from '../model/User.ts';
-import Race from '../model/Race.ts';
-import Class from '../model/Class.ts';
+import Monster from '../model/Monsters.ts';
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
+import Race from '../model/Race.js';
+import Class from '../model/Class.js';
 
 const SECRET_KEY = process.env.SECRET_KEY || 'secret_key';
 
@@ -11,13 +13,13 @@ interface UserArgs {
 
 export default {
   Query: {
-    async user(_: any, { ID }: { ID: string }) {
-      return User.findById(ID).populate('race').populate('class');
+    async user(_: any, { id }: { id: string }) {
+      return User.findById(id).populate('race').populate('class').populate('favoritedMonsters');
     },
 
     async checkUsername(_: any, { userName }: UserArgs) {
       const existingUser = await User.findOne({ userName });
-      return !existingUser; // Return true if available, false if taken
+      return !existingUser;
     },
   },
 
@@ -32,7 +34,7 @@ export default {
       const defaultClass = await Class.findOne({ index: 'barbarian' });
 
       if (!defaultRace || !defaultClass) {
-        throw new Error('Default race or class not found in the database');
+        throw new Error('Default race or class not found in the database'); // Check if defaults exist
       }
 
       const user = new User({
@@ -45,38 +47,42 @@ export default {
 
       const token = jwt.sign({ id: user._id, userName: user.userName }, SECRET_KEY, { expiresIn: '2h' });
 
-      return {
-        user: {
-          id: user._id,
-          userName: user.userName,
-          race: defaultRace,
-          class: defaultClass,
-          abilityScores: user.abilityScores,
-          equipments: user.equipments,
-        },
-        token,
-      };
+      return { user: await user.populate('race class'), token };
     },
 
     async loginUser(_: any, { userName }: UserArgs) {
-      const user = await User.findOne({ userName }).populate('race').populate('class');
-      if (!user) {
-        throw new Error('User not found');
-      }
+      const user = await User.findOne({ userName }).populate('race').populate('class').populate('favoritedMonsters');
+      if (!user) throw new Error('User not found');
 
       const token = jwt.sign({ id: user._id, userName: user.userName }, SECRET_KEY, { expiresIn: '2h' });
 
-      return {
-        user: {
-          id: user._id,
-          userName: user.userName,
-          race: user.race,
-          class: user.class,
-          abilityScores: user.abilityScores,
-          equipments: user.equipments,
-        },
-        token,
-      };
+      return { user, token };
+    },
+
+    async addFavoriteMonster(_: any, { userId, monsterId }: { userId: string; monsterId: string }) {
+      const user = await User.findById(userId).populate('favoritedMonsters');
+      if (!user) throw new Error('User not found');
+
+      const monsterObjectId = new mongoose.Types.ObjectId(monsterId);
+
+      if (!user.favoritedMonsters.some(fav => fav._id.equals(monsterObjectId))) {
+        user.favoritedMonsters.push(monsterObjectId);
+        await user.save();
+      }
+
+      return user.populate('favoritedMonsters');
+    },
+
+    async removeFavoriteMonster(_: any, { userId, monsterId }: { userId: string; monsterId: string }) {
+      const user = await User.findById(userId).populate('favoritedMonsters');
+      if (!user) throw new Error('User not found');
+
+      const monsterObjectId = new mongoose.Types.ObjectId(monsterId);
+
+      user.favoritedMonsters.pull(monsterObjectId);
+      await user.save();
+
+      return user.populate('favoritedMonsters');
     },
   },
 };

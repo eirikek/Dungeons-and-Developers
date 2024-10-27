@@ -2,6 +2,7 @@ import { gql } from 'apollo-server';
 
 export const raceType = gql`
     type Race {
+        id: ID!
         index: String!
         name: String!
         speed: Int!

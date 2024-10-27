@@ -17,6 +17,7 @@ export const userType = gql`
         race: Race!
         abilityScores: [Ability]!
         equipments: [Equipment]!
+        favoritedMonsters: [Monster!]!
     }
 
     type AuthPayload {
@@ -33,5 +34,7 @@ export const userType = gql`
     extend type Mutation {
         createUser(userName: String!): AuthPayload!
         loginUser(userName: String!): AuthPayload!
+        addFavoriteMonster(userId: ID!, monsterId: ID!): User!
+        removeFavoriteMonster(userId: ID!, monsterId: ID!): User!
     }
 `;

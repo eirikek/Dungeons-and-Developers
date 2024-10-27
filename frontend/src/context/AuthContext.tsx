@@ -1,32 +1,33 @@
 import { createContext, ReactNode, useReducer } from 'react';
 
-// Define the initial state with proper typing
 const initialState: LoginState = {
-  user: localStorage.getItem('token') || '',
+  token: localStorage.getItem('token') || '',
+  userId: localStorage.getItem('userId') || '',
 };
 
-// Define the structure of the state
 interface LoginState {
-  user: string;
+  token: string;
+  userId: string;
 }
 
-// Define the structure of the action (in this case, only 'LOGIN')
 interface LoginAction {
   type: 'LOGIN';
   payload: {
     token: string;
+    userId: string;
   };
 }
 
 type AuthAction = LoginAction;
 
 const AuthContext = createContext<{
-  user: string;
-  login: (data: { token: string }) => void;
+  token: string;
+  userId: string;
+  login: (data: { token: string; userId: string }) => void;
 }>({
-  user: '',
+  token: '',
+  userId: '',
   login: () => {
-
   },
 });
 
@@ -34,28 +35,25 @@ function authReducer(state: LoginState, action: AuthAction): LoginState {
   switch (action.type) {
     case 'LOGIN':
       return {
-        ...state,
-        user: action.payload.token,
+        token: action.payload.token,
+        userId: action.payload.userId,
       };
     default:
       return state;
   }
 }
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-function AuthProvider({ children }: AuthProviderProps) {
+function AuthProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  const login = (userData: { token: string }) => {
+  const login = (userData: { token: string; userId: string }) => {
     localStorage.setItem('token', userData.token);
+    localStorage.setItem('userId', userData.userId);
     dispatch({ type: 'LOGIN', payload: userData });
   };
 
   return (
-    <AuthContext.Provider value={{ user: state.user, login }}>
+    <AuthContext.Provider value={{ token: state.token, userId: state.userId, login }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { useMutation, useLazyQuery } from '@apollo/client';
 import { gql } from '@apollo/client';
+import { AuthContext } from '../../context/AuthContext.tsx';
 
 const CHECK_USERNAME = gql`
     query checkUsername($userName: String!) {
@@ -90,6 +91,7 @@ const formVariants = {
 };
 
 export default function LoginPage() {
+  const { login } = useContext(AuthContext);
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
   const [fade, setFade] = useState(true);
   const [isLogin, setIsLogin] = useState(true);
@@ -101,22 +103,24 @@ export default function LoginPage() {
 
   const [createUser] = useMutation(CREATE_USER, {
     onCompleted: (data) => {
-      const { token } = data.createUser;
-      localStorage.setItem('token', token);
+      console.log(data);
+      const { token, user } = data.createUser;
+      login({ token, userId: user.id });
       window.location.href = '/project2/home';
     },
-    onError: () => {
-      setShakeInput(true);
-    },
+    onError: () => setShakeInput(true),
   });
 
   const [loginUser] = useMutation(LOGIN_USER, {
     onCompleted: (data) => {
-      const { token } = data.loginUser;
-      localStorage.setItem('token', token);
+      const { token, user } = data.loginUser;
+      login({ token, userId: user.id });
       window.location.href = '/project2/home';
     },
-    onError: () => setShakeInput(true),
+    onError: (error) => {
+      console.error('Login Error:', error); // Detailed error logging
+      setShakeInput(true);
+    },
   });
 
   useEffect(() => {

@@ -5,7 +5,7 @@ import App from './App.tsx';
 import './index.css';
 import client from './client/apollo.ts';
 import { ApolloProvider } from '@apollo/react-hooks';
-import { AuthProvider } from './context/authContext.tsx';
+import { AuthProvider } from './context/AuthContext.tsx';
 
 
 const queryClient = new QueryClient();

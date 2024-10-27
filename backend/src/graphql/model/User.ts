@@ -6,6 +6,7 @@ const playerSchema = new Schema({
   race: { type: Types.ObjectId, ref: 'Race' },
   abilityScores: [],
   equipments: [],
+  favoritedMonsters: [{ type: Types.ObjectId, ref: 'Monster' }],
 });
 
 export default model('User', playerSchema);
