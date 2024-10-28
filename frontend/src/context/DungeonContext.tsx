@@ -6,11 +6,17 @@ import {
   GET_USER_FAVORITES,
 } from '../../../backend/src/graphql/queries.ts';
 import { MonsterCardProps } from '../interfaces/MonsterCardProps.ts';
+import MonsterDataProps from '../interfaces/MonsterDataProps.ts';
 
 interface DungeonContextType {
   dungeonMonsters: MonsterCardProps[];
   toggleDungeon: (monster: MonsterCardProps) => void;
   isInDungeon: (monsterIndex: string) => boolean;
+}
+
+interface DungeonProviderProps {
+  children: ReactNode;
+  userId: string;
 }
 
 export const DungeonContext = createContext<DungeonContextType>({
@@ -20,10 +26,6 @@ export const DungeonContext = createContext<DungeonContextType>({
   isInDungeon: () => false,
 });
 
-interface DungeonProviderProps {
-  children: ReactNode;
-  userId: string;
-}
 
 export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
   const [dungeonMonsters, setDungeonMonsters] = useState<MonsterCardProps[]>([]);
@@ -37,7 +39,26 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
 
   useEffect(() => {
     if (data?.user?.favoritedMonsters) {
-      setDungeonMonsters(data.user.favoritedMonsters);
+      console.log('Fetched favoritedMonsters:', data.user.favoritedMonsters);
+      const transformedMonsters = data.user.favoritedMonsters.map((monster: MonsterDataProps) => {
+        if (!monster.id || !monster.name || !monster.size || !monster.type || monster.hit_points === undefined || !monster.image) {
+          console.warn('Incomplete monster data:', monster);
+          return null;
+        }
+
+        return {
+          id: monster.id,
+          name: monster.name,
+          size: monster.size,
+          type: monster.type,
+          alignment: monster.alignment,
+          hp: monster.hit_points,
+          img: monster.image,
+        };
+      }).filter(Boolean);
+
+      setDungeonMonsters(transformedMonsters);
+      console.log('Dungeon monsters after transformation:', transformedMonsters);
     }
   }, [data]);
 

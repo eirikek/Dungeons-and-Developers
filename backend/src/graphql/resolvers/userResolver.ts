@@ -1,5 +1,4 @@
 import User from '../model/User.ts';
-import Monster from '../model/Monsters.ts';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import Race from '../model/Race.js';
@@ -18,7 +17,6 @@ export default {
         .populate({
           path: 'favoritedMonsters',
           select: '_id name size type alignment hit_points image',
-          options: { lean: true },
         })
         .populate('race')
         .populate('class');
