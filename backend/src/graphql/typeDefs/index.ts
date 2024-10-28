@@ -6,7 +6,9 @@ import { userType } from './userType.ts';
 
 const baseType = gql`
     type Query
-    type Mutation
+    type Mutation {
+        fetchAllData: String!
+    }
 `;
 
 export default [

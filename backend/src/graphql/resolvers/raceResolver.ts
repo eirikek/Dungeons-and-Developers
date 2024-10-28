@@ -1,5 +1,5 @@
 import Race from '../model/Race.ts';
-import fetchRaces from '../../scripts/fetchRaces.ts';
+import fetchData from '../../scripts/fetchData.js';
 
 interface RaceArgs {
   id: string;
@@ -24,9 +24,9 @@ export default {
   },
 
   Mutation: {
-    async fetchRaces() {
-      await fetchRaces();
-      return 'Races fetched!';
+    async fetchAllData() {
+      await fetchData();
+      return 'Data fetched and stored successfully!';
     },
   },
 };

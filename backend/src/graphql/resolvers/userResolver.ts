@@ -39,7 +39,7 @@ export default {
       const defaultClass = await Class.findOne({ index: 'barbarian' });
 
       if (!defaultRace || !defaultClass) {
-        throw new Error('Default race or class not found in the database'); // Check if defaults exist
+        throw new Error('Default race or class not found in the database');
       }
 
       const user = new User({

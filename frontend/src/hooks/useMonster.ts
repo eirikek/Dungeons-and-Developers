@@ -1,4 +1,4 @@
-import { useQuery, gql } from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
 import { useMemo } from 'react';
 import MonsterDataProps from '../interfaces/MonsterDataProps.ts';
 
@@ -31,7 +31,7 @@ function useMonster(searchTerm: string, currentPage: number, monstersPerPage: nu
 
   const transformedMonsters = useMemo(() => {
     if (!data || !data.monsters) return [];
-    return data.monsters.monsters.map(monster => ({
+    const mappedMonsters = data.monsters.monsters.map(monster => ({
       id: monster.id,
       name: monster.name,
       type: monster.type,
@@ -40,6 +40,8 @@ function useMonster(searchTerm: string, currentPage: number, monstersPerPage: nu
       size: monster.size,
       img: monster.image,
     }));
+
+    return Array.from(new Map(mappedMonsters.map((m) => [m.id, m])).values());
   }, [data]);
 
   return {

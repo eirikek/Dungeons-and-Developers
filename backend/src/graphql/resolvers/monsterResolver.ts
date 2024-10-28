@@ -1,5 +1,5 @@
 import Monster from '../model/Monsters.ts';
-import fetchMonsters from '../../scripts/fetchMonsters.ts';
+import fetchData from '../../scripts/fetchData.js';
 
 interface MonsterArgs {
   id: string;
@@ -55,9 +55,9 @@ export default {
   },
 
   Mutation: {
-    async fetchMonsters() {
-      await fetchMonsters();
-      return 'Monsters fetched!';
+    async fetchAllData() {
+      await fetchData();
+      return 'Data fetched and stored successfully!';
     },
   },
 };

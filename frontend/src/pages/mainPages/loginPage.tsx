@@ -118,7 +118,10 @@ export default function LoginPage() {
       window.location.href = '/project2/home';
     },
     onError: (error) => {
-      console.error('Login Error:', error); // Detailed error logging
+      console.error('Error registering user:', error);
+      if (error.graphQLErrors && error.graphQLErrors[0]) {
+        console.error('GraphQL Error Message:', error.graphQLErrors[0].message);
+      }
       setShakeInput(true);
     },
   });

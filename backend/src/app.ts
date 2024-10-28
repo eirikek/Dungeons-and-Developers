@@ -5,6 +5,7 @@ import cors from 'cors';
 
 import typeDefs from './graphql/typeDefs/index.ts';
 import resolvers from './graphql/resolvers/index.ts';
+import fetchData from './scripts/fetchData.ts';
 
 const app = express();
 app.use(express.json());
@@ -23,9 +24,16 @@ const server = new ApolloServer({
 
 mongoose.connect(MONGODBURLPROFILE)
   .then(() => {
-      console.log(('mongoDB connection connected'));
-      return server.listen({ port: 4000 });
-    },
-  ).then((result) => {
-  console.log(result.url);
-});
+    console.log('MongoDB connection established');
+    
+    server.listen({ port: 4000 }).then(({ url }) => {
+      console.log(`Server is running at ${url}`);
+
+      fetchData()
+        .then(() => console.log('Data fetching complete'))
+        .catch((error) => console.error('Error fetching data:', error));
+    });
+  })
+  .catch(error => {
+    console.error('Error connecting to MongoDB:', error);
+  });

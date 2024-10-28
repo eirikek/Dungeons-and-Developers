@@ -1,5 +1,5 @@
 import Class from '../model/Class.ts';
-import fetchClasses from '../../scripts/fetchClasses.ts';
+import fetchData from '../../scripts/fetchData.ts';
 
 interface ClassArgs {
   id: string;
@@ -24,9 +24,9 @@ export default {
   },
 
   Mutation: {
-    async fetchClasses() {
-      await fetchClasses();
-      return 'Classes fetched!';
+    async fetchAllData() {
+      await fetchData();
+      return 'Data fetched and stored successfully!';
     },
   },
 };
