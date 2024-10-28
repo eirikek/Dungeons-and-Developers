@@ -13,18 +13,6 @@ const MonsterCard = ({ id, name, type, hp, alignment, size, img }: MonsterCardPr
 
   const { toggleDungeon, isInDungeon } = useContext(DungeonContext);
 
-  //Dummy reviews
-  const reviews = [
-    { user: 'Eirik', difficulty: 50, description: 'Very challenging!' },
-    { user: 'User2', difficulty: 30, description: 'Not so hard, but cool monster' },
-    { user: 'User3', difficulty: 90, description: 'Extremly hard, do not use' },
-    { user: 'User4', difficulty: 10, description: 'Very easy!' },
-    { user: 'User5', difficulty: 50, description: 'Very challenging!' },
-    { user: 'User6', difficulty: 60, description: 'Blah blah' },
-    { user: 'User7', difficulty: 100, description: 'Extremly hard, do not use' },
-    { user: 'User8', difficulty: 15, description: 'Very easy!' },
-  ];
-
   useEffect(() => {
     if (id && !img) {
       setImageLoaded(true);
@@ -98,7 +86,7 @@ const MonsterCard = ({ id, name, type, hp, alignment, size, img }: MonsterCardPr
           <div className="flex w-full justify-between">
             {/* stopPropagation to prevent showing the details modal when the review button is clicked */}
             <div onClick={(e) => e.stopPropagation()}>
-              <MonsterReviewModal name={name} monsterIndex={id} image={monsterImageURL} />
+              <MonsterReviewModal monsterId={id} name={name} image={monsterImageURL} />
             </div>
             <button onClick={(e) => {
               e.stopPropagation();

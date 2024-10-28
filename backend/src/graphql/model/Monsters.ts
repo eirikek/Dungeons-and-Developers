@@ -1,5 +1,12 @@
 import { model, Schema } from 'mongoose';
 
+const reviewSchema = new Schema({
+  user: { type: String, required: true },
+  difficulty: { type: Number, required: true },
+  description: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
 const monsterSchema = new Schema({
   name: String,
   size: String,
@@ -7,6 +14,7 @@ const monsterSchema = new Schema({
   alignment: String,
   hit_points: Number,
   image: String,
+  reviews: [reviewSchema],
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true },

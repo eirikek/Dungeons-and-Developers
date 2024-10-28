@@ -55,3 +55,29 @@ export const REMOVE_FAVORITE_MONSTER = gql`
     }
 `;
 
+export const GET_MONSTER_REVIEWS = gql`
+    query GetMonsterReviews($monsterId: ID!) {
+        monster(id: $monsterId) {
+            reviews {
+                user
+                difficulty
+                description
+                createdAt
+            }
+        }
+    }
+`;
+
+export const ADD_REVIEW = gql`
+    mutation AddReview($monsterId: ID!, $review: ReviewInput!) {
+        addReview(monsterId: $monsterId, review: $review) {
+            reviews {
+                user
+                difficulty
+                description
+                createdAt
+            }
+        }
+    }
+`;
+

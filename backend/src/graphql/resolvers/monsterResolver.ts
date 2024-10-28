@@ -11,6 +11,12 @@ interface MonsterQueryArgs {
   limit?: number;
 }
 
+interface ReviewInput {
+  user: string;
+  difficulty: number;
+  description: string;
+}
+
 export default {
   Query: {
     async monsters(_: any, { searchTerm = '', offset = 0, limit = 8 }: MonsterQueryArgs) {
@@ -58,6 +64,16 @@ export default {
     async fetchAllData() {
       await fetchData();
       return 'Data fetched and stored successfully!';
+    },
+
+    async addReview(_: any, { monsterId, review }: { monsterId: string; review: ReviewInput }) {
+      const monster = await Monster.findById(monsterId);
+      if (!monster) throw new Error('Monster not found');
+
+      monster.reviews.push(review);
+      await monster.save();
+
+      return monster;
     },
   },
 };

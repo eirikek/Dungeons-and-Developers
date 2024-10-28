@@ -8,12 +8,15 @@ import {
   Slider,
   TextField,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { GiDaemonSkull, GiGoblinHead, GiRoundShield, GiSpikedDragonHead } from 'react-icons/gi';
 import { LuSwords } from 'react-icons/lu';
+import { useMutation } from '@apollo/client';
+import { ADD_REVIEW, GET_MONSTER_REVIEWS } from '../../../../backend/src/graphql/queries';
+import { AuthContext } from '../../context/AuthContext';
 
 type ReviewType = {
-  monsterIndex: string;
+  monsterId: string;
   name: string;
   image: string;
 };
@@ -41,24 +44,69 @@ const marks = [
   },
 ];
 
-const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
+const MonsterReviewModal = ({ name, monsterId, image }: ReviewType) => {
+  const { userId } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
-
-  const [difficulty, setDifficulty] = useState<number>(0);
+  const [difficulty, setDifficulty] = useState(50);
   const [description, setDescription] = useState('');
 
+  const [addReview] = useMutation(ADD_REVIEW, {
+    refetchQueries: [{ query: GET_MONSTER_REVIEWS, variables: { monsterId } }],
+  });
+
   const handleClickOpen = () => {
-    const savedReview = localStorage.getItem(`Review: ${monsterIndex}`);
-    if (savedReview) {
-      const parsedReview = JSON.parse(savedReview);
-      setDifficulty(parsedReview.difficulty);
-      setDescription(parsedReview.description);
-    }
     setIsOpen(true);
   };
 
   const handleClose = () => {
     setIsOpen(false);
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!userId) {
+      alert('You must be logged in to submit a review.');
+      return;
+    }
+
+    try {
+      // Console log to verify the payload before sending
+      console.log('Submitting review with payload:', {
+        monsterId,
+        review: {
+          user: userId,
+          difficulty,
+          description,
+        },
+      });
+
+      const response = await addReview({
+        variables: {
+          monsterId,
+          review: {
+            user: userId,
+            difficulty,
+            description,
+          },
+        },
+      });
+
+      // Log the successful response
+      console.log('Mutation response:', response);
+      setIsOpen(false);
+    } catch (error: any) {
+      console.error('Error submitting review:', error);
+
+      // Additional error details for Apollo Client errors
+      if (error.networkError && error.networkError.result && error.networkError.result.errors) {
+        console.error('Network error details:', error.networkError.result.errors);
+      } else if (error.graphQLErrors) {
+        console.error('GraphQL error details:', error.graphQLErrors);
+      } else {
+        console.error('Unknown error:', error.message);
+      }
+    }
   };
 
   const getStringValue = (value: number) => {
@@ -102,17 +150,6 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
         onClose={handleClose}
         PaperProps={{
           component: 'form',
-          onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-            localStorage.setItem(
-              name,
-              JSON.stringify({
-                difficulty: difficulty,
-                description: description,
-              }),
-            );
-            handleClose();
-          },
           sx: {
             width: { xs: '100vw', sm: '95vw', md: '90vw', lg: '80vw', xl: '70vw' },
             height: { xs: '100vh', sm: '85vh', md: '85vh', lg: '60vh', xl: '70vh' },
@@ -242,7 +279,7 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
           }}>
             Cancel
           </Button>
-          <Button type="submit" aria-label="Save-button" sx={{
+          <Button onClick={handleSubmit} type="submit" aria-label="Save-button" sx={{
             color: 'white',
             borderColor: 'white',
             '&:hover': {

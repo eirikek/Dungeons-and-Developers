@@ -9,11 +9,25 @@ export const monsterType = gql`
         alignment: String!
         hit_points: Int!
         image: String
+        reviews: [Review!]!
     }
 
     type MonsterResult {
         monsters: [Monster!]!
         totalMonsters: Int!
+    }
+
+    type Review {
+        user: String!
+        difficulty: Int!
+        description: String!
+        createdAt: String!
+    }
+
+    input ReviewInput {
+        user: String!
+        difficulty: Int!
+        description: String!
     }
 
     extend type Query {
@@ -23,5 +37,6 @@ export const monsterType = gql`
 
     extend type Mutation {
         fetchMonsters: String!
+        addReview(monsterId: ID!, review: ReviewInput!): Monster!
     }
 `;
