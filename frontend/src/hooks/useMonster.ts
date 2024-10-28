@@ -1,8 +1,8 @@
 import { useQuery, gql } from '@apollo/client';
 import { useMemo } from 'react';
 
-export interface Monster {
-  index: string;
+interface MonsterGraphQL {
+  id: string;
   name: string;
   size: string;
   type: string;
@@ -11,12 +11,11 @@ export interface Monster {
   image?: string;
 }
 
-// GraphQL query med søkeord og paginering
 const GET_MONSTERS = gql`
     query GetMonsters($searchTerm: String, $offset: Int, $limit: Int) {
         monsters(searchTerm: $searchTerm, offset: $offset, limit: $limit) {
             monsters {
-                index
+                id
                 name
                 size
                 type
@@ -33,7 +32,7 @@ function useMonster(searchTerm: string, currentPage: number, monstersPerPage: nu
   const offset = (currentPage - 1) * monstersPerPage;
 
   const { data, error, loading } = useQuery<{
-    monsters: { monsters: Monster[], totalMonsters: number }
+    monsters: { monsters: MonsterGraphQL[], totalMonsters: number }
   }>(GET_MONSTERS, {
     variables: { searchTerm, offset, limit: monstersPerPage },
     fetchPolicy: 'network-only',  // Alltid hente ferske data fra serveren
@@ -42,7 +41,7 @@ function useMonster(searchTerm: string, currentPage: number, monstersPerPage: nu
   const transformedMonsters = useMemo(() => {
     if (!data || !data.monsters) return [];
     return data.monsters.monsters.map(monster => ({
-      index: monster.index,
+      id: monster.id,
       name: monster.name,
       type: monster.type,
       hp: monster.hit_points,

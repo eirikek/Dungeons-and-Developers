@@ -19,17 +19,15 @@ async function fetchMonsters() {
       const monsterDetails = await axios.get(`${monstersURL}/${monster.index}`);
 
       if (monsterDetails.data.image) {
-        // Oppdatering av riktig base-URL for bilder
         const imageUrl = monsterDetails.data.image ? `${imageBaseURL}/${monsterDetails.data.index}.png` : undefined;
 
         const monsterDocument = new Monster({
-          index: monsterDetails.data.index,
           name: monsterDetails.data.name,
           size: monsterDetails.data.size,
           type: monsterDetails.data.type,
           alignment: monsterDetails.data.alignment,
           hit_points: monsterDetails.data.hit_points,
-          image: imageUrl, // Lagre hele bilde-URLen i stedet for relativ sti
+          image: imageUrl,
         });
 
         await monsterDocument.save();

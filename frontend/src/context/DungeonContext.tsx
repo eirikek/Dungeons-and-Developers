@@ -42,16 +42,17 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
   }, [data]);
 
   const toggleDungeon = async (monster: MonsterCardProps) => {
-    console.log(`Toggling dungeon for monster with index ${monster.index}`);
-    if (isInDungeon(monster.index)) {
-      await removeFavoriteMonster({ variables: { userId, monsterId: monster.index } });
+    const monsterId = monster.id;
+    if (isInDungeon(monsterId)) {
+      await removeFavoriteMonster({ variables: { userId, monsterId: monsterId } });
     } else {
-      await addFavoriteMonster({ variables: { userId, monsterId: monster.index } });
+      await addFavoriteMonster({ variables: { userId, monsterId: monsterId } });
     }
     await refetch();
+    console.log('Current dungeonMonsters after toggle:', dungeonMonsters);
   };
 
-  const isInDungeon = (monsterIndex: string) => dungeonMonsters.some((monster) => monster.index === monsterIndex);
+  const isInDungeon = (monsterId: string) => dungeonMonsters.some((monster) => monster.id === monsterId);
 
   return (
     <DungeonContext.Provider value={{ dungeonMonsters, toggleDungeon, isInDungeon }}>

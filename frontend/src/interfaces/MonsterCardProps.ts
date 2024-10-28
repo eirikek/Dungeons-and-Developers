@@ -1,5 +1,5 @@
 export interface MonsterCardProps {
-  index: string;
+  id: string;
   name: string;
   type: string;
   hp: number;

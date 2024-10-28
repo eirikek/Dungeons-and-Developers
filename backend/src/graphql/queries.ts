@@ -6,7 +6,6 @@ export const GET_USER_FAVORITES = gql`
         user(id: $userId) {
             favoritedMonsters {
                 id
-                index
                 name
                 size
                 type

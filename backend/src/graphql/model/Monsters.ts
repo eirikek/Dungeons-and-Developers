@@ -1,7 +1,6 @@
 import { model, Schema } from 'mongoose';
 
 const monsterSchema = new Schema({
-  index: String,
   name: String,
   size: String,
   type: String,

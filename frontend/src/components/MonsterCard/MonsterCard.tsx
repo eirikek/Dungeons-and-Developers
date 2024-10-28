@@ -6,7 +6,7 @@ import MonsterReviewModal from './MonsterReviewModal.tsx';
 import MonsterDetailsModal from './MonsterDetailsModal.tsx';
 import { MonsterCardProps } from '../../interfaces/MonsterCardProps.ts';
 
-const MonsterCard = ({ index, name, type, hp, alignment, size, img }: MonsterCardProps) => {
+const MonsterCard = ({ id, name, type, hp, alignment, size, img }: MonsterCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,10 +26,10 @@ const MonsterCard = ({ index, name, type, hp, alignment, size, img }: MonsterCar
   ];
 
   useEffect(() => {
-    if (index && !img) {
+    if (id && !img) {
       setImageLoaded(true);
     }
-  }, [img, index]);
+  }, [img, id]);
 
   const handleImageLoad = () => {
     setImageLoaded(true);
@@ -43,7 +43,8 @@ const MonsterCard = ({ index, name, type, hp, alignment, size, img }: MonsterCar
   const monsterImageURL = img ? img : NoMonsterImageFound;
 
   const handleToggleDungeon = () => {
-    toggleDungeon({ index, name, type, hp, alignment, size, img });
+    console.log('Toggling dungeon for monster:', { id, name, type, hp, alignment, size, img });
+    toggleDungeon({ id, name, type, hp, alignment, size, img });
   };
 
   // Function to open the modal when the card is clicked
@@ -82,7 +83,7 @@ const MonsterCard = ({ index, name, type, hp, alignment, size, img }: MonsterCar
                 style={{ display: imageLoaded ? 'block' : 'none' }}
               />
               <div className="absolute left-[75%] top-5">
-                <DungeonButton onAddToDungeonClick={handleToggleDungeon} isInDungeon={isInDungeon(index)} />
+                <DungeonButton onAddToDungeonClick={handleToggleDungeon} isInDungeon={isInDungeon(id)} />
               </div>
             </div>
           )}
@@ -97,13 +98,13 @@ const MonsterCard = ({ index, name, type, hp, alignment, size, img }: MonsterCar
           <div className="flex w-full justify-between">
             {/* stopPropagation to prevent showing the details modal when the review button is clicked */}
             <div onClick={(e) => e.stopPropagation()}>
-              <MonsterReviewModal name={name} monsterIndex={index} image={monsterImageURL} />
+              <MonsterReviewModal name={name} monsterIndex={id} image={monsterImageURL} />
             </div>
             <button onClick={(e) => {
               e.stopPropagation();
               handleToggleDungeon();
             }}
-                    className="text-4xl md:text-2xl xl:text-lg 2xl:text-sm hover:text-customRed transition-all duration-200">{isInDungeon(index) ? 'Remove from dungeon' : 'Add to dungeon'}</button>
+                    className="text-4xl md:text-2xl xl:text-lg 2xl:text-sm hover:text-customRed transition-all duration-200">{isInDungeon(id) ? 'Remove from dungeon' : 'Add to dungeon'}</button>
           </div>
         </div>
       </div>

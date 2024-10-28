@@ -14,7 +14,14 @@ interface UserArgs {
 export default {
   Query: {
     async user(_: any, { id }: { id: string }) {
-      return User.findById(id).populate('race').populate('class').populate('favoritedMonsters');
+      return User.findById(id)
+        .populate({
+          path: 'favoritedMonsters',
+          select: '_id name size type alignment hit_points image',
+          options: { lean: true },
+        })
+        .populate('race')
+        .populate('class');
     },
 
     async checkUsername(_: any, { userName }: UserArgs) {

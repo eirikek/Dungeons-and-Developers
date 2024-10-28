@@ -2,18 +2,12 @@ import { gql } from 'apollo-server';
 
 export const monsterType = gql`
     type Monster {
-        index: String!
+        id: ID!
         name: String!
         size: String!
         type: String!
         alignment: String!
         hit_points: Int!
-        hit_dice: String!
-        strength: Int!
-        dexterity: Int!
-        intelligence: Int!
-        wisdom: Int!
-        charisma: Int!
         image: String
     }
 
@@ -24,7 +18,7 @@ export const monsterType = gql`
 
     extend type Query {
         monsters(searchTerm: String, offset: Int, limit: Int): MonsterResult!
-        monster(id: String!): Monster!
+        monster(id: ID!): Monster!
     }
 
     extend type Mutation {
