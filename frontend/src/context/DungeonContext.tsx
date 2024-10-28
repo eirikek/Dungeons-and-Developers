@@ -30,7 +30,7 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
   const [addFavoriteMonster] = useMutation(ADD_FAVORITE_MONSTER);
   const [removeFavoriteMonster] = useMutation(REMOVE_FAVORITE_MONSTER);
 
-  const { data, refetch } = useQuery(GET_USER_FAVORITES, {
+  const { data } = useQuery(GET_USER_FAVORITES, {
     variables: { userId },
     skip: !userId,
   });
@@ -42,14 +42,26 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
   }, [data]);
 
   const toggleDungeon = async (monster: MonsterCardProps) => {
-    const monsterId = monster.id;
-    if (isInDungeon(monsterId)) {
-      await removeFavoriteMonster({ variables: { userId, monsterId: monsterId } });
-    } else {
-      await addFavoriteMonster({ variables: { userId, monsterId: monsterId } });
+    console.log(`Toggling dungeon for monster with id: ${monster.id}`);
+
+    try {
+      if (isInDungeon(monster.id)) {
+        console.log('Removing monster from dungeon:', monster);
+        await removeFavoriteMonster({ variables: { userId, monsterId: monster.id } });
+
+        setDungeonMonsters((prev) =>
+          prev.filter((m) => m.id !== monster.id),
+        );
+      } else {
+        console.log('Adding monster to dungeon:', monster);
+        await addFavoriteMonster({ variables: { userId, monsterId: monster.id } });
+        setDungeonMonsters((prev) => [...prev, monster]);
+      }
+
+      console.log('Dungeon monsters after direct update:', dungeonMonsters);
+    } catch (error) {
+      console.error('Error in toggleDungeon:', error);
     }
-    await refetch();
-    console.log('Current dungeonMonsters after toggle:', dungeonMonsters);
   };
 
   const isInDungeon = (monsterId: string) => dungeonMonsters.some((monster) => monster.id === monsterId);
