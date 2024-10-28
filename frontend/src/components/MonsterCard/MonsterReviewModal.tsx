@@ -11,15 +11,10 @@ import {
 import React, { useState, useContext } from 'react';
 import { GiDaemonSkull, GiGoblinHead, GiRoundShield, GiSpikedDragonHead } from 'react-icons/gi';
 import { LuSwords } from 'react-icons/lu';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { ADD_REVIEW, GET_MONSTER_REVIEWS } from '../../../../backend/src/graphql/queries';
 import { AuthContext } from '../../context/AuthContext';
-
-type ReviewType = {
-  monsterId: string;
-  name: string;
-  image: string;
-};
+import { ReviewFormType, ReviewType } from '../../interfaces/ReviewProps.ts';
 
 const marks = [
   {
@@ -44,17 +39,25 @@ const marks = [
   },
 ];
 
-const MonsterReviewModal = ({ name, monsterId, image }: ReviewType) => {
+const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
   const { userId } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const [difficulty, setDifficulty] = useState(50);
   const [description, setDescription] = useState('');
+  const { data } = useQuery(GET_MONSTER_REVIEWS, { variables: { monsterId } });
+  const existingReview = data?.monster?.reviews.find(
+    (review: ReviewType) => review.user.id === userId,
+  );
 
   const [addReview] = useMutation(ADD_REVIEW, {
     refetchQueries: [{ query: GET_MONSTER_REVIEWS, variables: { monsterId } }],
   });
 
   const handleClickOpen = () => {
+    if (existingReview) {
+      alert('You have already submitted a review for this monster.');
+      return;
+    }
     setIsOpen(true);
   };
 
@@ -92,20 +95,10 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewType) => {
         },
       });
 
-      // Log the successful response
       console.log('Mutation response:', response);
       setIsOpen(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error submitting review:', error);
-
-      // Additional error details for Apollo Client errors
-      if (error.networkError && error.networkError.result && error.networkError.result.errors) {
-        console.error('Network error details:', error.networkError.result.errors);
-      } else if (error.graphQLErrors) {
-        console.error('GraphQL error details:', error.graphQLErrors);
-      } else {
-        console.error('Unknown error:', error.message);
-      }
     }
   };
 

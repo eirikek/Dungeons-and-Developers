@@ -92,5 +92,15 @@ export default {
         select: 'id userName',
       });
     },
+
+    async deleteReview(_: any, { monsterId, reviewId }: { monsterId: string; reviewId: string }) {
+      const monster = await Monster.findById(monsterId);
+      if (!monster) throw new Error('Monster not found');
+
+      monster.reviews.pull({ _id: reviewId });
+      await monster.save();
+      
+      return monster;
+    },
   },
 };

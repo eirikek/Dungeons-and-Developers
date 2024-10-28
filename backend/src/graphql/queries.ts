@@ -86,3 +86,20 @@ export const ADD_REVIEW = gql`
         }
     }
 `;
+
+export const DELETE_REVIEW = gql`
+    mutation DeleteReview($monsterId: ID!, $reviewId: ID!) {
+        deleteReview(monsterId: $monsterId, reviewId: $reviewId) {
+            reviews {
+                id
+                user {
+                    id
+                    userName
+                }
+                difficulty
+                description
+                createdAt
+            }
+        }
+    }
+`;

@@ -18,6 +18,7 @@ export const monsterType = gql`
     }
 
     type Review {
+        id: ID!
         user: User!
         difficulty: Int!
         description: String!
@@ -38,5 +39,6 @@ export const monsterType = gql`
     extend type Mutation {
         fetchMonsters: String!
         addReview(monsterId: ID!, review: ReviewInput!): Monster!
+        deleteReview(monsterId: ID!, reviewId: ID!): Monster!
     }
 `;

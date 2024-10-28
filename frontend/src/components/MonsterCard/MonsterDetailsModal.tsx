@@ -9,16 +9,7 @@ import {
 import Review from './Review.tsx';
 import { useQuery } from '@apollo/client';
 import { GET_MONSTER_REVIEWS } from '../../../../backend/src/graphql/queries';
-
-type ReviewType = {
-  id: string;
-  user: {
-    id: string;
-    userName: string;
-  };
-  difficulty: number;
-  description: string;
-};
+import { ReviewType } from '../../interfaces/ReviewProps.ts';
 
 type MonsterDetailsModalProps = {
   id: string;
@@ -85,11 +76,7 @@ const MonsterDetailsModal = ({ id, name, hp, type, image, onClose }: MonsterDeta
               reviews.map((review) => (
                 <Review
                   key={review.id}
-                  review={{
-                    user: review.user.userName, // Pass userName as a string
-                    difficulty: review.difficulty,
-                    description: review.description,
-                  }}
+                  review={review}
                 />
               ))
             ) : (

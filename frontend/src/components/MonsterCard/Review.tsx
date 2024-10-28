@@ -1,13 +1,10 @@
 import { Slider, Box } from '@mui/material';
 import { GiDaemonSkull, GiGoblinHead, GiRoundShield, GiSpikedDragonHead } from 'react-icons/gi';
 import { LuSwords } from 'react-icons/lu';
+import { ReviewType } from '../../interfaces/ReviewProps.ts';
 
 type ReviewProps = {
-  review: {
-    user: string;
-    difficulty: number;
-    description: string;
-  };
+  review: ReviewType;
 };
 
 const marks = [
@@ -23,7 +20,7 @@ const Review = ({ review }: ReviewProps) => {
 
   return (
     <Box className="border-[1px] border-white p-4 rounded mb-4 gap-6 flex flex-col">
-      <h4 className="sub-header">{user}</h4>
+      <h4 className="sub-header">{user.userName}</h4>
       <Slider
         value={difficulty}
         marks={marks}
