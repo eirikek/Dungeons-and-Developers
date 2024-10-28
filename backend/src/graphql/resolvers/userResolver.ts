@@ -14,6 +14,7 @@ export default {
   Query: {
     async user(_: any, { id }: { id: string }) {
       return User.findById(id)
+        .select('dungeonName')
         .populate({
           path: 'favoritedMonsters',
           select: '_id name size type alignment hit_points image',
@@ -88,6 +89,16 @@ export default {
       await user.save();
 
       return user.populate('favoritedMonsters');
+    },
+
+    async updateDungeonName(_: any, { userId, dungeonName }: { userId: string; dungeonName: string }) {
+      const user = await User.findById(userId);
+      if (!user) throw new Error('User not found');
+
+      user.dungeonName = dungeonName;
+      await user.save();
+
+      return user;
     },
   },
 };

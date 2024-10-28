@@ -1,5 +1,23 @@
-// src/graphql/queries.ts
 import { gql } from '@apollo/client';
+
+export const GET_USER_DUNGEON = gql`
+    query GetUserDungeon($userId: ID!) {
+        user(id: $userId) {
+            dungeonName
+            favoritedMonsters {
+                id
+            }
+        }
+    }
+`;
+
+export const UPDATE_DUNGEON_NAME = gql`
+    mutation UpdateDungeonName($userId: ID!, $dungeonName: String!) {
+        updateDungeonName(userId: $userId, dungeonName: $dungeonName) {
+            dungeonName
+        }
+    }
+`;
 
 export const GET_USER_FAVORITES = gql`
     query GetUserFavorites($userId: ID!) {
@@ -36,3 +54,4 @@ export const REMOVE_FAVORITE_MONSTER = gql`
         }
     }
 `;
+

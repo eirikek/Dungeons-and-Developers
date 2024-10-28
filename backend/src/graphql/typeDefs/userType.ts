@@ -18,6 +18,7 @@ export const userType = gql`
         abilityScores: [Ability]!
         equipments: [Equipment]!
         favoritedMonsters: [Monster!]!
+        dungeonName: String!
     }
 
     type AuthPayload {
@@ -36,5 +37,6 @@ export const userType = gql`
         loginUser(userName: String!): AuthPayload!
         addFavoriteMonster(userId: ID!, monsterId: ID!): User!
         removeFavoriteMonster(userId: ID!, monsterId: ID!): User!
+        updateDungeonName(userId: ID!, dungeonName: String!): User!
     }
 `;

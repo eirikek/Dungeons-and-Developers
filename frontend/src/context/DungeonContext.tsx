@@ -31,6 +31,7 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
   const [dungeonMonsters, setDungeonMonsters] = useState<MonsterCardProps[]>([]);
   const [addFavoriteMonster] = useMutation(ADD_FAVORITE_MONSTER);
   const [removeFavoriteMonster] = useMutation(REMOVE_FAVORITE_MONSTER);
+  const maxFavorites = 6;
 
   const { data } = useQuery(GET_USER_FAVORITES, {
     variables: { userId },
@@ -39,10 +40,8 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
 
   useEffect(() => {
     if (data?.user?.favoritedMonsters) {
-      console.log('Fetched favoritedMonsters:', data.user.favoritedMonsters);
       const transformedMonsters = data.user.favoritedMonsters.map((monster: MonsterDataProps) => {
         if (!monster.id || !monster.name || !monster.size || !monster.type || monster.hit_points === undefined || !monster.image) {
-          console.warn('Incomplete monster data:', monster);
           return null;
         }
 
@@ -58,28 +57,24 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
       }).filter(Boolean);
 
       setDungeonMonsters(transformedMonsters);
-      console.log('Dungeon monsters after transformation:', transformedMonsters);
     }
   }, [data]);
 
   const toggleDungeon = async (monster: MonsterCardProps) => {
-    console.log(`Toggling dungeon for monster with id: ${monster.id}`);
+    if (!isInDungeon(monster.id) && dungeonMonsters.length >= maxFavorites) {
+      return;
+    }
 
     try {
       if (isInDungeon(monster.id)) {
-        console.log('Removing monster from dungeon:', monster);
         await removeFavoriteMonster({ variables: { userId, monsterId: monster.id } });
-
         setDungeonMonsters((prev) =>
           prev.filter((m) => m.id !== monster.id),
         );
       } else {
-        console.log('Adding monster to dungeon:', monster);
         await addFavoriteMonster({ variables: { userId, monsterId: monster.id } });
         setDungeonMonsters((prev) => [...prev, monster]);
       }
-
-      console.log('Dungeon monsters after direct update:', dungeonMonsters);
     } catch (error) {
       console.error('Error in toggleDungeon:', error);
     }

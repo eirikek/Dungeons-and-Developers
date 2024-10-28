@@ -7,6 +7,7 @@ const playerSchema = new Schema({
   abilityScores: [],
   equipments: [],
   favoritedMonsters: [{ type: Types.ObjectId, ref: 'Monster' }],
+  dungeonName: { type: String, default: 'My Dungeon' },
 });
 
 export default model('User', playerSchema);
