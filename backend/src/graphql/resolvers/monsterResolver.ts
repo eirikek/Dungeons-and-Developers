@@ -110,5 +110,24 @@ export default {
         throw error;
       }
     },
+
+    async updateReview(_: any, { monsterId, reviewId, review }: {
+      monsterId: string;
+      reviewId: string;
+      review: ReviewInput
+    }) {
+      const monster = await Monster.findById(monsterId);
+      if (!monster) throw new Error('Monster not found');
+
+      const reviewToUpdate = monster.reviews.id(reviewId);
+      if (!reviewToUpdate) throw new Error('Review not found');
+
+      reviewToUpdate.difficulty = review.difficulty;
+      reviewToUpdate.description = review.description;
+
+      await monster.save();
+
+      return reviewToUpdate;
+    },
   },
 };

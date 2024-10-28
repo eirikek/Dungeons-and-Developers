@@ -40,5 +40,6 @@ export const monsterType = gql`
         fetchMonsters: String!
         addReview(monsterId: ID!, review: ReviewInput!): Monster!
         deleteReview(monsterId: ID!, reviewId: ID!): Monster!
+        updateReview(monsterId: ID!, reviewId: ID!, review: ReviewInput!): Review!
     }
 `;

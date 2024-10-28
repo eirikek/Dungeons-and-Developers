@@ -16,13 +16,6 @@ const monsterSchema = new Schema({
   hit_points: Number,
   image: String,
   reviews: [reviewSchema],
-}, {
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true },
-});
-
-monsterSchema.virtual('id').get(function() {
-  return this._id.toHexString();
 });
 
 export default model('Monster', monsterSchema);
