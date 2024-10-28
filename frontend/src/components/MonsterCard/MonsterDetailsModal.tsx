@@ -37,7 +37,7 @@ const MonsterDetailsModal = ({ id, name, hp, type, image, onClose }: MonsterDeta
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error loading reviews.</p>;
 
-  const reviews: ReviewType[] = data?.getMonsterReviews || [];
+  const reviews: ReviewType[] = data?.monster?.reviews || [];
 
   const calculateAverageDifficulty = () => {
     if (reviews.length === 0) return 'No reviews';
