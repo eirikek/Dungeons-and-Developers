@@ -5,17 +5,7 @@ import {
   REMOVE_FAVORITE_MONSTER,
   GET_USER_FAVORITES,
 } from '../../../backend/src/graphql/queries.ts';
-
-interface MonsterCardProps {
-  id: string;
-  index: string;
-  name: string;
-  size: string;
-  type: string;
-  alignment: string;
-  hit_points: number;
-  image?: string;
-}
+import { MonsterCardProps } from '../interfaces/MonsterCardProps.ts';
 
 interface DungeonContextType {
   dungeonMonsters: MonsterCardProps[];
@@ -52,12 +42,13 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
   }, [data]);
 
   const toggleDungeon = async (monster: MonsterCardProps) => {
+    console.log(`Toggling dungeon for monster with index ${monster.index}`);
     if (isInDungeon(monster.index)) {
-      await removeFavoriteMonster({ variables: { userId, monsterId: monster.id } });
+      await removeFavoriteMonster({ variables: { userId, monsterId: monster.index } });
     } else {
-      await addFavoriteMonster({ variables: { userId, monsterId: monster.id } });
+      await addFavoriteMonster({ variables: { userId, monsterId: monster.index } });
     }
-    refetch();
+    await refetch();
   };
 
   const isInDungeon = (monsterIndex: string) => dungeonMonsters.some((monster) => monster.index === monsterIndex);

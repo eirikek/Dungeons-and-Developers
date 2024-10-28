@@ -14,7 +14,7 @@ const DungeonMonsterGrid = () => {
           <MonsterCard
             key={idx}
             {...monster}
-            hp={monster.hit_points} // Map hit_points to hp
+            hp={monster.hp}
           />
         ))
       )}

@@ -39,8 +39,6 @@ function useMonster(searchTerm: string, currentPage: number, monstersPerPage: nu
     fetchPolicy: 'network-only',  // Alltid hente ferske data fra serveren
   });
 
-  console.log('Data from server: ', data);
-
   const transformedMonsters = useMemo(() => {
     if (!data || !data.monsters) return [];
     return data.monsters.monsters.map(monster => ({

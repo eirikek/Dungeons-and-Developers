@@ -4,16 +4,7 @@ import { DungeonContext } from '../../context/DungeonContext.tsx';
 import DungeonButton from './DungeonButton.tsx';
 import MonsterReviewModal from './MonsterReviewModal.tsx';
 import MonsterDetailsModal from './MonsterDetailsModal.tsx';
-
-export interface MonsterCardProps {
-  index: string;
-  name: string;
-  type: string;
-  hp: number;
-  alignment: string;
-  size: string;
-  img?: string;
-}
+import { MonsterCardProps } from '../../interfaces/MonsterCardProps.ts';
 
 const MonsterCard = ({ index, name, type, hp, alignment, size, img }: MonsterCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
