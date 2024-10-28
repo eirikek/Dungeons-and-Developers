@@ -99,11 +99,11 @@ const MonsterCard = ({ id, name, type, hp, alignment, size, img }: MonsterCardPr
       {/* Monster Details Modal */}
       {isModalOpen && (
         <MonsterDetailsModal
+          id={id}
           name={name}
           hp={hp}
           type={type}
           image={monsterImageURL}
-          reviews={reviews}
           onClose={handleCloseModal}
         />
       )}

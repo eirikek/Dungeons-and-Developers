@@ -1,7 +1,7 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, Types } from 'mongoose';
 
 const reviewSchema = new Schema({
-  user: { type: String, required: true },
+  user: { type: Types.ObjectId, ref: 'User' },
   difficulty: { type: Number, required: true },
   description: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },

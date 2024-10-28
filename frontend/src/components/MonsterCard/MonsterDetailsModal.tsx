@@ -4,29 +4,44 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
 } from '@mui/material';
-import Review from './Review';
+import Review from './Review.tsx';
+import { useQuery } from '@apollo/client';
+import { GET_MONSTER_REVIEWS } from '../../../../backend/src/graphql/queries';
 
 type ReviewType = {
-  user: string;
+  id: string;
+  user: {
+    id: string;
+    userName: string;
+  };
   difficulty: number;
   description: string;
 };
 
 type MonsterDetailsModalProps = {
+  id: string;
   name: string;
   hp: number;
   type: string;
   image: string;
-  reviews: ReviewType[];
   onClose: () => void;
 };
 
-const MonsterDetailsModal = ({ name, hp, type, image, reviews, onClose }: MonsterDetailsModalProps) => {
-  // Calculate the average difficulty from reviews
+const MonsterDetailsModal = ({ id, name, hp, type, image, onClose }: MonsterDetailsModalProps) => {
+  const { data, loading, error } = useQuery(GET_MONSTER_REVIEWS, {
+    variables: { monsterId: id },
+  });
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error loading reviews.</p>;
+
+  const reviews: ReviewType[] = data?.getMonsterReviews || [];
+
   const calculateAverageDifficulty = () => {
     if (reviews.length === 0) return 'No reviews';
-    const totalDifficulty = reviews.reduce((sum, review) => sum + review.difficulty, 0);
+    const totalDifficulty = reviews.reduce((sum: number, review: ReviewType) => sum + review.difficulty, 0);
     return (totalDifficulty / reviews.length).toFixed(1);
   };
 
@@ -61,20 +76,24 @@ const MonsterDetailsModal = ({ name, hp, type, image, reviews, onClose }: Monste
 
         {/* Scrollable Reviews Section */}
         <Box className="w-full xl:w-1/2 rounded h-full flex flex-col gap-3">
-          {/* Sticky header */}
           <div className="sticky top-0 z-10 bg-black py-4">
             <h2 className="header">Reviews</h2>
           </div>
 
           <div className="overflow-y-auto flex-1 flex flex-col gap-5 p-1">
             {reviews.length > 0 ? (
-              reviews.map((review, index) => (
-                <>
-                  <Review key={index} review={review} />
-                </>
+              reviews.map((review) => (
+                <Review
+                  key={review.id}
+                  review={{
+                    user: review.user.userName, // Pass userName as a string
+                    difficulty: review.difficulty,
+                    description: review.description,
+                  }}
+                />
               ))
             ) : (
-              <p className="text">No reviews yet.</p>
+              <DialogContentText className="text">No reviews yet.</DialogContentText>
             )}
           </div>
         </Box>

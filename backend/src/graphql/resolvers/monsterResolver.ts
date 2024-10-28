@@ -1,4 +1,5 @@
 import Monster from '../model/Monsters.ts';
+import User from '../model/User.ts';
 import fetchData from '../../scripts/fetchData.js';
 
 interface MonsterArgs {
@@ -56,7 +57,10 @@ export default {
     },
 
     async monster(_: any, { id }: MonsterArgs) {
-      return Monster.findOne({ index: id });
+      return Monster.findById(id).populate({
+        path: 'reviews.user',
+        select: 'id userName',
+      });
     },
   },
 
@@ -70,10 +74,23 @@ export default {
       const monster = await Monster.findById(monsterId);
       if (!monster) throw new Error('Monster not found');
 
-      monster.reviews.push(review);
+      const user = await User.findById(review.user);
+      if (!user) throw new Error('User not found');
+
+      const fullReview = {
+        user: user._id,
+        difficulty: review.difficulty,
+        description: review.description,
+        createdAt: new Date().toISOString(),
+      };
+
+      monster.reviews.push(fullReview);
       await monster.save();
 
-      return monster;
+      return Monster.findById(monsterId).populate({
+        path: 'reviews.user',
+        select: 'id userName',
+      });
     },
   },
 };

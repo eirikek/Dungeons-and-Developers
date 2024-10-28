@@ -18,14 +18,14 @@ export const monsterType = gql`
     }
 
     type Review {
-        user: String!
+        user: User!
         difficulty: Int!
         description: String!
         createdAt: String!
     }
 
     input ReviewInput {
-        user: String!
+        user: ID!
         difficulty: Int!
         description: String!
     }
