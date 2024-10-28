@@ -6,10 +6,14 @@ import Counter from '../Counter/Counter.tsx';
 interface AbilityScoreCardProps {
   name: string;
   description: string;
+  skills: {
+    name: string;
+    index: string;
+  }[];
 
 }
 
-const AbilityScoreCard: React.FC<AbilityScoreCardProps> = ({ name, description,  }) => {
+const AbilityScoreCard: React.FC<AbilityScoreCardProps> = ({ name, description, skills }) => {
   // Add state to keep track of the ability score value
   const [score, setScore] = useState<number>(0);
 
@@ -42,6 +46,10 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps> = ({ name, description, 
       {/* Display the skills associated with the ability */}
       <ul className="w-full justify-start xl:w-auto xl:justify-center xl:min-w-[15vw] 2xl:min-w-[10vw]">
         <li className="bold text">Skills required:</li>
+        {skills.map((skill) => (
+          <li key={skill.index}>{skill.name}</li>
+        ))}
+
 
       </ul>
     </motion.section>

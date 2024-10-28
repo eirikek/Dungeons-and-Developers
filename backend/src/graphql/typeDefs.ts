@@ -39,8 +39,12 @@ export default gql`
         name: String!
         index: String!
         desc: [String!]!
+        skills: [Skills!]!
          }
-
+    type Skills{
+        name: String!
+        index: String!
+        }
     type Ability {
         name: String!
         score: Int!

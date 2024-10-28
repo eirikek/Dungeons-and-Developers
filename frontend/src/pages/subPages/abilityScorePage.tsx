@@ -24,6 +24,7 @@ export default function AbilityScorePage() {
             key={ability.index}
             name={ability.name}
             description={Array.isArray(ability.desc) ? ability.desc.join(', ') : ''}
+            skills={ability.skills }
           />
         ))}
 

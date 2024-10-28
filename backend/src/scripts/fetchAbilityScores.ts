@@ -15,26 +15,31 @@ async function fetchAbilityScores() {
 
     const { data } = await axios.get(abilitiesURL);
     const abilities = data.results;
-    console.log(abilities);
+    //console.log(abilities);
 
 
     for (const ability of abilities) {
       const abilityDetails = await axios.get(`${abilitiesURL}/${ability.index}`);
-      console.log(abilityDetails, "this is testing");
+      //console.log(abilityDetails, "this is testing");
+      //console.log(abilityDetails.data);
+      console.log(abilityDetails.data.skills);
 
       const inDB = await AbilityScore.findOne({index: abilityDetails.data.index})
 
 
       if(!inDB) {
 
+
         const abilityDocument = new AbilityScore({
           index: abilityDetails.data.index,
           name: abilityDetails.data.name,
-          desc: Array.isArray(abilityDetails.data.desc) ? abilityDetails.data.desc : []
+          desc: Array.isArray(abilityDetails.data.desc) ? abilityDetails.data.desc : [],
+          skills: Array.isArray(abilityDetails.data.skills) ? abilityDetails.data.skills : []
         });
 
         await abilityDocument.save();
-        console.log(`ability saved: ${abilityDetails.data.name}`);
+        console.log(`ability saved: ${abilityDocument.skills}`);
+
       }
 
     }
