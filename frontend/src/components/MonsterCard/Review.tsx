@@ -1,10 +1,16 @@
-import { Slider, Box } from '@mui/material';
+import { Slider, Box, IconButton } from '@mui/material';
 import { GiDaemonSkull, GiGoblinHead, GiRoundShield, GiSpikedDragonHead } from 'react-icons/gi';
 import { LuSwords } from 'react-icons/lu';
+import { MdDelete } from 'react-icons/md'; // Trashcan icon
+import { useMutation } from '@apollo/client';
+import { DELETE_REVIEW, GET_MONSTER_REVIEWS } from '../../../../backend/src/graphql/queries';
 import { ReviewType } from '../../interfaces/ReviewProps.ts';
+import { AuthContext } from '../../context/AuthContext';
+import { useContext } from 'react';
 
 type ReviewProps = {
   review: ReviewType;
+  monsterId: string;
 };
 
 const marks = [
@@ -15,11 +21,44 @@ const marks = [
   { value: 90, label: <GiDaemonSkull size={20} /> },
 ];
 
-const Review = ({ review }: ReviewProps) => {
-  const { user, difficulty, description } = review;
+const Review = ({ review, monsterId }: ReviewProps) => {
+  const { userId } = useContext(AuthContext);
+  const { user, difficulty, description, id: reviewId } = review;
+
+  console.log('Review Component Rendered:', { reviewId, monsterId, userId });
+
+  const [deleteReview] = useMutation(DELETE_REVIEW, {
+    refetchQueries: [{ query: GET_MONSTER_REVIEWS, variables: { monsterId } }],
+  });
+
+  const handleDelete = async () => {
+    console.log('Attempting to delete review with:', { monsterId, reviewId });
+    try {
+      await deleteReview({
+        variables: {
+          monsterId,
+          reviewId,
+        },
+      });
+      console.log('Review deleted successfully');
+    } catch (error) {
+      console.error('Error deleting review:', error);
+    }
+  };
+
 
   return (
-    <Box className="border-[1px] border-white p-4 rounded mb-4 gap-6 flex flex-col">
+    <Box className="relative border-[1px] border-white p-4 rounded mb-4 gap-6 flex flex-col">
+      {userId === user.id && (
+        <IconButton
+          onClick={handleDelete}
+          sx={{ position: 'absolute', top: 10, right: 10, color: '#DB3232' }}
+          aria-label="Delete review"
+
+        >
+          <MdDelete size={30} />
+        </IconButton>
+      )}
       <h4 className="sub-header">{user.userName}</h4>
       <Slider
         value={difficulty}

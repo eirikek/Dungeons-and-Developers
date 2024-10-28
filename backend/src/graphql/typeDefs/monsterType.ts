@@ -2,7 +2,7 @@ import { gql } from 'apollo-server';
 
 export const monsterType = gql`
     type Monster {
-        id: ID
+        id: ID!
         name: String!
         size: String!
         type: String!

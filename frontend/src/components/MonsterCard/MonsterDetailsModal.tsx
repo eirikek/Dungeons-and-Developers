@@ -25,6 +25,8 @@ const MonsterDetailsModal = ({ id, name, hp, type, image, onClose }: MonsterDeta
     variables: { monsterId: id },
   });
 
+  console.log('Monster reviews data:', JSON.stringify(data, null, 2));
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error loading reviews.</p>;
 
@@ -77,6 +79,7 @@ const MonsterDetailsModal = ({ id, name, hp, type, image, onClose }: MonsterDeta
                 <Review
                   key={review.id}
                   review={review}
+                  monsterId={id}
                 />
               ))
             ) : (

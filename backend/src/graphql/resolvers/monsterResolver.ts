@@ -94,13 +94,21 @@ export default {
     },
 
     async deleteReview(_: any, { monsterId, reviewId }: { monsterId: string; reviewId: string }) {
-      const monster = await Monster.findById(monsterId);
-      if (!monster) throw new Error('Monster not found');
+      try {
+        const monster = await Monster.findById(monsterId);
+        if (!monster) throw new Error('Monster not found');
 
-      monster.reviews.pull({ _id: reviewId });
-      await monster.save();
-      
-      return monster;
+        const reviewIndex = monster.reviews.findIndex((review) => review._id.toString() === reviewId);
+        if (reviewIndex === -1) throw new Error('Review not found');
+
+        monster.reviews.splice(reviewIndex, 1);
+        await monster.save();
+
+        return monster;
+      } catch (error) {
+        console.error('Error in deleteReview resolver:', error);
+        throw error;
+      }
     },
   },
 };

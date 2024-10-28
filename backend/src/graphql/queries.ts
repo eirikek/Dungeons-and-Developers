@@ -59,6 +59,7 @@ export const GET_MONSTER_REVIEWS = gql`
     query GetMonsterReviews($monsterId: ID!) {
         monster(id: $monsterId) {
             reviews {
+                id
                 user {
                     id
                     userName
