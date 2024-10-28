@@ -33,6 +33,7 @@ export default function MonsterPage() {
     const value = e.target.value;
     setSearchTerm(value);
     debouncedSearch(value);
+    setCurrentPage(1);
   };
 
   const totalPages = Math.min(Math.ceil(totalMonsters / monstersPerPage), 10);
