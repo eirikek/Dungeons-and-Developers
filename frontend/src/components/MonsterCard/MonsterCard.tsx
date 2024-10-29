@@ -4,59 +4,35 @@ import { DungeonContext } from '../../context/DungeonContext.tsx';
 import DungeonButton from './DungeonButton.tsx';
 import MonsterReviewModal from './MonsterReviewModal.tsx';
 import MonsterDetailsModal from './MonsterDetailsModal.tsx';
+import { MonsterCardProps } from '../../interfaces/MonsterCardProps.ts';
 
-export interface MonsterCardProps {
-  index: string;
-  name: string;
-  type: string;
-  hp: number;
-  alignment: string;
-  size: string;
-  img?: string;
-  onLoad: () => void;
-}
-
-const MonsterCard = ({ index, name, type, hp, alignment, size, img, onLoad }: MonsterCardProps) => {
+const MonsterCard = ({ id, name, type, hp, alignment, size, img }: MonsterCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { toggleDungeon, isInDungeon } = useContext(DungeonContext);
 
-  //Dummy reviews
-  const reviews = [
-    { user: 'Eirik', difficulty: 50, description: 'Very challenging!' },
-    { user: 'User2', difficulty: 30, description: 'Not so hard, but cool monster' },
-    { user: 'User3', difficulty: 90, description: 'Extremly hard, do not use' },
-    { user: 'User4', difficulty: 10, description: 'Very easy!' },
-    { user: 'User5', difficulty: 50, description: 'Very challenging!' },
-    { user: 'User6', difficulty: 60, description: 'Blah blah' },
-    { user: 'User7', difficulty: 100, description: 'Extremly hard, do not use' },
-    { user: 'User8', difficulty: 15, description: 'Very easy!' },
-  ];
-
   useEffect(() => {
-    if (index && !img) {
+    if (id && !img) {
       setImageLoaded(true);
-      onLoad();
     }
-  }, [img, index]);
+  }, [img, id]);
 
   const handleImageLoad = () => {
     setImageLoaded(true);
-    onLoad();
   };
 
   const handleImageError = () => {
     setImageError(true);
     setImageLoaded(true);
-    onLoad();
   };
 
   const monsterImageURL = img ? img : NoMonsterImageFound;
 
   const handleToggleDungeon = () => {
-    toggleDungeon({ index, name, type, hp, alignment, size, img });
+    console.log('Toggling dungeon for monster:', { id, name, type, hp, alignment, size, img });
+    toggleDungeon({ id, name, type, hp, alignment, size, img });
   };
 
   // Function to open the modal when the card is clicked
@@ -95,7 +71,7 @@ const MonsterCard = ({ index, name, type, hp, alignment, size, img, onLoad }: Mo
                 style={{ display: imageLoaded ? 'block' : 'none' }}
               />
               <div className="absolute left-[75%] top-5">
-                <DungeonButton onAddToDungeonClick={handleToggleDungeon} isInDungeon={isInDungeon(index)} />
+                <DungeonButton onAddToDungeonClick={handleToggleDungeon} isInDungeon={isInDungeon(id)} />
               </div>
             </div>
           )}
@@ -110,24 +86,24 @@ const MonsterCard = ({ index, name, type, hp, alignment, size, img, onLoad }: Mo
           <div className="flex w-full justify-between">
             {/* stopPropagation to prevent showing the details modal when the review button is clicked */}
             <div onClick={(e) => e.stopPropagation()}>
-              <MonsterReviewModal name={name} monsterIndex={index} image={monsterImageURL} />
+              <MonsterReviewModal monsterId={id} name={name} image={monsterImageURL} />
             </div>
             <button onClick={(e) => {
               e.stopPropagation();
               handleToggleDungeon();
             }}
-                    className="text-4xl md:text-2xl xl:text-lg 2xl:text-sm hover:text-customRed transition-all duration-200">{isInDungeon(index) ? 'Remove from dungeon' : 'Add to dungeon'}</button>
+                    className="text-4xl md:text-2xl xl:text-lg 2xl:text-sm hover:text-customRed transition-all duration-200">{isInDungeon(id) ? 'Remove from dungeon' : 'Add to dungeon'}</button>
           </div>
         </div>
       </div>
       {/* Monster Details Modal */}
       {isModalOpen && (
         <MonsterDetailsModal
+          id={id}
           name={name}
           hp={hp}
           type={type}
           image={monsterImageURL}
-          reviews={reviews}
           onClose={handleCloseModal}
         />
       )}

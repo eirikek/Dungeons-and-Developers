@@ -50,10 +50,16 @@ export default {
           '50%': { transform: 'scale(1.4)' },
           '100%': { transform: 'scale(1)' },
         },
+        shake: {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '25%': { transform: 'translateX(-5px)' },
+          '75%': { transform: 'translateX(5px)' },
+        },
       },
       animation: {
         'underline-expand': 'underlineExpand 0.3s ease-out forwards',
         'background-zoom': 'zoom 120s linear infinite',
+        'shake': 'shake 0.5s ease-in-out',
       },
       flexGrow: {
         '2': 2,

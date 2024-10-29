@@ -5,64 +5,99 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  Slider,
-  TextField,
 } from '@mui/material';
-import React, { useState } from 'react';
-import { GiDaemonSkull, GiGoblinHead, GiRoundShield, GiSpikedDragonHead } from 'react-icons/gi';
-import { LuSwords } from 'react-icons/lu';
+import React, { useState, useContext, useEffect } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
+import { ADD_REVIEW, GET_MONSTER_REVIEWS, UPDATE_REVIEW } from '../../../../backend/src/graphql/queries';
+import { AuthContext } from '../../context/AuthContext';
+import { ReviewFormType, ReviewType } from '../../interfaces/ReviewProps.ts';
+import ReviewSlider from './ReviewSlider.tsx';
+import ReviewTextField from './ReviewTextField.tsx';
 
-type ReviewType = {
-  monsterIndex: string;
-  name: string;
-  image: string;
-};
-
-const marks = [
-  {
-    value: 10,
-    label: <LuSwords size={30} />,
-  },
-  {
-    value: 30,
-    label: <GiRoundShield size={30} />,
-  },
-  {
-    value: 50,
-    label: <GiGoblinHead size={30} />,
-  },
-  {
-    value: 70,
-    label: <GiSpikedDragonHead size={30} />,
-  },
-  {
-    value: 90,
-    label: <GiDaemonSkull size={30} />,
-  },
-];
-
-const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
+const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
+  const { userId } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
-
-  const [difficulty, setDifficulty] = useState<number>(0);
+  const [editMode, setEditMode] = useState(false);
+  const [difficulty, setDifficulty] = useState(50);
   const [description, setDescription] = useState('');
+  const [originalDifficulty, setOriginalDifficulty] = useState(50);
+  const [originalDescription, setOriginalDescription] = useState('');
+
+  const { data } = useQuery(GET_MONSTER_REVIEWS, { variables: { monsterId } });
+  const existingReview = data?.monster?.reviews.find(
+    (review: ReviewType) => review.user.id === userId,
+  );
+
+  const [addReview] = useMutation(ADD_REVIEW, {
+    refetchQueries: [{ query: GET_MONSTER_REVIEWS, variables: { monsterId } }],
+  });
+
+  const [updateReview] = useMutation(UPDATE_REVIEW, {
+    refetchQueries: [{ query: GET_MONSTER_REVIEWS, variables: { monsterId } }],
+  });
+
+  useEffect(() => {
+    if (existingReview) {
+      setDescription(existingReview.description);
+      setDifficulty(existingReview.difficulty);
+      setOriginalDescription(existingReview.description);
+      setOriginalDifficulty(existingReview.difficulty);
+    }
+  }, [existingReview]);
 
   const handleClickOpen = () => {
-    const savedReview = localStorage.getItem(`Review: ${monsterIndex}`);
-    if (savedReview) {
-      const parsedReview = JSON.parse(savedReview);
-      setDifficulty(parsedReview.difficulty);
-      setDescription(parsedReview.description);
+    if (existingReview) {
+      setEditMode(true);
+    } else {
+      setDescription('');
+      setDifficulty(50);
+      setEditMode(false);
     }
     setIsOpen(true);
   };
 
   const handleClose = () => {
+    if (editMode) {
+      setDescription(originalDescription);
+      setDifficulty(originalDifficulty);
+    } else {
+      setDescription('');
+      setDifficulty(50);
+    }
     setIsOpen(false);
+    setEditMode(false);
   };
 
-  const getStringValue = (value: number) => {
-    return `${value}`;
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!userId) {
+      alert('You must be logged in to submit a review.');
+      return;
+    }
+
+    try {
+      if (editMode && existingReview) {
+        // Update existing review
+        await updateReview({
+          variables: {
+            monsterId,
+            reviewId: existingReview.id,
+            review: { user: userId, difficulty, description },
+          },
+        });
+      } else {
+        // Add new review
+        await addReview({
+          variables: {
+            monsterId,
+            review: { user: userId, difficulty, description },
+          },
+        });
+      }
+      setIsOpen(false);
+    } catch (error) {
+      console.error('Error submitting review:', error);
+    }
   };
 
   return (
@@ -102,17 +137,6 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
         onClose={handleClose}
         PaperProps={{
           component: 'form',
-          onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-            localStorage.setItem(
-              name,
-              JSON.stringify({
-                difficulty: difficulty,
-                description: description,
-              }),
-            );
-            handleClose();
-          },
           sx: {
             width: { xs: '100vw', sm: '95vw', md: '90vw', lg: '80vw', xl: '70vw' },
             height: { xs: '100vh', sm: '85vh', md: '85vh', lg: '60vh', xl: '70vh' },
@@ -131,101 +155,11 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
             <DialogContentText sx={{ color: 'white', fontSize: '1.5rem', fontFamily: 'MedievalSharp' }}>
               Difficulty
             </DialogContentText>
-            <Box>
-              <Slider
-                aria-label="Monster difficulty"
-                defaultValue={50}
-                getAriaValueText={getStringValue}
-                valueLabelDisplay="auto"
-                shiftStep={30}
-                step={10}
-                marks={marks}
-                min={0}
-                max={100}
-                value={difficulty}
-                onChange={(_, value) => setDifficulty(value as number)}
-                sx={{
-                  '& .MuiSlider-markLabel': {
-                    color: 'white',
-                    fontFamily: 'MedievalSharp',
-                    fontSize: '1.5rem',
-                  },
-
-                  '& .MuiSlider-mark': {
-                    color: 'white',
-                    width: 5,
-                    height: 5,
-                    borderRadius: '50%',
-                    transform: 'translateX(-50%) translateY(-50%)',
-                  },
-
-                  '& .MuiSlider-thumb': {
-                    color: '#DB3232',
-                    width: 24,
-                    height: 24,
-                  },
-                  '& .MuiSlider-track': {
-                    color: '#DB3232',
-                    height: 10,
-                  },
-                  '& .MuiSlider-rail': {
-                    color: '#DB3232',
-                    height: 10,
-                  },
-                }}
-              />
-            </Box>
-            <TextField
-              autoFocus
-              required
-              margin="dense"
-              id="description"
-              name="monster-description"
-              label="Description"
-              type="text"
-              fullWidth
-              variant="standard"
-              multiline
-              minRows={4}
-              maxRows={12}
+            <ReviewSlider value={difficulty} onChange={(_, value) => setDifficulty(value as number)} />
+            <ReviewTextField
               value={description}
-              onChange={(e) => setDescription(e.target.value.slice(0, 300))} // Limit to 300 characters
-              sx={{
-                marginTop: 4,
-                '& .MuiInputBase-input': {
-                  color: 'black',
-                  fontSize: '1.25rem',
-                  height: 'auto',
-                  padding: '20px',
-                  fontFamily: 'MedievalSharp',
-                  backgroundColor: 'white',
-                  borderRadius: '4px',
-                },
-                '& .MuiInputLabel-root': {
-                  color: 'white',
-                  fontFamily: 'MedievalSharp',
-                  fontSize: '1.5rem',
-                  transform: 'translate(0, -20px)',
-                  transition: 'transform 0.3s ease, font-size 0.3s ease',
-                },
-
-                '& .MuiInputLabel-root.Mui-focused': {
-                  fontSize: '1.25rem',
-                  color: 'white',
-                },
-
-                '& .MuiInput-underline:before': {
-                  borderBottomColor: 'white',
-                },
-                '& .MuiInput-underline:after': {
-                  borderBottomColor: '#DB3232',
-                },
-                '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
-                  borderBottomColor: '#DB3232',
-                },
-
-              }}
-            ></TextField>
+              onChange={(e) => setDescription(e.target.value.slice(0, 300))}
+            />
           </article>
         </DialogContent>
 
@@ -242,7 +176,7 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
           }}>
             Cancel
           </Button>
-          <Button type="submit" aria-label="Save-button" sx={{
+          <Button onClick={handleSubmit} type="submit" aria-label="Save-button" sx={{
             color: 'white',
             borderColor: 'white',
             '&:hover': {
@@ -252,7 +186,7 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
             fontFamily: 'MedievalSharp',
             fontSize: '1.5rem',
           }}>
-            SUBMIT
+            {editMode ? 'UPDATE' : 'SUBMIT'}
           </Button>
         </DialogActions>
       </Dialog>

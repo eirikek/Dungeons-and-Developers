@@ -1,47 +1,86 @@
-import { createContext, useState, useEffect, ReactNode } from 'react';
-import { MonsterCardDataProps } from '../hooks/useMonster';
-
+import { createContext, ReactNode, useEffect, useState } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
+import {
+  ADD_FAVORITE_MONSTER,
+  REMOVE_FAVORITE_MONSTER,
+  GET_USER_FAVORITES,
+} from '../../../backend/src/graphql/queries.ts';
+import { MonsterCardProps } from '../interfaces/MonsterCardProps.ts';
+import MonsterDataProps from '../interfaces/MonsterDataProps.ts';
 
 interface DungeonContextType {
-  dungeonMonsters: MonsterCardDataProps[];
-  toggleDungeon: (monster: MonsterCardDataProps) => void;
+  dungeonMonsters: MonsterCardProps[];
+  toggleDungeon: (monster: MonsterCardProps) => void;
   isInDungeon: (monsterIndex: string) => boolean;
+}
+
+interface DungeonProviderProps {
+  children: ReactNode;
+  userId: string;
 }
 
 export const DungeonContext = createContext<DungeonContextType>({
   dungeonMonsters: [],
-  toggleDungeon: () => {},
+  toggleDungeon: () => {
+  },
   isInDungeon: () => false,
 });
 
-export const DungeonProvider = ({ children }: { children: ReactNode }) => {
-  const initializeDungeon = () => {
-    const savedDungeon = localStorage.getItem('dungeonMonsters');
-    return savedDungeon ? JSON.parse(savedDungeon) : [];
-  };
 
-  const [dungeonMonsters, setDungeonMonsters] = useState<MonsterCardDataProps[]>(initializeDungeon);
+export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
+  const [dungeonMonsters, setDungeonMonsters] = useState<MonsterCardProps[]>([]);
+  const [addFavoriteMonster] = useMutation(ADD_FAVORITE_MONSTER);
+  const [removeFavoriteMonster] = useMutation(REMOVE_FAVORITE_MONSTER);
+  const maxFavorites = 6;
+
+  const { data } = useQuery(GET_USER_FAVORITES, {
+    variables: { userId },
+    skip: !userId,
+  });
 
   useEffect(() => {
-    localStorage.setItem('dungeonMonsters', JSON.stringify(dungeonMonsters));
-  }, [dungeonMonsters]);
+    if (data?.user?.favoritedMonsters) {
+      const transformedMonsters = data.user.favoritedMonsters.map((monster: MonsterDataProps) => {
+        if (!monster.id || !monster.name || !monster.size || !monster.type || monster.hit_points === undefined || !monster.image) {
+          return null;
+        }
 
-  const toggleDungeon = (monster: MonsterCardDataProps) => {
-    setDungeonMonsters((prev) => {
-      const isAlreadyInDungeon = prev.some((m) => m.index === monster.index);
+        return {
+          id: monster.id,
+          name: monster.name,
+          size: monster.size,
+          type: monster.type,
+          alignment: monster.alignment,
+          hp: monster.hit_points,
+          img: monster.image,
+        };
+      }).filter(Boolean);
 
-      if (isAlreadyInDungeon) {
-        return prev.filter((m) => m.index !== monster.index);
-      } else if (prev.length < 6) {
-        return [...prev, monster];
+      setDungeonMonsters(transformedMonsters);
+    }
+  }, [data]);
+
+  const toggleDungeon = async (monster: MonsterCardProps) => {
+    if (!isInDungeon(monster.id) && dungeonMonsters.length >= maxFavorites) {
+      return;
+    }
+
+    try {
+      if (isInDungeon(monster.id)) {
+        await removeFavoriteMonster({ variables: { userId, monsterId: monster.id } });
+        setDungeonMonsters((prev) =>
+          prev.filter((m) => m.id !== monster.id),
+        );
+      } else {
+        await addFavoriteMonster({ variables: { userId, monsterId: monster.id } });
+        setDungeonMonsters((prev) => [...prev, monster]);
       }
-      return prev;
-    });
+    } catch (error) {
+      console.error('Error in toggleDungeon:', error);
+    }
   };
 
-  const isInDungeon = (monsterIndex: string) => {
-    return dungeonMonsters.some((monster) => monster.index === monsterIndex);
-  };
+  const isInDungeon = (monsterId: string) => dungeonMonsters.some((monster) => monster.id === monsterId);
 
   return (
     <DungeonContext.Provider value={{ dungeonMonsters, toggleDungeon, isInDungeon }}>
