@@ -5,39 +5,14 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  Slider,
-  TextField,
 } from '@mui/material';
 import React, { useState, useContext } from 'react';
-import { GiDaemonSkull, GiGoblinHead, GiRoundShield, GiSpikedDragonHead } from 'react-icons/gi';
-import { LuSwords } from 'react-icons/lu';
 import { useMutation, useQuery } from '@apollo/client';
 import { ADD_REVIEW, GET_MONSTER_REVIEWS } from '../../../../backend/src/graphql/queries';
 import { AuthContext } from '../../context/AuthContext';
 import { ReviewFormType, ReviewType } from '../../interfaces/ReviewProps.ts';
-
-const marks = [
-  {
-    value: 10,
-    label: <LuSwords size={30} />,
-  },
-  {
-    value: 30,
-    label: <GiRoundShield size={30} />,
-  },
-  {
-    value: 50,
-    label: <GiGoblinHead size={30} />,
-  },
-  {
-    value: 70,
-    label: <GiSpikedDragonHead size={30} />,
-  },
-  {
-    value: 90,
-    label: <GiDaemonSkull size={30} />,
-  },
-];
+import ReviewSlider from './ReviewSlider.tsx';
+import ReviewTextField from './ReviewTextField.tsx';
 
 const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
   const { userId } = useContext(AuthContext);
@@ -74,7 +49,6 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
     }
 
     try {
-      // Console log to verify the payload before sending
       console.log('Submitting review with payload:', {
         monsterId,
         review: {
@@ -100,10 +74,6 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
     } catch (error: unknown) {
       console.error('Error submitting review:', error);
     }
-  };
-
-  const getStringValue = (value: number) => {
-    return `${value}`;
   };
 
   return (
@@ -161,101 +131,11 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
             <DialogContentText sx={{ color: 'white', fontSize: '1.5rem', fontFamily: 'MedievalSharp' }}>
               Difficulty
             </DialogContentText>
-            <Box>
-              <Slider
-                aria-label="Monster difficulty"
-                defaultValue={50}
-                getAriaValueText={getStringValue}
-                valueLabelDisplay="auto"
-                shiftStep={30}
-                step={10}
-                marks={marks}
-                min={0}
-                max={100}
-                value={difficulty}
-                onChange={(_, value) => setDifficulty(value as number)}
-                sx={{
-                  '& .MuiSlider-markLabel': {
-                    color: 'white',
-                    fontFamily: 'MedievalSharp',
-                    fontSize: '1.5rem',
-                  },
-
-                  '& .MuiSlider-mark': {
-                    color: 'white',
-                    width: 5,
-                    height: 5,
-                    borderRadius: '50%',
-                    transform: 'translateX(-50%) translateY(-50%)',
-                  },
-
-                  '& .MuiSlider-thumb': {
-                    color: '#DB3232',
-                    width: 24,
-                    height: 24,
-                  },
-                  '& .MuiSlider-track': {
-                    color: '#DB3232',
-                    height: 10,
-                  },
-                  '& .MuiSlider-rail': {
-                    color: '#DB3232',
-                    height: 10,
-                  },
-                }}
-              />
-            </Box>
-            <TextField
-              autoFocus
-              required
-              margin="dense"
-              id="description"
-              name="monster-description"
-              label="Description"
-              type="text"
-              fullWidth
-              variant="standard"
-              multiline
-              minRows={4}
-              maxRows={12}
+            <ReviewSlider value={difficulty} onChange={(_, value) => setDifficulty(value as number)} />
+            <ReviewTextField
               value={description}
-              onChange={(e) => setDescription(e.target.value.slice(0, 300))} // Limit to 300 characters
-              sx={{
-                marginTop: 4,
-                '& .MuiInputBase-input': {
-                  color: 'black',
-                  fontSize: '1.25rem',
-                  height: 'auto',
-                  padding: '20px',
-                  fontFamily: 'MedievalSharp',
-                  backgroundColor: 'white',
-                  borderRadius: '4px',
-                },
-                '& .MuiInputLabel-root': {
-                  color: 'white',
-                  fontFamily: 'MedievalSharp',
-                  fontSize: '1.5rem',
-                  transform: 'translate(0, -20px)',
-                  transition: 'transform 0.3s ease, font-size 0.3s ease',
-                },
-
-                '& .MuiInputLabel-root.Mui-focused': {
-                  fontSize: '1.25rem',
-                  color: 'white',
-                },
-
-                '& .MuiInput-underline:before': {
-                  borderBottomColor: 'white',
-                },
-                '& .MuiInput-underline:after': {
-                  borderBottomColor: '#DB3232',
-                },
-                '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
-                  borderBottomColor: '#DB3232',
-                },
-
-              }}
-            ></TextField>
+              onChange={(e) => setDescription(e.target.value.slice(0, 300))}
+            />
           </article>
         </DialogContent>
 

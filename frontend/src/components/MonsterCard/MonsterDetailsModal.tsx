@@ -50,10 +50,12 @@ const MonsterDetailsModal = ({ id, name, hp, type, image, onClose }: MonsterDeta
           height: { xs: '100vh', sm: '85vh', md: '85vh', lg: '85vh', xl: '85vh' },
           maxWidth: 'none',
           backgroundColor: 'black',
+          padding: 2,
+
         },
       }}
     >
-      <DialogContent className="flex flex-col xl:flex-row bg-black gap-6 h-full">
+      <DialogContent className="flex flex-col xl:flex-row bg-black gap-6 h-full overflow-x-hidden">
 
         {/* Monster Info Section */}
         <Box className="w-full xl:w-1/2 flex flex-col xl:items-center justify-center gap-2 flex-shrink-0">

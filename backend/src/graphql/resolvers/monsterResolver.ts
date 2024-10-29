@@ -104,7 +104,10 @@ export default {
         monster.reviews.splice(reviewIndex, 1);
         await monster.save();
 
-        return monster;
+        return Monster.findById(monsterId).populate({
+          path: 'reviews.user',
+          select: 'id userName',
+        });
       } catch (error) {
         console.error('Error in deleteReview resolver:', error);
         throw error;
@@ -127,7 +130,11 @@ export default {
 
       await monster.save();
 
-      return reviewToUpdate;
+      // Populate the user field in the updated review before returning it
+      return Monster.findById(monsterId).populate({
+        path: 'reviews.user',
+        select: 'id userName',
+      }).then(monster => monster?.reviews.id(reviewId));
     },
   },
 };
