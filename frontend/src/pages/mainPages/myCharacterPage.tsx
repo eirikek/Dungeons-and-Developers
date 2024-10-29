@@ -7,6 +7,7 @@ import useRaces from '../../hooks/useRaces.ts';
 import useClasses from '../../hooks/useClasses.ts';
 import useAbilityScores from '../../hooks/useAbilityScores.ts';
 import Counter from '../../components/Counter/Counter.tsx';
+import TutorialModal from '../../components/MyCharacter/TutorialModal.tsx';
 
 const MyCharacterPage = () => {
   const raceNames = ['dragonborn', 'dwarf', 'elf', 'gnome', 'half-elf', 'half-orc', 'halfling', 'human', 'tiefling'];
@@ -47,24 +48,27 @@ const MyCharacterPage = () => {
   return (
     <MainPageLayout>
       <main
-        className="relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-myCharacter before:bg-cover before:bg-center before:z-0">
+        className="main before:bg-myCharacter">
 
-        <div className="absolute inset-0 w-full h-full bg-black opacity-70" />
+        <div className="black-overlay" />
         <div
-          className="flex flex-col py-20 text-white min-h-[calc(100vh-100px)] min-w-[70%] z-10 mt-24 justify-between items-center">
-          <h2 className="text-4xl">My Character</h2>
-          {/* RACE SECTION */}
-          <section className="w-full flex justify-between">
+          className="wrapper w-full py-[15vh] gap-32">
+          <h1 className="header">My Character</h1>
+          <TutorialModal />
+          {/* Race section */}
+          <section className="w-full flex flex-col lg:flex-row justify-between">
             <article className="w-full xl:w-1/2 flex flex-col items-center">
-              <h2 className="text-3xl mb-8">Race:</h2>
-              <div className="flex items-center justify-between gap-4">
-                <button className="text-4xl text-white hover:text-gray-400" onClick={handlePrevRace}>
+              <h2 className="header">Race:</h2>
+              <div className="flex items-center">
+                <button className="arrow-button"
+                        onClick={handlePrevRace}>
                   <FaChevronLeft />
                 </button>
                 {currentRace && (
                   <article className="flex flex-col justify-center items-center gap-4 min-w-52">
-                    <h2 className="text-2xl">{currentRace.name}</h2>
-                    <div className="flex justify-center items-center w-52 h-52 overflow-hidden">
+                    <h3 className="sub-header">{currentRace.name}</h3>
+                    <div
+                      className="flex justify-center items-center w-[70vw] h-[30vh] lg:w-[20vw] lg:h-[25vh] overflow-hidden">
                       {!raceImageLoaded && (
                         <div className="flex justify-center w-full">Loading image...</div>
                       )}
@@ -78,23 +82,26 @@ const MyCharacterPage = () => {
                     </div>
                   </article>
                 )}
-                <button className="text-4xl text-white hover:text-gray-400" onClick={handleNextRace}>
+                <button className="arrow-button"
+                        onClick={handleNextRace}>
                   <FaChevronRight />
                 </button>
               </div>
             </article>
 
             {/* Class section */}
-            <article className="w-full xl:w-1/2 flex flex-col items-center">
-              <h2 className="text-3xl mb-8">Class:</h2>
+            <article className="w-full xl:w-1/2 flex flex-col items-center mt-[10vh] lg:mt-0">
+              <h2 className="header">Class:</h2>
               <div className="flex items-center gap-4">
-                <button className="text-4xl text-white hover:text-gray-400" onClick={handlePrevClass}>
+                <button className="arrow-button"
+                        onClick={handlePrevClass}>
                   <FaChevronLeft />
                 </button>
                 {currentClass && (
                   <article className="flex flex-col items-center gap-4">
-                    <h2 className="text-2xl">{currentClass.name}</h2>
-                    <div className="flex justify-center items-center w-52 h-52 overflow-hidden">
+                    <h3 className="sub-header">{currentClass.name}</h3>
+                    <div
+                      className="flex justify-center items-center w-[65vw] h-[25vh] lg:w-[25vw] lg:h-[25vh] overflow-hidden">
                       {!classImageLoaded && (
                         <div className="flex justify-center w-full py-24">Loading image...</div>
                       )}
@@ -102,13 +109,14 @@ const MyCharacterPage = () => {
                         src={currentClassImage}
                         alt={currentClass.name}
                         className="w-full h-full object-contain shadow-none"
-                        onLoad={() => setClassImageLoaded(true)} // Update the state when image is loaded
-                        style={{ display: classImageLoaded ? 'block' : 'none' }} // Show image only when loaded
+                        onLoad={() => setClassImageLoaded(true)}
+                        style={{ display: classImageLoaded ? 'block' : 'none' }}
                       />
                     </div>
                   </article>
                 )}
-                <button className="text-4xl text-white hover:text-gray-400" onClick={handleNextClass}>
+                <button className="arrow-button"
+                        onClick={handleNextClass}>
                   <FaChevronRight />
                 </button>
               </div>
@@ -116,34 +124,35 @@ const MyCharacterPage = () => {
           </section>
 
           {/* Ability scores section */}
-          <section className="w-full flex xl:flex-row justify-between">
-            <article className="flex flex-col items-center w-full xl:w-1/2">
-              <h2 className="text-3xl mb-8">Ability Scores:</h2>
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-y-6 gap-x-40">
-                {abilityData.map((ability, index) => (
-                  <div key={index} className="flex items-center">
-                    <label className="text-lg w-32">{ability.full_name}:</label>
-                    <Counter
-                      value={abilityValue[index]}
-                      onChange={(newValue) => handleAbilityChange(index, newValue)}
-                    />
-                  </div>
-                ))}
-              </div>
-            </article>
+          <article className="flex flex-col items-center w-full">
+            <h2 className="header mb-[8vh]">Ability Scores:</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[12vh] gap-x-[25vw]">
+              {abilityData.map((ability, index) => (
+                <div key={index} className="flex items-center">
+                  <label
+                    className="sub-header w-32 mr-[85px]">{ability.full_name}:</label>
+                  <Counter
+                    scale={1.5}
+                    value={abilityValue[index]}
+                    onChange={(newValue) => handleAbilityChange(index, newValue)}
+                  />
+                </div>
+              ))}
+            </div>
+          </article>
 
-            {/* Equipemnt section */}
-            <article className="flex flex-col items-center w-full xl:w-1/2">
-              <h2 className="text-3xl mb-8">Equipments:</h2>
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-y-10 gap-x-40">
-                {['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8', 'Item 9', 'Item 10'].map((item, index) => (
-                  <li key={index} className="list-disc list-inside text-lg">
-                    {item}
-                  </li>
-                ))}
-              </div>
-            </article>
-          </section>
+          {/* Equipemnt section */}
+          <article className="flex flex-col items-center w-full mt-10">
+            <h2 className="header mb-[5vh]">Equipments:</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[5vh] gap-x-[40vw] xl:gap-y-[10vh]">
+              {['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8', 'Item 9', 'Item 10'].map((item, index) => (
+                <li key={index}
+                    className="list-disc list-inside sub-header">
+                  {item}
+                </li>
+              ))}
+            </div>
+          </article>
         </div>
       </main>
     </MainPageLayout>
