@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
+import CustomCheckbox from '../../components/CustomCheckbox/CustomCheckbox.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import Pagination from '../../components/Pagination/Pagination.tsx';
 import { useToast } from '../../context/useToast.ts';
@@ -70,17 +71,17 @@ const EquipmentPage: React.FC = () => {
 
   return (
     <MainPageLayout>
-      <main className="relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-equipments before:bg-cover before:bg-center before:z-0">
-        <div className="absolute inset-0 w-full h-full bg-black opacity-70" />
-        <div className="flex flex-col py-20 text-white min-h-[calc(100vh-100px)] min-w-[70%] z-10 mt-24 justify-between items-center">
-          <h1 className="text-4xl">Equipments</h1>
+      <main className="main before:bg-equipments">
+        <div className="black-overlay" />
+        <div className="wrapper py-20 min-w-[70%] flex gap-y-32 2xl:gap-0 mt-10 items-center justify-center">
+          <h1 className="header">Equipments</h1>
 
           {/* Equipment Grid */}
           <section className="w-full h-9/10 overflow-hidden">
             <AnimatePresence initial={false} custom={direction} mode="wait">
               <motion.div
                 key={currentPage}
-                className="grid grid-cols-4 gap-x-20 gap-y-16 w-full"
+                className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-x-20 gap-y-16 w-full"
                 custom={direction}
                 variants={variants}
                 initial="enter"
@@ -89,15 +90,14 @@ const EquipmentPage: React.FC = () => {
                 transition={{ duration: 0.3 }}
               >
                 {currentEquipment.map((equip, index) => (
-                  <div key={index} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      className="mr-4 cursor-pointer min-w-8 min-h-8 accent-customRed"
-                      onClick={() => handleClick(equip.name)}
+                  <div key={index} className="flex items-center gap-6">
+                    <CustomCheckbox
+                      scale={1}
                       checked={checkedItems.includes(equip.name)}
-                      disabled={checkedItems.length >= 10 && !checkedItems.includes(equip.name)}
+                      onChange={() => handleClick(equip.name)}
+                      disabled={checkedItems.length >= 10 && checkedItems.includes(equip.name)}
                     />
-                    <span className="text-xl">{equip.name}</span>
+                    <span className="text">{equip.name}</span>
                   </div>
                 ))}
               </motion.div>

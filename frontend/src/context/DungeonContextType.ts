@@ -1,9 +1,9 @@
 import { createContext } from 'react';
-import { MonsterCardDataProps } from '../hooks/useMonster';
+import { MonsterCardProps } from '../interfaces/MonsterCardProps';
 
 export interface DungeonContextType {
-  dungeonMonsters: MonsterCardDataProps[];
-  toggleDungeon: (monster: MonsterCardDataProps) => void;
+  dungeonMonsters: MonsterCardProps[];
+  toggleDungeon: (monster: MonsterCardProps) => void;
   isInDungeon: (monsterIndex: string) => boolean;
 }
 
