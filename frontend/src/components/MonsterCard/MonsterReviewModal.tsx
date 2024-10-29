@@ -1,8 +1,8 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Slider, TextField } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { GiDaemonSkull, GiGoblinHead, GiRoundShield, GiSpikedDragonHead } from 'react-icons/gi';
 import { LuSwords } from 'react-icons/lu';
-import { toast } from 'react-toastify';
+import { useToast } from '../../context/useToast';
 
 type ReviewType = {
   monsterIndex: string;
@@ -10,8 +10,12 @@ type ReviewType = {
   image: string;
 };
 
+type ReviewStorage = {
+  current: Review | null;
+  previous: Review | null;
+};
+
 type Review = {
-  id: number;
   difficulty: number;
   description: string;
 };
@@ -44,70 +48,56 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
   const [difficulty, setDifficulty] = useState<number>(0);
   const [description, setDescription] = useState('');
 
-  const toastId = useRef<null | string>(null);
-  const [reviewCount, setReviewCount] = useState(0);
-  const [previousReview, setPreviousReview] = useState<Review | null>(null);
-
-  useEffect(() => {
-    const savedReviews = localStorage.getItem(`Review: ${monsterIndex}`);
-    if (savedReviews) {
-      const parsedReview = JSON.parse(savedReviews) as Review[];
-      setReviewCount(parsedReview[parsedReview.length - 1]?.id + 1 || 0);
-    }
-  }, [monsterIndex]);
+  const { showToast } = useToast();
 
   const notify = (monsterName: string, onCloseCallback: () => void) => {
-    if (!toast.isActive(toastId.current as string)) {
-      toastId.current = toast.info(
-        <>
-          <p>{monsterName}</p>
-          <button
-            onClick={() => handleUndo()}
-            className="bg-blue-400 text-white px-3 py-1 rounded-md hover:bg-blue-800 transition duration-200 ease-in-out mt-8"
-          >
-            Undo
-          </button>
-        </>,
-        {
-          position: 'top-center',
-          autoClose: 3000,
-          onClose: onCloseCallback,
-        }
-      ) as string;
-    }
+    showToast({
+      message: `Review for ${monsterName} was submitted!`,
+      type: 'info',
+      undoAction: handleUndo,
+    });
+    onCloseCallback();
   };
 
   const handleUndo = () => {
     // claude.ai :How to store previous reviews in array and undo the newest one
-    if (previousReview) {
-      const savedReviews = localStorage.getItem(`Review: ${monsterIndex}`);
-      if (savedReviews) {
-        const parsedReviews = JSON.parse(savedReviews) as Review[];
+    const savedReviews = localStorage.getItem(`Review: ${monsterIndex}`);
 
-        parsedReviews.pop();
-        localStorage.setItem(`Review: ${monsterIndex}`, JSON.stringify(parsedReviews));
-
-        setDifficulty(previousReview.difficulty);
-        setDescription(previousReview.description);
-        setReviewCount((prev) => prev - 1);
-        setPreviousReview(null);
-
-        toast.success('Previous review restored!', {
-          position: 'top-center',
-          autoClose: 2000,
-        });
-      }
+    if (!savedReviews) {
+      showToast({
+        message: 'No reviews to undo',
+        type: 'warning',
+      });
+      return;
     }
+    const reviews = JSON.parse(savedReviews) as ReviewStorage;
+    if (reviews.previous) {
+      const restoredReviews: ReviewStorage = {
+        current: reviews.previous,
+        previous: null,
+      };
+      localStorage.setItem(`Review: ${monsterIndex}`, JSON.stringify(restoredReviews));
+
+      setDifficulty(reviews.previous.difficulty);
+      setDescription(reviews.previous.description);
+    } else {
+      localStorage.removeItem(`Review: ${monsterIndex}`);
+      setDifficulty(0);
+      setDescription('');
+    }
+    showToast({
+      message: 'Previous review restored!',
+      type: 'success',
+    });
   };
 
   const handleClickOpen = () => {
     const savedReviews = localStorage.getItem(`Review: ${monsterIndex}`);
     if (savedReviews) {
-      const parsedReviews = JSON.parse(savedReviews) as Review[];
-      const latestReview = parsedReviews[parsedReviews.length - 1];
-      if (latestReview) {
-        setDifficulty(latestReview.difficulty);
-        setDescription(latestReview.description);
+      const parsedReviews = JSON.parse(savedReviews) as ReviewStorage;
+      if (parsedReviews.current) {
+        setDifficulty(parsedReviews.current.difficulty);
+        setDescription(parsedReviews.current.description);
       }
     }
     setIsOpen(true);
@@ -123,25 +113,20 @@ const MonsterReviewModal = ({ name, monsterIndex, image }: ReviewType) => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const savedReviews = localStorage.getItem(`Review: ${monsterIndex}`);
+
     const newReview: Review = {
-      id: reviewCount,
       difficulty,
       description,
     };
 
-    let reviews: Review[] = [];
+    const savedReviews = localStorage.getItem(`Review: ${monsterIndex}`);
+    const reviews: ReviewStorage = savedReviews ? JSON.parse(savedReviews) : { current: null, previous: null };
 
-    if (savedReviews) {
-      reviews = JSON.parse(savedReviews);
-      setPreviousReview(reviews[reviews.length - 1]);
-      if (reviews.length >= 2) {
-        reviews = reviews.slice(-1);
-      }
-    }
-    reviews.push(newReview);
-    localStorage.setItem(`Review: ${monsterIndex}`, JSON.stringify(reviews));
-    setReviewCount((prev) => prev + 1);
+    const updatedReviews: ReviewStorage = {
+      current: newReview,
+      previous: reviews.current,
+    };
+    localStorage.setItem(`Review: ${monsterIndex}`, JSON.stringify(updatedReviews));
     notify(name, handleClose);
   };
 

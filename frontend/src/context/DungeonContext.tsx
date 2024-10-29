@@ -1,25 +1,16 @@
-import { createContext, useState, useEffect, ReactNode, useRef } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { MonsterCardDataProps } from '../hooks/useMonster';
-import { toast } from 'react-toastify';
+import { DungeonContext, DungeonContextType } from './DungeonContextType';
+import { useToast } from './useToast';
 
-interface DungeonContextType {
-  dungeonMonsters: MonsterCardDataProps[];
-  toggleDungeon: (monster: MonsterCardDataProps) => void;
-  isInDungeon: (monsterIndex: string) => boolean;
-}
 interface Action {
   monster: MonsterCardDataProps;
   action: 'add' | 'remove';
   timestamp: number;
 }
 
-export const DungeonContext = createContext<DungeonContextType>({
-  dungeonMonsters: [],
-  toggleDungeon: () => {},
-  isInDungeon: () => false,
-});
-
 export const DungeonProvider = ({ children }: { children: ReactNode }) => {
+  const { showToast } = useToast();
   const initializeDungeon = () => {
     const savedDungeon = localStorage.getItem('dungeonMonsters');
     return savedDungeon ? JSON.parse(savedDungeon) : [];
@@ -40,43 +31,38 @@ export const DungeonProvider = ({ children }: { children: ReactNode }) => {
     setDungeonMonsters((prev) => {
       const isAlreadyInDungeon = prev.some((m) => m.index === monster.index);
 
-      let updatedMonsters;
-
       if (isAlreadyInDungeon) {
-        updatedMonsters = prev.filter((m) => m.index !== monster.index);
+        const updatedMonsters = prev.filter((m) => m.index !== monster.index);
         addAction({ monster, action: 'remove', timestamp: Date.now() });
-      } else if (prev.length < 6) {
-        updatedMonsters = [...prev, monster];
-        addAction({ monster, action: 'add', timestamp: Date.now() });
-      } else {
-        updatedMonsters = prev;
-      }
-      const actionMessage = isAlreadyInDungeon
-        ? `${monster.name} was removed from dungeon`
-        : `${monster.name} was added to dungeon`;
 
-      showToast(actionMessage, monster);
+        showToast({
+          message: `${monster.name} was removed from dungeon`,
+          type: 'info',
+          undoAction: () => handleUndo(monster),
+        });
+
+        return updatedMonsters;
+      }
+      if (prev.length === 6) {
+        showToast({
+          message: 'Only 6 monsters allowed in dungeon!',
+          type: 'warning',
+          duration: 2000,
+        });
+        return prev;
+      }
+
+      const updatedMonsters = [...prev, monster];
+      addAction({ monster, action: 'add', timestamp: Date.now() });
+
+      showToast({
+        message: `${monster.name} was added to dungeon`,
+        type: 'info',
+        undoAction: () => handleUndo(monster),
+      });
 
       return updatedMonsters;
     });
-  };
-
-  const showToast = (actionMessage: string, monster: MonsterCardDataProps) => {
-    toast.info(
-      <>
-        <p>{actionMessage}</p>
-        <button
-          onClick={() => handleUndo(monster)}
-          className="bg-blue-400 text-white px-3 py-1 rounded-md hover:bg-blue-800 transition duration-200 ease-in-out mt-8"
-        >
-          Undo
-        </button>
-      </>,
-      {
-        position: 'top-center',
-        autoClose: 3000,
-      }
-    );
   };
 
   const handleUndo = (monster: MonsterCardDataProps) => {
@@ -96,9 +82,11 @@ export const DungeonProvider = ({ children }: { children: ReactNode }) => {
         action === 'remove'
           ? `${monster.name} has been restored to the dungeon`
           : `Canceled adding ${monster.name} to dungeon `;
-      toast.success(undoMessage, {
-        position: 'top-center',
-        autoClose: 3000,
+
+      showToast({
+        message: undoMessage,
+        type: 'success',
+        duration: 3000,
       });
     }
   };
@@ -107,7 +95,7 @@ export const DungeonProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <DungeonContext.Provider value={{ dungeonMonsters, toggleDungeon, isInDungeon }}>
+    <DungeonContext.Provider value={{ dungeonMonsters, toggleDungeon, isInDungeon } as DungeonContextType}>
       {children}
     </DungeonContext.Provider>
   );
