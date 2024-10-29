@@ -5,6 +5,7 @@ import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { GET_USER_DUNGEON, UPDATE_DUNGEON_NAME } from '../../../../backend/src/graphql/queries.ts';
 import { useMutation, useQuery } from '@apollo/client';
 import { AuthContext } from '../../context/AuthContext.tsx';
+import DungeonStats from '../../components/Dungeon/DungeonStats.tsx';
 
 export default function DungeonPage() {
   const { userId } = useContext(AuthContext);
@@ -34,7 +35,12 @@ export default function DungeonPage() {
     if (userId) {
       updateDungeonName({
         variables: { userId, dungeonName: newName },
-      });
+      }).then((response) => {
+        console.log('Dungeon name updated successfully:', response);
+      })
+        .catch((error) => {
+          console.error('Error updating dungeon name:', error);
+        });
     }
   };
 
@@ -51,7 +57,7 @@ export default function DungeonPage() {
             value={dungeonName}
             onSave={handleSaveDungeonName}
           />
-
+          <DungeonStats />
           <DungeonMonsterGrid />
         </div>
       </main>
