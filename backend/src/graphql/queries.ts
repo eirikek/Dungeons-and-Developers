@@ -119,3 +119,60 @@ export const UPDATE_REVIEW = gql`
         }
     }
 `;
+
+export const CREATE_USER = gql`
+    mutation createUser($userName: String!) {
+        createUser(userName: $userName) {
+            token
+            user {
+                id
+                userName
+                class {
+                    name
+                }
+                race {
+                    name
+                }
+                abilityScores {
+                    name
+                    score
+                }
+                equipments {
+                    name
+                }
+            }
+        }
+    }
+`;
+
+export const LOGIN_USER = gql`
+    mutation loginUser($userName: String!) {
+        loginUser(userName: $userName) {
+            token
+            user {
+                id
+                userName
+                class {
+                    name
+                }
+                race {
+                    name
+                }
+                abilityScores {
+                    name
+                    score
+                }
+                equipments {
+                    name
+                }
+            }
+        }
+    }
+`;
+
+export const CHECK_USERNAME = gql`
+    query checkUsername($userName: String!) {
+        checkUsername(userName: $userName)
+    }
+`;
+
