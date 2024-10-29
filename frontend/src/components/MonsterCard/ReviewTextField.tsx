@@ -20,7 +20,7 @@ const ReviewTextField: React.FC<ReviewTextFieldProps> = ({ value, onChange, labe
     sx={{
       '& .MuiInputBase-input': {
         color: 'black',
-        fontSize: '1.25rem',
+        fontSize: '1.1rem',
         height: 'auto',
         padding: '20px',
         fontFamily: 'MedievalSharp',

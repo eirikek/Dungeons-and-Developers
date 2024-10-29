@@ -6,9 +6,9 @@ import {
   DialogContent,
   DialogContentText,
 } from '@mui/material';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import { ADD_REVIEW, GET_MONSTER_REVIEWS } from '../../../../backend/src/graphql/queries';
+import { ADD_REVIEW, GET_MONSTER_REVIEWS, UPDATE_REVIEW } from '../../../../backend/src/graphql/queries';
 import { AuthContext } from '../../context/AuthContext';
 import { ReviewFormType, ReviewType } from '../../interfaces/ReviewProps.ts';
 import ReviewSlider from './ReviewSlider.tsx';
@@ -17,8 +17,12 @@ import ReviewTextField from './ReviewTextField.tsx';
 const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
   const { userId } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const [difficulty, setDifficulty] = useState(50);
   const [description, setDescription] = useState('');
+  const [originalDifficulty, setOriginalDifficulty] = useState(50);
+  const [originalDescription, setOriginalDescription] = useState('');
+
   const { data } = useQuery(GET_MONSTER_REVIEWS, { variables: { monsterId } });
   const existingReview = data?.monster?.reviews.find(
     (review: ReviewType) => review.user.id === userId,
@@ -28,50 +32,70 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
     refetchQueries: [{ query: GET_MONSTER_REVIEWS, variables: { monsterId } }],
   });
 
+  const [updateReview] = useMutation(UPDATE_REVIEW, {
+    refetchQueries: [{ query: GET_MONSTER_REVIEWS, variables: { monsterId } }],
+  });
+
+  useEffect(() => {
+    if (existingReview) {
+      setDescription(existingReview.description);
+      setDifficulty(existingReview.difficulty);
+      setOriginalDescription(existingReview.description);
+      setOriginalDifficulty(existingReview.difficulty);
+    }
+  }, [existingReview]);
+
   const handleClickOpen = () => {
     if (existingReview) {
-      alert('You have already submitted a review for this monster.');
-      return;
+      setEditMode(true);
+    } else {
+      setDescription('');
+      setDifficulty(50);
+      setEditMode(false);
     }
     setIsOpen(true);
   };
 
   const handleClose = () => {
+    if (editMode) {
+      setDescription(originalDescription);
+      setDifficulty(originalDifficulty);
+    } else {
+      setDescription('');
+      setDifficulty(50);
+    }
     setIsOpen(false);
+    setEditMode(false);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
     if (!userId) {
       alert('You must be logged in to submit a review.');
       return;
     }
 
     try {
-      console.log('Submitting review with payload:', {
-        monsterId,
-        review: {
-          user: userId,
-          difficulty,
-          description,
-        },
-      });
-
-      const response = await addReview({
-        variables: {
-          monsterId,
-          review: {
-            user: userId,
-            difficulty,
-            description,
+      if (editMode && existingReview) {
+        // Update existing review
+        await updateReview({
+          variables: {
+            monsterId,
+            reviewId: existingReview.id,
+            review: { user: userId, difficulty, description },
           },
-        },
-      });
-
-      console.log('Mutation response:', response);
+        });
+      } else {
+        // Add new review
+        await addReview({
+          variables: {
+            monsterId,
+            review: { user: userId, difficulty, description },
+          },
+        });
+      }
       setIsOpen(false);
-    } catch (error: unknown) {
+    } catch (error) {
       console.error('Error submitting review:', error);
     }
   };
@@ -162,7 +186,7 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
             fontFamily: 'MedievalSharp',
             fontSize: '1.5rem',
           }}>
-            SUBMIT
+            {editMode ? 'UPDATE' : 'SUBMIT'}
           </Button>
         </DialogActions>
       </Dialog>

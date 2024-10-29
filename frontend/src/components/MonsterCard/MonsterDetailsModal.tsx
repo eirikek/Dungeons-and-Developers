@@ -10,6 +10,8 @@ import Review from './Review.tsx';
 import { useQuery } from '@apollo/client';
 import { GET_MONSTER_REVIEWS } from '../../../../backend/src/graphql/queries';
 import { ReviewType } from '../../interfaces/ReviewProps.ts';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
 
 type MonsterDetailsModalProps = {
   id: string;
@@ -21,16 +23,15 @@ type MonsterDetailsModalProps = {
 };
 
 const MonsterDetailsModal = ({ id, name, hp, type, image, onClose }: MonsterDetailsModalProps) => {
-  const { data, loading, error } = useQuery(GET_MONSTER_REVIEWS, {
-    variables: { monsterId: id },
-  });
+  const { userId } = useContext(AuthContext);
+  const { data, loading, error } = useQuery(GET_MONSTER_REVIEWS, { variables: { monsterId: id } });
+  const reviews: ReviewType[] = data?.monster?.reviews || [];
 
-  console.log('Monster reviews data:', JSON.stringify(data, null, 2));
+  const sortedReviews = [...reviews].sort((a, b) => (a.user.id === userId ? -1 : b.user.id === userId ? 1 : 0));
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error loading reviews.</p>;
 
-  const reviews: ReviewType[] = data?.monster?.reviews || [];
 
   const calculateAverageDifficulty = () => {
     if (reviews.length === 0) return 'No reviews';
@@ -76,13 +77,9 @@ const MonsterDetailsModal = ({ id, name, hp, type, image, onClose }: MonsterDeta
           </div>
 
           <div className="overflow-y-auto flex-1 flex flex-col gap-5 p-1">
-            {reviews.length > 0 ? (
-              reviews.map((review) => (
-                <Review
-                  key={review.id}
-                  review={review}
-                  monsterId={id}
-                />
+            {sortedReviews.length > 0 ? (
+              sortedReviews.map((review) => (
+                <Review key={review.id} review={review} monsterId={id} />
               ))
             ) : (
               <DialogContentText className="text">No reviews yet.</DialogContentText>

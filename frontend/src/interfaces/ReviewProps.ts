@@ -13,9 +13,5 @@ export type ReviewFormType = {
   monsterId: string;
   name: string;
   image: string;
-  user: {
-    id: string;
-    userName: string;
-  };
 };
 
