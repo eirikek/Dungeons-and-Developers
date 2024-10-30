@@ -7,7 +7,7 @@ import client from './client/apollo.ts';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { AuthProvider } from './context/AuthContext.tsx';
 import { DungeonProvider } from './context/DungeonContext.tsx';
-
+import ToastProvider from './components/Toast/CustomToast.tsx';
 
 const queryClient = new QueryClient();
 const userId = localStorage.getItem('userId') || '';
@@ -17,11 +17,13 @@ createRoot(document.getElementById('root')!).render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <DungeonProvider userId={userId}>
-            <App />
-          </DungeonProvider>
+          <ToastProvider>
+            <DungeonProvider userId={userId}>
+              <App />
+            </DungeonProvider>
+          </ToastProvider>
         </AuthProvider>
       </QueryClientProvider>
     </StrictMode>
-  </ApolloProvider>,
+  </ApolloProvider>
 );

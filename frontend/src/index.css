@@ -85,3 +85,4 @@ body {
 .arrow-button {
     @apply text-6xl lg:text-4xl xl:text-3xl text-white hover:text-gray-400;
 }
+
