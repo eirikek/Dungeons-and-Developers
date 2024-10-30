@@ -19,7 +19,7 @@ const GET_MONSTERS = gql`
   }
 `;
 
-function useMonster(searchTerm, currentPage, monstersPerPage, selectedFilters) {
+function useMonster(searchTerm: string, currentPage: number, monstersPerPage: number, selectedFilters) {
   const offset = (currentPage - 1) * monstersPerPage;
 
   const { data, loading, error } = useQuery<{
