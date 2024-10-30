@@ -1,37 +1,25 @@
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { useMemo } from 'react';
 import MonsterDataProps from '../interfaces/MonsterDataProps.ts';
+import { GET_MONSTERS } from '../../../backend/src/graphql/queries.ts';
 
-const GET_MONSTERS = gql`
-    query GetMonsters($searchTerm: String, $offset: Int, $limit: Int) {
-        monsters(searchTerm: $searchTerm, offset: $offset, limit: $limit) {
-            monsters {
-                id
-                name
-                size
-                type
-                alignment
-                hit_points
-                image
-            }
-            totalMonsters
-        }
-    }
-`;
-
-function useMonster(searchTerm: string, currentPage: number, monstersPerPage: number) {
+function useMonster(searchTerm: string, currentPage: number, monstersPerPage: number, selectedFilters: Set<string>) {
   const offset = (currentPage - 1) * monstersPerPage;
 
   const { data, error, loading } = useQuery<{
-    monsters: { monsters: MonsterDataProps[], totalMonsters: number }
+    monsters: { monsters: MonsterDataProps[]; totalMonsters: number };
   }>(GET_MONSTERS, {
-    variables: { searchTerm, offset, limit: monstersPerPage },
-    fetchPolicy: 'network-only',  // Alltid hente ferske data fra serveren
+    variables: { searchTerm, offset, limit: monstersPerPage, types: Array.from(selectedFilters) },
+    fetchPolicy: 'network-only',
   });
 
   const transformedMonsters = useMemo(() => {
     if (!data || !data.monsters) return [];
-    const mappedMonsters = data.monsters.monsters.map(monster => ({
+    const filteredMonsters = data.monsters.monsters.filter(
+      (monster) => selectedFilters.size === 0 || selectedFilters.has(monster.type)
+    );
+
+    return filteredMonsters.map((monster) => ({
       id: monster.id,
       name: monster.name,
       type: monster.type,
@@ -40,9 +28,7 @@ function useMonster(searchTerm: string, currentPage: number, monstersPerPage: nu
       size: monster.size,
       img: monster.image,
     }));
-
-    return Array.from(new Map(mappedMonsters.map((m) => [m.id, m])).values());
-  }, [data]);
+  }, [data, selectedFilters]);
 
   return {
     monsters: transformedMonsters,
