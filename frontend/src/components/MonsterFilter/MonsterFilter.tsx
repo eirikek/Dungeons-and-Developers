@@ -12,16 +12,14 @@ const filterOptions = [
   'fey',
   'giant',
   'undead',
-  'celestial',
   'elemental',
 ];
 
-export default function MonsterFilter() {
-  const [selectedFilters, setSelectedFilters] = useState<Set<string>>(new Set());
+export default function MonsterFilter({ selectedFilters, setSelectedFilters }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleCheckboxChange = (option: string) => {
-    setSelectedFilters((prev) => {
+    setSelectedFilters((prev: Set<string>) => {
       const newFilters = new Set(prev);
       if (newFilters.has(option)) {
         newFilters.delete(option);
