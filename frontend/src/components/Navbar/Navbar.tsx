@@ -4,7 +4,7 @@ import { FiMenu, FiX } from 'react-icons/fi';
 import { FaChevronDown } from 'react-icons/fa';
 import logo from '../../assets/images/logo.svg';
 import CustomButton from '../CustomButton/CustomButton.tsx';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,6 +13,7 @@ const Navbar = () => {
   const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
   const [isDropdownHovered, setIsDropdownHovered] = useState(false);
 
+  const navigate = useNavigate();
   const location = useLocation();
 
   const toggleMenu = () => {
@@ -21,6 +22,11 @@ const Navbar = () => {
 
   const toggleMobileDropdown = () => {
     setIsMobileDropdownOpen(!isMobileDropdownOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/project2');
   };
 
   useEffect(() => {
@@ -163,7 +169,7 @@ const Navbar = () => {
                 </div>
               </div>
 
-              <CustomButton text={'Log out'} linkTo={'/project2'} isActive={location.pathname === '/project2'}>
+              <CustomButton text={'Log out'} onClick={handleLogout}>
                 <IoIosLogOut className="ml-2 mt-0.5" />
               </CustomButton>
             </section>

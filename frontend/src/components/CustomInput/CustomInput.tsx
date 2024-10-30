@@ -38,6 +38,10 @@ const CustomInput = ({ placeholder, inputName, value, onSave }: InputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    setInputValue(value);
+  }, [value]);
+
+  useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
     }
@@ -100,7 +104,7 @@ const CustomInput = ({ placeholder, inputName, value, onSave }: InputProps) => {
               ref={inputRef}
               id={inputName}
               type="text"
-              defaultValue={inputValue === placeholder ? '' : inputValue}
+              value={inputValue}
               onChange={handleChange}
               onBlur={handleBlur}
               autoFocus
