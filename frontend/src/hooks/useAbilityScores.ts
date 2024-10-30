@@ -9,25 +9,24 @@ const GET_ABILITYSCORES = gql`
             abilities {
                 index
                 name
-                desc
-                skills
+               
             }
             totalAbilities
         }
     }
 `;
-interface Description{
-  desc: string;
-}
-interface Skill{
-  name: string;
-  index: string;
-}
+//interface Description{
+//  desc: string;
+//}
+//interface Skill{
+//  name: string;
+//  index: string;
+//}
 interface AbilityData {
   name: string;
   index: string;
-  desc: Description[];
-  skills: Skill[];
+  //desc: Description[];
+  //skills: Skill[];
 }
 function useAbilityScores(currentPage: number, abilitiesPerPage: number) {
   const offset = (currentPage - 1) * abilitiesPerPage;
@@ -46,8 +45,8 @@ function useAbilityScores(currentPage: number, abilitiesPerPage: number) {
     return data.abilities.abilities.map(ability => ({
       index: ability.index,
       name: ability.name,
-      desc: Array.isArray(ability.desc) ? ability.desc : [],
-      skills: Array.isArray(ability.skills) ? ability.skills: []
+      //desc: Array.isArray(ability.desc) ? ability.desc : [],
+      //skills: Array.isArray(ability.skills) ? ability.skills: []
     }));
   }, [data]);
 

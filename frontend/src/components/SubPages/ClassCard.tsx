@@ -31,7 +31,7 @@ const ClassCard: React.FC<ClassCardProps> = ({ name, hit_die, index }) => {
         <img src={classImage} alt={name} className="max-w-44 shadow-none" />
         <div>
           <h2 className="sub-header bold">{name}</h2>
-          <p className="text">HP: {hit_die}</p>
+          <p className="text">Hit die: {hit_die}</p>
         </div>
       </div>
       <div className="w-1/5 flex items-center justify-center xl:justify-end">
