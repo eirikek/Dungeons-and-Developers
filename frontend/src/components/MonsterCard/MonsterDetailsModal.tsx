@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-} from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import Review from './Review.tsx';
 import { useQuery } from '@apollo/client';
 import { GET_MONSTER_REVIEWS } from '../../../../backend/src/graphql/queries';
@@ -32,7 +25,6 @@ const MonsterDetailsModal = ({ id, name, hp, type, image, onClose }: MonsterDeta
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error loading reviews.</p>;
 
-
   const calculateAverageDifficulty = () => {
     if (reviews.length === 0) return 'No reviews';
     const totalDifficulty = reviews.reduce((sum: number, review: ReviewType) => sum + review.difficulty, 0);
@@ -52,12 +44,10 @@ const MonsterDetailsModal = ({ id, name, hp, type, image, onClose }: MonsterDeta
           maxWidth: 'none',
           backgroundColor: 'black',
           padding: 2,
-
         },
       }}
     >
       <DialogContent className="flex flex-col xl:flex-row bg-black gap-6 h-full overflow-x-hidden">
-
         {/* Monster Info Section */}
         <Box className="w-full xl:w-1/2 flex flex-col xl:items-center justify-center gap-2 flex-shrink-0">
           <img src={image} alt={name} className="w-full sm:w-3/4 xl:w-1/2 rounded" />
@@ -79,7 +69,7 @@ const MonsterDetailsModal = ({ id, name, hp, type, image, onClose }: MonsterDeta
           <div className="overflow-y-auto flex-1 flex flex-col gap-5 p-1">
             {sortedReviews.length > 0 ? (
               sortedReviews.map((review) => (
-                <Review key={review.id} review={review} monsterId={id} />
+                <Review key={review.id} review={review} monsterId={id} monsterName={name} />
               ))
             ) : (
               <DialogContentText className="text">No reviews yet.</DialogContentText>
