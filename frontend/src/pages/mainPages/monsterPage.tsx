@@ -14,12 +14,18 @@ export default function MonsterPage() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectedFilters, setSelectedFilters] = useState<Set<string>>(new Set());
 
   // Used for loading screen
   hourglass.register();
 
   // Får ut `monsters`, `loading`, og `error` fra hooken.
-  const { monsters, totalMonsters, loading, error } = useMonster(debouncedSearchTerm, currentPage, monstersPerPage);
+  const { monsters, totalMonsters, loading, error } = useMonster(
+    debouncedSearchTerm,
+    currentPage,
+    monstersPerPage,
+    selectedFilters
+  );
 
   // Debounce søketerm oppdateringer
   const debouncedSearch = useMemo(
@@ -61,7 +67,7 @@ export default function MonsterPage() {
 
         <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start">
           <div className={'flex gap-10 z-10'}>
-            <MonsterFilter />
+            <MonsterFilter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} />
             <SearchBar
               searchTerm={searchTerm}
               handleSearchChange={handleSearchChange}
