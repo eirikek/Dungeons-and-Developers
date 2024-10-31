@@ -5,24 +5,38 @@ import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { useMutation } from '@apollo/client';
 import { UPDATE_USER_CLASS } from '../../../../backend/src/graphql/queries.ts';
-import ClassData from '../../interfaces/ClassProps.ts';
+import ClassProps from '../../interfaces/ClassProps.ts';
+import { useToast } from '../../hooks/useToast.ts';
 
-const ClassCard: React.FC<ClassData> = ({ name, hit_die, index, id }) => {
+interface ClassCardProps extends ClassProps {
+  selectedClassId: string;
+  onSelect: (id: string) => void;
+}
+
+const ClassCard: React.FC<ClassCardProps> = ({ id, name, hit_die, index, selectedClassId, onSelect }) => {
   const classImage = classImages[index];
   const { userId } = useContext(AuthContext);
   const [updateUserClass] = useMutation(UPDATE_USER_CLASS);
+  const { showToast } = useToast();
 
   const handleSelectClass = () => {
-    console.log('userId:', userId, 'classId:', id);
-    updateUserClass({
-      variables: { userId, classId: id },
-    })
-      .then((response) => {
-        console.log('Class updated:', response.data.updateUserClass.class);
+    if (selectedClassId !== id) {
+      onSelect(id);
+      updateUserClass({
+        variables: { userId, classId: id },
       })
-      .catch((error) => {
-        console.error('Error updating class:', error);
-      });
+        .then((response) => {
+          showToast({
+            message: `Race changed to ${name}`,
+            type: 'success',
+            duration: 3000,
+          });
+          console.log('Class updated:', response.data.updateUserClass.class);
+        })
+        .catch((error) => {
+          console.error('Error updating class:', error);
+        });
+    }
   };
 
   return (
@@ -41,11 +55,11 @@ const ClassCard: React.FC<ClassData> = ({ name, hit_die, index, id }) => {
         <img src={classImage} alt={name} className="max-w-44 shadow-none" />
         <div>
           <h2 className="sub-header bold">{name}</h2>
-          <p className="text">Hit die: {hit_die}</p>
+          <p className="text">HP: {hit_die}</p>
         </div>
       </div>
       <div className="w-1/5 flex items-center justify-center xl:justify-end">
-        <CustomCheckbox scale={2} onChange={handleSelectClass} />
+        <CustomCheckbox scale={2} checked={selectedClassId === id} onChange={handleSelectClass} disableUncheck={true} />
       </div>
     </motion.section>
   );

@@ -4,9 +4,10 @@ interface CustomCheckboxProps {
   checked?: boolean;
   onChange?: (checked: boolean) => void;
   scale?: number;
+  disableUncheck?: boolean;
 }
 
-const CustomCheckbox = ({ checked = false, onChange, scale = 1 }: CustomCheckboxProps) => {
+const CustomCheckbox = ({ checked = false, onChange, scale = 1, disableUncheck = false }: CustomCheckboxProps) => {
   const [isChecked, setIsChecked] = useState(checked);
 
   useEffect(() => {
@@ -16,10 +17,15 @@ const CustomCheckbox = ({ checked = false, onChange, scale = 1 }: CustomCheckbox
   const handleCheckboxChange = () => {
     setIsChecked((prevChecked) => {
       const newChecked = !prevChecked;
-      if (onChange) {
-        onChange(newChecked);
+
+      if (!disableUncheck || !prevChecked) {
+        if (onChange) {
+          onChange(newChecked);
+        }
+        return newChecked;
       }
-      return newChecked;
+      
+      return prevChecked;
     });
   };
 
