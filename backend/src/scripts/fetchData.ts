@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import Monster from '../graphql/model/Monsters.ts';
 import Race from '../graphql/model/Race.ts';
 import Class from '../graphql/model/Class.ts';
@@ -9,6 +9,7 @@ const urls = {
   monsters: 'https://www.dnd5eapi.co/api/monsters',
   races: 'https://www.dnd5eapi.co/api/races',
   classes: 'https://www.dnd5eapi.co/api/classes',
+  equipments: 'https://www.dnd5eapi.co/api/equipment',
 };
 
 async function fetchMonsters() {
@@ -80,11 +81,33 @@ async function fetchClasses() {
   console.log('All classes saved to MongoDB!');
 }
 
+async function fetchEquipments() {
+  const { data } = await axios.get(urls.equipments);
+  const equipments = data.results;
+
+  for (const equipment of equipments) {
+    const equipmentDetails = await axios.get(`${urls.equipments}/${equipment.index}`);
+    const inDB = await Class.findOne({ index: equipmentDetails.data.index });
+
+    if (!inDB) {
+      await new Class({
+        index: equipmentDetails.data.index,
+        name: equipmentDetails.data.name,
+        category: equipmentDetails.data.equipment_category.name,
+        value: equipmentDetails.data.cost.quantity,
+      }).save();
+      console.log(`Equipment saved: ${equipmentDetails.data.name}`);
+    }
+  }
+  console.log('All equipments saved to MongoDB!');
+}
+
 async function fetchData() {
   try {
     await fetchMonsters();
     await fetchRaces();
     await fetchClasses();
+    await fetchEquipments();
   } catch (error) {
     console.error('Error fetching or saving data:', error);
   }
