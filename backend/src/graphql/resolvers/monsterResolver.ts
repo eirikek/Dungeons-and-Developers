@@ -22,20 +22,31 @@ interface ReviewInput {
 export default {
   Query: {
     async monsters(_: any, { searchTerm = '', offset = 0, limit = 8, types = [] }: MonsterQueryArgs) {
-      let query = {};
+      let query: any = {};
 
-      // Filter by search term if provided
       if (searchTerm) {
-        const regex = new RegExp(searchTerm, 'i');
-        query = { ...query, name: { $regex: regex } };
+        const startsWithRegex = new RegExp(`^${searchTerm}`, 'i');
+        const containsRegex = new RegExp(searchTerm, 'i');
+
+        query.name = { $regex: startsWithRegex };
+
+        let monsters = await Monster.find(query).skip(offset).limit(limit);
+
+        if (monsters.length < limit) {
+          const additionalQuery = { name: { $regex: containsRegex }, _id: { $nin: monsters.map(m => m._id) } };
+          const additionalResults = await Monster.find(additionalQuery).skip(offset).limit(limit - monsters.length);
+          monsters = [...monsters, ...additionalResults];
+        }
+
+        const totalMonsters = await Monster.countDocuments({ name: { $regex: containsRegex } });
+
+        return { monsters, totalMonsters };
       }
 
-      // Filter by types if provided
       if (types.length > 0) {
-        query = { ...query, type: { $in: types } };
+        query.type = { $in: types };
       }
 
-      // Fetch monsters based on the combined filters
       const monsters = await Monster.find(query).skip(offset).limit(limit);
       const totalMonsters = await Monster.countDocuments(query);
 
@@ -110,7 +121,7 @@ export default {
         monsterId: string;
         reviewId: string;
         review: ReviewInput;
-      }
+      },
     ) {
       const monster = await Monster.findById(monsterId);
       if (!monster) throw new Error('Monster not found');

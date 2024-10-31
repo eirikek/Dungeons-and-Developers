@@ -64,7 +64,7 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!userId) {
-      alert('You must be logged in to submit a review.');
+      showToast({ message: 'You must be logged in to submit a review', type: 'error', duration: 3000 });
       return;
     }
 
