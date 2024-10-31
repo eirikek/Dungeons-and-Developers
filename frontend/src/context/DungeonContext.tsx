@@ -71,7 +71,13 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
   }, [data]);
 
   const toggleDungeon = async (monster: MonsterCardProps) => {
+    if (!userId) {
+      showToast({ message: 'You must be logged in to add monsters to dungeon', type: 'error', duration: 3000 });
+      return;
+    }
+
     if (!isInDungeon(monster.id) && dungeonMonsters.length >= maxFavorites) {
+      showToast({ message: 'You can only add 6 monsters to your dungeon', type: 'warning', duration: 3000 });
       return;
     }
 
@@ -80,6 +86,7 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
         undoRemoveRef.current = monster;
         await removeFavoriteMonster({ variables: { userId, monsterId: monster.id } });
         setDungeonMonsters((prev) => prev.filter((m) => m.id !== monster.id));
+
         showToast({
           message: `${monster.name} removed from dungeon`,
           type: 'info',

@@ -23,36 +23,34 @@ export default {
   Query: {
     async monsters(_: any, { searchTerm = '', offset = 0, limit = 8, types = [] }: MonsterQueryArgs) {
       let query: any = {};
-      
+
       if (searchTerm) {
         const startsWithRegex = new RegExp(`^${searchTerm}`, 'i');
         const containsRegex = new RegExp(searchTerm, 'i');
 
-        query = { name: { $regex: startsWithRegex } };
-        if (types.length > 0) {
-          query.type = { $in: types };
-        }
+        query.name = { $regex: startsWithRegex };
 
         let monsters = await Monster.find(query).skip(offset).limit(limit);
-        let totalMonsters = await Monster.countDocuments(query);
 
         if (monsters.length < limit) {
-          query.name = { $regex: containsRegex };
-          const additionalResults = await Monster.find(query).skip(offset).limit(limit - monsters.length);
+          const additionalQuery = { name: { $regex: containsRegex }, _id: { $nin: monsters.map(m => m._id) } };
+          const additionalResults = await Monster.find(additionalQuery).skip(offset).limit(limit - monsters.length);
           monsters = [...monsters, ...additionalResults];
         }
 
-        return { monsters, totalMonsters };
-      } else if (types.length > 0) {
-        query.type = { $in: types };
-        const monsters = await Monster.find(query).skip(offset).limit(limit);
-        const totalMonsters = await Monster.countDocuments(query);
-        return { monsters, totalMonsters };
-      } else {
-        const monsters = await Monster.find(query).skip(offset).limit(limit);
-        const totalMonsters = await Monster.countDocuments();
+        const totalMonsters = await Monster.countDocuments({ name: { $regex: containsRegex } });
+
         return { monsters, totalMonsters };
       }
+
+      if (types.length > 0) {
+        query.type = { $in: types };
+      }
+
+      const monsters = await Monster.find(query).skip(offset).limit(limit);
+      const totalMonsters = await Monster.countDocuments(query);
+
+      return { monsters, totalMonsters };
     },
 
     async monster(_: any, { id }: MonsterArgs) {
@@ -62,7 +60,6 @@ export default {
       });
     },
   },
-
 
   Mutation: {
     async fetchAllData() {

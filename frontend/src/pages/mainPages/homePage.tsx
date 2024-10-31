@@ -20,18 +20,15 @@ export default function HomePage() {
 
   useEffect(() => {
     const loginToast = localStorage.getItem('loginToast');
-    console.log('HomePage useEffect triggered'); // Check when this useEffect is called
-    console.log('userName:', userName); // Confirm the userName from context
-    console.log('loginToast:', loginToast); // Confirm loginToast value
 
     if (userName && loginToast === 'true') {
       setTimeout(() => {
         showToast({
           message: `Welcome, ${userName}!`,
-          type: 'success',
-          duration: 2000,
+          type: 'info',
+          duration: 3000,
         });
-      }, 400); // Small delay to ensure render completion
+      }, 400);
       localStorage.setItem('loginToast', 'false');
     }
   }, [userName, showToast]);

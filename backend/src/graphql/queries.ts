@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client';
-import exp from 'node:constants';
 
 export const GET_MONSTERS = gql`
     query GetMonsters($searchTerm: String, $offset: Int, $limit: Int, $types: [String!]) {
