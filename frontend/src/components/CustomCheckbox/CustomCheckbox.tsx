@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface CustomCheckboxProps {
   checked?: boolean;
@@ -8,6 +8,10 @@ interface CustomCheckboxProps {
 
 const CustomCheckbox = ({ checked = false, onChange, scale = 1 }: CustomCheckboxProps) => {
   const [isChecked, setIsChecked] = useState(checked);
+
+  useEffect(() => {
+    setIsChecked(checked);
+  }, [checked]);
 
   const handleCheckboxChange = () => {
     setIsChecked((prevChecked) => {
@@ -24,11 +28,7 @@ const CustomCheckbox = ({ checked = false, onChange, scale = 1 }: CustomCheckbox
       className="relative block cursor-pointer transform transition-transform"
       style={{ transform: `scale(${scale})` }} // Apply the scale dynamically
     >
-      <input
-        type="checkbox"
-        checked={isChecked}
-        onChange={handleCheckboxChange}
-      />
+      <input type="checkbox" checked={isChecked} onChange={handleCheckboxChange} />
       {/* Checkbox background */}
       <span
         className={`absolute top-0 left-0 h-6 w-6 rounded bg-gray-300 transition-all duration-300 ${
@@ -37,9 +37,7 @@ const CustomCheckbox = ({ checked = false, onChange, scale = 1 }: CustomCheckbox
       />
       {/* Checkmark icon */}
       {isChecked && (
-        <span
-          className="absolute left-[9px] top-[5px] w-[5px] h-[10px] border-white border-2 border-t-0 border-l-0 transform rotate-45"
-        />
+        <span className="absolute left-[9px] top-[5px] w-[5px] h-[10px] border-white border-2 border-t-0 border-l-0 transform rotate-45" />
       )}
     </label>
   );

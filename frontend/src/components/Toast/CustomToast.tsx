@@ -1,8 +1,8 @@
-import { CheckCircle, X } from '@mui/icons-material';
+import { CheckCircle } from '@mui/icons-material';
 import React, { useRef, useState } from 'react';
 import { FaUndoAlt } from 'react-icons/fa';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
-import { IoAlertCircleOutline } from 'react-icons/io5';
+import { IoAlertCircleOutline, IoCloseCircleOutline } from 'react-icons/io5';
 import { toast, ToastContainer, Zoom } from 'react-toastify';
 import { ToastContext, ToastProps } from '../../context/ToastContext';
 import 'react-toastify/dist/ReactToastify.css';
@@ -16,7 +16,7 @@ const CustomToast = ({ message, type, undoAction, closeToast }: ToastProps) => {
       case 'success':
         return <CheckCircle className="w-5 h-5 text-green-500" />;
       case 'error':
-        return <X className="w-5 h-5 text-red-500" />;
+        return <IoCloseCircleOutline className="w-5 h-5 text-red-500" />;
       case 'warning':
         return <IoAlertCircleOutline className="w-5 h-5 text-yellow-500" />;
       case 'info':

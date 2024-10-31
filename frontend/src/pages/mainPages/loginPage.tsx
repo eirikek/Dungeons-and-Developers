@@ -4,8 +4,7 @@ import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { useMutation, useLazyQuery } from '@apollo/client';
 import { AuthContext } from '../../context/AuthContext.tsx';
-import { CHECK_USERNAME, CREATE_USER, LOGIN_USER } from '../../../../backend/src/graphql/queries.ts';
-import { useNavigate } from 'react-router-dom';
+import { CREATE_USER, LOGIN_USER, CHECK_USERNAME } from '../../../../backend/src/graphql/queries';
 
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',
@@ -45,15 +44,13 @@ export default function LoginPage() {
   const [logInUsername, setLogInUsername] = useState('');
   const [isUsernameAvailable, setIsUsernameAvailable] = useState<boolean | null>(null);
   const [shakeInput, setShakeInput] = useState(false);
-  const navigate = useNavigate();
 
   const [createUser] = useMutation(CREATE_USER, {
     onCompleted: (data) => {
+      console.log(data);
       const { token, user } = data.createUser;
-      login({ token, userId: user.id });
-      sessionStorage.setItem('loginToast', 'true');
-      sessionStorage.setItem('username', user.userName);
-      navigate('/project2/home');
+      login({ token, userId: user.id, userName: user.userName });
+      window.location.href = '/project2/home';
     },
     onError: () => setShakeInput(true),
   });
@@ -61,13 +58,10 @@ export default function LoginPage() {
   const [loginUser] = useMutation(LOGIN_USER, {
     onCompleted: (data) => {
       const { token, user } = data.loginUser;
-      login({ token, userId: user.id });
-      sessionStorage.setItem('loginToast', 'true');
-      sessionStorage.setItem('username', user.userName);
-      navigate('/project2/home');
+      login({ token, userId: user.id, userName: user.userName });
+      window.location.href = '/project2/home';
     },
     onError: (error) => {
-      console.error('Error registering user:', error);
       if (error.graphQLErrors && error.graphQLErrors[0]) {
         console.error('GraphQL Error Message:', error.graphQLErrors[0].message);
       }

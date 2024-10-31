@@ -1,5 +1,22 @@
 import { gql } from '@apollo/client';
 
+export const GET_MONSTERS = gql`
+    query GetMonsters($searchTerm: String, $offset: Int, $limit: Int, $types: [String!]) {
+        monsters(searchTerm: $searchTerm, offset: $offset, limit: $limit, types: $types) {
+            monsters {
+                id
+                name
+                size
+                type
+                alignment
+                hit_points
+                image
+            }
+            totalMonsters
+        }
+    }
+`;
+
 export const GET_USER_DUNGEON = gql`
     query GetUserDungeon($userId: ID!) {
         user(id: $userId) {
@@ -120,6 +137,12 @@ export const UPDATE_REVIEW = gql`
     }
 `;
 
+export const CHECK_USERNAME = gql`
+    query checkUsername($userName: String!) {
+        checkUsername(userName: $userName)
+    }
+`;
+
 export const CREATE_USER = gql`
     mutation createUser($userName: String!) {
         createUser(userName: $userName) {
@@ -169,10 +192,3 @@ export const LOGIN_USER = gql`
         }
     }
 `;
-
-export const CHECK_USERNAME = gql`
-    query checkUsername($userName: String!) {
-        checkUsername(userName: $userName)
-    }
-`;
-

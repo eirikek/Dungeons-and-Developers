@@ -3,11 +3,13 @@ import { createContext, ReactNode, useReducer } from 'react';
 const initialState: LoginState = {
   token: localStorage.getItem('token') || '',
   userId: localStorage.getItem('userId') || '',
+  userName: localStorage.getItem('userName') || '',
 };
 
 interface LoginState {
   token: string;
   userId: string;
+  userName: string;
 }
 
 interface LoginAction {
@@ -15,20 +17,28 @@ interface LoginAction {
   payload: {
     token: string;
     userId: string;
+    userName: string;
   };
 }
 
-type AuthAction = LoginAction;
+interface LogoutAction {
+  type: 'LOGOUT';
+}
+
+type AuthAction = LoginAction | LogoutAction;
 
 const AuthContext = createContext<{
   token: string;
   userId: string;
-  login: (data: { token: string; userId: string }) => void;
+  userName: string;
+  login: (data: { token: string; userId: string; userName: string }) => void;
+  logout: () => void;
 }>({
   token: '',
   userId: '',
-  login: () => {
-  },
+  userName: '',
+  login: () => {},
+  logout: () => {},
 });
 
 function authReducer(state: LoginState, action: AuthAction): LoginState {
@@ -37,6 +47,13 @@ function authReducer(state: LoginState, action: AuthAction): LoginState {
       return {
         token: action.payload.token,
         userId: action.payload.userId,
+        userName: action.payload.userName,
+      };
+    case 'LOGOUT':
+      return {
+        token: '',
+        userId: '',
+        userName: '',
       };
     default:
       return state;
@@ -46,14 +63,22 @@ function authReducer(state: LoginState, action: AuthAction): LoginState {
 function AuthProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  const login = (userData: { token: string; userId: string }) => {
+  const login = (userData: { token: string; userId: string; userName: string }) => {
+    console.log('Logging in with:', userData);
     localStorage.setItem('token', userData.token);
     localStorage.setItem('userId', userData.userId);
+    localStorage.setItem('userName', userData.userName);
+    localStorage.setItem('loginToast', 'true');
     dispatch({ type: 'LOGIN', payload: userData });
   };
 
+  const logout = () => {
+    localStorage.clear();
+    dispatch({ type: 'LOGOUT' });
+  };
+
   return (
-    <AuthContext.Provider value={{ token: state.token, userId: state.userId, login }}>
+    <AuthContext.Provider value={{ token: state.token, userId: state.userId, userName: state.userName, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
