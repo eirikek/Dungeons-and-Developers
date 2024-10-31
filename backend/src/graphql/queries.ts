@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import exp from 'node:constants';
 
 export const GET_MONSTERS = gql`
     query GetMonsters($searchTerm: String, $offset: Int, $limit: Int, $types: [String!]) {
@@ -133,6 +134,62 @@ export const UPDATE_REVIEW = gql`
             difficulty
             description
             createdAt
+        }
+    }
+`;
+
+export const CHECK_USERNAME = gql`
+    query checkUsername($userName: String!) {
+        checkUsername(userName: $userName)
+    }
+`;
+
+export const CREATE_USER = gql`
+    mutation createUser($userName: String!) {
+        createUser(userName: $userName) {
+            token
+            user {
+                id
+                userName
+                class {
+                    name
+                }
+                race {
+                    name
+                }
+                abilityScores {
+                    name
+                    score
+                }
+                equipments {
+                    name
+                }
+            }
+        }
+    }
+`;
+
+export const LOGIN_USER = gql`
+    mutation loginUser($userName: String!) {
+        loginUser(userName: $userName) {
+            token
+            user {
+                id
+                userName
+                class {
+                    name
+                }
+                race {
+                    name
+                }
+                abilityScores {
+                    name
+                    score
+                }
+                equipments {
+                    name
+                }
+            }
         }
     }
 `;

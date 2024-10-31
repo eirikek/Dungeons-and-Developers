@@ -3,64 +3,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { useMutation, useLazyQuery } from '@apollo/client';
-import { gql } from '@apollo/client';
 import { AuthContext } from '../../context/AuthContext.tsx';
-
-const CHECK_USERNAME = gql`
-    query checkUsername($userName: String!) {
-        checkUsername(userName: $userName)
-    }
-`;
-
-const CREATE_USER = gql`
-    mutation createUser($userName: String!) {
-        createUser(userName: $userName) {
-            token
-            user {
-                id
-                userName
-                class {
-                    name
-                }
-                race {
-                    name
-                }
-                abilityScores {
-                    name
-                    score
-                }
-                equipments {
-                    name
-                }
-            }
-        }
-    }
-`;
-
-const LOGIN_USER = gql`
-    mutation loginUser($userName: String!) {
-        loginUser(userName: $userName) {
-            token
-            user {
-                id
-                userName
-                class {
-                    name
-                }
-                race {
-                    name
-                }
-                abilityScores {
-                    name
-                    score
-                }
-                equipments {
-                    name
-                }
-            }
-        }
-    }
-`;
+import { CREATE_USER, LOGIN_USER, CHECK_USERNAME } from '../../../../backend/src/graphql/queries';
 
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',
@@ -105,7 +49,7 @@ export default function LoginPage() {
     onCompleted: (data) => {
       console.log(data);
       const { token, user } = data.createUser;
-      login({ token, userId: user.id });
+      login({ token, userId: user.id, userName: user.userName });
       window.location.href = '/project2/home';
     },
     onError: () => setShakeInput(true),
@@ -114,11 +58,10 @@ export default function LoginPage() {
   const [loginUser] = useMutation(LOGIN_USER, {
     onCompleted: (data) => {
       const { token, user } = data.loginUser;
-      login({ token, userId: user.id });
+      login({ token, userId: user.id, userName: user.userName });
       window.location.href = '/project2/home';
     },
     onError: (error) => {
-      console.error('Error registering user:', error);
       if (error.graphQLErrors && error.graphQLErrors[0]) {
         console.error('GraphQL Error Message:', error.graphQLErrors[0].message);
       }
@@ -201,13 +144,13 @@ export default function LoginPage() {
 
   return (
     <MainPageLayout isLoginTransition={true}>
-      <main
-        className="relative flex items-center justify-center h-screen overflow-hidden z-0 before:absolute before:inset-0 before:bg-login before:bg-cover before:bg-center before:animate-background-zoom before:z-0">
+      <main className="relative flex items-center justify-center h-screen overflow-hidden z-0 before:absolute before:inset-0 before:bg-login before:bg-cover before:bg-center before:animate-background-zoom before:z-0">
         <div className="black-overlay"></div>
         <section className="w-[90%] h-3/4 relative z-10 flex flex-col items-center justify-center">
           <header className="absolute top-0 w-full">
             <h1
-              className={`sub-header xl:text-2xl text-center transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`}>
+              className={`sub-header xl:text-2xl text-center transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`}
+            >
               {quotes[currentQuoteIndex]}
             </h1>
           </header>
@@ -241,8 +184,10 @@ export default function LoginPage() {
                     </div>
                     <div className="text">
                       Don't have an account?{' '}
-                      <button className="underline transition-all hover:text-gray-300 outline-none"
-                              onClick={toggleForm}>
+                      <button
+                        className="underline transition-all hover:text-gray-300 outline-none"
+                        onClick={toggleForm}
+                      >
                         Register
                       </button>
                     </div>
@@ -256,15 +201,27 @@ export default function LoginPage() {
                       onChange={handleRegisterUsernameChange}
                       onFocus={() => setShakeInput(false)}
                       className={`text w-60 xs:w-72 p-2 border-2 rounded bg-transparent text-center focus:outline-none
-    ${shakeInput ? 'animate-shake border-red-500' :
-                        isUsernameAvailable === false ? 'border-red-500' :
-                          isUsernameAvailable === true ? 'border-green-500' : 'border-gray-500 focus:border-white'}`}
+    ${
+      shakeInput
+        ? 'animate-shake border-red-500'
+        : isUsernameAvailable === false
+          ? 'border-red-500'
+          : isUsernameAvailable === true
+            ? 'border-green-500'
+            : 'border-gray-500 focus:border-white'
+    }`}
                       placeholder="Username"
                     />
                     <p
                       className={`absolute left-1/2 transform -translate-x-1/2 translate-y-12 text px-2 rounded inline-flex whitespace-nowrap
-                        ${isUsernameAvailable === false ? 'bg-red-500' :
-                        isUsernameAvailable === true ? 'bg-green-500' : 'bg-transparent'}`}>
+                        ${
+                          isUsernameAvailable === false
+                            ? 'bg-red-500'
+                            : isUsernameAvailable === true
+                              ? 'bg-green-500'
+                              : 'bg-transparent'
+                        }`}
+                    >
                       {isUsernameAvailable === false
                         ? 'Username is taken'
                         : isUsernameAvailable === true
@@ -274,8 +231,10 @@ export default function LoginPage() {
                     <CustomButton text="Register" onClick={handleRegister} />
                     <div className="text">
                       Already have an account?{' '}
-                      <button className="underline transition-all hover:text-gray-300 outline-none"
-                              onClick={toggleForm}>
+                      <button
+                        className="underline transition-all hover:text-gray-300 outline-none"
+                        onClick={toggleForm}
+                      >
                         Log in
                       </button>
                     </div>

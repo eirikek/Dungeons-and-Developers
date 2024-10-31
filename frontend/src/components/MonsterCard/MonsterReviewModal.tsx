@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-} from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import React, { useState, useContext, useEffect } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { ADD_REVIEW, GET_MONSTER_REVIEWS, UPDATE_REVIEW } from '../../../../backend/src/graphql/queries';
@@ -13,6 +6,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { ReviewFormType, ReviewType } from '../../interfaces/ReviewProps.ts';
 import ReviewSlider from './ReviewSlider.tsx';
 import ReviewTextField from './ReviewTextField.tsx';
+import { useToast } from '../../hooks/useToast';
 
 const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
   const { userId } = useContext(AuthContext);
@@ -22,11 +16,10 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
   const [description, setDescription] = useState('');
   const [originalDifficulty, setOriginalDifficulty] = useState(50);
   const [originalDescription, setOriginalDescription] = useState('');
+  const { showToast } = useToast();
 
   const { data } = useQuery(GET_MONSTER_REVIEWS, { variables: { monsterId } });
-  const existingReview = data?.monster?.reviews.find(
-    (review: ReviewType) => review.user.id === userId,
-  );
+  const existingReview = data?.monster?.reviews.find((review: ReviewType) => review.user.id === userId);
 
   const [addReview] = useMutation(ADD_REVIEW, {
     refetchQueries: [{ query: GET_MONSTER_REVIEWS, variables: { monsterId } }],
@@ -85,6 +78,7 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
             review: { user: userId, difficulty, description },
           },
         });
+        showToast({ message: `Review on ${name} updated`, type: 'success', duration: 3000 });
       } else {
         // Add new review
         await addReview({
@@ -93,42 +87,46 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
             review: { user: userId, difficulty, description },
           },
         });
+        showToast({ message: `Review on ${name} submitted`, type: 'success', duration: 3000 });
       }
       setIsOpen(false);
     } catch (error) {
       console.error('Error submitting review:', error);
+      showToast({ message: `Failed to submit review on ${name}`, type: 'error', duration: 3000 });
     }
   };
 
   return (
     <>
-      <Button variant="outlined" onClick={handleClickOpen}
-              sx={{
-                color: 'white',
-                borderColor: '#DB3232',
-                backgroundColor: '#DB3232',
-                padding: '0.2vw 0.5vw',
-                minWidth: 'unset',
-                minHeight: 'unset',
-                height: 'auto',
-                lineHeight: 'normal',
-                borderRadius: '4px',
-                boxSizing: 'border-box',
-                '&:hover': {
-                  borderColor: '#DB3232',
-                  backgroundColor: 'black',
-                  color: '#DB3232',
-                },
-                fontFamily: 'MedievalSharp',
-                fontSize: {
-                  xs: '3.5vw',
-                  sm: '2vw',
-                  md: '1.3vw',
-                  lg: '1.2vw',
-                  xl: '1vw',
-                },
-                textTransform: 'none',
-              }}
+      <Button
+        variant="outlined"
+        onClick={handleClickOpen}
+        sx={{
+          color: 'white',
+          borderColor: '#DB3232',
+          backgroundColor: '#DB3232',
+          padding: '0.2vw 0.5vw',
+          minWidth: 'unset',
+          minHeight: 'unset',
+          height: 'auto',
+          lineHeight: 'normal',
+          borderRadius: '4px',
+          boxSizing: 'border-box',
+          '&:hover': {
+            borderColor: '#DB3232',
+            backgroundColor: 'black',
+            color: '#DB3232',
+          },
+          fontFamily: 'MedievalSharp',
+          fontSize: {
+            xs: '3.5vw',
+            sm: '2vw',
+            md: '1.3vw',
+            lg: '1.2vw',
+            xl: '1vw',
+          },
+          textTransform: 'none',
+        }}
       >
         Review
       </Button>
@@ -156,36 +154,42 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
               Difficulty
             </DialogContentText>
             <ReviewSlider value={difficulty} onChange={(_, value) => setDifficulty(value as number)} />
-            <ReviewTextField
-              value={description}
-              onChange={(e) => setDescription(e.target.value.slice(0, 300))}
-            />
+            <ReviewTextField value={description} onChange={(e) => setDescription(e.target.value.slice(0, 300))} />
           </article>
         </DialogContent>
 
         <DialogActions className="bg-black">
-          <Button onClick={handleClose} aria-label="Cancel-button" sx={{
-            color: 'white',
-            borderColor: 'white',
-            '&:hover': {
-              borderColor: '#DB3232',
-              color: '#DB3232',
-            },
-            fontFamily: 'MedievalSharp',
-            fontSize: '1.5rem',
-          }}>
+          <Button
+            onClick={handleClose}
+            aria-label="Cancel-button"
+            sx={{
+              color: 'white',
+              borderColor: 'white',
+              '&:hover': {
+                borderColor: '#DB3232',
+                color: '#DB3232',
+              },
+              fontFamily: 'MedievalSharp',
+              fontSize: '1.5rem',
+            }}
+          >
             Cancel
           </Button>
-          <Button onClick={handleSubmit} type="submit" aria-label="Save-button" sx={{
-            color: 'white',
-            borderColor: 'white',
-            '&:hover': {
-              borderColor: '#DB3232',
-              color: '#DB3232',
-            },
-            fontFamily: 'MedievalSharp',
-            fontSize: '1.5rem',
-          }}>
+          <Button
+            onClick={handleSubmit}
+            type="submit"
+            aria-label="Save-button"
+            sx={{
+              color: 'white',
+              borderColor: 'white',
+              '&:hover': {
+                borderColor: '#DB3232',
+                color: '#DB3232',
+              },
+              fontFamily: 'MedievalSharp',
+              fontSize: '1.5rem',
+            }}
+          >
             {editMode ? 'UPDATE' : 'SUBMIT'}
           </Button>
         </DialogActions>
