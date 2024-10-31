@@ -31,7 +31,6 @@ const RaceCard: React.FC<RaceCardProps> = ({ name, description, imageUrl, alignm
         <img src={imageUrl} alt={name} className="max-w-36 xl:max-w-28 shadow-none" />
         <div>
           <h2 className="sub-header bold">{name}</h2>
-          <p className="text">{description}</p>
           <p className="text">{alignment}</p>
           <p className="text">{size_description}</p>
           <p className="text">Size: {size}</p>

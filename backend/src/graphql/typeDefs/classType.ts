@@ -2,6 +2,7 @@ import { gql } from 'apollo-server';
 
 export const classType = gql`
     type Class {
+        id: ID!
         index: String!
         name: String!
         hit_die: Int!

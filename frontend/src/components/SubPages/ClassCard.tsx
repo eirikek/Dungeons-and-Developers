@@ -1,19 +1,29 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { motion } from 'framer-motion';
 import classImages from '../../utils/classImageMapping.ts';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
+import { AuthContext } from '../../context/AuthContext.tsx';
+import { useMutation } from '@apollo/client';
+import { UPDATE_USER_CLASS } from '../../../../backend/src/graphql/queries.ts';
+import ClassData from '../../interfaces/ClassProps.ts';
 
-interface ClassCardProps {
-  name: string;
-  hit_die: number;
-  index: string;
-  //proficiency_choices: string;
-}
-
-
-
-const ClassCard: React.FC<ClassCardProps> = ({ name, hit_die, index }) => {
+const ClassCard: React.FC<ClassData> = ({ name, hit_die, index, id }) => {
   const classImage = classImages[index];
+  const { userId } = useContext(AuthContext);
+  const [updateUserClass] = useMutation(UPDATE_USER_CLASS);
+
+  const handleSelectClass = () => {
+    console.log('userId:', userId, 'classId:', id);
+    updateUserClass({
+      variables: { userId, classId: id },
+    })
+      .then((response) => {
+        console.log('Class updated:', response.data.updateUserClass.class);
+      })
+      .catch((error) => {
+        console.error('Error updating class:', error);
+      });
+  };
 
   return (
     <motion.section
@@ -35,7 +45,7 @@ const ClassCard: React.FC<ClassCardProps> = ({ name, hit_die, index }) => {
         </div>
       </div>
       <div className="w-1/5 flex items-center justify-center xl:justify-end">
-        <CustomCheckbox scale={2} />
+        <CustomCheckbox scale={2} onChange={handleSelectClass} />
       </div>
     </motion.section>
   );

@@ -127,7 +127,6 @@ export default {
 
       await monster.save();
 
-      // Populate the user field in the updated review before returning it
       return Monster.findById(monsterId)
         .populate({
           path: 'reviews.user',
