@@ -5,6 +5,7 @@ import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { useMutation, useLazyQuery } from '@apollo/client';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { CREATE_USER, LOGIN_USER, CHECK_USERNAME } from '../../../../backend/src/graphql/queries';
+import { useToast } from '../../hooks/useToast.ts';
 
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',
@@ -44,31 +45,9 @@ export default function LoginPage() {
   const [logInUsername, setLogInUsername] = useState('');
   const [isUsernameAvailable, setIsUsernameAvailable] = useState<boolean | null>(null);
   const [shakeInput, setShakeInput] = useState(false);
+  const { showToast } = useToast();
 
-  const [createUser] = useMutation(CREATE_USER, {
-    onCompleted: (data) => {
-      console.log(data);
-      const { token, user } = data.createUser;
-      login({ token, userId: user.id, userName: user.userName });
-      window.location.href = '/project2/home';
-    },
-    onError: () => setShakeInput(true),
-  });
-
-  const [loginUser] = useMutation(LOGIN_USER, {
-    onCompleted: (data) => {
-      const { token, user } = data.loginUser;
-      login({ token, userId: user.id, userName: user.userName });
-      window.location.href = '/project2/home';
-    },
-    onError: (error) => {
-      if (error.graphQLErrors && error.graphQLErrors[0]) {
-        console.error('GraphQL Error Message:', error.graphQLErrors[0].message);
-      }
-      setShakeInput(true);
-    },
-  });
-
+  // Change quote every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setFade(false);
@@ -81,6 +60,39 @@ export default function LoginPage() {
     return () => clearInterval(interval);
   }, []);
 
+  // GraphQL mutations
+  const [createUser] = useMutation(CREATE_USER, {
+    onCompleted: (data) => {
+      const { token, user } = data.createUser;
+      login({ token, userId: user.id, userName: user.userName });
+      window.location.href = '/project2/home';
+    },
+    onError: () => {
+      setShakeInput(true);
+    },
+  });
+
+  const [loginUser] = useMutation(LOGIN_USER, {
+    onCompleted: (data) => {
+      const { token, user } = data.loginUser;
+      login({ token, userId: user.id, userName: user.userName });
+      window.location.href = '/project2/home';
+    },
+    onError: () => {
+      setShakeInput(true);
+      showToast({
+        message: `No user found with username: ${logInUsername}`,
+        type: 'error',
+        duration: 3000,
+      });
+    },
+  });
+
+  const [checkUsername] = useLazyQuery(CHECK_USERNAME, {
+    onCompleted: (data) => setIsUsernameAvailable(data.checkUsername),
+  });
+
+  // Toggle between login and register form
   const toggleForm = () => {
     setDirection(isLogin ? 1 : -1);
     setIsLogin(!isLogin);
@@ -88,6 +100,17 @@ export default function LoginPage() {
     setIsUsernameAvailable(null);
   };
 
+  // Check if username is available
+  const handleRegisterUsernameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setRegisterUsername(value);
+    setShakeInput(false);
+    if (value) {
+      await checkUsername({ variables: { userName: value } });
+    }
+  };
+
+  // Register user if username is available
   const handleRegister = async () => {
     if (!registerUsername) {
       setShakeInput(true);
@@ -101,33 +124,27 @@ export default function LoginPage() {
       }
     } else {
       setShakeInput(true);
+      showToast({
+        message: `Username ${registerUsername} is already taken`,
+        type: 'error',
+        duration: 3000,
+      });
     }
   };
 
-  const [checkUsername] = useLazyQuery(CHECK_USERNAME, {
-    onCompleted: (data) => setIsUsernameAvailable(data.checkUsername),
-  });
-
+  // Reset username availability when user starts typing
   useEffect(() => {
     if (!registerUsername) {
       setIsUsernameAvailable(null);
     }
   }, [registerUsername]);
 
-  const handleRegisterUsernameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setRegisterUsername(value);
-    setShakeInput(false);
-    if (value) {
-      await checkUsername({ variables: { userName: value } });
-    }
-  };
-
   const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLogInUsername(e.target.value);
     setShakeInput(false);
   };
 
+  // Log in user
   const handleLogin = async () => {
     if (!logInUsername) {
       setShakeInput(true);
@@ -179,6 +196,7 @@ export default function LoginPage() {
                         value={logInUsername}
                         onChange={handleLoginChange}
                         onAnimationEnd={() => setShakeInput(false)}
+                        maxLength={40}
                       />
                       <CustomButton text="Log in" onClick={handleLogin} />
                     </div>
@@ -200,16 +218,16 @@ export default function LoginPage() {
                       value={registerUsername}
                       onChange={handleRegisterUsernameChange}
                       onFocus={() => setShakeInput(false)}
-                      className={`text w-60 xs:w-72 p-2 border-2 rounded bg-transparent text-center focus:outline-none
-    ${
-      shakeInput
-        ? 'animate-shake border-red-500'
-        : isUsernameAvailable === false
-          ? 'border-red-500'
-          : isUsernameAvailable === true
-            ? 'border-green-500'
-            : 'border-gray-500 focus:border-white'
-    }`}
+                      maxLength={40}
+                      className={`text w-60 xs:w-72 p-2 border-2 rounded bg-transparent text-center focus:outline-none ${
+                        shakeInput
+                          ? 'animate-shake border-red-500'
+                          : isUsernameAvailable === false
+                            ? 'border-red-500'
+                            : isUsernameAvailable === true
+                              ? 'border-green-500'
+                              : 'border-gray-500 focus:border-white'
+                      }`}
                       placeholder="Username"
                     />
                     <p

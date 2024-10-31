@@ -3,5 +3,5 @@ export default interface ClassProps {
   name: string;
   hit_die: number;
   index: string;
-  //proficiency_choices: ProficiencyChoice[];
+  skills: string[];
 }

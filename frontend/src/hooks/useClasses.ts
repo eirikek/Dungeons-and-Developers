@@ -3,11 +3,6 @@ import { useQuery } from '@apollo/client';
 import { GET_CLASSES } from '../../../backend/src/graphql/queries.ts';
 import ClassData from '../interfaces/ClassProps.ts';
 
-//interface ProficiencyChoice {
-//desc: string;
-
-//}
-
 function useClass(currentPage: number, classesPerPage: number) {
   const offset = (currentPage - 1) * classesPerPage;
 
@@ -28,10 +23,7 @@ function useClass(currentPage: number, classesPerPage: number) {
       index: classs.index,
       name: classs.name,
       hit_die: classs.hit_die,
-      //Chatgpt, line 53, to 56
-      //proficiency_choices: Array.isArray(classs.proficiency_choices)
-      //? classs.proficiency_choices.map((choice: ProficiencyChoice) => choice.desc)
-      // : []
+      skills: classs.skills,
     }));
   }, [data]);
 

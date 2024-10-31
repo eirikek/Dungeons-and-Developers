@@ -13,7 +13,7 @@ interface ClassCardProps extends ClassProps {
   onSelect: (id: string) => void;
 }
 
-const ClassCard: React.FC<ClassCardProps> = ({ id, name, hit_die, index, selectedClassId, onSelect }) => {
+const ClassCard: React.FC<ClassCardProps> = ({ id, name, hit_die, index, skills = [], selectedClassId, onSelect }) => {
   const classImage = classImages[index];
   const { userId } = useContext(AuthContext);
   const [updateUserClass] = useMutation(UPDATE_USER_CLASS);
@@ -56,6 +56,7 @@ const ClassCard: React.FC<ClassCardProps> = ({ id, name, hit_die, index, selecte
         <div>
           <h2 className="sub-header bold">{name}</h2>
           <p className="text">HP: {hit_die}</p>
+          <p className="text">Skills: {skills.join(', ')}</p>
         </div>
       </div>
       <div className="w-1/5 flex items-center justify-center xl:justify-end">

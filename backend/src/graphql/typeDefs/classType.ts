@@ -6,7 +6,7 @@ export const classType = gql`
         index: String!
         name: String!
         hit_die: Int!
-        proficiency_choices: [String!]
+        skills: [String!]
     }
 
     type ClassResult {

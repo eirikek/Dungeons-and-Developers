@@ -213,6 +213,7 @@ export const GET_CLASSES = gql`
                 index
                 name
                 hit_die
+                skills
             }
             totalClasses
         }

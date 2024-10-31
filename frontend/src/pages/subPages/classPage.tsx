@@ -38,6 +38,7 @@ export default function ClassPage() {
             name={classInfo.name}
             hit_die={classInfo.hit_die}
             index={classInfo.index}
+            skills={classInfo.skills}
             selectedClassId={selectedClassId}
             onSelect={handleClassSelect}
           />

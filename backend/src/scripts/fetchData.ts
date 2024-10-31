@@ -3,7 +3,6 @@ import Monster from '../graphql/model/Monsters.ts';
 import Race from '../graphql/model/Race.ts';
 import Class from '../graphql/model/Class.ts';
 import AbilityScore from '../graphql/model/AbilityScore.ts';
-import mongoose from 'mongoose';
 
 
 const imageBaseURL = 'https://www.dnd5eapi.co/api/images/monsters';
@@ -73,10 +72,19 @@ async function fetchClasses() {
     const inDB = await Class.findOne({ index: classDetails.data.index });
 
     if (!inDB) {
+      const proficiencyChoices = classDetails.data.proficiency_choices?.find(
+        (choice: any) => choice.type === 'proficiencies',
+      );
+
+      const skills = proficiencyChoices
+        ? proficiencyChoices.from.options.map((option: any) => option.item.name.replace('Skill: ', ''))
+        : [];
+
       await new Class({
         index: classDetails.data.index,
         name: classDetails.data.name,
         hit_die: classDetails.data.hit_die,
+        skills: skills,
       }).save();
       console.log(`Class saved: ${classDetails.data.name}`);
     }
