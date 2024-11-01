@@ -22,8 +22,8 @@ function useAbilityScores(currentPage: number, abilitiesPerPage: number) {
     return data.abilities.abilities.map((ability) => ({
       index: ability.index,
       name: ability.name,
-      //desc: Array.isArray(ability.desc) ? ability.desc : [],
-      skills: ability.skills
+      skills: ability.skills,
+      score: ability.score,
     }));
   }, [data]);
 

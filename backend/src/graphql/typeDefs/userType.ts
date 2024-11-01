@@ -26,6 +26,7 @@ export const userType = gql`
         getUser(amount: Int): [User]
         checkUsername(userName: String!): Boolean!
         user(id: ID!): User!
+        getArrayScores(userId: ID!): [Int!]!
     }
 
     extend type Mutation {
@@ -36,5 +37,6 @@ export const userType = gql`
         updateDungeonName(userId: ID!, dungeonName: String!): User!
         updateUserRace(userId: ID!, raceId: ID!): User!
         updateUserClass(userId: ID!, classId: ID!): User!
+        updateAbilityScores(userId: ID!, scores: [Int!]!): User!
     }
 `;

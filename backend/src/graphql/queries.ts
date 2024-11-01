@@ -199,6 +199,15 @@ export const UPDATE_USER_CLASS = gql`
     }
 `;
 
+export const UPDATE_ABILITY_SCORES = gql`
+    mutation UpdateAbilityScores($userId: ID!, $scores: [Int!]!) {
+        updateAbilityScores(userId: $userId, scores: $scores) {
+            id
+            abilityScores
+        }
+    }
+`;
+
 
 
 export const GET_USER_CLASS = gql`
@@ -211,6 +220,12 @@ export const GET_USER_CLASS = gql`
                 hit_die
             }
         }
+    }
+`;
+//Chatgpt prompt from line 225-230
+export const GET_ARRAY_SCORES = gql`
+    query GetArrayScores($userId: ID!) {
+        getArrayScores(userId: $userId)
     }
 `;
 
@@ -274,6 +289,7 @@ export const GET_ABILITYSCORES = gql`
         }
     }
 `;
+
 export const GET_CLASSES = gql`
     query GetClasses($offset: Int, $limit: Int) {
         classes(offset: $offset, limit: $limit) {
