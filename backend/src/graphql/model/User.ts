@@ -5,7 +5,7 @@ const playerSchema = new Schema({
   class: { type: Types.ObjectId, ref: 'Class' },
   race: { type: Types.ObjectId, ref: 'Race' },
   abilityScores: {type:[Number], default: [0,0,0,0,0,0]},
-  equipments: [],
+  equipments: [{ type: Schema.Types.ObjectId, ref: 'Equipment' }],
   favoritedMonsters: [{ type: Types.ObjectId, ref: 'Monster' }],
   dungeonName: { type: String, default: 'My Dungeon' },
 });

@@ -2,9 +2,20 @@ import { gql } from 'apollo-server';
 
 export const userType = gql`
 
-    type Equipment {
-        name: String!
-    }
+  type UserEquipments {
+    equipments: [Equipment!]
+  }
+  type User {
+    id: ID!
+    userName: String!
+    class: Class!
+    race: Race!
+    abilityScores: [Ability]!
+    equipments: [Equipment!]
+    favoritedMonsters: [Monster!]!
+    dungeonName: String!
+  }
+
 
     type User {
         id: ID!
@@ -17,10 +28,15 @@ export const userType = gql`
         dungeonName: String!
     }
 
-    type AuthPayload {
-        token: String!
-        user: User!
-    }
+  type AuthPayload {
+    token: String!
+    user: User!
+  }
+
+  type AddEquipmentToCharacterResult {
+    user: User!
+    equipments: [Equipment!]!
+  }
 
     extend type Query {
         getUser(amount: Int): [User]
@@ -38,5 +54,8 @@ export const userType = gql`
         updateUserRace(userId: ID!, raceId: ID!): User!
         updateUserClass(userId: ID!, classId: ID!): User!
         updateAbilityScores(userId: ID!, scores: [Int!]!): User!
+        addEquipmentToCharacter(userId: ID!, equipmentId: ID!): User!
+        removeEquipmentFromCharacter(userId: ID!, equipmentId: ID!): User!
     }
 `;
+

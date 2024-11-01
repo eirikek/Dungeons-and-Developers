@@ -1,8 +1,8 @@
-import User from '../model/User.ts';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
-import Race from '../model/Race.js';
 import Class from '../model/Class.js';
+import Race from '../model/Race.js';
+import User from '../model/User.ts';
 
 const SECRET_KEY = process.env.SECRET_KEY || 'secret_key';
 
@@ -20,7 +20,8 @@ export default {
           select: '_id name size type alignment hit_points image',
         })
         .populate('race')
-        .populate('class');
+        .populate('class')
+        .populate('equipments');
     },
 
     async checkUsername(_: any, { userName }: UserArgs) {
@@ -79,7 +80,7 @@ export default {
 
       const monsterObjectId = new mongoose.Types.ObjectId(monsterId);
 
-      if (!user.favoritedMonsters.some(fav => fav._id.equals(monsterObjectId))) {
+      if (!user.favoritedMonsters.some((fav) => fav._id.equals(monsterObjectId))) {
         user.favoritedMonsters.push(monsterObjectId);
         await user.save();
       }
@@ -133,8 +134,20 @@ export default {
       await user.save();
 
       return user.populate('class');
-
     },
+    async addEquipmentToCharacter(_: any, { userId, equipmentId }: { userId: string; equipmentId: string }) {
+      const user = await User.findById(userId).populate('equipments');
+      if (!user) throw new Error('User not found');
+
+      const equipmentObjectId = new mongoose.Types.ObjectId(equipmentId);
+
+      if (!user.equipments.some((equip) => equip._id.equals(equipmentObjectId))) {
+        user.equipments.push(equipmentObjectId);
+        await user.save();
+      }
+      return user.populate('equipments');
+    },
+
     async updateAbilityScores(_: any, { userId, scores }: { userId: string; scores: number[] }) {
       const user = await User.findById(userId);
       if (!user) throw new Error('User not found');
@@ -146,8 +159,21 @@ export default {
       user.abilityScores = scores;
       await user.save();
 
-      return user.populate('race class'); // Populate if necessary
-    }
+      return user.populate('race class');
+    },
+    
 
+    async removeEquipmentFromCharacter(_: any, { userId, equipmentId }: { userId: string; equipmentId: string }) {
+      const user = await User.findById(userId).populate('equipments');
+      if (!user) throw new Error('User not found');
+
+      const equipmentObjectId = new mongoose.Types.ObjectId(equipmentId);
+
+
+      user.equipments = user.equipments.filter((equip) => !equip._id.equals(equipmentObjectId));
+
+      await user.save();
+      return user.populate('equipments');
+    },
   },
 };
