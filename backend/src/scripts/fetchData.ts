@@ -104,7 +104,7 @@ async function fetchAbilityScores() {
       const inDB = await AbilityScore.findOne({ index: abilityDetails.data.index });
 
       if (!inDB) {
-        const skillNames = abilityDetails.data.skills.map((skill: any) => skill.full_name);
+        const skillNames = abilityDetails.data.skills ? abilityDetails.data.skills.map((skill: any) => skill.name) : [];
         const abilityDocument = new AbilityScore({
           index: abilityDetails.data.index,
           name: abilityDetails.data.full_name,

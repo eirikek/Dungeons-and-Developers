@@ -5,9 +5,11 @@ interface CounterProps {
   value: number;
   onChange: (newValue: number) => void;
   scale?: number;
+  onPointerUp?: () => void;
+  onMouseUp?: () => void;
 }
 
-export default function Counter({ value, onChange, scale }: CounterProps) {
+export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp }: CounterProps) {
   const changeTimer = useRef<NodeJS.Timeout | null>(null);
   const rate = 100;
 
@@ -15,6 +17,8 @@ export default function Counter({ value, onChange, scale }: CounterProps) {
     if (changeTimer.current) {
       clearInterval(changeTimer.current);
       changeTimer.current = null;
+      onPointerUp?.();
+      onMouseUp?.();
     }
   };
 
@@ -65,8 +69,9 @@ export default function Counter({ value, onChange, scale }: CounterProps) {
         <FaChevronUp size={22} />
       </button>
 
-      <div
-        className="text-5xl md:text-4xl lg:text-3xl xl:text-2xl 2xl:text-lg text-white w-12 text-center">{value}</div>
+      <div className="text-5xl md:text-4xl lg:text-3xl xl:text-2xl 2xl:text-lg text-white w-12 text-center">
+        {value}
+      </div>
 
       <button
         className="text-white hover:text-gray-400"

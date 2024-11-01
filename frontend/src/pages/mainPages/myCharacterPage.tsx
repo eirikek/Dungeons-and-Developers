@@ -1,10 +1,10 @@
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
-
+import abilityScoreMap from '../../utils/abilityScoreMapping.ts';
 import TutorialModal from '../../components/MyCharacter/TutorialModal.tsx';
 import useUserEquipments from '../../hooks/useUserEquipments.ts';
 import { useMutation, useQuery } from '@apollo/client';
+import { useToast } from '../../hooks/useToast.ts';
 import {
   GET_ARRAY_SCORES,
   GET_USER_CLASS,
@@ -21,18 +21,10 @@ import classImageMapping from '../../utils/classImageMapping.ts';
 import useRaces from '../../hooks/useRaces.ts';
 import raceImageMapping from '../../utils/raceImageMapping.ts';
 
-const abilityScoreMap: { [key: string]: number } = {
-  WIS: 5,
-  STR: 4,
-  INT: 3,
-  DEX: 2,
-  CON: 1,
-  CHA: 0,
-};
-
 const MyCharacterPage = () => {
   const { userEquipments } = useUserEquipments();
   const { userId } = useContext(AuthContext);
+  const { showToast } = useToast();
 
   // classes
   const { data: userClassData } = useQuery(GET_USER_CLASS, {
@@ -49,6 +41,7 @@ const MyCharacterPage = () => {
   //AbilityScore
   const { data, loading } = useQuery(GET_ARRAY_SCORES, {
     variables: { userId },
+    fetchPolicy: 'network-only',
   });
   const [updateAbilityScores] = useMutation(UPDATE_ABILITY_SCORES);
   const [scores, setScores] = useState<number[]>(Array(6).fill(0));
@@ -90,6 +83,7 @@ const MyCharacterPage = () => {
       setSelectedClassId(classData[0].id);
     }
   }, [userClassData, classData]);
+
   useEffect(() => {
     if (userRaceData?.user?.race?.id) {
       setSelectedRaceId(userRaceData.user.race.id);
@@ -189,7 +183,7 @@ const MyCharacterPage = () => {
                 </button>
                 {currentRace && (
                   <article className="flex flex-col justify-center items-center gap-4 min-w-52">
-                    {/*<h3 className="sub-header">{currentRace.name}</h3>*/}
+                    <h3 className="sub-header">{currentRace.name}</h3>
                     <div className="flex justify-center items-center w-[70vw] h-[30vh] lg:w-[20vw] lg:h-[25vh] overflow-hidden">
                       {!raceImageLoaded && <div className="flex justify-center w-full">Loading image...</div>}
                       <img
