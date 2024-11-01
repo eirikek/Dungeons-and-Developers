@@ -7,6 +7,22 @@
 An application to explore the various functionalities and mechanics of the popular roleplaying game Dungeons & Dragons. Where you can create your own character, explore the games classes, monsters, races and abilityscores!
 
 
+## Features
+
+#### Explore monsters
+- You can explore the different monsters within D&D
+    - View the monsters HP, and type
+    - Filter by type search for specific monsters
+    - Review monsters to assign them difficulties and notes
+    - Add monsters to your dungeon
+
+#### Dungeon
+- View all saved monsters, and their combined HP. To know how difficult this dungeon would be
+
+#### My character
+- Explore the different races, classes, ability scores and equipment which you can assign to your character. With usefull information
+
+
 
 ## Tech Stack
 
