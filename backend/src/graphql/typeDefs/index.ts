@@ -3,6 +3,7 @@ import { classType } from './classType.ts';
 import { monsterType } from './monsterType.ts';
 import { raceType } from './raceType.ts';
 import { userType } from './userType.ts';
+import { abilityType } from './abilityType.ts';
 
 const baseType = gql`
     type Query
@@ -17,4 +18,5 @@ export default [
   monsterType,
   raceType,
   userType,
+  abilityType,
 ];
