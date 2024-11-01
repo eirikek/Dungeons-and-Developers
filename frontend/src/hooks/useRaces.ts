@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import RaceProps from '../interfaces/RaceProps.ts';
 import { GET_RACES } from '../../../backend/src/graphql/queries.ts';
 
-function useRace(currentPage: number, racesPerPage: number) {
+function useRaces(currentPage: number, racesPerPage: number) {
   const offset = (currentPage - 1) * racesPerPage;
 
   const { data, error, loading } = useQuery<{
@@ -27,7 +27,6 @@ function useRace(currentPage: number, racesPerPage: number) {
       speed: race.speed,
       alignment: race.alignment,
       size: race.size,
-      img: race.img,
     }));
   }, [data]);
 
@@ -39,4 +38,4 @@ function useRace(currentPage: number, racesPerPage: number) {
   };
 }
 
-export default useRace;
+export default useRaces;
