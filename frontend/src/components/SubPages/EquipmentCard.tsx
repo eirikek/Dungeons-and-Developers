@@ -1,19 +1,5 @@
+import { EquipmentCardProps } from '../../interfaces/EquipmentProps.ts';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
-
-interface Equipment {
-  id: string;
-  index: string;
-  name: string;
-  category: string;
-  value: number;
-}
-interface EquipmentCardProps {
-  equipment: Equipment;
-  isChecked: boolean;
-  userId: string;
-  onChange: (equipId: string, checked: boolean, equipment: Equipment) => void;
-  disabled: boolean;
-}
 
 const EquipmentCard = ({ equipment, isChecked, onChange, disabled }: EquipmentCardProps) => {
   const handleCheckboxChange = (checked: boolean) => {

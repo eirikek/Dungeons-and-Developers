@@ -10,8 +10,9 @@ import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import Pagination from '../../components/Pagination/Pagination.tsx';
 import EquipmentCard from '../../components/SubPages/EquipmentCard.tsx';
 import { AuthContext } from '../../context/AuthContext.tsx';
-import useEquipments, { Equipment } from '../../hooks/useEquipments.ts';
+import useEquipments from '../../hooks/useEquipments.ts';
 import { useToast } from '../../hooks/useToast.ts';
+import { Equipment } from '../../interfaces/EquipmentProps.ts';
 
 const variants = {
   enter: (direction: number) => ({

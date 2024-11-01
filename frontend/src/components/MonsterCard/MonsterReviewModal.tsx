@@ -1,12 +1,12 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
-import React, { useState, useContext, useEffect } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
 import { ADD_REVIEW, GET_MONSTER_REVIEWS, UPDATE_REVIEW } from '../../../../backend/src/graphql/queries';
 import { AuthContext } from '../../context/AuthContext';
+import { useToast } from '../../hooks/useToast';
 import { ReviewFormType, ReviewType } from '../../interfaces/ReviewProps.ts';
 import ReviewSlider from './ReviewSlider.tsx';
 import ReviewTextField from './ReviewTextField.tsx';
-import { useToast } from '../../hooks/useToast';
 
 const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
   const { userId } = useContext(AuthContext);
@@ -64,7 +64,7 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!userId) {
-      alert('You must be logged in to submit a review.');
+      showToast({ message: 'You must be logged in to submit a review', type: 'error', duration: 3000 });
       return;
     }
 

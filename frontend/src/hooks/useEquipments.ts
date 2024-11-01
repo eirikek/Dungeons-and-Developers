@@ -1,14 +1,6 @@
-import { useMemo } from 'react';
 import { gql, useQuery } from '@apollo/client';
-import Equipment from '../../../backend/src/graphql/model/Equipment.ts';
-
-export interface Equipment {
-  id: string;
-  index: string;
-  name: string;
-  category: string;
-  value: number;
-}
+import { useMemo } from 'react';
+import { Equipment } from '../interfaces/EquipmentProps';
 
 const GET_EQUIPMENTS = gql`
   query GetEquipments($offset: Int, $limit: Int) {

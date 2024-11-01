@@ -1,9 +1,10 @@
 import { gql } from 'apollo-server';
+import { abilityType } from './abilityType.ts';
 import { classType } from './classType.ts';
+import { equipmentType } from './equipmentType.js';
 import { monsterType } from './monsterType.ts';
 import { raceType } from './raceType.ts';
 import { userType } from './userType.ts';
-import { equipmentType } from './equipmentType.js';
 
 const baseType = gql`
   type Query
@@ -12,4 +13,4 @@ const baseType = gql`
   }
 `;
 
-export default [baseType, classType, monsterType, raceType, userType, equipmentType];
+export default [baseType, classType, monsterType, raceType, userType, abilityType, equipmentType];

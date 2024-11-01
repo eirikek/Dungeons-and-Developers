@@ -44,5 +44,7 @@ export const userType = gql`
     removeFavoriteMonster(userId: ID!, monsterId: ID!): User!
     removeEquipmentFromCharacter(userId: ID!, equipmentId: ID!): User!
     updateDungeonName(userId: ID!, dungeonName: String!): User!
+    updateUserRace(userId: ID!, raceId: ID!): User!
+    updateUserClass(userId: ID!, classId: ID!): User!
   }
 `;

@@ -21,7 +21,7 @@ export default function DungeonPage() {
     awaitRefetchQueries: true,
   });
 
-  const [dungeonName, setDungeonName] = useState<string>('My dungeon');
+  const [dungeonName, setDungeonName] = useState<string>('My Dungeon');
 
   useEffect(() => {
     if (data && data.user && data.user.dungeonName) {
@@ -35,9 +35,10 @@ export default function DungeonPage() {
     if (userId) {
       updateDungeonName({
         variables: { userId, dungeonName: newName },
-      }).then((response) => {
-        console.log('Dungeon name updated successfully:', response);
       })
+        .then((response) => {
+          console.log('Dungeon name updated successfully:', response);
+        })
         .catch((error) => {
           console.error('Error updating dungeon name:', error);
         });
@@ -46,11 +47,9 @@ export default function DungeonPage() {
 
   return (
     <MainPageLayout>
-      <main
-        className="main before:bg-dungeon xl:h-screen xl:overflow-hidden">
+      <main className="main before:bg-dungeon xl:h-screen xl:overflow-hidden">
         <div className="black-overlay" />
-        <div
-          className="wrapper min-w-[70%] mt-[10vh] h-full !justify-start">
+        <div className="wrapper min-w-[70%] mt-[10vh] h-full !justify-start">
           <CustomInput
             placeholder="Enter dungeon name"
             inputName="Dungeon Name"

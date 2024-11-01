@@ -101,6 +101,32 @@ export default {
 
       return user;
     },
+
+    async updateUserRace(_: any, { userId, raceId }: { userId: string; raceId: string }) {
+      const user = await User.findById(userId);
+      if (!user) throw new Error('User not found');
+
+      const race = await Race.findById(raceId);
+      if (!race) throw new Error('Race not found');
+
+      user.race = race._id;
+      await user.save();
+
+      return user.populate('race');
+    },
+
+    async updateUserClass(_: any, { userId, classId }: { userId: string; classId: string }) {
+      const user = await User.findById(userId);
+      if (!user) throw new Error('User not found');
+
+      const playerClass = await Class.findById(classId);
+      if (!playerClass) throw new Error('Class not found');
+
+      user.class = playerClass._id;
+      await user.save();
+
+      return user.populate('class');
+    },
     async addEquipmentToCharacter(_: any, { userId, equipmentId }: { userId: string; equipmentId: string }) {
       const user = await User.findById(userId).populate('equipments');
       if (!user) throw new Error('User not found');

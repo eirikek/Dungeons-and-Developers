@@ -7,28 +7,31 @@ import favoriteImg from '../../assets/images/dungeon-gate.svg';
 import Tilt from 'react-parallax-tilt';
 import HomeSection from '../../components/Home/HomeSection.tsx';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { useToast } from '../../hooks/useToast.ts';
+import { AuthContext } from '../../context/AuthContext.tsx';
 
 export default function HomePage() {
   const { scrollYProgress } = useScroll();
   const [isMobile, setIsMobile] = useState(false);
+  const { userName } = useContext(AuthContext);
   const { showToast } = useToast();
 
   useEffect(() => {
-    const loginToast = sessionStorage.getItem('loginToast');
-    const username = sessionStorage.getItem('username');
-    if (loginToast && username) {
-      showToast({
-        message: `Welcome, ${username}!`,
-        type: 'success',
-        duration: 2000,
-      });
-      sessionStorage.removeItem('loginToast');
-      sessionStorage.removeItem('username');
+    const loginToast = localStorage.getItem('loginToast');
+
+    if (userName && loginToast === 'true') {
+      setTimeout(() => {
+        showToast({
+          message: `Welcome, ${userName}!`,
+          type: 'info',
+          duration: 3000,
+        });
+      }, 400);
+      localStorage.setItem('loginToast', 'false');
     }
-  }, [showToast]);
+  }, [userName, showToast]);
 
   useEffect(() => {
     const handleResize = () => {

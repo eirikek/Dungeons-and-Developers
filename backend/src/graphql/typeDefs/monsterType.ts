@@ -32,7 +32,7 @@ export const monsterType = gql`
     }
 
     extend type Query {
-        monsters(searchTerm: String, offset: Int, limit: Int): MonsterResult!
+        monsters(searchTerm: String, offset: Int, limit: Int, types: [String!]): MonsterResult!
         monster(id: ID!): Monster!
     }
 
