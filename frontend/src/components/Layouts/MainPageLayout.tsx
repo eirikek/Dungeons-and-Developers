@@ -27,7 +27,7 @@ const MainPageLayout: React.FC<MainPageLayoutProps> = ({ children, isLoginTransi
   if (isMobile) {
     return (
       <>
-        {location.pathname !== '/project2' && <Navbar />}
+        {location.pathname !== '/' && <Navbar />}
         {children}
       </>
     );
@@ -46,39 +46,38 @@ const MainPageLayout: React.FC<MainPageLayoutProps> = ({ children, isLoginTransi
           ...(isLoginTransition
             ? {} // Skip clipPath for login/logout transition
             : {
-              clipPath: 'polygon(50% 0, 50% 0, 50% 100%, 50% 100%)',
-              WebkitClipPath: 'polygon(50% 0, 50% 0, 50% 100%, 50% 100%)',
-            }),
+                clipPath: 'polygon(50% 0, 50% 0, 50% 100%, 50% 100%)',
+                WebkitClipPath: 'polygon(50% 0, 50% 0, 50% 100%, 50% 100%)',
+              }),
         },
         animateState: {
           opacity: 1,
           ...(isLoginTransition
             ? {}
             : {
-              clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
-              WebkitClipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
-            }),
+                clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+                WebkitClipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+              }),
         },
         exitState: {
           opacity: 0,
           ...(isLoginTransition
             ? {}
             : {
-              clipPath: 'polygon(50% 0, 50% 0, 50% 100%, 50% 100%)',
-              WebkitClipPath: 'polygon(50% 0, 50% 0, 50% 100%, 50% 100%)',
-            }),
+                clipPath: 'polygon(50% 0, 50% 0, 50% 100%, 50% 100%)',
+                WebkitClipPath: 'polygon(50% 0, 50% 0, 50% 100%, 50% 100%)',
+              }),
         },
       }}
       style={{ WebkitClipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', willChange: 'clip-path, opacity' }}
     >
-      
       {children}
     </motion.div>
   );
 
   return (
     <>
-      {location.pathname !== '/project2' && <Navbar />}
+      {location.pathname !== '/' && <Navbar />}
       {motionWrapper}
     </>
   );
