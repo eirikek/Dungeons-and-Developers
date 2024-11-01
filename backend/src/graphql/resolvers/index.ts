@@ -3,6 +3,7 @@ import monsterResolver from './monsterResolver.ts';
 import raceResolver from './raceResolver.ts';
 import classResolver from './classResolver.ts';
 import abilityResolver from './abilityResolver.ts';
+import equipmentResolver from './equipmentResolver.js';
 
 export default {
   Query: {
@@ -11,6 +12,7 @@ export default {
     ...raceResolver.Query,
     ...classResolver.Query,
     ...abilityResolver.Query,
+    ...equipmentResolver.Query,
   },
   Mutation: {
     ...userResolver.Mutation,
@@ -18,5 +20,6 @@ export default {
     ...raceResolver.Mutation,
     ...classResolver.Mutation,
     ...abilityResolver.Mutation,
+    ...equipmentResolver.Mutation,
   },
 };
