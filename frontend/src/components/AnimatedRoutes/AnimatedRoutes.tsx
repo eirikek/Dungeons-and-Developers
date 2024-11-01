@@ -24,11 +24,11 @@ export default function AnimatedRoutes() {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         {/* Public Route */}
-        <Route path="/project2" element={<LoginPage />} />
+        <Route path="" element={<LoginPage />} />
 
         {/* Protected Routes */}
         <Route
-          path="/project2/home"
+          path="/home"
           element={
             <ProtectedRoute>
               <HomePage />
@@ -36,7 +36,7 @@ export default function AnimatedRoutes() {
           }
         />
         <Route
-          path="/project2/dungeon"
+          path="/dungeon"
           element={
             <ProtectedRoute>
               <DungeonPage />
@@ -44,7 +44,7 @@ export default function AnimatedRoutes() {
           }
         />
         <Route
-          path="/project2/class"
+          path="/class"
           element={
             <ProtectedRoute>
               <ClassPage />
@@ -52,7 +52,7 @@ export default function AnimatedRoutes() {
           }
         />
         <Route
-          path="/project2/race"
+          path="/race"
           element={
             <ProtectedRoute>
               <RacePage />
@@ -60,7 +60,7 @@ export default function AnimatedRoutes() {
           }
         />
         <Route
-          path="/project2/abilityscore"
+          path="/abilityscore"
           element={
             <ProtectedRoute>
               <AbilityScorePage />
@@ -68,7 +68,7 @@ export default function AnimatedRoutes() {
           }
         />
         <Route
-          path="/project2/equipment"
+          path="/equipment"
           element={
             <ProtectedRoute>
               <EquipmentPage />
@@ -76,7 +76,7 @@ export default function AnimatedRoutes() {
           }
         />
         <Route
-          path="/project2/monsters"
+          path="/monsters"
           element={
             <ProtectedRoute>
               <MonsterPage />
@@ -84,7 +84,7 @@ export default function AnimatedRoutes() {
           }
         />
         <Route
-          path="/project2/mycharacter"
+          path="/mycharacter"
           element={
             <ProtectedRoute>
               <MyCharacterPage />
