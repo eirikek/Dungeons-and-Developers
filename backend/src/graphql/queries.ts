@@ -205,20 +205,7 @@ export const UPDATE_USER_CLASS = gql`
     }
 `;
 
-export const GET_CLASSES = gql`
-    query GetClasses($offset: Int, $limit: Int) {
-        classes(offset: $offset, limit: $limit) {
-            classes {
-                id
-                index
-                name
-                hit_die
-                skills
-            }
-            totalClasses
-        }
-    }
-`;
+
 
 export const GET_USER_CLASS = gql`
     query GetUserClass($userId: ID!) {
@@ -277,6 +264,33 @@ export const GET_USER_RACE = gql`
                 size
                 img
             }
+        }
+    }
+`;
+
+export const GET_ABILITYSCORES = gql`
+    query GetAbilityScores($offset: Int, $limit: Int) {
+        abilities(offset: $offset, limit: $limit) {
+            abilities {
+                index
+                name
+                skills               
+            }
+            totalAbilities
+        }
+    }
+`;
+export const GET_CLASSES = gql`
+    query GetClasses($offset: Int, $limit: Int) {
+        classes(offset: $offset, limit: $limit) {
+            classes {
+                id
+                index
+                name
+                hit_die
+                skills
+            }
+            totalClasses
         }
     }
 `;

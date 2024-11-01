@@ -103,16 +103,20 @@ async function fetchAbilityScores() {
       const inDB = await AbilityScore.findOne({ index: abilityDetails.data.index });
 
 
+
+
       if (!inDB) {
+        const skillNames = abilityDetails.data.skills.map((skill : any) => skill.name);
         const abilityDocument = new AbilityScore({
           index: abilityDetails.data.index,
           name: abilityDetails.data.name,
           //desc: Array.isArray(abilityDetails.data.desc) ? abilityDetails.data.desc : [],
-          //skills: Array.isArray(abilityDetails.data.skills) ? abilityDetails.data.skills : [],
+          skills: skillNames
         });
 
         await abilityDocument.save();
-        console.log(`ability saved: `);
+        console.log(`ability saved: ${skillNames}`);
+
 
       }
 

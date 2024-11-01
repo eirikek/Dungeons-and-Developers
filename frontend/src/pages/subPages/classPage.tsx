@@ -42,7 +42,6 @@ export default function ClassPage() {
             selectedClassId={selectedClassId}
             onSelect={handleClassSelect}
           />
-          //proficiency_choices = {classInfo.proficiency_choices.join('')}
         ))}
       </section>
     </SubPageLayout>

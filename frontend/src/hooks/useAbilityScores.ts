@@ -1,33 +1,10 @@
 import { useMemo} from 'react';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
+import AbilityData from '../interfaces/AbilityScoreProps.ts'
+import { GET_ABILITYSCORES } from '../../../backend/src/graphql/queries.ts';
 
 
 
-const GET_ABILITYSCORES = gql`
-    query GetAbilityScores($offset: Int, $limit: Int) {
-        abilities(offset: $offset, limit: $limit) {
-            abilities {
-                index
-                name
-               
-            }
-            totalAbilities
-        }
-    }
-`;
-//interface Description{
-//  desc: string;
-//}
-//interface Skill{
-//  name: string;
-//  index: string;
-//}
-interface AbilityData {
-  name: string;
-  index: string;
-  //desc: Description[];
-  //skills: Skill[];
-}
 function useAbilityScores(currentPage: number, abilitiesPerPage: number) {
   const offset = (currentPage - 1) * abilitiesPerPage;
 
@@ -42,11 +19,11 @@ function useAbilityScores(currentPage: number, abilitiesPerPage: number) {
 
   const transformedAbilities = useMemo(() => {
     if (!data || !data.abilities) return [];
-    return data.abilities.abilities.map(ability => ({
+    return data.abilities.abilities.map((ability) => ({
       index: ability.index,
       name: ability.name,
       //desc: Array.isArray(ability.desc) ? ability.desc : [],
-      //skills: Array.isArray(ability.skills) ? ability.skills: []
+      skills: ability.skills
     }));
   }, [data]);
 
