@@ -28,6 +28,14 @@ export default {
       const existingUser = await User.findOne({ userName });
       return !existingUser;
     },
+
+    async getArrayScores(_: any, { userId }: { userId: string }) {
+      const user = await User.findById(userId).select('abilityScores');
+      if (!user) throw new Error('User not found');
+      return user.abilityScores;
+    },
+
+
   },
 
   Mutation: {
@@ -139,11 +147,28 @@ export default {
       }
       return user.populate('equipments');
     },
+
+    async updateAbilityScores(_: any, { userId, scores }: { userId: string; scores: number[] }) {
+      const user = await User.findById(userId);
+      if (!user) throw new Error('User not found');
+
+      if (scores.length !== 6) {
+        throw new Error('Ability scores array must have exactly 6 elements');
+      }
+
+      user.abilityScores = scores;
+      await user.save();
+
+      return user.populate('race class');
+    },
+    
+
     async removeEquipmentFromCharacter(_: any, { userId, equipmentId }: { userId: string; equipmentId: string }) {
       const user = await User.findById(userId).populate('equipments');
       if (!user) throw new Error('User not found');
 
       const equipmentObjectId = new mongoose.Types.ObjectId(equipmentId);
+
 
       user.equipments = user.equipments.filter((equip) => !equip._id.equals(equipmentObjectId));
 

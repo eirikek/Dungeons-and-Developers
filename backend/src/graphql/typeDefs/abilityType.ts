@@ -4,13 +4,9 @@ export const abilityType = gql`
     type AbilityScore{
         name: String!
         index: String!
-        desc: [String!]!
-        skills: [Skills!]!
+        skills: [String!]
     }
-    type Skills{
-        name: String!
-        index: String!
-    }
+    
 
     type AbilityResult {
         abilities: [AbilityScore!]!
