@@ -192,3 +192,91 @@ export const LOGIN_USER = gql`
         }
     }
 `;
+export const UPDATE_USER_CLASS = gql`
+    mutation UpdateUserClass($userId: ID!, $classId:ID!){
+        updateUserClass(userId:$userId, classId: $classId){
+            id
+            class{
+                name
+                index
+                hit_die
+            }
+        }
+    }
+`;
+
+export const GET_CLASSES = gql`
+    query GetClasses($offset: Int, $limit: Int) {
+        classes(offset: $offset, limit: $limit) {
+            classes {
+                id
+                index
+                name
+                hit_die
+                skills
+            }
+            totalClasses
+        }
+    }
+`;
+
+export const GET_USER_CLASS = gql`
+    query GetUserClass($userId: ID!) {
+        user(id: $userId) {
+            class {
+                id
+                name
+                index
+                hit_die
+            }
+        }
+    }
+`;
+
+export const UPDATE_USER_RACE = gql`
+    mutation UpdateUserRace($userId: ID!, $raceId: ID!) {
+        updateUserRace(userId: $userId, raceId: $raceId) {
+            id
+            race {
+                name
+                speed
+                alignment
+                size
+                img
+            }
+        }
+    }
+`;
+
+export const GET_RACES = gql`
+    query GetRaces($offset: Int, $limit: Int) {
+        races(offset: $offset, limit: $limit) {
+            races {
+                id
+                index
+                name
+                speed
+                alignment
+                size
+                img
+            }
+            totalRaces
+        }
+    }
+`;
+
+export const GET_USER_RACE = gql`
+    query GetUserRace($userId: ID!) {
+        user(id: $userId) {
+            id
+            race {
+                id
+                name
+                speed
+                alignment
+                size
+                img
+            }
+        }
+    }
+`;

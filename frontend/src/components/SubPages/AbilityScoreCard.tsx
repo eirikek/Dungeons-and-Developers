@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Counter from '../Counter/Counter.tsx';
 
-
 interface AbilityScoreCardProps {
   name: string;
   //description: string;
@@ -10,7 +9,6 @@ interface AbilityScoreCardProps {
   //  name: string;
   //  index: string;
   //}[];
-
 }
 
 const AbilityScoreCard: React.FC<AbilityScoreCardProps> = ({ name }) => {
@@ -24,7 +22,7 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps> = ({ name }) => {
 
   return (
     <motion.section
-      className="flex flex-col xl:flex-row xl:h-[400px] 2xl:h-[350px] w-full justify-between items-center p-8 xl:p-12 rounded-lg bg-black bg-opacity-80 gap-10"
+      className="flex flex-col xl:flex-row xl:h-[400px] 2xl:h-[350px] w-full justify-between items-center p-8 xl:p-12 rounded-lg bg-black bg-opacity-90 gap-10"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
@@ -46,14 +44,9 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps> = ({ name }) => {
       {/* Display the skills associated with the ability */}
       <ul className="w-full justify-start xl:w-auto xl:justify-center xl:min-w-[15vw] 2xl:min-w-[10vw]">
         <li className="bold text">Skills required:</li>
-
-
-
       </ul>
     </motion.section>
   );
 };
 
 export default AbilityScoreCard;
-
-

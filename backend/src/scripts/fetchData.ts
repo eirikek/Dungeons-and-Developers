@@ -2,6 +2,8 @@ import axios from 'axios';
 import Monster from '../graphql/model/Monsters.ts';
 import Race from '../graphql/model/Race.ts';
 import Class from '../graphql/model/Class.ts';
+import AbilityScore from '../graphql/model/AbilityScore.ts';
+
 
 const imageBaseURL = 'https://www.dnd5eapi.co/api/images/monsters';
 
@@ -9,6 +11,7 @@ const urls = {
   monsters: 'https://www.dnd5eapi.co/api/monsters',
   races: 'https://www.dnd5eapi.co/api/races',
   classes: 'https://www.dnd5eapi.co/api/classes',
+  abilities: 'https://www.dnd5eapi.co/api/ability-scores',
 };
 
 async function fetchMonsters() {
@@ -69,10 +72,19 @@ async function fetchClasses() {
     const inDB = await Class.findOne({ index: classDetails.data.index });
 
     if (!inDB) {
+      const proficiencyChoices = classDetails.data.proficiency_choices?.find(
+        (choice: any) => choice.type === 'proficiencies',
+      );
+
+      const skills = proficiencyChoices
+        ? proficiencyChoices.from.options.map((option: any) => option.item.name.replace('Skill: ', ''))
+        : [];
+
       await new Class({
         index: classDetails.data.index,
         name: classDetails.data.name,
         hit_die: classDetails.data.hit_die,
+        skills: skills,
       }).save();
       console.log(`Class saved: ${classDetails.data.name}`);
     }
@@ -80,11 +92,44 @@ async function fetchClasses() {
   console.log('All classes saved to MongoDB!');
 }
 
+async function fetchAbilityScores() {
+  try {
+    const { data } = await axios.get(urls.abilities);
+    const abilities = data.results;
+
+
+    for (const ability of abilities) {
+      const abilityDetails = await axios.get(`${urls.abilities}/${ability.index}`);
+      const inDB = await AbilityScore.findOne({ index: abilityDetails.data.index });
+
+
+      if (!inDB) {
+        const abilityDocument = new AbilityScore({
+          index: abilityDetails.data.index,
+          name: abilityDetails.data.name,
+          //desc: Array.isArray(abilityDetails.data.desc) ? abilityDetails.data.desc : [],
+          //skills: Array.isArray(abilityDetails.data.skills) ? abilityDetails.data.skills : [],
+        });
+
+        await abilityDocument.save();
+        console.log(`ability saved: `);
+
+      }
+
+    }
+
+    console.log('All abilities saved to MongoDB!');
+  } catch (error) {
+    console.error('Error fetching or saving abilities:', error);
+  }
+}
+
 async function fetchData() {
   try {
     await fetchMonsters();
     await fetchRaces();
     await fetchClasses();
+    await fetchAbilityScores();
   } catch (error) {
     console.error('Error fetching or saving data:', error);
   }
