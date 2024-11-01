@@ -1,10 +1,6 @@
 import { gql } from 'apollo-server';
 
 export const userType = gql`
-    type Ability {
-        name: String!
-        score: Int!
-    }
 
     type Equipment {
         name: String!
@@ -15,7 +11,7 @@ export const userType = gql`
         userName: String!
         class: Class!
         race: Race!
-        abilityScores: [Ability]!
+        abilityScores: [Int!]!
         equipments: [Equipment]!
         favoritedMonsters: [Monster!]!
         dungeonName: String!

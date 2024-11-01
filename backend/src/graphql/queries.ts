@@ -156,10 +156,7 @@ export const CREATE_USER = gql`
                 race {
                     name
                 }
-                abilityScores {
-                    name
-                    score
-                }
+                abilityScores
                 equipments {
                     name
                 }
@@ -181,10 +178,7 @@ export const LOGIN_USER = gql`
                 race {
                     name
                 }
-                abilityScores {
-                    name
-                    score
-                }
+                abilityScores
                 equipments {
                     name
                 }
