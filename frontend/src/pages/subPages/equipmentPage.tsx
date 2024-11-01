@@ -1,11 +1,5 @@
-import { useMutation, useQuery } from '@apollo/client';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useContext, useEffect, useState } from 'react';
-import {
-  ADD_EQUIPMENT_TO_CHARACTER,
-  GET_USER_EQUIPMENT,
-  REMOVE_EQUIPMENT_FROM_CHARACTER,
-} from '../../../../backend/src/graphql/queries.ts';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import Pagination from '../../components/Pagination/Pagination.tsx';
 import EquipmentCard from '../../components/SubPages/EquipmentCard.tsx';
@@ -13,6 +7,7 @@ import { AuthContext } from '../../context/AuthContext.tsx';
 import useEquipments from '../../hooks/useEquipments.ts';
 import { useToast } from '../../hooks/useToast.ts';
 import { Equipment } from '../../interfaces/EquipmentProps.ts';
+import useUserEquipments from '../../hooks/useUserEquipments.ts';
 
 const variants = {
   enter: (direction: number) => ({
@@ -32,81 +27,25 @@ const variants = {
 const EquipmentPage = () => {
   const { userId } = useContext(AuthContext);
   const { showToast } = useToast();
+  const { userEquipments, loading, addToEquipments, removeFromEquipments } = useUserEquipments();
+
   const [direction, setDirection] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const equipmentsPerPage = 20;
   const maxEquipments = 10;
 
-  const [equipments, setEquipments] = useState<Equipment[]>([]);
-  const [totalEquipments, setTotalEquipments] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [userEquipments, setUserEquipments] = useState<Equipment[]>([]);
-
   const { equipments: fetchedEquipments, totalEquipments: fetchedTotalEquipments } = useEquipments(
     currentPage,
     equipmentsPerPage
   );
-  const {
-    data: userData,
-    loading: userLoading,
-    error: userError,
-    refetch: refetchUserEquipments,
-  } = useQuery(GET_USER_EQUIPMENT, {
-    variables: { userId },
-    fetchPolicy: 'network-only',
-  });
+
+  const [equipments, setEquipments] = useState<Equipment[]>(fetchedEquipments);
 
   useEffect(() => {
-    const fetchEquipments = async () => {
-      try {
-        setEquipments(fetchedEquipments);
-        setTotalEquipments(fetchedTotalEquipments);
-        console.log('Set userEquipments:');
-      } catch (error) {
-        console.log('Error fetching equipments', error);
-      }
-    };
+    setEquipments(fetchedEquipments);
+  }, [currentPage, fetchedEquipments]);
 
-    fetchEquipments();
-  }, [currentPage, fetchedEquipments, fetchedTotalEquipments]);
-
-  useEffect(() => {
-    const fetchUserEquipments = () => {
-      if (userData?.user) {
-        const fetchedEquipments = userData.user.equipments || [];
-        setUserEquipments(fetchedEquipments);
-        console.log('Set userEquipments:', fetchedEquipments);
-      } else {
-        console.log('User equipments is null!');
-        setUserEquipments([]);
-      }
-      setLoading(false);
-    };
-
-    if (userData) {
-      fetchUserEquipments();
-    }
-  }, [userData]);
-
-  const [addEquipment] = useMutation(ADD_EQUIPMENT_TO_CHARACTER, {
-    onCompleted: () => {
-      refetchUserEquipments().then((r) => console.log('Fetched equipments ', r));
-    },
-  });
-
-  const [removeEquipment] = useMutation(REMOVE_EQUIPMENT_FROM_CHARACTER, {
-    onCompleted: () => {
-      refetchUserEquipments().then((r) => console.log('Fetched equipments ', r));
-    },
-  });
-
-  useEffect(() => {
-    if (userData?.user?.equipments) {
-      setUserEquipments(userData.user.equipments);
-    }
-  }, [userData]);
-
+  // chatgpt prompt line 111 to 145
   const handleEquipmentChange = async (equipId: string, checked: boolean, equipment: Equipment) => {
     try {
       if (checked) {
@@ -121,29 +60,27 @@ const EquipmentPage = () => {
         }
 
         // Proceed to add equipment if within limits
-        await addEquipment({ variables: { userId, equipmentId: equipId } });
+        await addToEquipments(equipId);
         showToast({
           message: `${equipment.name} was added to your equipments!`,
           type: 'success',
           duration: 3000,
         });
-        setUserEquipments((prev) => [...prev, equipment]);
       } else {
         // Handle equipment removal
-        await removeEquipment({ variables: { userId, equipmentId: equipId } });
+        await removeFromEquipments(equipId);
         showToast({
           message: `${equipment.name} was removed from your equipments!`,
           type: 'success',
           duration: 3000,
         });
-        setUserEquipments((prev) => prev.filter((userEquip) => userEquip.id !== equipId));
       }
     } catch (error) {
       console.error('Error updating equipment:', error);
     }
   };
 
-  const totalPages = Math.ceil(totalEquipments / equipmentsPerPage);
+  const totalPages = Math.ceil(fetchedTotalEquipments / equipmentsPerPage);
   const handlePageChange = (newDirection: number) => {
     const newPage = currentPage + newDirection;
     if (newPage >= 1 && newPage <= totalPages) {
@@ -152,8 +89,7 @@ const EquipmentPage = () => {
     }
   };
 
-  if (loading || userLoading) return <div>Loading...</div>;
-  if (error || userError) return <div>Error loading equipments.</div>;
+  if (loading) return <div>Loading...</div>;
 
   return (
     <MainPageLayout>
