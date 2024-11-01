@@ -15,13 +15,13 @@ const abilityScoreMap: { [key: string]: number } = {
   CHA: 0,
 };
 //Chatgpt prompt from line 17-24 and 26-30 and 34-43
-const AbilityScoreCard: React.FC<AbilityScoreCardProps & { initialScores: number[] }> = ({ name, skills = [], initialScores }) => {
-  const [scores, setScores] = useState<number[]>(initialScores|| Array(6).fill(0));
+const AbilityScoreCard: React.FC<AbilityScoreCardProps> = ({ name, skills = [] }) => {
   const [updateAbilityScores] = useMutation(UPDATE_ABILITY_SCORES);
   const { userId } = useContext(AuthContext);
   const { data, loading, error } = useQuery(GET_ARRAY_SCORES, {
     variables: { userId },
   });
+  const [scores, setScores] = useState<number[]>(data.abilityScores || Array(6).fill(0));
 
   useEffect(() => {
     if (data && data.getArrayScores) {
@@ -35,12 +35,12 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps & { initialScores: number
     const updatedScores = [...scores];
     updatedScores[index] = newValue;
     setScores(updatedScores);
-    console.log(updatedScores)
+    console.log(updatedScores);
 
     try {
       await updateAbilityScores({ variables: { userId, scores: updatedScores } });
     } catch (error) {
-      console.error("Error updating ability scores:", error);
+      console.error('Error updating ability scores:', error);
     }
   };
   if (loading) return <div>Loading...</div>;
