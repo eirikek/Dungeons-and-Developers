@@ -121,16 +121,17 @@ export const UPDATE_REVIEW = gql`
   }
 `;
 
-export const GET_EQUIPMENTS = gql`
-  query GetEquipments($offset: Int, $limit: Int) {
-    equipments(offset: $offset, limit: $limit) {
+export const GET_USER_EQUIPMENT = gql`
+  query GetUserEquipment($userId: ID!) {
+    user(id: $userId) {
+      id
       equipments {
         id
         index
+        name
         category
         value
       }
-      totalEquipments
     }
   }
 `;
@@ -138,14 +139,27 @@ export const GET_EQUIPMENTS = gql`
 export const ADD_EQUIPMENT_TO_CHARACTER = gql`
   mutation AddEquipmentToCharacter($userId: ID!, $equipmentId: ID!) {
     addEquipmentToCharacter(userId: $userId, equipmentId: $equipmentId) {
-      user {
-        id
-        userName
-      }
+      id
       equipments {
         id
         index
         name
+        category
+        value
+      }
+    }
+  }
+`;
+
+export const REMOVE_EQUIPMENT_FROM_CHARACTER = gql`
+  mutation RemoveEquipmentFromCharacter($userId: ID!, $equipmentId: ID!) {
+    removeEquipmentFromCharacter(userId: $userId, equipmentId: $equipmentId) {
+      id
+      equipments {
+        id
+        index
+        name
+        category
         value
       }
     }

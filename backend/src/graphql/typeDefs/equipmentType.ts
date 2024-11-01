@@ -10,7 +10,7 @@ export const equipmentType = gql`
   }
   type EquipmentResult {
     equipments: [Equipment!]!
-    totalEquipments: Int!
+    totalCount: Int!
   }
   extend type Query {
     equipments(offset: Int, limit: Int): EquipmentResult!
@@ -18,8 +18,5 @@ export const equipmentType = gql`
   }
   extend type Mutation {
     fetchEquipments: String!
-  }
-  extend type Mutation {
-    addEquipmentToCharacter(userId: ID!, equipmentId: ID!): User
   }
 `;

@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import Monster from '../graphql/model/Monsters.ts';
 import Race from '../graphql/model/Race.ts';
 import Class from '../graphql/model/Class.ts';
+import Equipment from '../graphql/model/Equipment.js';
 
 const imageBaseURL = 'https://www.dnd5eapi.co/api/images/monsters';
 
@@ -87,10 +88,10 @@ async function fetchEquipments() {
 
   for (const equipment of equipments) {
     const equipmentDetails = await axios.get(`${urls.equipments}/${equipment.index}`);
-    const inDB = await Class.findOne({ index: equipmentDetails.data.index });
+    const inDB = await Equipment.exists({ index: equipmentDetails.data.index });
 
     if (!inDB) {
-      await new Class({
+      await new Equipment({
         index: equipmentDetails.data.index,
         name: equipmentDetails.data.name,
         category: equipmentDetails.data.equipment_category.name,
