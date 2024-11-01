@@ -5,27 +5,16 @@ export const userType = gql`
   type UserEquipments {
     equipments: [Equipment!]
   }
+  
   type User {
     id: ID!
     userName: String!
     class: Class!
     race: Race!
-    abilityScores: [Ability]!
-    equipments: [Equipment!]
+    abilityScores: [Int!]!
+    equipments: [Equipment]!
     favoritedMonsters: [Monster!]!
     dungeonName: String!
-  }
-
-
-    type User {
-        id: ID!
-        userName: String!
-        class: Class!
-        race: Race!
-        abilityScores: [Int!]!
-        equipments: [Equipment]!
-        favoritedMonsters: [Monster!]!
-        dungeonName: String!
     }
 
   type AuthPayload {
