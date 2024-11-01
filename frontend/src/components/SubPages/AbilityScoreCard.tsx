@@ -21,7 +21,7 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps> = ({ name, skills = [] }
   const { data, loading, error } = useQuery(GET_ARRAY_SCORES, {
     variables: { userId },
   });
-  const [scores, setScores] = useState<number[]>(data.abilityScores || Array(6).fill(0));
+  const [scores, setScores] = useState<number[]>(data?.abilityScores || Array(6).fill(0));
 
   useEffect(() => {
     if (data && data.getArrayScores) {

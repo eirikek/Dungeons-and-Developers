@@ -14,48 +14,38 @@ const SubMenu = () => {
       {/* Race Button */}
       <div
         className={`flex-1 transition-all duration-300 ease-in-out flex items-center justify-center ${
-          isActive('/project2/race') ? 'bold' : ''
-        } ${hoveredButton === '/project2/race' || (!hoveredButton && isActive('/project2/race')) ? 'flex-grow-2' : ''}`}
-        onMouseEnter={() => setHoveredButton('/project2/race')}
+          isActive('/race') ? 'bold' : ''
+        } ${hoveredButton === '/race' || (!hoveredButton && isActive('/race')) ? 'flex-grow-2' : ''}`}
+        onMouseEnter={() => setHoveredButton('/race')}
         onMouseLeave={() => setHoveredButton(null)}
       >
-        <Button
-          text="Race"
-          linkTo="/project2/race"
-          noUnderline={true}
-          className="header"
-        />
+        <Button text="Race" linkTo="/race" noUnderline={true} className="header" />
       </div>
       <div className="h-14 w-0.5 bg-customRed"></div>
 
       {/* Class Button */}
       <div
         className={`flex-1 transition-all duration-300 ease-in-out flex items-center justify-center ${
-          isActive('/project2/class') ? 'bold' : '' // Always keep bold for active
-        } ${hoveredButton === '/project2/class' || (!hoveredButton && isActive('/project2/class')) ? 'flex-grow-2' : ''}`}
-        onMouseEnter={() => setHoveredButton('/project2/class')}
+          isActive('/class') ? 'bold' : '' // Always keep bold for active
+        } ${hoveredButton === '/class' || (!hoveredButton && isActive('/class')) ? 'flex-grow-2' : ''}`}
+        onMouseEnter={() => setHoveredButton('/class')}
         onMouseLeave={() => setHoveredButton(null)}
       >
-        <Button
-          text="Class"
-          linkTo="/project2/class"
-          noUnderline={true}
-          className="header w-full justify-center"
-        />
+        <Button text="Class" linkTo="/class" noUnderline={true} className="header w-full justify-center" />
       </div>
       <div className="h-14 w-0.5 bg-customRed"></div>
 
       {/* Ability Scores Button */}
       <div
         className={`flex-1 transition-all duration-300 ease-in-out flex items-center justify-center ${
-          isActive('/project2/abilityscore') ? 'bold' : '' // Always keep bold for active
-        } ${hoveredButton === '/project2/abilityscore' || (!hoveredButton && isActive('/project2/abilityscore')) ? 'flex-grow-2' : ''}`}
-        onMouseEnter={() => setHoveredButton('/project2/abilityscore')}
+          isActive('/abilityscore') ? 'bold' : '' // Always keep bold for active
+        } ${hoveredButton === '/abilityscore' || (!hoveredButton && isActive('/abilityscore')) ? 'flex-grow-2' : ''}`}
+        onMouseEnter={() => setHoveredButton('/abilityscore')}
         onMouseLeave={() => setHoveredButton(null)}
       >
         <Button
           text="Ability scores"
-          linkTo="/project2/abilityscore"
+          linkTo="/abilityscore"
           noUnderline={true}
           className="header w-full justify-center"
         />
