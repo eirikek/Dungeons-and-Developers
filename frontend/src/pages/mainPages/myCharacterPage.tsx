@@ -26,7 +26,6 @@ const MyCharacterPage = () => {
   const { userId } = useContext(AuthContext);
   const { showToast } = useToast();
 
-  // classes
   const { data: userClassData } = useQuery(GET_USER_CLASS, {
     variables: { userId },
     skip: !userId,
@@ -38,19 +37,12 @@ const MyCharacterPage = () => {
   const [classIndex, setClassIndex] = useState(0);
   const [classImageLoaded, setClassImageLoaded] = useState(false);
 
-  //AbilityScore
   const { data, loading } = useQuery(GET_ARRAY_SCORES, {
     variables: { userId },
     fetchPolicy: 'network-only',
   });
   const [updateAbilityScores] = useMutation(UPDATE_ABILITY_SCORES);
   const [scores, setScores] = useState<number[]>(Array(6).fill(0));
-
-  const [selectedClassId, setSelectedClassId] = useState<string | undefined>(
-    userClassData?.user?.class?.id || (classData.length > 0 ? classData[0].id : undefined)
-  );
-
-  // races
 
   const { data: userRaceData } = useQuery(GET_USER_RACE, {
     variables: { userId },
@@ -59,9 +51,6 @@ const MyCharacterPage = () => {
   const { races: raceData } = useRaces(currentPage, classesPerPage);
   const [raceImageLoaded, setRaceImageLoaded] = useState(false);
   const [raceIndex, setRaceIndex] = useState(0);
-  const [selectedRaceID, setSelectedRaceId] = useState<string | undefined>(
-    userRaceData?.user?.race?.id || (raceData.length > 0 ? raceData[0].id : undefined)
-  );
 
   const [updateUserRace] = useMutation(UPDATE_USER_RACE);
 
@@ -73,27 +62,15 @@ const MyCharacterPage = () => {
 
   useEffect(() => {
     if (userClassData?.user?.class?.id) {
-      setSelectedClassId(userClassData.user.class.id);
-      // Find and set the index of the selected class
       const selectedIndex = classData.findIndex((c) => c.id === userClassData.user.class.id);
-      if (selectedIndex !== -1) {
-        setClassIndex(selectedIndex);
-      }
-    } else if (classData.length > 0) {
-      setSelectedClassId(classData[0].id);
+      if (selectedIndex !== -1) setClassIndex(selectedIndex);
     }
   }, [userClassData, classData]);
 
   useEffect(() => {
     if (userRaceData?.user?.race?.id) {
-      setSelectedRaceId(userRaceData.user.race.id);
-      // Find and set the index of the selected race
-      const selectedIndex = raceData.findIndex((c) => c.id === userRaceData.user.race.id);
-      if (selectedIndex !== -1) {
-        setRaceIndex(selectedIndex);
-      }
-    } else if (raceData.length > 0) {
-      setSelectedRaceId(raceData[0].id);
+      const selectedIndex = raceData.findIndex((r) => r.id === userRaceData.user.race.id);
+      if (selectedIndex !== -1) setRaceIndex(selectedIndex);
     }
   }, [userRaceData, raceData]);
 
@@ -109,56 +86,28 @@ const MyCharacterPage = () => {
     }
   };
 
-  const handleClassSelect = async () => {
-    const currentClass = classData[classIndex];
-    if (currentClass) {
-      try {
-        await updateUserClass({
-          variables: {
-            userId,
-            classId: currentClass.id,
-          },
-        });
-        setSelectedClassId(currentClass.id);
-      } catch (error) {
-        console.error('Error updating user class:', error);
-      }
+  const handleChange = async (type: 'race' | 'class', direction: 'next' | 'prev') => {
+    const isRace = type === 'race';
+    const data = isRace ? raceData : classData;
+    const index = isRace ? raceIndex : classIndex;
+    const setIndex = isRace ? setRaceIndex : setClassIndex;
+    const updateMutation = isRace ? updateUserRace : updateUserClass;
+    const toastType = isRace ? 'Race' : 'Class';
+
+    const newIndex = direction === 'next' ? (index + 1) % data.length : (index - 1 + data.length) % data.length;
+
+    setIndex(newIndex);
+    const newItem = data[newIndex];
+
+    showToast({ message: `${toastType} changed to ${newItem.name}`, type: 'success' });
+
+    try {
+      await updateMutation({
+        variables: { userId, [`${type}Id`]: newItem.id },
+      });
+    } catch (error) {
+      console.error(`Error updating ${toastType.toLowerCase()}:`, error);
     }
-  };
-  const handleRaceSelect = async () => {
-    const currentRace = raceData[raceIndex];
-    if (currentRace) {
-      try {
-        await updateUserRace({
-          variables: {
-            userId,
-            raceId: currentRace.id,
-          },
-        });
-        setSelectedRaceId(currentRace.id);
-      } catch (error) {
-        console.error('Error updating race:', error);
-      }
-    }
-  };
-
-  const handleNextClass = () => {
-    const newIndex = (classIndex + 1) % classData.length;
-    setClassIndex(newIndex);
-  };
-
-  const handlePrevClass = () => {
-    const newIndex = (classIndex - 1 + classData.length) % classData.length;
-    setClassIndex(newIndex);
-  };
-
-  const handleNextRace = () => {
-    const newIndex = (raceIndex + 1) % raceData.length;
-    setRaceIndex(newIndex);
-  };
-  const handlePrevRace = () => {
-    const newIndex = (raceIndex - 1 + raceData.length) % raceData.length;
-    setRaceIndex(newIndex);
   };
 
   const currentClass = classData[classIndex];
@@ -178,7 +127,7 @@ const MyCharacterPage = () => {
             <article className="w-full xl:w-1/2 flex flex-col items-center">
               <h2 className="header">Race:</h2>
               <div className="flex items-center">
-                <button className="arrow-button" onClick={handlePrevRace}>
+                <button className="arrow-button" onClick={() => handleChange('race', 'prev')}>
                   <FaChevronLeft />
                 </button>
                 {currentRace && (
@@ -196,19 +145,8 @@ const MyCharacterPage = () => {
                     </div>
                   </article>
                 )}
-                <button className="arrow-button" onClick={handleNextRace}>
+                <button className="arrow-button" onClick={() => handleChange('race', 'next')}>
                   <FaChevronRight />
-                </button>
-                <button
-                  onClick={handleRaceSelect}
-                  className={`mt-4 px-6 py-2 rounded-md ${
-                    selectedRaceID === currentRace?.id
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : 'bg-customRed-500 text-white hover:bg-customRed-600'
-                  }`}
-                  disabled={selectedRaceID === currentRace?.id}
-                >
-                  {selectedRaceID === currentRace?.id ? 'Current Race' : 'Select Race'}
                 </button>
               </div>
             </article>
@@ -217,7 +155,7 @@ const MyCharacterPage = () => {
             <article className="w-full xl:w-1/2 flex flex-col items-center mt-[10vh] lg:mt-0">
               <h2 className="header">Class:</h2>
               <div className="flex items-center gap-4">
-                <button className="arrow-button" onClick={handlePrevClass}>
+                <button className="arrow-button" onClick={() => handleChange('class', 'prev')}>
                   <FaChevronLeft />
                 </button>
                 {currentClass && (
@@ -235,19 +173,8 @@ const MyCharacterPage = () => {
                     </div>
                   </article>
                 )}
-                <button className="arrow-button" onClick={handleNextClass}>
+                <button className="arrow-button" onClick={() => handleChange('class', 'next')}>
                   <FaChevronRight />
-                </button>
-                <button
-                  onClick={handleClassSelect}
-                  className={`mt-4 px-6 py-2 rounded-md ${
-                    selectedClassId === currentClass?.id
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : 'bg-customRed-500 text-white hover:bg-customRed-600'
-                  }`}
-                  disabled={selectedClassId === currentClass?.id}
-                >
-                  {selectedClassId === currentClass?.id ? 'Current Class' : 'Select Class'}
                 </button>
               </div>
             </article>
@@ -263,6 +190,13 @@ const MyCharacterPage = () => {
                     scale={1.5}
                     value={scores[abilityScoreMap[key]]}
                     onChange={(newValue) => handleCounterChange(abilityScoreMap[key], newValue)}
+                    onMouseUp={() => {
+                      showToast({
+                        message: `Value for ${key} changed to ${scores[abilityScoreMap[key]]}`,
+                        type: 'success',
+                        duration: 3000,
+                      });
+                    }}
                   />
                 </div>
               ))}
@@ -274,14 +208,16 @@ const MyCharacterPage = () => {
             <h2 className="header mb-[5vh]">Equipments:</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[5vh] gap-x-[40vw] xl:gap-y-[10vh]">
               {loading && <div>Loading equipments...</div>}
-              {userEquipments.length < 1 && <p>No equipments added yet...</p>}
-              <ul>
-                {userEquipments.map((equipment, index) => (
-                  <li key={index} className="list-disc list-inside sub-header">
-                    {equipment.name}
-                  </li>
-                ))}
-              </ul>
+              {userEquipments.length < 1 && (
+                <div className="flex items-center justify-center h-full w-full col-span-full text-center">
+                  <p className="sub-header">No equipments selected</p>
+                </div>
+              )}
+              {userEquipments.map((equipment, index) => (
+                <li key={index} className="list-disc list-inside sub-header">
+                  {equipment.name}
+                </li>
+              ))}
             </div>
           </article>
         </div>

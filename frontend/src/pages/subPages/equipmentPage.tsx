@@ -49,14 +49,13 @@ const EquipmentPage = () => {
   const handleEquipmentChange = async (equipId: string, checked: boolean, equipment: Equipment) => {
     try {
       if (checked) {
-        // Check if user already has the maximum number of equipments
         if (userEquipments.length >= maxEquipments) {
           showToast({
             message: 'Cannot add any more items, inventory is full',
             type: 'warning',
             duration: 2000,
           });
-          return; // Early return to prevent adding the equipment
+          return;
         }
 
         // Proceed to add equipment if within limits
@@ -70,7 +69,7 @@ const EquipmentPage = () => {
         // Handle equipment removal
         await removeFromEquipments(equipId);
         showToast({
-          message: `${equipment.name} was removed from your equipments!`,
+          message: `${equipment.name} was removed from equipments!`,
           type: 'success',
           duration: 3000,
         });
@@ -97,11 +96,11 @@ const EquipmentPage = () => {
         <div className="black-overlay" />
         <div className="wrapper py-20 min-w-[70%] flex gap-y-32 2xl:gap-0 mt-10 items-center justify-center">
           <h1 className="header">Equipments</h1>
-          <section className="w-full h-9/10 overflow-hidden">
+          <section className="w-full h-9/10">
             <AnimatePresence initial={false} custom={direction} mode="wait">
               <motion.div
                 key={currentPage}
-                className="grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 gap-6 p-4"
+                className="grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 gap-10 p-10 w-full h-full auto-rows-fr"
                 custom={direction}
                 variants={variants}
                 initial="enter"

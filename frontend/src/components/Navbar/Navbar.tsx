@@ -277,7 +277,7 @@ const Navbar = () => {
           <li>
             <CustomButton
               text={'Log out'}
-              linkTo={''}
+              linkTo={'/'}
               className="sub-header flex items-center"
               noUnderline={true}
               isActive={location.pathname === ''}

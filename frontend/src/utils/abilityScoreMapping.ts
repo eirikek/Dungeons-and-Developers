@@ -1,10 +1,10 @@
 const abilityScoreMap: { [key: string]: number } = {
-  WISDOM: 5,
-  STRENGTH: 4,
-  INTELLIGENCE: 3,
-  DEXTERITY: 2,
-  CONSTITUTION: 1,
-  CHARISMA: 0,
+  Wisdom: 5,
+  Strength: 4,
+  Intelligence: 3,
+  Dexterity: 2,
+  Constitution: 1,
+  Charisma: 0,
 };
 
 export default abilityScoreMap;

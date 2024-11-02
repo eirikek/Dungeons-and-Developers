@@ -24,9 +24,13 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps> = ({ name, skills = [] }
     }
   }, [data]);
 
-  const index = abilityScoreMap[name.toUpperCase() as keyof typeof abilityScoreMap];
+  const index = abilityScoreMap[name as keyof typeof abilityScoreMap];
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const handleCounterChange = async (newValue: number) => {
+    if (isUpdating) return;
+    setIsUpdating(true);
+
     const updatedScores = [...scores];
     updatedScores[index] = newValue;
     setScores(updatedScores);
@@ -35,6 +39,8 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps> = ({ name, skills = [] }
       await updateAbilityScores({ variables: { userId, scores: updatedScores } });
     } catch (error) {
       console.error('Error updating ability scores:', error);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
