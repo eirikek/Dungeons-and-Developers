@@ -42,6 +42,7 @@ An application to explore the various functionalities and mechanics of the popul
 
 ## Run Locally
 Clone the project
+Link: http://it2810-20.idi.ntnu.no/project2
 
 ```bash
   git clone https://git.ntnu.no/IT2810-H24/T20-Project-2
