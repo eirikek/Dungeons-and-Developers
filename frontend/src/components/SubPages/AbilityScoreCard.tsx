@@ -1,68 +1,14 @@
-import React, { useContext, useEffect, useState, useCallback } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import Counter from '../Counter/Counter.tsx';
 import AbilityScoreCardProps from '../../interfaces/AbilityScoreProps.ts';
-import { useMutation, useQuery } from '@apollo/client';
-import { GET_ARRAY_SCORES, UPDATE_ABILITY_SCORES } from '../../../../backend/src/graphql/queries.ts';
-import { AuthContext } from '../../context/AuthContext.tsx';
-import abilityScoreMap from '../../utils/abilityScoreMapping.ts';
-import { useToast } from '../../hooks/useToast.ts';
 
-const AbilityScoreCard: React.FC<AbilityScoreCardProps> = ({ name, skills = [] }) => {
-  const { userId } = useContext(AuthContext);
-  const { showToast } = useToast();
-  const { data, loading, error } = useQuery(GET_ARRAY_SCORES, {
-    variables: { userId },
-    fetchPolicy: 'network-only',
-  });
-
-  const [updateAbilityScores] = useMutation(UPDATE_ABILITY_SCORES);
-  const [scores, setScores] = useState<number[]>(data?.abilityScores || Array(6).fill(0));
-  const index = abilityScoreMap[name as keyof typeof abilityScoreMap];
-  const [localValue, setLocalValue] = useState(scores[index]);
-  const [hasInteracted, setHasInteracted] = useState(false);
-
-  useEffect(() => {
-    if (data && data.getArrayScores) {
-      setScores(data.getArrayScores);
-      setLocalValue(data.getArrayScores[index]);
-    }
-  }, [data, index]);
-
-  const handleUpdateScore = useCallback(() => {
-    const updatedScores = [...scores];
-    updatedScores[index] = localValue;
-    updateAbilityScores({ variables: { userId, scores: updatedScores } })
-      .then(() => {
-        showToast({
-          message: `Value for ${name} changed to ${localValue}`,
-          type: 'success',
-          duration: 3000,
-        });
-      })
-      .catch((error) => {
-        console.error('Error updating ability scores:', error);
-      });
-  }, [userId, scores, index, localValue, name, showToast, updateAbilityScores]);
-
-  useEffect(() => {
-    if (!hasInteracted) return;
-
-    const timer = setTimeout(() => {
-      handleUpdateScore();
-    }, 150);
-
-    return () => clearTimeout(timer);
-  }, [localValue, handleUpdateScore, hasInteracted]);
-
-  const handleCounterChange = (newValue: number) => {
-    setLocalValue(newValue);
-    setHasInteracted(true);
-  };
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error loading ability scores.</div>;
-
+const AbilityScoreCard: React.FC<AbilityScoreCardProps & { score: number; onChange: (value: number) => void }> = ({
+  name,
+  skills = [],
+  score,
+  onChange,
+}) => {
   return (
     <motion.section
       className="flex flex-col xl:flex-row xl:h-[400px] 2xl:h-[350px] w-full justify-between items-center p-8 xl:p-12 rounded-lg bg-black bg-opacity-90 gap-16"
@@ -77,17 +23,13 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps> = ({ name, skills = [] }
     >
       <div className="flex items-center gap-16 xl:flex-row flex-col">
         <h2 className="sub-header">{name}</h2>
-        <Counter
-          value={localValue}
-          onChange={handleCounterChange} // Immediate update for local value
-          scale={1.5}
-        />
+        <Counter value={score} onChange={onChange} scale={1.5} />
       </div>
 
       <ul className="w-full justify-start xl:w-auto xl:justify-center xl:min-w-[15vw] 2xl:min-w-[10vw] text-center xl:text-left">
         <li className="bold text">Skills required:</li>
-        {skills.map((skill, index) => (
-          <li key={index} className="text">
+        {skills.map((skill, skillIndex) => (
+          <li key={skillIndex} className="text">
             {skill}
           </li>
         ))}

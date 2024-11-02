@@ -1,6 +1,6 @@
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
-import abilityScoreMap from '../../utils/abilityScoreMapping.ts';
+import abilityScoreMap, { notifyScoreChanges } from '../../utils/abilityScoreMapping.ts';
 import TutorialModal from '../../components/MyCharacter/TutorialModal.tsx';
 import useUserEquipments from '../../hooks/useUserEquipments.ts';
 import { useMutation, useQuery } from '@apollo/client';
@@ -85,26 +85,12 @@ const MyCharacterPage = () => {
     setHasInteractedScores(true);
   };
 
-  // Debounced update to the database
   const handleUpdateScores = useCallback(() => {
     if (!hasInteractedScores || !initialized) return;
 
     updateAbilityScores({ variables: { userId, scores: localScores } })
       .then(() => {
-        localScores.forEach((newScore, index) => {
-          if (newScore !== scores[index]) {
-            const abilityName = Object.keys(abilityScoreMap).find((key) => abilityScoreMap[key] === index);
-            if (abilityName) {
-              showToast({
-                message: `Value for ${abilityName} changed to ${newScore}`,
-                type: 'success',
-                duration: 3000,
-              });
-            }
-          }
-        });
-
-        setScores(localScores);
+        notifyScoreChanges(localScores, scores, setScores, showToast); // Use notifyScoreChanges function here
       })
       .catch((error) => console.error('Error updating ability scores:', error));
   }, [userId, localScores, scores, initialized, hasInteractedScores, updateAbilityScores, showToast]);
