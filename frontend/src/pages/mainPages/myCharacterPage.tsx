@@ -107,14 +107,14 @@ const MyCharacterPage = () => {
         setScores(localScores);
       })
       .catch((error) => console.error('Error updating ability scores:', error));
-  }, [userId, localScores, scores, hasInteractedScores, updateAbilityScores, showToast]);
+  }, [userId, localScores, scores, initialized, hasInteractedScores, updateAbilityScores, showToast]);
 
   useEffect(() => {
     if (hasInteractedScores) {
       const timer = setTimeout(() => {
         handleUpdateScores();
         setHasInteractedScores(false);
-      }, 150);
+      }, 100);
 
       return () => clearTimeout(timer);
     }
@@ -136,6 +136,11 @@ const MyCharacterPage = () => {
     try {
       await updateMutation({
         variables: { userId, [`${type}Id`]: newItem.id },
+      });
+      showToast({
+        message: `${toastType} changed to ${newItem.name}`,
+        type: 'success',
+        duration: 3000,
       });
     } catch (error) {
       console.error(`Error updating ${toastType.toLowerCase()}:`, error);
