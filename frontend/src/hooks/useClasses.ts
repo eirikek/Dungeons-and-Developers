@@ -13,10 +13,6 @@ function useClass(currentPage: number, classesPerPage: number) {
     fetchPolicy: 'network-only',
   });
 
-
-  console.log('Data from server: ', data);
-  //console.log(data);
-
   const transformedClasses = useMemo(() => {
     if (!data || !data.classes) return [];
     return data.classes.classes.map((classs) => ({

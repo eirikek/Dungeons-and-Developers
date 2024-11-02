@@ -110,7 +110,7 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
   const undoRemoveMonster = async () => {
     if (undoRemoveRef.current) {
       const monster = undoRemoveRef.current;
-      undoRemoveRef.current = null; // Clear undo reference after restoration
+      undoRemoveRef.current = null;
       await addFavoriteMonster({ variables: { userId, monsterId: monster.id } });
       setDungeonMonsters((prev) => [...prev, monster]);
       showToast({

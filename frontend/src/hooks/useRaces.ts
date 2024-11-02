@@ -16,7 +16,6 @@ function useRaces(currentPage: number, racesPerPage: number) {
   if (error) {
     console.error('GraphQL Error:', error);
   }
-  console.log('Data from server: ', data);
 
   const transformedRaces = useMemo(() => {
     if (!data || !data.races) return [];

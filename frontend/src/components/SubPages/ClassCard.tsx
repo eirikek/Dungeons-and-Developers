@@ -27,7 +27,7 @@ const ClassCard: React.FC<ClassCardProps> = ({ id, name, hit_die, index, skills 
       })
         .then((response) => {
           showToast({
-            message: `Race changed to ${name}`,
+            message: `Class changed to ${name}`,
             type: 'success',
             duration: 3000,
           });

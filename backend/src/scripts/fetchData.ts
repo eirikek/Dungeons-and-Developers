@@ -75,7 +75,7 @@ async function fetchClasses() {
 
     if (!inDB) {
       const proficiencyChoices = classDetails.data.proficiency_choices?.find(
-        (choice: any) => choice.type === 'proficiencies',
+        (choice: any) => choice.type === 'proficiencies'
       );
 
       const skills = proficiencyChoices
@@ -99,29 +99,20 @@ async function fetchAbilityScores() {
     const { data } = await axios.get(urls.abilities);
     const abilities = data.results;
 
-
     for (const ability of abilities) {
       const abilityDetails = await axios.get(`${urls.abilities}/${ability.index}`);
       const inDB = await AbilityScore.findOne({ index: abilityDetails.data.index });
 
-
-
-
       if (!inDB) {
-        const skillNames = abilityDetails.data.skills.map((skill : any) => skill.name);
+        const skillNames = abilityDetails.data.skills ? abilityDetails.data.skills.map((skill: any) => skill.name) : [];
         const abilityDocument = new AbilityScore({
           index: abilityDetails.data.index,
-          name: abilityDetails.data.name,
-          //desc: Array.isArray(abilityDetails.data.desc) ? abilityDetails.data.desc : [],
-          skills: skillNames
+          name: abilityDetails.data.full_name,
+          skills: skillNames,
         });
 
         await abilityDocument.save();
-        console.log(`ability saved: ${skillNames}`);
-
-
       }
-
     }
 
     console.log('All abilities saved to MongoDB!');

@@ -7,7 +7,7 @@ interface ProtectedRouteProps {
 
 function ProtectedRoute({ children }: ProtectedRouteProps) {
   const token = localStorage.getItem('token');
-  return token ? <>{children}</> : <Navigate to="/project2" />;
+  return token ? <>{children}</> : <Navigate to="/" />;
 }
 
 export default ProtectedRoute;
