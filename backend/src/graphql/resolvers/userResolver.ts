@@ -34,8 +34,6 @@ export default {
       if (!user) throw new Error('User not found');
       return user.abilityScores;
     },
-
-
   },
 
   Mutation: {
@@ -66,7 +64,15 @@ export default {
     },
 
     async loginUser(_: any, { userName }: UserArgs) {
-      const user = await User.findOne({ userName }).populate('race').populate('class').populate('favoritedMonsters');
+      const user = await User.findOne({ userName })
+        .populate('race')
+        .populate('class')
+        .populate('favoritedMonsters')
+        .populate({
+          path: 'equipments',
+          model: 'Equipment',
+          select: 'id name category value',
+        });
       if (!user) throw new Error('User not found');
 
       const token = jwt.sign({ id: user._id, userName: user.userName }, SECRET_KEY, { expiresIn: '2h' });
@@ -161,14 +167,12 @@ export default {
 
       return user.populate('race class');
     },
-    
 
     async removeEquipmentFromCharacter(_: any, { userId, equipmentId }: { userId: string; equipmentId: string }) {
       const user = await User.findById(userId).populate('equipments');
       if (!user) throw new Error('User not found');
 
       const equipmentObjectId = new mongoose.Types.ObjectId(equipmentId);
-
 
       user.equipments = user.equipments.filter((equip) => !equip._id.equals(equipmentObjectId));
 

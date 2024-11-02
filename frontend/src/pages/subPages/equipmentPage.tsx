@@ -61,7 +61,7 @@ const EquipmentPage = () => {
         // Proceed to add equipment if within limits
         await addToEquipments(equipId);
         showToast({
-          message: `${equipment.name} was added to your equipments!`,
+          message: `${equipment.name} was added to your equipments`,
           type: 'success',
           duration: 3000,
         });
@@ -69,7 +69,7 @@ const EquipmentPage = () => {
         // Handle equipment removal
         await removeFromEquipments(equipId);
         showToast({
-          message: `${equipment.name} was removed from equipments!`,
+          message: `${equipment.name} was removed from equipments`,
           type: 'success',
           duration: 3000,
         });

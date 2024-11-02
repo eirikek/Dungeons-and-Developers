@@ -37,6 +37,7 @@ const MyCharacterPage = () => {
   const [classIndex, setClassIndex] = useState(0);
   const [classImageLoaded, setClassImageLoaded] = useState(false);
   const [hasInteractedScores, setHasInteractedScores] = useState(false);
+  const [initialized, setInitialized] = useState(false);
 
   const { data, loading } = useQuery(GET_ARRAY_SCORES, {
     variables: { userId },
@@ -58,6 +59,8 @@ const MyCharacterPage = () => {
   useEffect(() => {
     if (data && data.getArrayScores) {
       setLocalScores(data.getArrayScores);
+      setScores(data.getArrayScores);
+      setInitialized(true);
     }
   }, [data]);
 
@@ -84,7 +87,7 @@ const MyCharacterPage = () => {
 
   // Debounced update to the database
   const handleUpdateScores = useCallback(() => {
-    if (!hasInteractedScores) return;
+    if (!hasInteractedScores || !initialized) return;
 
     updateAbilityScores({ variables: { userId, scores: localScores } })
       .then(() => {
@@ -233,7 +236,7 @@ const MyCharacterPage = () => {
               {loading && <div>Loading equipments...</div>}
               {userEquipments.length < 1 && (
                 <div className="flex items-center justify-center h-full w-full col-span-full text-center">
-                  <p className="sub-header">No equipments selected</p>
+                  <p className="sub-header">No equipments added</p>
                 </div>
               )}
               {userEquipments.map((equipment, index) => (
