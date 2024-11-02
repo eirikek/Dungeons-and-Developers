@@ -188,6 +188,20 @@ export const REMOVE_EQUIPMENT_FROM_CHARACTER = gql`
   }
 `;
 
+export const REMOVE_ALL_EQUIPMENTS = gql`
+  mutation RemoveAllEquipments($userId: ID!) {
+    removeAllEquipments(userId: $userId) {
+      id
+      equipments {
+        id
+        name
+        category
+        value
+      }
+    }
+  }
+`;
+
 export const CREATE_USER = gql`
   mutation createUser($userName: String!) {
     createUser(userName: $userName) {

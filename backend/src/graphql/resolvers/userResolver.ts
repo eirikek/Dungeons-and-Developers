@@ -179,5 +179,16 @@ export default {
       await user.save();
       return user.populate('equipments');
     },
+
+    async removeAllEquipments(_: any, { userId }: { userId: string }) {
+      const user = await User.findById(userId).populate('equipments');
+      if (!user) throw new Error('User not found');
+
+      const removedEquipments = user.equipments;
+      user.equipments = [];
+      await user.save();
+      
+      return user.populate('equipments');
+    },
   },
 };
