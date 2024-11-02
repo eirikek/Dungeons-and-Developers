@@ -13,7 +13,7 @@ import {
   UPDATE_USER_CLASS,
   UPDATE_USER_RACE,
 } from '../../../../backend/src/graphql/queries.ts';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import useClasses from '../../hooks/useClasses.ts';
 import Counter from '../../components/Counter/Counter.tsx';
@@ -36,12 +36,14 @@ const MyCharacterPage = () => {
   const { classes: classData } = useClasses(currentPage, classesPerPage);
   const [classIndex, setClassIndex] = useState(0);
   const [classImageLoaded, setClassImageLoaded] = useState(false);
+  const [hasInteractedScores, setHasInteractedScores] = useState(false);
 
   const { data, loading } = useQuery(GET_ARRAY_SCORES, {
     variables: { userId },
     fetchPolicy: 'network-only',
   });
   const [updateAbilityScores] = useMutation(UPDATE_ABILITY_SCORES);
+  const [localScores, setLocalScores] = useState<number[]>(Array(6).fill(0));
   const [scores, setScores] = useState<number[]>(Array(6).fill(0));
 
   const { data: userRaceData } = useQuery(GET_USER_RACE, {
@@ -51,12 +53,11 @@ const MyCharacterPage = () => {
   const { races: raceData } = useRaces(currentPage, classesPerPage);
   const [raceImageLoaded, setRaceImageLoaded] = useState(false);
   const [raceIndex, setRaceIndex] = useState(0);
-
   const [updateUserRace] = useMutation(UPDATE_USER_RACE);
 
   useEffect(() => {
     if (data && data.getArrayScores) {
-      setScores(data.getArrayScores);
+      setLocalScores(data.getArrayScores);
     }
   }, [data]);
 
@@ -74,17 +75,47 @@ const MyCharacterPage = () => {
     }
   }, [userRaceData, raceData]);
 
-  const handleCounterChange = async (index: number, newValue: number) => {
-    const updatedScores = [...scores];
-    updatedScores[index] = newValue;
-    setScores(updatedScores);
-
-    try {
-      await updateAbilityScores({ variables: { userId, scores: updatedScores } });
-    } catch (error) {
-      console.error('Error updating ability scores:', error);
-    }
+  const handleCounterChange = (index: number, newValue: number) => {
+    const updatedLocalScores = [...localScores];
+    updatedLocalScores[index] = newValue;
+    setLocalScores(updatedLocalScores);
+    setHasInteractedScores(true);
   };
+
+  // Debounced update to the database
+  const handleUpdateScores = useCallback(() => {
+    if (!hasInteractedScores) return;
+
+    updateAbilityScores({ variables: { userId, scores: localScores } })
+      .then(() => {
+        localScores.forEach((newScore, index) => {
+          if (newScore !== scores[index]) {
+            const abilityName = Object.keys(abilityScoreMap).find((key) => abilityScoreMap[key] === index);
+            if (abilityName) {
+              showToast({
+                message: `Value for ${abilityName} changed to ${newScore}`,
+                type: 'success',
+                duration: 3000,
+              });
+            }
+          }
+        });
+
+        setScores(localScores);
+      })
+      .catch((error) => console.error('Error updating ability scores:', error));
+  }, [userId, localScores, scores, hasInteractedScores, updateAbilityScores, showToast]);
+
+  useEffect(() => {
+    if (hasInteractedScores) {
+      const timer = setTimeout(() => {
+        handleUpdateScores();
+        setHasInteractedScores(false);
+      }, 150);
+
+      return () => clearTimeout(timer);
+    }
+  }, [localScores, handleUpdateScores, hasInteractedScores]);
 
   const handleChange = async (type: 'race' | 'class', direction: 'next' | 'prev') => {
     const isRace = type === 'race';
@@ -98,8 +129,6 @@ const MyCharacterPage = () => {
 
     setIndex(newIndex);
     const newItem = data[newIndex];
-
-    showToast({ message: `${toastType} changed to ${newItem.name}`, type: 'success' });
 
     try {
       await updateMutation({
@@ -115,6 +144,7 @@ const MyCharacterPage = () => {
 
   const currentRace = raceData[raceIndex];
   const currentRaceImage = currentRace ? raceImageMapping[currentRace.index] : '';
+
   return (
     <MainPageLayout>
       <main className="main before:bg-myCharacter">
@@ -188,15 +218,8 @@ const MyCharacterPage = () => {
                   <label className="sub-header w-32 mr-[85px]">{key}:</label>
                   <Counter
                     scale={1.5}
-                    value={scores[abilityScoreMap[key]]}
+                    value={localScores[abilityScoreMap[key]]}
                     onChange={(newValue) => handleCounterChange(abilityScoreMap[key], newValue)}
-                    onMouseUp={() => {
-                      showToast({
-                        message: `Value for ${key} changed to ${scores[abilityScoreMap[key]]}`,
-                        type: 'success',
-                        duration: 3000,
-                      });
-                    }}
                   />
                 </div>
               ))}
