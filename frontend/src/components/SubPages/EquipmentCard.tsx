@@ -1,8 +1,12 @@
 import { EquipmentCardProps } from '../../interfaces/EquipmentProps.ts';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
 
-const EquipmentCard = ({ equipment, isChecked, onChange, disabled }: EquipmentCardProps) => {
+const EquipmentCard = ({ equipment, isChecked, onChange, disabled, onDisabledClick }: EquipmentCardProps) => {
   const handleCheckboxChange = (checked: boolean) => {
+    if (disabled) {
+      onDisabledClick?.();
+      return;
+    }
     onChange(equipment.id, checked, equipment);
   };
 
@@ -15,7 +19,8 @@ const EquipmentCard = ({ equipment, isChecked, onChange, disabled }: EquipmentCa
           scale={1.5}
           checked={isChecked}
           onChange={handleCheckboxChange}
-          disabled={disabled && !isChecked}
+          disabled={disabled}
+          onDisabledClick={onDisabledClick}
         />
       </section>
     </>

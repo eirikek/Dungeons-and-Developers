@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import Pagination from '../../components/Pagination/Pagination.tsx';
 import EquipmentCard from '../../components/SubPages/EquipmentCard.tsx';
@@ -28,6 +28,7 @@ const EquipmentPage = () => {
   const { userId } = useContext(AuthContext);
   const { showToast } = useToast();
   const { userEquipments, loading, addToEquipments, removeFromEquipments } = useUserEquipments();
+  const undoRemoveRef = useRef<Equipment | null>(null);
 
   const [direction, setDirection] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,7 +46,19 @@ const EquipmentPage = () => {
     setEquipments(fetchedEquipments);
   }, [currentPage, fetchedEquipments]);
 
-  // chatgpt prompt line 111 to 145
+  const undoRemoveEquipment = async () => {
+    if (undoRemoveRef.current) {
+      const equipment = undoRemoveRef.current;
+      undoRemoveRef.current = null;
+      await addToEquipments(equipment.id);
+      showToast({
+        message: `${equipment.name} restored to equipments`,
+        type: 'success',
+        duration: 3000,
+      });
+    }
+  };
+
   const handleEquipmentChange = async (equipId: string, checked: boolean, equipment: Equipment) => {
     try {
       if (checked) {
@@ -58,7 +71,6 @@ const EquipmentPage = () => {
           return;
         }
 
-        // Proceed to add equipment if within limits
         await addToEquipments(equipId);
         showToast({
           message: `${equipment.name} was added to your equipments`,
@@ -66,12 +78,13 @@ const EquipmentPage = () => {
           duration: 3000,
         });
       } else {
-        // Handle equipment removal
         await removeFromEquipments(equipId);
+        undoRemoveRef.current = equipment;
         showToast({
-          message: `${equipment.name} was removed from equipments`,
-          type: 'success',
-          duration: 3000,
+          message: `${equipment.name} removed from equipments`,
+          type: 'info',
+          duration: 5000,
+          undoAction: undoRemoveEquipment,
         });
       }
     } catch (error) {
@@ -109,14 +122,24 @@ const EquipmentPage = () => {
                 transition={{ duration: 0.3 }}
               >
                 {equipments.map((equipment, index) => {
+                  const isChecked = userEquipments.some((userEquip) => userEquip.id === equipment.id);
+                  const isDisabled = userEquipments.length >= maxEquipments && !isChecked;
+
                   return (
                     <EquipmentCard
                       key={index}
-                      equipment={equipment}
-                      isChecked={userEquipments.some((userEquip) => userEquip.id === equipment.id)}
                       userId={userId}
+                      equipment={equipment}
+                      isChecked={isChecked}
                       onChange={handleEquipmentChange}
-                      disabled={userEquipments.length >= maxEquipments}
+                      disabled={isDisabled}
+                      onDisabledClick={() => {
+                        showToast({
+                          message: 'Cannot add any more items, inventory is full',
+                          type: 'warning',
+                          duration: 2000,
+                        });
+                      }}
                     />
                   );
                 })}
