@@ -78,7 +78,8 @@ export default function LoginPage() {
       login({ token, userId: user.id, userName: user.userName });
       window.location.href = '/project2/home';
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('Error logging in:', error);
       setShakeInput(true);
       showToast({
         message: `No user found with username: ${logInUsername}`,

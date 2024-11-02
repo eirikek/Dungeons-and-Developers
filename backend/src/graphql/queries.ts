@@ -1,20 +1,20 @@
 import { gql } from '@apollo/client';
 
 export const GET_MONSTERS = gql`
-    query GetMonsters($searchTerm: String, $offset: Int, $limit: Int, $types: [String!]) {
-        monsters(searchTerm: $searchTerm, offset: $offset, limit: $limit, types: $types) {
-            monsters {
-                id
-                name
-                size
-                type
-                alignment
-                hit_points
-                image
-            }
-            totalMonsters
-        }
+  query GetMonsters($searchTerm: String, $offset: Int, $limit: Int, $types: [String!]) {
+    monsters(searchTerm: $searchTerm, offset: $offset, limit: $limit, types: $types) {
+      monsters {
+        id
+        name
+        size
+        type
+        alignment
+        hit_points
+        image
+      }
+      totalMonsters
     }
+  }
 `;
 
 export const GET_USER_DUNGEON = gql`
@@ -138,9 +138,9 @@ export const UPDATE_REVIEW = gql`
 `;
 
 export const CHECK_USERNAME = gql`
-    query checkUsername($userName: String!) {
-        checkUsername(userName: $userName)
-    }
+  query checkUsername($userName: String!) {
+    checkUsername(userName: $userName)
+  }
 `;
 
 export const GET_USER_EQUIPMENT = gql`
@@ -188,164 +188,176 @@ export const REMOVE_EQUIPMENT_FROM_CHARACTER = gql`
   }
 `;
 
+export const REMOVE_ALL_EQUIPMENTS = gql`
+  mutation RemoveAllEquipments($userId: ID!) {
+    removeAllEquipments(userId: $userId) {
+      id
+      equipments {
+        id
+        name
+        category
+        value
+      }
+    }
+  }
+`;
+
 export const CREATE_USER = gql`
-    mutation createUser($userName: String!) {
-        createUser(userName: $userName) {
-            token
-            user {
-                id
-                userName
-                class {
-                    name
-                }
-                race {
-                    name
-                }
-                abilityScores
-                equipments {
-                    name
-                }
-            }
+  mutation createUser($userName: String!) {
+    createUser(userName: $userName) {
+      token
+      user {
+        id
+        userName
+        class {
+          name
+        }
+        race {
+          name
+        }
+        abilityScores
+        equipments {
+          name
+        }
+      }
     }
   }
 `;
 
 export const LOGIN_USER = gql`
-    mutation loginUser($userName: String!) {
-        loginUser(userName: $userName) {
-            token
-            user {
-                id
-                userName
-                class {
-                    name
-                }
-                race {
-                    name
-                }
-                abilityScores
-                equipments {
-                    name
-                }
-            }
+  mutation loginUser($userName: String!) {
+    loginUser(userName: $userName) {
+      token
+      user {
+        id
+        userName
+        class {
+          name
+        }
+        race {
+          name
+        }
+        abilityScores
+        equipments {
+          name
+        }
+      }
     }
   }
 `;
 export const UPDATE_USER_CLASS = gql`
-    mutation UpdateUserClass($userId: ID!, $classId:ID!){
-        updateUserClass(userId:$userId, classId: $classId){
-            id
-            class{
-                name
-                index
-                hit_die
-            }
-        }
+  mutation UpdateUserClass($userId: ID!, $classId: ID!) {
+    updateUserClass(userId: $userId, classId: $classId) {
+      id
+      class {
+        name
+        index
+        hit_die
+      }
     }
+  }
 `;
 
 export const UPDATE_ABILITY_SCORES = gql`
-    mutation UpdateAbilityScores($userId: ID!, $scores: [Int!]!) {
-        updateAbilityScores(userId: $userId, scores: $scores) {
-            id
-            abilityScores
-        }
+  mutation UpdateAbilityScores($userId: ID!, $scores: [Int!]!) {
+    updateAbilityScores(userId: $userId, scores: $scores) {
+      id
+      abilityScores
     }
+  }
 `;
-
-
 
 export const GET_USER_CLASS = gql`
-    query GetUserClass($userId: ID!) {
-        user(id: $userId) {
-            class {
-                id
-                name
-                index
-                hit_die
-            }
-        }
+  query GetUserClass($userId: ID!) {
+    user(id: $userId) {
+      class {
+        id
+        name
+        index
+        hit_die
+      }
     }
+  }
 `;
-//Chatgpt prompt from line 225-230
+
 export const GET_ARRAY_SCORES = gql`
-    query GetArrayScores($userId: ID!) {
-        getArrayScores(userId: $userId)
-    }
+  query GetArrayScores($userId: ID!) {
+    getArrayScores(userId: $userId)
+  }
 `;
 
 export const UPDATE_USER_RACE = gql`
-    mutation UpdateUserRace($userId: ID!, $raceId: ID!) {
-        updateUserRace(userId: $userId, raceId: $raceId) {
-            id
-            race {
-                name
-                speed
-                alignment
-                size
-                img
-            }
-        }
+  mutation UpdateUserRace($userId: ID!, $raceId: ID!) {
+    updateUserRace(userId: $userId, raceId: $raceId) {
+      id
+      race {
+        name
+        speed
+        alignment
+        size
+        img
+      }
     }
+  }
 `;
 
 export const GET_RACES = gql`
-    query GetRaces($offset: Int, $limit: Int) {
-        races(offset: $offset, limit: $limit) {
-            races {
-                id
-                index
-                name
-                speed
-                alignment
-                size
-                img
-            }
-            totalRaces
-        }
+  query GetRaces($offset: Int, $limit: Int) {
+    races(offset: $offset, limit: $limit) {
+      races {
+        id
+        index
+        name
+        speed
+        alignment
+        size
+        img
+      }
+      totalRaces
     }
+  }
 `;
 
 export const GET_USER_RACE = gql`
-    query GetUserRace($userId: ID!) {
-        user(id: $userId) {
-            id
-            race {
-                id
-                name
-                speed
-                alignment
-                size
-                img
-            }
-        }
+  query GetUserRace($userId: ID!) {
+    user(id: $userId) {
+      id
+      race {
+        id
+        name
+        speed
+        alignment
+        size
+        img
+      }
     }
+  }
 `;
 
 export const GET_ABILITYSCORES = gql`
-    query GetAbilityScores($offset: Int, $limit: Int) {
-        abilities(offset: $offset, limit: $limit) {
-            abilities {
-                index
-                name
-                skills               
-            }
-            totalAbilities
-        }
+  query GetAbilityScores($offset: Int, $limit: Int) {
+    abilities(offset: $offset, limit: $limit) {
+      abilities {
+        index
+        name
+        skills
+      }
+      totalAbilities
     }
+  }
 `;
 
 export const GET_CLASSES = gql`
-    query GetClasses($offset: Int, $limit: Int) {
-        classes(offset: $offset, limit: $limit) {
-            classes {
-                id
-                index
-                name
-                hit_die
-                skills
-            }
-            totalClasses
-        }
+  query GetClasses($offset: Int, $limit: Int) {
+    classes(offset: $offset, limit: $limit) {
+      classes {
+        id
+        index
+        name
+        hit_die
+        skills
+      }
+      totalClasses
     }
+  }
 `;

@@ -12,7 +12,10 @@ function useAbilityScores(currentPage: number, abilitiesPerPage: number) {
     variables: { offset, limit: abilitiesPerPage },
     fetchPolicy: 'network-only',
   });
-  console.log('GraphQL Response:', data);
+
+  console.log('GraphQL Data:', data);
+  console.log('Loading:', loading);
+  console.log('Error:', error);
 
   const transformedAbilities = useMemo(() => {
     if (!data || !data.abilities) return [];
