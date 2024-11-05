@@ -65,6 +65,7 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
         onMouseLeave={clearTimer}
         onTouchStart={startIncrement}
         onTouchEnd={clearTimer}
+        aria-label="Increment"
       >
         <FaChevronUp size={22} />
       </button>
@@ -80,6 +81,7 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
         onMouseLeave={clearTimer}
         onTouchStart={startDecrement}
         onTouchEnd={clearTimer}
+        aria-label="Decrement"
       >
         <FaChevronDown size={22} />
       </button>

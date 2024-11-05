@@ -71,13 +71,15 @@ const MonsterCard = ({ id, name, type, hp, alignment, size, img }: MonsterCardPr
                 style={{ display: imageLoaded ? 'block' : 'none' }}
               />
               <div className="absolute left-[75%] top-5">
-                <DungeonButton onAddToDungeonClick={handleToggleDungeon} isInDungeon={isInDungeon(id)} />
+                <DungeonButton
+                  onAddToDungeonClick={handleToggleDungeon}
+                  isInDungeon={isInDungeon(id)}
+                  aria-label="Click to add to dungeon"
+                />
               </div>
             </div>
           )}
           {!imageLoaded && <div className="flex justify-center w-full py-24">Loading image...</div>}
-
-
         </div>
         <div className="flex flex-col gap-1 w-full p-3">
           <h2 className="text-5xl md:text-3xl lg:text-2xl xl:text-xl 2xl:text-lg bold">{name}</h2>
@@ -88,11 +90,15 @@ const MonsterCard = ({ id, name, type, hp, alignment, size, img }: MonsterCardPr
             <div onClick={(e) => e.stopPropagation()}>
               <MonsterReviewModal monsterId={id} name={name} image={monsterImageURL} />
             </div>
-            <button onClick={(e) => {
-              e.stopPropagation();
-              handleToggleDungeon();
-            }}
-                    className="text-4xl md:text-2xl xl:text-lg 2xl:text-sm hover:text-customRed transition-all duration-200">{isInDungeon(id) ? 'Remove from dungeon' : 'Add to dungeon'}</button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggleDungeon();
+              }}
+              className="text-4xl md:text-2xl xl:text-lg 2xl:text-sm hover:text-customRed transition-all duration-200"
+            >
+              {isInDungeon(id) ? 'Remove from dungeon' : 'Add to dungeon'}
+            </button>
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@ import { MonsterCardProps } from '../interfaces/MonsterCardProps.ts';
 import MonsterDataProps from '../interfaces/MonsterDataProps.ts';
 import { useToast } from '../hooks/useToast.ts';
 
-interface DungeonContextType {
+export interface DungeonContextType {
   dungeonMonsters: MonsterCardProps[];
   toggleDungeon: (monster: MonsterCardProps) => void;
   isInDungeon: (monsterIndex: string) => boolean;
