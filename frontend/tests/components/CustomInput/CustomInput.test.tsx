@@ -10,7 +10,7 @@ describe('CustomInput Component', () => {
 
   it('renders correctly in view mode', () => {
     render(<CustomInput placeholder={placeholder} inputName={inputName} value={initialValue} onSave={onSaveMock} />);
-    expect(screen.getByTestId('dungeon name')).toHaveTextContent(initialValue);
+    expect(screen.getByTestId('dungeon-name')).toHaveTextContent(initialValue);
     expect(screen.getByRole('button', { name: `Edit ${inputName}` })).toBeInTheDocument();
   });
 

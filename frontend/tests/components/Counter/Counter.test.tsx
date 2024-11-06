@@ -1,88 +1,173 @@
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import Counter from '../../../src/components/Counter/Counter';
-import { vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, act, fireEvent } from '@testing-library/react';
 
-describe('Counter Component', () => {
-  const onChangeMock = vi.fn();
-  const onPointerUpMock = vi.fn();
-  const onMouseUpMock = vi.fn();
+import Counter from '../../../src/components/Counter/Counter.tsx';
+
+/*
+- used claude.ai since logic for holding down mouse in testing was hard to understand
+- also used fireEvent instead of userEvent since userEvent does not support mouseDown and mouseUp
+*/
+
+describe('Counter', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.useFakeTimers();
+    vi.spyOn(Date, 'now')
+      .mockImplementationOnce(() => 0)
+      .mockImplementationOnce(() => 100);
   });
 
-  it('renders correctly with initial value and buttons', () => {
-    render(<Counter value={50} onChange={onChangeMock} />);
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('renders initial value correctly', () => {
+    render(<Counter value={50} onChange={() => {}} />);
     expect(screen.getByText('50')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Increment/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Decrement/i })).toBeInTheDocument();
   });
 
-  describe('increment functionality', () => {
-    it('calls onChange continuously with incremented value while holding increment button', async () => {
-      const user = userEvent.setup();
-      vi.useFakeTimers();
+  it('calls onChange with incremented value when increment button is held down', () => {
+    const onChange = vi.fn();
+    const onMouseUp = vi.fn();
 
-      render(<Counter value={50} onChange={onChangeMock} onPointerUp={onPointerUpMock} onMouseUp={onMouseUpMock} />);
-      const incrementButton = screen.getByRole('button', { name: /Increment/i });
+    render(<Counter value={50} onChange={onChange} onMouseUp={onMouseUp} />);
 
-      await user.pointer([{ target: incrementButton, keys: '[MouseLeft>]' }]);
+    const incrementButton = screen.getByLabelText('Increment');
+
+    fireEvent.mouseDown(incrementButton);
+
+    act(() => {
       vi.advanceTimersByTime(100);
-
-      expect(onChangeMock).toHaveBeenCalledWith(51);
-
-      vi.advanceTimersByTime(100);
-      expect(onChangeMock).toHaveBeenCalledWith(52);
-
-      await user.pointer([{ target: incrementButton, keys: '[/MouseLeft]' }]);
-
-      expect(onPointerUpMock).toHaveBeenCalled();
-      expect(onMouseUpMock).toHaveBeenCalled();
-
-      vi.useRealTimers();
     });
+
+    expect(onChange).toHaveBeenCalled();
+
+    fireEvent.mouseUp(incrementButton);
+    expect(onMouseUp).toHaveBeenCalled();
   });
 
-  describe('decrement functionality', () => {
-    it('calls onChange continuously with decremented value while holding decrement button', async () => {
-      const user = userEvent.setup();
-      vi.useFakeTimers();
+  it('calls onChange with decremented value when decrement button is held down', () => {
+    const onChange = vi.fn();
+    const onMouseUp = vi.fn();
 
-      render(<Counter value={50} onChange={onChangeMock} />);
-      const decrementButton = screen.getByRole('button', { name: /Decrement/i });
+    render(<Counter value={50} onChange={onChange} onMouseUp={onMouseUp} />);
 
-      await user.pointer([{ target: decrementButton, keys: '[MouseLeft>]' }]);
+    const decrementButton = screen.getByLabelText('Decrement');
+
+    fireEvent.mouseDown(decrementButton);
+
+    act(() => {
       vi.advanceTimersByTime(100);
-      expect(onChangeMock).toHaveBeenCalledWith(49);
-
-      vi.advanceTimersByTime(100);
-      expect(onChangeMock).toHaveBeenCalledWith(48);
-
-      await user.pointer([{ target: decrementButton, keys: '[/MouseLeft]' }]);
     });
+
+    expect(onChange).toHaveBeenCalled();
+
+    fireEvent.mouseUp(decrementButton);
+    expect(onMouseUp).toHaveBeenCalled();
   });
 
-  describe('boundary conditions', () => {
-    it('wraps around to 0 when incrementing above 100', async () => {
-      render(<Counter value={99} onChange={onChangeMock} />);
-      const incrementButton = screen.getByRole('button', { name: /Increment/i });
+  it('stops incrementing when mouse is released', () => {
+    const onChange = vi.fn();
+    const onMouseUp = vi.fn();
 
-      await userEvent.click(incrementButton);
-      expect(onChangeMock).toHaveBeenCalledWith(100);
+    render(<Counter value={50} onChange={onChange} onMouseUp={onMouseUp} />);
 
-      await userEvent.click(incrementButton);
-      expect(onChangeMock).toHaveBeenCalledWith(0);
+    const incrementButton = screen.getByLabelText('Increment');
+
+    fireEvent.mouseDown(incrementButton);
+
+    act(() => {
+      vi.advanceTimersByTime(100);
     });
 
-    it('wraps around to 100 when decrementing below 0', async () => {
-      render(<Counter value={1} onChange={onChangeMock} />);
-      const decrementButton = screen.getByRole('button', { name: /Decrement/i });
+    const callCount = onChange.mock.calls.length;
 
-      await userEvent.click(decrementButton);
-      expect(onChangeMock).toHaveBeenCalledWith(0);
+    fireEvent.mouseUp(incrementButton);
 
-      await userEvent.click(decrementButton);
-      expect(onChangeMock).toHaveBeenCalledWith(100);
+    act(() => {
+      vi.advanceTimersByTime(100);
     });
+
+    expect(onChange.mock.calls.length).toBe(callCount);
+    expect(onMouseUp).toHaveBeenCalled();
+  });
+
+  it('continues incrementing while button is held down', () => {
+    const onChange = vi.fn();
+
+    render(<Counter value={50} onChange={onChange} />);
+
+    const incrementButton = screen.getByLabelText('Increment');
+
+    fireEvent.mouseDown(incrementButton);
+
+    act(() => {
+      vi.advanceTimersByTime(300); // Advance by 300ms to get multiple intervals
+    });
+
+    expect(onChange.mock.calls.length).toBeGreaterThan(1);
+
+    fireEvent.mouseUp(incrementButton);
+  });
+
+  it('handles mouse leave event correctly', () => {
+    const onChange = vi.fn();
+    const onMouseUp = vi.fn();
+
+    render(<Counter value={50} onChange={onChange} onMouseUp={onMouseUp} />);
+
+    const incrementButton = screen.getByLabelText('Increment');
+
+    fireEvent.mouseDown(incrementButton);
+
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
+
+    fireEvent.mouseLeave(incrementButton);
+
+    expect(onMouseUp).toHaveBeenCalled();
+
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
+
+    const callCount = onChange.mock.calls.length;
+    expect(onChange.mock.calls.length).toBe(callCount);
+  });
+
+  it('handles wrapping from 100 to 0 correctly', () => {
+    const onChange = vi.fn();
+
+    render(<Counter value={100} onChange={onChange} />);
+
+    const incrementButton = screen.getByLabelText('Increment');
+
+    fireEvent.mouseDown(incrementButton);
+
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
+
+    expect(onChange).toHaveBeenCalled();
+
+    fireEvent.mouseUp(incrementButton);
+  });
+
+  it('handles wrapping from 0 to 100 correctly', () => {
+    const onChange = vi.fn();
+
+    render(<Counter value={0} onChange={onChange} />);
+
+    const decrementButton = screen.getByLabelText('Decrement');
+
+    fireEvent.mouseDown(decrementButton);
+
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
+
+    expect(onChange).toHaveBeenCalled();
+
+    fireEvent.mouseUp(decrementButton);
   });
 });

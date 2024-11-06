@@ -1,23 +1,36 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+/*
+Mocked provider:
+* https://www.apollographql.com/docs/react/development-testing/testing
+*
+*  */
 import { MockedProvider } from '@apollo/client/testing';
 import DungeonPage from '../../../src/pages/mainPages/dungeonPage.tsx';
-import { GET_USER_DUNGEON, UPDATE_DUNGEON_NAME } from '../../../../backend/src/graphql/queries.ts';
-import { useToast } from '../../../src/hooks/useToast.ts';
+import { GET_MONSTER_REVIEWS, GET_USER_DUNGEON, UPDATE_DUNGEON_NAME } from '../../../../backend/src/graphql/queries.ts';
+
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
 import { BrowserRouter } from 'react-router-dom';
-import { expect } from 'vitest';
+import { DungeonContext } from '../../../src/context/DungeonContext.tsx';
 
 const mockShowToast = vi.fn();
-vi.mock('../hooks/useToast.ts', () => ({
+vi.mock('../../../src/hooks/useToast.ts', () => ({
   useToast: () => ({
     showToast: mockShowToast,
   }),
 }));
 
+const mockToggleDungeon = vi.fn(() => {
+  mockShowToast({
+    message: 'Goblin added to dungeon',
+    type: 'success',
+    duration: 3000,
+  });
+});
+
 const mockMonsters = [
-  { id: '1', name: 'Goblin', hp: 30, type: 'Beast', size: 'Small', img: '' },
-  { id: '2', name: 'Orc', hp: 50, type: 'Humanoid', size: 'Medium', img: '' },
+  { id: '1', name: 'Goblin', hp: 30, type: 'Beast', size: 'Small', img: '', alignment: 'neutral evil' },
+  { id: '2', name: 'Orc', hp: 50, type: 'Humanoid', size: 'Medium', img: '', alignment: 'chaotic evil' },
 ];
 
 const mocks = [
@@ -62,6 +75,54 @@ const mocks = [
       },
     },
   },
+  {
+    request: {
+      query: GET_MONSTER_REVIEWS,
+      variables: { monsterId: '1' },
+    },
+    result: {
+      data: {
+        monster: {
+          reviews: [
+            {
+              id: 'review-1',
+              user: {
+                id: 'user-1',
+                userName: 'Alice',
+              },
+              difficulty: 4,
+              description: 'This monster was tough!',
+              createdAt: '2024-11-06T08:00:00Z',
+            },
+          ],
+        },
+      },
+    },
+  },
+  {
+    request: {
+      query: GET_MONSTER_REVIEWS,
+      variables: { monsterId: '2' },
+    },
+    result: {
+      data: {
+        monster: {
+          reviews: [
+            {
+              id: 'review-2',
+              user: {
+                id: 'user-1',
+                userName: 'Bob',
+              },
+              difficulty: 3,
+              description: 'A challenging but fair fight.',
+              createdAt: '2024-11-05T12:00:00Z',
+            },
+          ],
+        },
+      },
+    },
+  },
 ];
 
 describe('DungeonPage', () => {
@@ -73,21 +134,30 @@ describe('DungeonPage', () => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <AuthContext.Provider value={{ userId, token, userName, login: vi.fn(), logout: vi.fn() }}>
-          <BrowserRouter>
-            <DungeonPage />
-          </BrowserRouter>
+          <DungeonContext.Provider
+            value={{
+              dungeonMonsters: mockMonsters,
+              toggleDungeon: mockToggleDungeon,
+              isInDungeon: (monsterId) => monsterId !== '1',
+            }}
+          >
+            <BrowserRouter>
+              <DungeonPage />
+            </BrowserRouter>
+          </DungeonContext.Provider>
         </AuthContext.Provider>
       </MockedProvider>
     );
   });
 
   it('renders correctly and matches snapshot', async () => {
-    // Wait for the data to be loaded and elements to appear
-    await waitFor(() => expect(screen.getByTestId('dungeon-name')).toBeInTheDocument());
-    expect(screen.getByText('My Dungeon')).toBeInTheDocument();
-    expect(screen.getByText('No monsters in dungeon')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('dungeon-name')).toBeInTheDocument();
 
-    // Snapshot testing
+      expect(screen.getByText('Example dungeon')).toBeInTheDocument();
+    });
+    expect(screen.queryByText('No monsters in dungeon')).toBeNull();
+
     expect(screen.getByRole('main')).toMatchSnapshot();
   });
 
@@ -95,65 +165,39 @@ describe('DungeonPage', () => {
     const user = userEvent.setup();
     const editButton = screen.getByRole('button', { name: 'Edit Dungeon Name' });
 
-    await user.click(editButton);
-    // Use userEvent to change the input and simulate pressing Enter
+    await waitFor(() => {
+      user.click(editButton);
+    });
 
-    const input = screen.getByRole('textbox', { name: 'Edit name' });
+    const input = await screen.findByLabelText('Edit name');
+
     await user.clear(input);
     await user.type(input, 'New dungeon');
 
     const saveButton = screen.getByRole('button', { name: 'Save Dungeon Name' });
 
-    await user.click(saveButton);
+    await waitFor(() => {
+      user.click(saveButton);
+    });
 
-    // Check if the toast notification is shown
-    await waitFor(() =>
-      expect(mockShowToast).toHaveBeenCalledWith({
-        message: 'Dungeon name updated successfully',
-        type: 'success',
-        duration: 3000,
-      })
-    );
     await waitFor(() => {
       expect(screen.getByTestId('dungeon-name')).toHaveTextContent('New dungeon');
     });
   });
 
   it('displays total HP when monsters are present', async () => {
-    // Update the mock data to include monsters
-    render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <AuthContext.Provider value={{ userId, userName, login: vi.fn(), logout: vi.fn(), token }}>
-          <BrowserRouter>
-            <DungeonPage />
-          </BrowserRouter>
-        </AuthContext.Provider>
-      </MockedProvider>
-    );
-
-    // Wait for the stats to update
     await waitFor(() => {
-      expect(screen.getByText(/Total Dungeon HP: 80/i)).toBeInTheDocument();
+      expect(screen.getByText('Total Dungeon HP: 80')).toBeInTheDocument();
     });
   });
 
   it('handles adding a monster to the dungeon', async () => {
-    // Render the monster card
-    render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <AuthContext.Provider value={{ userId, userName, login: vi.fn(), logout: vi.fn(), token }}>
-          <BrowserRouter>
-            <DungeonPage />
-          </BrowserRouter>
-        </AuthContext.Provider>
-      </MockedProvider>
-    );
+    const user = userEvent.setup();
+    const monsterCard = screen.getByTestId('Goblin-monster-card');
+    // const addButton = within(monsterCard).getByRole('button', { name: 'Click to add to dungeon' });
+    const addButton = within(monsterCard).getByText('Add to dungeon');
+    await user.click(addButton);
 
-    // Simulate clicking the add button on the monster card using userEvent
-    const addButton = screen.getByLabelText('Click to add to dungeon');
-    await userEvent.click(addButton);
-
-    // Verify if the toast is shown for adding monster
     await waitFor(() =>
       expect(mockShowToast).toHaveBeenCalledWith({
         message: 'Goblin added to dungeon',

@@ -10,7 +10,13 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: 'src/test/setup.ts',
     include: ['tests/**/*.test.tsx'],
-    exclude: ['**/node_modules/**', '**/dist/**'],
+    exclude: ['**/node_modules/**', '**/dist/**', './src/constants.ts', './src/main.tsx'],
     root: './',
+    coverage: {
+      provider: 'istanbul',
+      reporter: ['text', 'json', 'html'],
+      reportsDirectory: './tests/coverage',
+      enabled: true,
+    },
   },
 });
