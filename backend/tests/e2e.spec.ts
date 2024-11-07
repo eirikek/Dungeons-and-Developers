@@ -43,16 +43,13 @@ test.describe('Class Queries', () => {
     });
     expect(response.ok()).toBeTruthy();
     const responseData = await response.json();
-    console.log('Response Data:', responseData); // Log the entire response
+    const classes = responseData.data.classes.classes;
 
-    const singleClass = responseData.data?.class;
-
-    // Check for null response
-    expect(singleClass).not.toBeNull();
-    expect(singleClass).toHaveProperty('id', 'some-class-id');
-    expect(singleClass).toHaveProperty('name');
-    expect(singleClass).toHaveProperty('hit_die');
-    expect(Array.isArray(singleClass.skills)).toBe(true);
+    expect(classes.length).toBeGreaterThan(0);
+    expect(classes[0]).toHaveProperty('id');
+    expect(classes[0]).toHaveProperty('name');
+    expect(classes[0]).toHaveProperty('hit_die');
+    expect(Array.isArray(classes[0].skills)).toBe(true);
   });
 
   test('Fetch a single class by ID', async ({ request }) => {
