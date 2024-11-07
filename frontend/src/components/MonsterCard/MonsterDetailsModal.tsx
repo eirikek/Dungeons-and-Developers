@@ -91,6 +91,7 @@ const MonsterDetailsModal = ({ id, name, hp, type, image, onClose }: MonsterDeta
             fontFamily: 'MedievalSharp',
             fontSize: '1.5rem',
           }}
+          aria-label="Close modal"
         >
           Close
         </Button>

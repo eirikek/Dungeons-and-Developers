@@ -6,6 +6,16 @@ import MonsterReviewModal from '../../../src/components/MonsterCard/MonsterRevie
 import { ADD_REVIEW, GET_MONSTER_REVIEWS, UPDATE_REVIEW } from '../../../../backend/src/graphql/queries';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
 
+export type Review = {
+  id: string;
+  user: {
+    id: string;
+    userName: string;
+  };
+  difficulty: number;
+  description: string;
+  createdAt: string;
+};
 // Mock the useToast hook
 vi.mock('../../../src/hooks/useToast.ts', () => ({
   useToast: () => ({
@@ -25,18 +35,29 @@ const mockUsername = 'bob';
 const mockLogin = vi.fn();
 const mockLogout = vi.fn();
 
-const mockReviews = [
+const initialEmptyReviews: Review[] = [];
+const mockReviewsUpdate: Review[] = [
   {
     id: 'review1',
     user: { id: mockUserId, userName: mockUsername },
     difficulty: 75,
-    description: 'Existing review',
+    description: 'Updated review',
+    createdAt: '2024-11-05T12:00:00Z',
+  },
+];
+
+const mockReviewsAdd: Review[] = [
+  {
+    id: 'review1',
+    user: { id: mockUserId, userName: mockUsername },
+    difficulty: 50,
+    description: 'New review',
     createdAt: '2024-11-05T12:00:00Z',
   },
 ];
 
 // Apollo query mocks
-const mocks = [
+const mocksForAddingReview = [
   {
     request: {
       query: GET_MONSTER_REVIEWS,
@@ -45,7 +66,7 @@ const mocks = [
     result: {
       data: {
         monster: {
-          reviews: mockReviews,
+          reviews: initialEmptyReviews,
         },
       },
     },
@@ -65,17 +86,36 @@ const mocks = [
     result: {
       data: {
         addReview: {
-          reviews: [
-            {
-              user: {
-                id: mockUserId,
-                userName: mockUsername,
-              },
-              difficulty: 50,
-              description: 'New review',
-              createdAt: '2024-11-06T08:00:00Z',
-            },
-          ],
+          reviews: mockReviewsAdd,
+        },
+      },
+    },
+  },
+  {
+    request: {
+      query: GET_MONSTER_REVIEWS,
+      variables: { monsterId: mockProps.monsterId },
+    },
+    result: {
+      data: {
+        monster: {
+          reviews: mockReviewsAdd,
+        },
+      },
+    },
+  },
+];
+
+const mocksForUpdatingReview = [
+  {
+    request: {
+      query: GET_MONSTER_REVIEWS,
+      variables: { monsterId: mockProps.monsterId },
+    },
+    result: {
+      data: {
+        monster: {
+          reviews: mockReviewsAdd,
         },
       },
     },
@@ -88,7 +128,7 @@ const mocks = [
         reviewId: 'review1',
         review: {
           user: mockUserId,
-          difficulty: 75,
+          difficulty: 50,
           description: 'Updated review',
         },
       },
@@ -116,14 +156,14 @@ const mocks = [
     result: {
       data: {
         monster: {
-          reviews: mockReviews,
+          reviews: mockReviewsUpdate,
         },
       },
     },
   },
 ];
 
-const renderComponent = () => {
+const renderComponent = (mocks: any) => {
   return render(
     <MockedProvider mocks={mocks} addTypename={false}>
       <AuthContext.Provider
@@ -140,62 +180,71 @@ describe('MonsterReviewModal', () => {
     vi.clearAllMocks();
   });
 
-  it('renders review button correctly', () => {
-    const { container } = renderComponent();
-    expect(screen.getByText('Review')).toBeInTheDocument();
+  it('renders review button correctly', async () => {
+    const { container } = renderComponent(mocksForAddingReview);
+    const reviewButton = await screen.findByText('Review');
+    expect(reviewButton).toBeInTheDocument();
     expect(container).toMatchSnapshot();
   });
 
   it('opens modal when review button is clicked', async () => {
-    renderComponent();
+    renderComponent(mocksForAddingReview);
     const user = userEvent.setup();
 
-    await user.click(screen.getByText('Review'));
+    const reviewButton = await screen.findByText('Review');
+    expect(reviewButton).toBeInTheDocument();
+
+    await user.click(reviewButton);
 
     expect(screen.getByText(`Review of ${mockProps.name}`)).toBeInTheDocument();
     expect(screen.getByRole('img')).toHaveAttribute('src', mockProps.image);
     expect(screen.getByText('Difficulty')).toBeInTheDocument();
   });
 
-  it('shows existing review data for user who has already reviewed', async () => {
-    renderComponent();
+  it('shows 0 reviews when there are no reviews', async () => {
+    renderComponent(mocksForAddingReview);
     const user = userEvent.setup();
 
-    await user.click(screen.getByText('Review'));
+    const reviewButton = await screen.findByText('Review');
+    expect(reviewButton).toBeInTheDocument();
 
+    await user.click(reviewButton);
     await waitFor(() => {
-      expect(screen.getByRole('textbox')).toHaveValue('Existing review');
+      expect(screen.getByRole('textbox')).toHaveValue('');
     });
   });
 
-  it('handles submission of new review', async () => {
-    const { container } = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <AuthContext.Provider
-          value={{ userId: mockUserId, token: 'user124', login: mockLogin, logout: mockLogout, userName: mockUsername }}
-        >
-          <MonsterReviewModal {...mockProps} />
-        </AuthContext.Provider>
-      </MockedProvider>
-    );
+  it('handles submission of new review, and shows it', async () => {
+    renderComponent(mocksForAddingReview);
 
     const user = userEvent.setup();
 
-    await user.click(screen.getByText('Review'));
+    const reviewButton = await screen.findByText('Review');
+    expect(reviewButton).toBeInTheDocument();
+
+    await user.click(reviewButton);
+
     await user.clear(screen.getByRole('textbox'));
+
     await user.type(screen.getByRole('textbox'), 'New review');
+
     await user.click(screen.getByRole('button', { name: 'Save-button' }));
 
-    expect(container).toMatchSnapshot();
+    await waitFor(() => {
+      expect(screen.getByRole('textbox')).toHaveValue('New review');
+    });
   });
 
   it('handles updating existing review', async () => {
-    renderComponent();
+    renderComponent(mocksForUpdatingReview);
     const user = userEvent.setup();
 
-    await user.click(screen.getByText('Review'));
+    const reviewButton = await screen.findByText('Review');
+    expect(reviewButton).toBeInTheDocument();
+
+    await user.click(reviewButton);
     await waitFor(() => {
-      expect(screen.getByRole('textbox')).toHaveValue('Existing review');
+      expect(screen.getByRole('textbox')).toHaveValue('New review');
     });
 
     await user.clear(screen.getByRole('textbox'));
@@ -205,14 +254,26 @@ describe('MonsterReviewModal', () => {
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
+
+    await user.click(reviewButton);
+    await waitFor(() => {
+      expect(screen.getByRole('textbox')).toHaveValue('Updated review');
+    });
   });
 
   it('closes modal when cancel is clicked', async () => {
-    renderComponent();
+    renderComponent(mocksForAddingReview);
     const user = userEvent.setup();
 
-    await user.click(screen.getByText('Review'));
-    await user.click(screen.getByText('Cancel'));
+    const reviewButton = await screen.findByText('Review');
+    expect(reviewButton).toBeInTheDocument();
+
+    await user.click(reviewButton);
+
+    await user.click(reviewButton);
+
+    const cancelButton = await screen.findByText('Cancel');
+    await user.click(cancelButton);
 
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -220,12 +281,15 @@ describe('MonsterReviewModal', () => {
   });
 
   it(
-    'handles character limit in description',
+    'respects character limit for review description',
     async () => {
-      renderComponent();
+      renderComponent(mocksForAddingReview);
       const user = userEvent.setup();
 
-      await user.click(screen.getByText('Review'));
+      const reviewButton = await screen.findByText('Review');
+      expect(reviewButton).toBeInTheDocument();
+
+      await user.click(reviewButton);
 
       const longText = 'a'.repeat(301);
       await user.clear(screen.getByRole('textbox'));
@@ -236,19 +300,22 @@ describe('MonsterReviewModal', () => {
     { timeout: 10000 }
   );
 
-  it('resets form when modal is closed', async () => {
-    renderComponent();
+  it('resets form when modal is closed and re-opened', async () => {
+    renderComponent(mocksForUpdatingReview);
     const user = userEvent.setup();
 
-    await user.click(screen.getByText('Review'));
+    const reviewButton = await screen.findByText('Review');
+    expect(reviewButton).toBeInTheDocument();
+
+    await user.click(reviewButton);
     await user.clear(screen.getByRole('textbox'));
-    await user.type(screen.getByRole('textbox'), 'Test review');
+    await user.type(screen.getByRole('textbox'), 'Temporary review');
     await user.click(screen.getByText('Cancel'));
 
     await user.click(screen.getByText('Review'));
 
     await waitFor(() => {
-      expect(screen.getByRole('textbox')).toHaveValue('Existing review');
+      expect(screen.getByRole('textbox')).toHaveValue('New review');
     });
   });
 });

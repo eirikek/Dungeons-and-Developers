@@ -127,6 +127,7 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
           },
           textTransform: 'none',
         }}
+        aria-label="Review button"
       >
         Review
       </Button>
