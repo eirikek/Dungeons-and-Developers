@@ -174,6 +174,7 @@ const EquipmentPage = () => {
 
                   return (
                     <EquipmentCard
+                      aria-label="equipment-card"
                       key={index}
                       userId={userId}
                       equipment={equipment}

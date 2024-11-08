@@ -33,7 +33,14 @@ const CustomCheckbox = ({
       style={{ transform: `scale(${scale})` }}
       onClick={disabled ? onDisabledClick : undefined}
     >
-      <input type="checkbox" checked={checked} onChange={handleCheckboxChange} disabled={disabled} />
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={handleCheckboxChange}
+        disabled={disabled}
+        aria-label="checkbox"
+        name="checkbox"
+      />
       <span
         className={`absolute top-0 left-0 h-6 w-6 rounded bg-gray-300 transition-all duration-300 ${
           checked ? 'bg-red-600' : ''

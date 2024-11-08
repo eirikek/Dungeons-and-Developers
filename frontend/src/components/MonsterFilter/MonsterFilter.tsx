@@ -55,7 +55,11 @@ export default function MonsterFilter({ selectedFilters, setSelectedFilters }: M
             <button onClick={clearFilters} className="underline transition-all hover:text-gray-300 outline-none">
               Clear Filters
             </button>
-            <FiX className="h-6 w-6 text-white hover:text-customRed cursor-pointer" onClick={toggleDropdown} />
+            <FiX
+              className="h-6 w-6 text-white hover:text-customRed cursor-pointer"
+              onClick={toggleDropdown}
+              aria-label="Close"
+            />
           </div>
           {filterOptions.map((option) => (
             <label key={option} className="flex items-center gap-5 mb-4 hover:cursor-pointer">

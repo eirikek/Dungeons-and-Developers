@@ -1,0 +1,141 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EquipmentPage > renders correctly and matches snapshot 1`] = `
+<main
+  class="main before:bg-equipments"
+>
+  <div
+    class="black-overlay"
+  />
+  <div
+    class="wrapper py-20 min-w-[70%] flex gap-y-32 2xl:gap-0 mt-10 items-center justify-center"
+  >
+    <h1
+      class="header"
+    >
+      Equipments
+    </h1>
+    <button
+      class="text px-1 rounded-md bg-customRed hover:bg-transparent border-2 border-customRed hover:border-customRed hover:text-customRed transition-colors duration-200"
+    >
+      Remove All Equipments
+    </button>
+    <section
+      class="w-full h-9/10"
+    >
+      <div
+        class="grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 gap-10 p-10 w-full h-full auto-rows-fr"
+        style="opacity: 1; will-change: transform; transform: none;"
+      >
+        <section
+          class="flex flex-col items-center justify-between gap-4 bg-black bg-opacity-80 py-10 px-4 rounded-xl w-full h-full min-w-[18vw] min-h-[30vh] text-center"
+        >
+          <h3
+            class="text"
+          >
+            Helmet
+          </h3>
+          <p
+            class="text"
+          >
+            Value: 4
+          </p>
+          <label
+            class="relative block cursor-pointer transform transition-transform"
+            style="transform: scale(1.5);"
+          >
+            <input
+              checked=""
+              type="checkbox"
+            />
+            <span
+              class="absolute top-0 left-0 h-6 w-6 rounded bg-gray-300 transition-all duration-300 bg-red-600"
+            />
+            <span
+              class="absolute left-[9px] top-[5px] w-[5px] h-[10px] border-white border-2 border-t-0 border-l-0 transform rotate-45"
+            />
+          </label>
+        </section>
+        <section
+          class="flex flex-col items-center justify-between gap-4 bg-black bg-opacity-80 py-10 px-4 rounded-xl w-full h-full min-w-[18vw] min-h-[30vh] text-center"
+        >
+          <h3
+            class="text"
+          >
+            Sword
+          </h3>
+          <p
+            class="text"
+          >
+            Value: 5
+          </p>
+          <label
+            class="relative block cursor-pointer transform transition-transform"
+            style="transform: scale(1.5);"
+          >
+            <input
+              type="checkbox"
+            />
+            <span
+              class="absolute top-0 left-0 h-6 w-6 rounded bg-gray-300 transition-all duration-300 "
+            />
+          </label>
+        </section>
+      </div>
+    </section>
+    <section
+      class="w-full flex justify-center items-center mt-5"
+    >
+      <div
+        class="flex justify-between items-center w-[70vw] xl:w-[30vw] w-text-2xl xl:text-lg 2xl:text-md"
+      >
+        <button
+          class="flex items-center hover:text-gray-400"
+          disabled=""
+        >
+          <svg
+            class="mr-2"
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 320 512"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"
+            />
+          </svg>
+          Prev Page
+        </button>
+        <span
+          class="w-2"
+        >
+          1
+        </span>
+        <button
+          class="flex items-center hover:text-gray-400"
+          disabled=""
+        >
+          Next Page
+          <svg
+            class="ml-2"
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 320 512"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"
+            />
+          </svg>
+        </button>
+      </div>
+    </section>
+  </div>
+</main>
+`;

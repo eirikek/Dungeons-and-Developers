@@ -117,6 +117,7 @@ const Review = ({ review, monsterId, monsterName }: ReviewProps) => {
                 color: '#DB3232',
               },
             }}
+            aria-label="Delete"
           >
             <MdDelete size={30} />
           </IconButton>
@@ -133,6 +134,7 @@ const Review = ({ review, monsterId, monsterName }: ReviewProps) => {
                 color: '#DB3232',
               },
             }}
+            aria-label="Edit"
           >
             {editMode ? <MdCancel size={30} /> : <MdEdit size={30} />}
           </IconButton>

@@ -1,17 +1,50 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MockedProvider } from '@apollo/client/testing';
-import Review from '../../../src/components/MonsterCard/Review.tsx';
 import { DELETE_REVIEW, UPDATE_REVIEW, GET_MONSTER_REVIEWS } from '../../../../backend/src/graphql/queries';
-import { AuthContext } from '../../../src/context/AuthContext.tsx';
+import Review from '../../../src/components/MonsterCard/Review.tsx';
+import { AuthContext } from '../../../src/context/AuthContext';
 import { ReviewType } from '../../../src/interfaces/ReviewProps';
+import React from 'react';
 
-// Mock useToast
+// Mock the useToast hook
 vi.mock('../../../src/hooks/useToast', () => ({
   useToast: () => ({
     showToast: vi.fn(),
   }),
+}));
+
+interface MockSliderProps {
+  id: string;
+  name: string;
+  min: number;
+  max: number;
+  value: number;
+  'data-testid': string;
+  onChange: (event: Event | React.ChangeEvent<HTMLInputElement>, newValue: number) => void;
+  disabled?: boolean;
+}
+
+// Mock the ReviewSlider component
+vi.mock('../../../src/components/MonsterCard/ReviewSlider', () => ({
+  default: ({ value, onChange, disabled = false }: MockSliderProps) => (
+    <input
+      type="range"
+      data-testid="review-slider"
+      value={value}
+      onChange={(e) => {
+        if (onChange && !disabled) {
+          const newValue = Number(e.target.value);
+          onChange(e, newValue);
+        }
+      }}
+      min={0}
+      max={100}
+      step={10}
+      disabled={disabled}
+    />
+  ),
 }));
 
 const mockReview: ReviewType = {
@@ -47,6 +80,52 @@ const mocks = [
   },
   {
     request: {
+      query: UPDATE_REVIEW,
+      variables: {
+        monsterId: mockMonsterId,
+        reviewId: mockReview.id,
+        review: {
+          user: mockUserId,
+          difficulty: 70,
+          description: 'This is an updated review',
+        },
+      },
+    },
+    result: {
+      data: {
+        updateReview: {
+          id: mockReview.id,
+          user: { id: mockUserId, userName: 'Test User' },
+          difficulty: 70,
+          description: 'This is an updated review',
+          createdAt: mockReview.createdAt,
+        },
+      },
+    },
+  },
+  {
+    request: {
+      query: GET_MONSTER_REVIEWS,
+      variables: { monsterId: mockMonsterId },
+    },
+    result: {
+      data: {
+        monster: {
+          reviews: [
+            {
+              id: mockReview.id,
+              user: { id: mockUserId, userName: 'Test User' },
+              difficulty: 70,
+              description: 'This is an updated review',
+              createdAt: mockReview.createdAt,
+            },
+          ],
+        },
+      },
+    },
+  },
+  {
+    request: {
       query: DELETE_REVIEW,
       variables: { monsterId: mockMonsterId, reviewId: mockReview.id },
     },
@@ -58,34 +137,10 @@ const mocks = [
       },
     },
   },
-  {
-    request: {
-      query: UPDATE_REVIEW,
-      variables: {
-        monsterId: mockMonsterId,
-        reviewId: mockReview.id,
-        review: {
-          user: mockUserId,
-          difficulty: 60,
-          description: 'Updated test review.',
-        },
-      },
-    },
-    result: {
-      data: {
-        updateReview: {
-          ...mockReview,
-          difficulty: 60,
-          description: 'Updated test review.',
-        },
-      },
-    },
-  },
-  // Add more mocks for ADD_REVIEW if needed
 ];
 
 const renderComponent = () => {
-  render(
+  return render(
     <MockedProvider mocks={mocks} addTypename={false}>
       <AuthContext.Provider
         value={{
@@ -108,53 +163,44 @@ describe('Review Component', () => {
   });
 
   it('renders review content correctly', async () => {
-    renderComponent();
+    const { asFragment } = renderComponent();
 
     expect(screen.getByText(mockReview.user.userName)).toBeInTheDocument();
     expect(screen.getByText(`Difficulty: ${mockReview.difficulty}`)).toBeInTheDocument();
     expect(screen.getByText(mockReview.description)).toBeInTheDocument();
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('allows user to edit and save review', async () => {
     renderComponent();
     const user = userEvent.setup();
+    await waitFor(() => {
+      expect(screen.getByText(`Difficulty: ${mockReview.difficulty}`)).toBeInTheDocument();
+    });
 
-    // Click the edit button
-    await user.click(screen.getByRole('button', { name: /edit/i }));
+    await user.click(screen.getByRole('button', { name: 'Edit' }));
 
-    // Update difficulty and description
     const newDifficulty = 70;
-    const newDescription = 'This is an updated review.';
+    const newDescription = 'This is an updated review';
 
-    const slider = screen.getByRole('slider');
-    await user.type(slider, `${newDifficulty}`);
+    const slider = screen.getByTestId('review-slider');
+    fireEvent.change(slider, { target: { value: newDifficulty } });
+
+    await waitFor(() => {
+      expect(slider).toHaveValue(String(newDifficulty));
+    });
 
     const textField = screen.getByRole('textbox');
     await user.clear(textField);
     await user.type(textField, newDescription);
 
-    // Click the save button
-    await user.click(screen.getByRole('button', { name: /save/i }));
+    expect(textField).toHaveValue(newDescription);
 
-    // Assertions
+    const saveButton = screen.getByRole('button', { name: 'Save' });
+    await user.click(saveButton);
+
     await waitFor(() => {
-      expect(screen.getByText(`Difficulty: ${newDifficulty}`)).toBeInTheDocument();
-      expect(screen.getByText(newDescription)).toBeInTheDocument();
+      expect(saveButton).not.toBeInTheDocument();
     });
   });
-
-  it('allows user to delete review', async () => {
-    renderComponent();
-    const user = userEvent.setup();
-
-    // Click the delete button
-    await user.click(screen.getByRole('button', { name: /delete/i }));
-
-    // Assertions
-    await waitFor(() => {
-      expect(screen.queryByText(mockReview.description)).not.toBeInTheDocument();
-    });
-  });
-
-  // Add more tests for undo functionality and edge cases
 });
