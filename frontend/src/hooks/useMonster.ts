@@ -3,13 +3,20 @@ import { useMemo } from 'react';
 import MonsterDataProps from '../interfaces/MonsterDataProps.ts';
 import { GET_MONSTERS } from '../../../backend/src/graphql/queries.ts';
 
-function useMonster(searchTerm: string, currentPage: number, monstersPerPage: number, selectedFilters: Set<string>) {
+function useMonster(
+  searchTerm: string,
+  currentPage: number,
+  monstersPerPage: number,
+  selectedFilters: Set<string>,
+  minHp: number,
+  maxHp: number
+) {
   const offset = (currentPage - 1) * monstersPerPage;
 
   const { data, error, loading } = useQuery<{
     monsters: { monsters: MonsterDataProps[]; totalMonsters: number };
   }>(GET_MONSTERS, {
-    variables: { searchTerm, offset, limit: monstersPerPage, types: Array.from(selectedFilters) },
+    variables: { searchTerm, offset, limit: monstersPerPage, types: Array.from(selectedFilters), minHp, maxHp },
     fetchPolicy: 'network-only',
   });
 

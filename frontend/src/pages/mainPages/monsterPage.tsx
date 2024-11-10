@@ -7,6 +7,7 @@ import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import Pagination from '../../components/Pagination/Pagination';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 import MonsterFilter from '../../components/MonsterFilter/MonsterFilter.tsx';
+import HitPointsFilter from '../../components/MonsterFilter/HpFilter.tsx';
 
 const monstersPerPage = 8;
 
@@ -15,6 +16,8 @@ export default function MonsterPage() {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedFilters, setSelectedFilters] = useState<Set<string>>(new Set());
+  const [minHp, setMinHp] = useState(0);
+  const [maxHp, setMaxHp] = useState(1000);
 
   hourglass.register();
 
@@ -22,7 +25,9 @@ export default function MonsterPage() {
     debouncedSearchTerm,
     currentPage,
     monstersPerPage,
-    selectedFilters
+    selectedFilters,
+    minHp,
+    maxHp
   );
 
   const debouncedSearch = useMemo(
@@ -40,15 +45,17 @@ export default function MonsterPage() {
     setCurrentPage(1);
   };
 
+  const handleHpChange = (min: number, max: number) => {
+    setMinHp(min);
+    setMaxHp(max);
+    setCurrentPage(1);
+  };
+
   useEffect(() => {
     setSearchTerm('');
     setDebouncedSearchTerm('');
     setCurrentPage(1);
-  }, [selectedFilters]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [selectedFilters]);
+  }, [selectedFilters, minHp, maxHp]);
 
   const totalPages = Math.min(Math.ceil(totalMonsters / monstersPerPage), 10);
 
@@ -74,6 +81,7 @@ export default function MonsterPage() {
 
         <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start">
           <div className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row'}>
+            <HitPointsFilter minHp={minHp} maxHp={maxHp} onHpChange={handleHpChange} />
             <MonsterFilter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} />
             <SearchBar
               searchTerm={searchTerm}

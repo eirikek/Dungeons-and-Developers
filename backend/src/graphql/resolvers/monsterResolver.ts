@@ -11,6 +11,8 @@ interface MonsterQueryArgs {
   offset?: number;
   limit?: number;
   types?: string[];
+  minHp?: number;
+  maxHp?: number;
 }
 
 interface ReviewInput {
@@ -21,7 +23,7 @@ interface ReviewInput {
 
 export default {
   Query: {
-    async monsters(_: any, { searchTerm = '', offset = 0, limit = 8, types = [] }: MonsterQueryArgs) {
+    async monsters(_: any, { searchTerm = '', offset = 0, limit = 8, types = [], minHp, maxHp }: MonsterQueryArgs) {
       let query: any = {};
 
       if (searchTerm) {
@@ -33,8 +35,10 @@ export default {
         let monsters = await Monster.find(query).skip(offset).limit(limit);
 
         if (monsters.length < limit) {
-          const additionalQuery = { name: { $regex: containsRegex }, _id: { $nin: monsters.map(m => m._id) } };
-          const additionalResults = await Monster.find(additionalQuery).skip(offset).limit(limit - monsters.length);
+          const additionalQuery = { name: { $regex: containsRegex }, _id: { $nin: monsters.map((m) => m._id) } };
+          const additionalResults = await Monster.find(additionalQuery)
+            .skip(offset)
+            .limit(limit - monsters.length);
           monsters = [...monsters, ...additionalResults];
         }
 
@@ -45,6 +49,10 @@ export default {
 
       if (types.length > 0) {
         query.type = { $in: types };
+      }
+
+      if (minHp !== undefined && maxHp !== undefined) {
+        query.hit_points = { $gte: minHp, $lte: maxHp };
       }
 
       const monsters = await Monster.find(query).skip(offset).limit(limit);
@@ -111,11 +119,18 @@ export default {
       }
     },
 
-    async updateReview(_: any, { monsterId, reviewId, review }: {
-      monsterId: string;
-      reviewId: string;
-      review: ReviewInput;
-    }) {
+    async updateReview(
+      _: any,
+      {
+        monsterId,
+        reviewId,
+        review,
+      }: {
+        monsterId: string;
+        reviewId: string;
+        review: ReviewInput;
+      }
+    ) {
       const monster = await Monster.findById(monsterId);
       if (!monster) throw new Error('Monster not found');
 
