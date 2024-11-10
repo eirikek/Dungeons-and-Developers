@@ -17,7 +17,6 @@ export default function MonsterPage() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedFilters, setSelectedFilters] = useState<Set<string>>(new Set());
 
-  // Separate states for the HP filter values and dynamic min/max HP
   const [hpFilterMin, setHpFilterMin] = useState<number | null>(null);
   const [hpFilterMax, setHpFilterMax] = useState<number | null>(null);
   const [dynamicMinHp, setDynamicMinHp] = useState<number>(0);
@@ -25,7 +24,6 @@ export default function MonsterPage() {
 
   hourglass.register();
 
-  // Fetch monsters based on filters and search term
   const { monsters, totalMonsters, minHp, maxHp, loading, error } = useMonster(
     debouncedSearchTerm,
     currentPage,
@@ -50,7 +48,6 @@ export default function MonsterPage() {
     setCurrentPage(1);
   };
 
-  // Update dynamicMinHp and dynamicMaxHp only when `selectedFilters` changes
   useEffect(() => {
     setDynamicMinHp(minHp);
     setDynamicMaxHp(maxHp);
@@ -60,9 +57,8 @@ export default function MonsterPage() {
       setHpFilterMin(minHp);
       setHpFilterMax(maxHp);
     }
-  }, [minHp, maxHp, selectedFilters]);
+  }, [minHp, maxHp, selectedFilters, hpFilterMin, hpFilterMax]);
 
-  // Handle changes to the HP filter slider
   const handleHpChange = useCallback(
     debounce((min: number, max: number) => {
       setHpFilterMin(min);

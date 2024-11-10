@@ -26,28 +26,23 @@ export default {
     async monsters(_: any, { searchTerm = '', offset = 0, limit = 8, types = [], minHp, maxHp }: MonsterQueryArgs) {
       let query: any = {};
 
-      // Apply search term filter if provided
       if (searchTerm) {
         const startsWithRegex = new RegExp(`^${searchTerm}`, 'i');
         const containsRegex = new RegExp(searchTerm, 'i');
         query.name = { $regex: containsRegex };
       }
 
-      // Apply type filter if provided
       if (types.length > 0) {
         query.type = { $in: types };
       }
 
-      // Apply HP range filter if provided
       if (minHp !== undefined && maxHp !== undefined) {
         query.hit_points = { $gte: minHp, $lte: maxHp };
       }
 
-      // Execute database queries based on the constructed query object
       const monsters = await Monster.find(query).skip(offset).limit(limit);
       const totalMonsters = await Monster.countDocuments(query);
 
-      // Calculate minHp and maxHp for the current filtered set
       const minHpValue = await Monster.findOne(query)
         .sort({ hit_points: 1 })
         .then((m) => m?.hit_points ?? 1);
