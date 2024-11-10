@@ -1,23 +1,15 @@
 import { Box, Slider } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface HitPointsFilterProps {
-  initialMinHp: number;
-  initialMaxHp: number;
   onHpChange: (min: number, max: number) => void;
 }
 
-export default function HitPointsFilter({ initialMinHp, initialMaxHp, onHpChange }: HitPointsFilterProps) {
+export default function HitPointsFilter({ onHpChange }: HitPointsFilterProps) {
   const sliderMin = 1;
   const sliderMax = 546;
 
-  const [hpRange, setHpRange] = useState<number[]>([initialMinHp || sliderMin, initialMaxHp || sliderMax]);
-
-  useEffect(() => {
-    if (initialMinHp && initialMaxHp) {
-      setHpRange([initialMinHp, initialMaxHp]);
-    }
-  }, [initialMinHp, initialMaxHp]);
+  const [hpRange, setHpRange] = useState<number[]>([sliderMin, sliderMax]);
 
   const handleSliderChange = (_: Event, newValue: number | number[]) => {
     const [min, max] = newValue as number[];

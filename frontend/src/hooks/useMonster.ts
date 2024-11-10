@@ -49,7 +49,7 @@ function useMonster(
     monsters: transformedMonsters,
     totalMonsters: data?.monsters.totalMonsters || 0,
     minHp: data?.monsters.minHp || 1,
-    maxHp: data?.monsters.maxHp || 546,
+    maxHp: data?.monsters.maxHp || 1000,
     loading,
     error,
   };

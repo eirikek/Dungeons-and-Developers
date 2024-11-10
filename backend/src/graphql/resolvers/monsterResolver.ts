@@ -26,12 +26,6 @@ export default {
     async monsters(_: any, { searchTerm = '', offset = 0, limit = 8, types = [], minHp, maxHp }: MonsterQueryArgs) {
       let query: any = {};
 
-      if (searchTerm) {
-        const startsWithRegex = new RegExp(`^${searchTerm}`, 'i');
-        const containsRegex = new RegExp(searchTerm, 'i');
-        query.name = { $regex: containsRegex };
-      }
-
       if (types.length > 0) {
         query.type = { $in: types };
       }
@@ -40,15 +34,41 @@ export default {
         query.hit_points = { $gte: minHp, $lte: maxHp };
       }
 
-      const monsters = await Monster.find(query).skip(offset).limit(limit);
-      const totalMonsters = await Monster.countDocuments(query);
+      let monsters: any[] = [];
+      let totalMonsters: number = 0;
+
+      if (searchTerm) {
+        const startsWithRegex = new RegExp(`^${searchTerm}`, 'i');
+        const containsRegex = new RegExp(searchTerm, 'i');
+
+        query.name = { $regex: startsWithRegex };
+        monsters = await Monster.find(query).skip(offset).limit(limit);
+
+        if (monsters.length < limit) {
+          const remainingLimit = limit - monsters.length;
+          query.name = { $regex: containsRegex };
+          query._id = { $nin: monsters.map((m) => m._id) };
+
+          const additionalMonsters = await Monster.find(query)
+            .skip(offset + monsters.length)
+            .limit(remainingLimit);
+
+          monsters = [...monsters, ...additionalMonsters];
+        }
+
+        query.name = { $regex: containsRegex };
+        totalMonsters = await Monster.countDocuments(query);
+      } else {
+        monsters = await Monster.find(query).skip(offset).limit(limit);
+        totalMonsters = await Monster.countDocuments(query);
+      }
 
       const minHpValue = await Monster.findOne(query)
         .sort({ hit_points: 1 })
         .then((m) => m?.hit_points ?? 1);
       const maxHpValue = await Monster.findOne(query)
         .sort({ hit_points: -1 })
-        .then((m) => m?.hit_points ?? 546);
+        .then((m) => m?.hit_points ?? 1000);
 
       return { monsters, totalMonsters, minHp: minHpValue, maxHp: maxHpValue };
     },

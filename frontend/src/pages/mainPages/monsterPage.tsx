@@ -16,11 +16,8 @@ export default function MonsterPage() {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedFilters, setSelectedFilters] = useState<Set<string>>(new Set());
-
   const [hpFilterMin, setHpFilterMin] = useState<number | null>(null);
   const [hpFilterMax, setHpFilterMax] = useState<number | null>(null);
-  const [dynamicMinHp, setDynamicMinHp] = useState<number>(0);
-  const [dynamicMaxHp, setDynamicMaxHp] = useState<number>(1000);
 
   hourglass.register();
 
@@ -49,24 +46,19 @@ export default function MonsterPage() {
   };
 
   useEffect(() => {
-    setDynamicMinHp(minHp);
-    setDynamicMaxHp(maxHp);
-
-    // Initialize HP filter only when `selectedFilters` changes
     if (hpFilterMin === null && hpFilterMax === null) {
       setHpFilterMin(minHp);
       setHpFilterMax(maxHp);
     }
   }, [minHp, maxHp, selectedFilters, hpFilterMin, hpFilterMax]);
 
-  const handleHpChange = useCallback(
-    debounce((min: number, max: number) => {
-      setHpFilterMin(min);
-      setHpFilterMax(max);
-      setCurrentPage(1);
-    }, 300),
-    []
-  );
+  const handleHpChange = useCallback((min: number, max: number) => {
+    setHpFilterMin(min);
+    setHpFilterMax(max);
+    setCurrentPage(1);
+  }, []);
+
+  const debouncedHandleHpChange = useMemo(() => debounce(handleHpChange, 300), [handleHpChange]);
 
   const totalPages = Math.min(Math.ceil(totalMonsters / monstersPerPage), 10);
 
@@ -92,7 +84,7 @@ export default function MonsterPage() {
 
         <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start">
           <div className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row'}>
-            <HitPointsFilter minHp={dynamicMinHp} maxHp={dynamicMaxHp} onHpChange={handleHpChange} />
+            <HitPointsFilter onHpChange={debouncedHandleHpChange} />
             <MonsterFilter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} />
             <SearchBar
               searchTerm={searchTerm}
