@@ -26,39 +26,36 @@ export default {
     async monsters(_: any, { searchTerm = '', offset = 0, limit = 8, types = [], minHp, maxHp }: MonsterQueryArgs) {
       let query: any = {};
 
+      // Apply search term filter if provided
       if (searchTerm) {
         const startsWithRegex = new RegExp(`^${searchTerm}`, 'i');
         const containsRegex = new RegExp(searchTerm, 'i');
-
-        query.name = { $regex: startsWithRegex };
-
-        let monsters = await Monster.find(query).skip(offset).limit(limit);
-
-        if (monsters.length < limit) {
-          const additionalQuery = { name: { $regex: containsRegex }, _id: { $nin: monsters.map((m) => m._id) } };
-          const additionalResults = await Monster.find(additionalQuery)
-            .skip(offset)
-            .limit(limit - monsters.length);
-          monsters = [...monsters, ...additionalResults];
-        }
-
-        const totalMonsters = await Monster.countDocuments({ name: { $regex: containsRegex } });
-
-        return { monsters, totalMonsters };
+        query.name = { $regex: containsRegex };
       }
 
+      // Apply type filter if provided
       if (types.length > 0) {
         query.type = { $in: types };
       }
 
+      // Apply HP range filter if provided
       if (minHp !== undefined && maxHp !== undefined) {
         query.hit_points = { $gte: minHp, $lte: maxHp };
       }
 
+      // Execute database queries based on the constructed query object
       const monsters = await Monster.find(query).skip(offset).limit(limit);
       const totalMonsters = await Monster.countDocuments(query);
 
-      return { monsters, totalMonsters };
+      // Calculate minHp and maxHp for the current filtered set
+      const minHpValue = await Monster.findOne(query)
+        .sort({ hit_points: 1 })
+        .then((m) => m?.hit_points ?? 1);
+      const maxHpValue = await Monster.findOne(query)
+        .sort({ hit_points: -1 })
+        .then((m) => m?.hit_points ?? 546);
+
+      return { monsters, totalMonsters, minHp: minHpValue, maxHp: maxHpValue };
     },
 
     async monster(_: any, { id }: MonsterArgs) {

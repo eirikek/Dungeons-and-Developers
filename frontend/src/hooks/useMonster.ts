@@ -8,15 +8,23 @@ function useMonster(
   currentPage: number,
   monstersPerPage: number,
   selectedFilters: Set<string>,
-  minHp: number,
-  maxHp: number
+  minHp?: number,
+  maxHp?: number
 ) {
   const offset = (currentPage - 1) * monstersPerPage;
 
+  const queryVariables = {
+    searchTerm,
+    offset,
+    limit: monstersPerPage,
+    types: Array.from(selectedFilters),
+    ...(minHp !== undefined && maxHp !== undefined ? { minHp, maxHp } : {}),
+  };
+
   const { data, error, loading } = useQuery<{
-    monsters: { monsters: MonsterDataProps[]; totalMonsters: number };
+    monsters: { monsters: MonsterDataProps[]; totalMonsters: number; minHp: number; maxHp: number };
   }>(GET_MONSTERS, {
-    variables: { searchTerm, offset, limit: monstersPerPage, types: Array.from(selectedFilters), minHp, maxHp },
+    variables: queryVariables,
     fetchPolicy: 'network-only',
   });
 
@@ -40,6 +48,8 @@ function useMonster(
   return {
     monsters: transformedMonsters,
     totalMonsters: data?.monsters.totalMonsters || 0,
+    minHp: data?.monsters.minHp || 1,
+    maxHp: data?.monsters.maxHp || 546,
     loading,
     error,
   };

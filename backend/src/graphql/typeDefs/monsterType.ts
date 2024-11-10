@@ -15,6 +15,8 @@ export const monsterType = gql`
   type MonsterResult {
     monsters: [Monster!]!
     totalMonsters: Int!
+    minHp: Int!
+    maxHp: Int!
   }
 
   type Review {

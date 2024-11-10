@@ -13,6 +13,8 @@ export const GET_MONSTERS = gql`
         image
       }
       totalMonsters
+      minHp
+      maxHp
     }
   }
 `;

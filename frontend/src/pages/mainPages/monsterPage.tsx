@@ -16,18 +16,23 @@ export default function MonsterPage() {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedFilters, setSelectedFilters] = useState<Set<string>>(new Set());
-  const [minHp, setMinHp] = useState(0);
-  const [maxHp, setMaxHp] = useState(1000);
+
+  // Separate states for the HP filter values and dynamic min/max HP
+  const [hpFilterMin, setHpFilterMin] = useState<number | null>(null);
+  const [hpFilterMax, setHpFilterMax] = useState<number | null>(null);
+  const [dynamicMinHp, setDynamicMinHp] = useState<number>(0);
+  const [dynamicMaxHp, setDynamicMaxHp] = useState<number>(1000);
 
   hourglass.register();
 
-  const { monsters, totalMonsters, loading, error } = useMonster(
+  // Fetch monsters based on filters and search term
+  const { monsters, totalMonsters, minHp, maxHp, loading, error } = useMonster(
     debouncedSearchTerm,
     currentPage,
     monstersPerPage,
     selectedFilters,
-    minHp,
-    maxHp
+    hpFilterMin !== null ? hpFilterMin : undefined,
+    hpFilterMax !== null ? hpFilterMax : undefined
   );
 
   const debouncedSearch = useMemo(
@@ -45,17 +50,27 @@ export default function MonsterPage() {
     setCurrentPage(1);
   };
 
-  const handleHpChange = (min: number, max: number) => {
-    setMinHp(min);
-    setMaxHp(max);
-    setCurrentPage(1);
-  };
-
+  // Update dynamicMinHp and dynamicMaxHp only when `selectedFilters` changes
   useEffect(() => {
-    setSearchTerm('');
-    setDebouncedSearchTerm('');
-    setCurrentPage(1);
-  }, [selectedFilters, minHp, maxHp]);
+    setDynamicMinHp(minHp);
+    setDynamicMaxHp(maxHp);
+
+    // Initialize HP filter only when `selectedFilters` changes
+    if (hpFilterMin === null && hpFilterMax === null) {
+      setHpFilterMin(minHp);
+      setHpFilterMax(maxHp);
+    }
+  }, [minHp, maxHp, selectedFilters]);
+
+  // Handle changes to the HP filter slider
+  const handleHpChange = useCallback(
+    debounce((min: number, max: number) => {
+      setHpFilterMin(min);
+      setHpFilterMax(max);
+      setCurrentPage(1);
+    }, 300),
+    []
+  );
 
   const totalPages = Math.min(Math.ceil(totalMonsters / monstersPerPage), 10);
 
@@ -81,7 +96,7 @@ export default function MonsterPage() {
 
         <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start">
           <div className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row'}>
-            <HitPointsFilter minHp={minHp} maxHp={maxHp} onHpChange={handleHpChange} />
+            <HitPointsFilter minHp={dynamicMinHp} maxHp={dynamicMaxHp} onHpChange={handleHpChange} />
             <MonsterFilter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} />
             <SearchBar
               searchTerm={searchTerm}

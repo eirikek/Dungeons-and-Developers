@@ -1,5 +1,5 @@
 import { Box, Slider } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface HitPointsFilterProps {
   minHp: number;
@@ -9,6 +9,10 @@ interface HitPointsFilterProps {
 
 export default function HitPointsFilter({ minHp, maxHp, onHpChange }: HitPointsFilterProps) {
   const [hpRange, setHpRange] = useState<number[]>([minHp, maxHp]);
+
+  useEffect(() => {
+    setHpRange([minHp, maxHp]);
+  }, [minHp, maxHp]);
 
   const handleSliderChange = (_: Event, newValue: number | number[]) => {
     const [min, max] = newValue as number[];
@@ -22,8 +26,8 @@ export default function HitPointsFilter({ minHp, maxHp, onHpChange }: HitPointsF
         value={hpRange}
         onChange={handleSliderChange}
         valueLabelDisplay="auto"
-        min={0}
-        max={1000}
+        min={1}
+        max={546}
         sx={{
           '& .MuiSlider-thumb': { color: '#DB3232', width: 24, height: 24 },
           '& .MuiSlider-track': { color: '#DB3232', height: 10 },
