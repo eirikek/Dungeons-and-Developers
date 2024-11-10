@@ -19,6 +19,15 @@ export const GET_MONSTERS = gql`
   }
 `;
 
+export const GET_MONSTER_TYPE_COUNTS = gql`
+  query GetMonsterTypeCounts($minHp: Int, $maxHp: Int) {
+    monsterTypeCounts(minHp: $minHp, maxHp: $maxHp) {
+      type
+      count
+    }
+  }
+`;
+
 export const GET_USER_DUNGEON = gql`
   query GetUserDungeon($userId: ID!) {
     user(id: $userId) {

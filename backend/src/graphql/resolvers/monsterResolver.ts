@@ -21,6 +21,11 @@ interface ReviewInput {
   description: string;
 }
 
+interface MonsterTypeCountsArgs {
+  minHp?: number;
+  maxHp?: number;
+}
+
 export default {
   Query: {
     async monsters(_: any, { searchTerm = '', offset = 0, limit = 8, types = [], minHp, maxHp }: MonsterQueryArgs) {
@@ -78,6 +83,19 @@ export default {
         path: 'reviews.user',
         select: 'id userName',
       });
+    },
+
+    async monsterTypeCounts(_: any, { minHp, maxHp }: MonsterTypeCountsArgs) {
+      const matchStage: Partial<{ hit_points: { $gte: number; $lte: number } }> = {};
+      if (minHp !== undefined && maxHp !== undefined) {
+        matchStage.hit_points = { $gte: minHp, $lte: maxHp };
+      }
+
+      return Monster.aggregate([
+        { $match: matchStage },
+        { $group: { _id: '$type', count: { $sum: 1 } } },
+        { $project: { type: '$_id', count: 1, _id: 0 } },
+      ]);
     },
   },
 

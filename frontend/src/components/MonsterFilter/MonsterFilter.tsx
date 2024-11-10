@@ -1,7 +1,15 @@
-import { useState } from 'react';
-import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
+import { useEffect, useRef, useState } from 'react';
+import { Box, Slider } from '@mui/material';
 import { FiX } from 'react-icons/fi';
-import { MonsterFilterProps } from '../../interfaces/MonsterFilterProps.ts';
+import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
+
+interface MonsterFilterProps {
+  selectedFilters: Set<string>;
+  setSelectedFilters: (filters: Set<string> | ((prev: Set<string>) => Set<string>)) => void;
+  onHpChange: (min: number, max: number) => void;
+  onClearFilters: () => void;
+  monsterCounts: Record<string, number>;
+}
 
 const filterOptions = [
   'dragon',
@@ -17,12 +25,51 @@ const filterOptions = [
   'elemental',
 ];
 
-export default function MonsterFilter({ selectedFilters, setSelectedFilters }: MonsterFilterProps) {
+export default function MonsterFilter({
+  selectedFilters,
+  setSelectedFilters,
+  onHpChange,
+  onClearFilters,
+  monsterCounts,
+}: MonsterFilterProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [hpRange, setHpRange] = useState<number[]>([1, 546]);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownRef]);
+
+  useEffect(() => {
+    setSelectedFilters((prevSelectedFilters) => {
+      const updatedFilters = new Set(prevSelectedFilters);
+      let modified = false;
+
+      // Iterate over each filter to ensure it is removed if monsterCounts is zero
+      prevSelectedFilters.forEach((filter) => {
+        if (monsterCounts[filter] === 0) {
+          updatedFilters.delete(filter); // Remove the filter if no monsters match it
+          modified = true;
+        }
+      });
+
+      // Only update if any filters were removed
+      return modified ? updatedFilters : prevSelectedFilters;
+    });
+  }, [monsterCounts, setSelectedFilters]);
 
   const handleCheckboxChange = (option: string) => {
     setSelectedFilters((prev: Set<string>) => {
-      const newFilters = new Set(prev);
+      const newFilters = new Set<string>(prev);
       if (newFilters.has(option)) {
         newFilters.delete(option);
       } else {
@@ -36,12 +83,22 @@ export default function MonsterFilter({ selectedFilters, setSelectedFilters }: M
     setIsDropdownOpen((prev) => !prev);
   };
 
-  const clearFilters = () => {
-    setSelectedFilters(new Set());
+  const handleSliderChange = (_: Event, newValue: number | number[]) => {
+    const [min, max] = newValue as number[];
+    setHpRange([min, max]);
+    onHpChange(min, max);
   };
 
+  const handleClearFilters = () => {
+    if (selectedFilters.size > 0 || hpRange[0] !== 1 || hpRange[1] !== 546) {
+      setSelectedFilters(new Set<string>());
+      setHpRange([1, 546]);
+      onHpChange(1, 546);
+      onClearFilters();
+    }
+  };
   return (
-    <div className="relative text-white">
+    <div className="relative text-white" ref={dropdownRef}>
       <button
         onClick={toggleDropdown}
         className="text px-1 rounded-md bg-customRed hover:bg-transparent border-2 border-customRed hover:border-customRed hover:text-customRed transition-colors duration-200"
@@ -49,23 +106,60 @@ export default function MonsterFilter({ selectedFilters, setSelectedFilters }: M
         Filter Monsters
       </button>
       {isDropdownOpen && (
-        <div className="absolute bg-customGray shadow-xl shadow-black p-4 rounded mt-2 w-48">
-          <div className="flex justify-between items-center mb-6">
-            <button onClick={clearFilters} className="underline transition-all hover:text-gray-300 outline-none">
+        <div className="absolute left-1/2 transform -translate-x-1/2 bg-customGray shadow-xl shadow-black p-8 rounded mt-2 min-w-max max-h-screen">
+          <div className="flex justify-between items-center mb-4">
+            <button
+              onClick={handleClearFilters}
+              className="underline transition-all hover:text-customRed text outline-none"
+            >
               Clear Filters
             </button>
-            <FiX className="h-6 w-6 text-white hover:text-customRed cursor-pointer" onClick={toggleDropdown} />
+            <FiX className="h-8 w-8 text-white hover:text-customRed cursor-pointer" onClick={toggleDropdown} />
           </div>
-          {filterOptions.map((option) => (
-            <label key={option} className="flex items-center gap-5 mb-4 hover:cursor-pointer">
-              <CustomCheckbox
-                checked={selectedFilters.has(option)}
-                onChange={() => handleCheckboxChange(option)}
-                scale={0.8}
-              />
-              <span>{option}</span>
-            </label>
-          ))}
+          <h2 className="text bold mb-2 ">Type:</h2>
+          <div className="grid grid-cols-2 gap-y-4 gap-x-8 mb-4">
+            {filterOptions.map((option) => {
+              const count = monsterCounts[option] || 0;
+              const isDisabled = count === 0;
+
+              return (
+                <label
+                  key={option}
+                  className={`flex items-center gap-5 mb-2 ${isDisabled ? 'text-gray-500' : ''} ${window.innerWidth < 1280 ? 'text' : ''}`}
+                  style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
+                >
+                  <CustomCheckbox
+                    checked={!isDisabled && selectedFilters.has(option)}
+                    onChange={() => handleCheckboxChange(option)}
+                    scale={0.8}
+                    disabled={isDisabled}
+                  />
+                  <span>
+                    {option} {count > 0 && `(${count})`}
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+          <Box>
+            <h2 className="text bold">Hit Points:</h2>
+            <Slider
+              value={hpRange}
+              onChange={handleSliderChange}
+              valueLabelDisplay="auto"
+              min={1}
+              max={546}
+              sx={{
+                '& .MuiSlider-thumb': { color: '#DB3232', width: 24, height: 24 },
+                '& .MuiSlider-track': { color: '#DB3232', height: 10 },
+                '& .MuiSlider-rail': { color: '#DB3232', height: 10 },
+              }}
+            />
+            <Box display="flex" justifyContent="space-between" mt={1}>
+              <span>min: {hpRange[0]}</span>
+              <span>max: {hpRange[1]}</span>
+            </Box>
+          </Box>
         </div>
       )}
     </div>

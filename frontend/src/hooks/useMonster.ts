@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { useMemo } from 'react';
 import MonsterDataProps from '../interfaces/MonsterDataProps.ts';
-import { GET_MONSTERS } from '../../../backend/src/graphql/queries.ts';
+import { GET_MONSTERS, GET_MONSTER_TYPE_COUNTS } from '../../../backend/src/graphql/queries.ts';
 
 function useMonster(
   searchTerm: string,
@@ -28,6 +28,19 @@ function useMonster(
     fetchPolicy: 'network-only',
   });
 
+  const { data: typeCountsData } = useQuery(GET_MONSTER_TYPE_COUNTS, {
+    variables: { minHp, maxHp },
+    fetchPolicy: 'network-only',
+  });
+
+  const monsterCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    typeCountsData?.monsterTypeCounts.forEach((entry: { type: string; count: number }) => {
+      counts[entry.type] = entry.count;
+    });
+    return counts;
+  }, [typeCountsData]);
+
   const transformedMonsters = useMemo(() => {
     if (!data || !data.monsters) return [];
     const filteredMonsters = data.monsters.monsters.filter(
@@ -50,6 +63,7 @@ function useMonster(
     totalMonsters: data?.monsters.totalMonsters || 0,
     minHp: data?.monsters.minHp || 1,
     maxHp: data?.monsters.maxHp || 1000,
+    monsterCounts,
     loading,
     error,
   };

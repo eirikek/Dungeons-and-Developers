@@ -7,7 +7,6 @@ import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import Pagination from '../../components/Pagination/Pagination';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 import MonsterFilter from '../../components/MonsterFilter/MonsterFilter.tsx';
-import HitPointsFilter from '../../components/MonsterFilter/HpFilter.tsx';
 
 const monstersPerPage = 8;
 
@@ -21,7 +20,7 @@ export default function MonsterPage() {
 
   hourglass.register();
 
-  const { monsters, totalMonsters, minHp, maxHp, loading, error } = useMonster(
+  const { monsters, totalMonsters, minHp, maxHp, monsterCounts, loading, error } = useMonster(
     debouncedSearchTerm,
     currentPage,
     monstersPerPage,
@@ -77,6 +76,13 @@ export default function MonsterPage() {
     [totalPages]
   );
 
+  const clearFilters = () => {
+    setSearchTerm('');
+    debouncedSearch('');
+    setHpFilterMin(null);
+    setHpFilterMax(null);
+  };
+
   return (
     <MainPageLayout>
       <main className="main before:bg-monsters xl:h-screen xl:overflow-hidden">
@@ -84,8 +90,13 @@ export default function MonsterPage() {
 
         <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start">
           <div className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row'}>
-            <HitPointsFilter onHpChange={debouncedHandleHpChange} />
-            <MonsterFilter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} />
+            <MonsterFilter
+              selectedFilters={selectedFilters}
+              setSelectedFilters={setSelectedFilters}
+              onHpChange={debouncedHandleHpChange}
+              onClearFilters={clearFilters}
+              monsterCounts={monsterCounts}
+            />
             <SearchBar
               searchTerm={searchTerm}
               handleSearchChange={handleSearchChange}

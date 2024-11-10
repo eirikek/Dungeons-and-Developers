@@ -19,6 +19,11 @@ export const monsterType = gql`
     maxHp: Int!
   }
 
+  type TypeCount {
+    type: String!
+    count: Int!
+  }
+
   type Review {
     id: ID!
     user: User!
@@ -36,6 +41,7 @@ export const monsterType = gql`
   extend type Query {
     monsters(searchTerm: String, offset: Int, limit: Int, types: [String!], minHp: Int, maxHp: Int): MonsterResult!
     monster(id: ID!): Monster!
+    monsterTypeCounts(minHp: Int, maxHp: Int): [TypeCount!]!
   }
 
   extend type Mutation {
