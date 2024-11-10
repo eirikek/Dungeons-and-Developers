@@ -13,7 +13,6 @@ const filterOptions = [
   'construct',
   'fiend',
   'fey',
-  'giant',
   'undead',
   'elemental',
 ];
