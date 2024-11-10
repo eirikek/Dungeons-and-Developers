@@ -8,12 +8,15 @@ interface HitPointsFilterProps {
 }
 
 export default function HitPointsFilter({ initialMinHp, initialMaxHp, onHpChange }: HitPointsFilterProps) {
-  const [hpRange, setHpRange] = useState<number[]>([initialMinHp, initialMaxHp]);
   const sliderMin = 1;
   const sliderMax = 546;
 
+  const [hpRange, setHpRange] = useState<number[]>([initialMinHp || sliderMin, initialMaxHp || sliderMax]);
+
   useEffect(() => {
-    setHpRange([initialMinHp, initialMaxHp]);
+    if (initialMinHp && initialMaxHp) {
+      setHpRange([initialMinHp, initialMaxHp]);
+    }
   }, [initialMinHp, initialMaxHp]);
 
   const handleSliderChange = (_: Event, newValue: number | number[]) => {
