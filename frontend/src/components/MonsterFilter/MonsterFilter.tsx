@@ -34,6 +34,7 @@ export default function MonsterFilter({
 }: MonsterFilterProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [hpRange, setHpRange] = useState<number[]>([1, 546]);
+  const [outOfRangeFilters, setOutOfRangeFilters] = useState<Set<string>>(new Set());
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -50,31 +51,40 @@ export default function MonsterFilter({
   }, [dropdownRef]);
 
   useEffect(() => {
-    setSelectedFilters((prevSelectedFilters) => {
-      const updatedFilters = new Set(prevSelectedFilters);
+    setOutOfRangeFilters((prevOutOfRange) => {
+      const updatedOutOfRange = new Set(prevOutOfRange);
       let modified = false;
 
-      // Iterate over each filter to ensure it is removed if monsterCounts is zero
-      prevSelectedFilters.forEach((filter) => {
+      selectedFilters.forEach((filter) => {
         if (monsterCounts[filter] === 0) {
-          updatedFilters.delete(filter); // Remove the filter if no monsters match it
+          updatedOutOfRange.add(filter);
+          modified = true;
+        } else if (updatedOutOfRange.has(filter)) {
+          updatedOutOfRange.delete(filter);
           modified = true;
         }
       });
 
-      // Only update if any filters were removed
-      return modified ? updatedFilters : prevSelectedFilters;
+      return modified ? updatedOutOfRange : prevOutOfRange;
     });
-  }, [monsterCounts, setSelectedFilters]);
+  }, [monsterCounts, selectedFilters]);
 
   const handleCheckboxChange = (option: string) => {
     setSelectedFilters((prev: Set<string>) => {
       const newFilters = new Set<string>(prev);
+      const outOfRange = new Set(outOfRangeFilters);
+
       if (newFilters.has(option)) {
         newFilters.delete(option);
+        outOfRange.delete(option);
       } else {
         newFilters.add(option);
+        if (monsterCounts[option] === 0) {
+          outOfRange.add(option);
+        }
       }
+
+      setOutOfRangeFilters(outOfRange);
       return newFilters;
     });
   };
@@ -94,6 +104,7 @@ export default function MonsterFilter({
       setSelectedFilters(new Set<string>());
       setHpRange([1, 546]);
       onHpChange(1, 546);
+      setOutOfRangeFilters(new Set());
       onClearFilters();
     }
   };
@@ -120,7 +131,7 @@ export default function MonsterFilter({
           <div className="grid grid-cols-2 gap-y-4 gap-x-8 mb-4">
             {filterOptions.map((option) => {
               const count = monsterCounts[option] || 0;
-              const isDisabled = count === 0;
+              const isDisabled = count === 0 && !selectedFilters.has(option);
 
               return (
                 <label
@@ -129,7 +140,7 @@ export default function MonsterFilter({
                   style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
                 >
                   <CustomCheckbox
-                    checked={!isDisabled && selectedFilters.has(option)}
+                    checked={selectedFilters.has(option)}
                     onChange={() => handleCheckboxChange(option)}
                     scale={0.8}
                     disabled={isDisabled}
