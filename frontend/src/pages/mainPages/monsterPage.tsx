@@ -8,6 +8,8 @@ import Pagination from '../../components/Pagination/Pagination';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 import MonsterFilter from '../../components/MonsterFilter/MonsterFilter.tsx';
 import useMonsterSuggestions from '../../hooks/useMonsterSuggestions';
+import { useQuery } from '@apollo/client';
+import { GET_MONSTER_HP_RANGE } from '../../../../backend/src/graphql/queries.ts';
 
 const monstersPerPage = 8;
 
@@ -16,13 +18,20 @@ export default function MonsterPage() {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedFilters, setSelectedFilters] = useState<Set<string>>(new Set());
-  const DEFAULT_MIN_HP = 1;
-  const DEFAULT_MAX_HP = 546;
-  const [hpFilterMin, setHpFilterMin] = useState<number>(DEFAULT_MIN_HP);
-  const [hpFilterMax, setHpFilterMax] = useState<number>(DEFAULT_MAX_HP);
   const [suggestions, setSuggestions] = useState([]);
+  const [hpFilterMin, setHpFilterMin] = useState<number>(1);
+  const [hpFilterMax, setHpFilterMax] = useState<number>(1000);
 
   hourglass.register();
+
+  const { data: hpRangeData, loading: hpRangeLoading } = useQuery(GET_MONSTER_HP_RANGE);
+
+  useEffect(() => {
+    if (hpRangeData && !hpRangeLoading) {
+      setHpFilterMin(hpRangeData.monsterHpRange.minHp);
+      setHpFilterMax(hpRangeData.monsterHpRange.maxHp);
+    }
+  }, [hpRangeData, hpRangeLoading]);
 
   const { monsters, totalMonsters, minHp, maxHp, monsterCounts, loading, error } = useMonster(
     debouncedSearchTerm,
@@ -41,8 +50,10 @@ export default function MonsterPage() {
   );
 
   useEffect(() => {
-    setSuggestions(suggestionResults.map((monster: { name: string }) => monster.name));
-  }, [suggestionResults]);
+    if (suggestionResults && !suggestionsLoading) {
+      setSuggestions(suggestionResults.map((monster: { name: string }) => monster.name));
+    }
+  }, [suggestionResults, suggestionsLoading]);
 
   const debouncedSearch = useMemo(
     () =>
@@ -94,8 +105,8 @@ export default function MonsterPage() {
   const clearFilters = () => {
     setSearchTerm('');
     debouncedSearch('');
-    setHpFilterMin(DEFAULT_MIN_HP);
-    setHpFilterMax(DEFAULT_MAX_HP);
+    setHpFilterMin(minHp);
+    setHpFilterMax(maxHp);
   };
 
   return (

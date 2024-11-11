@@ -19,6 +19,11 @@ export const monsterType = gql`
     maxHp: Int!
   }
 
+  type HpRange {
+    minHp: Int!
+    maxHp: Int!
+  }
+
   type TypeCount {
     type: String!
     count: Int!
@@ -50,6 +55,7 @@ export const monsterType = gql`
     ): MonsterResult!
     monster(id: ID!): Monster!
     monsterTypeCounts(minHp: Int, maxHp: Int): [TypeCount!]!
+    monsterHpRange: HpRange!
   }
 
   extend type Mutation {

@@ -33,12 +33,12 @@ const SearchBar = ({
         />
       </div>
       {isFocused && suggestions.length > 0 && (
-        <ul className="absolute top-full mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-md z-10">
+        <ul className="absolute top-full mt-1 w-full bg-customGray shadow-xl shadow-black rounded z-10">
           {suggestions.map((suggestion, index) => (
             <li
               key={index}
               onMouseDown={() => onSuggestionClick(suggestion)}
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-black"
+              className="px-4 py-2 hover:bg-customRed rounded cursor-pointer"
             >
               {suggestion}
             </li>

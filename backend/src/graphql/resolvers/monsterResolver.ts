@@ -106,6 +106,16 @@ export default {
         { $project: { type: '$_id', count: 1, _id: 0 } },
       ]);
     },
+
+    async monsterHpRange() {
+      const minHpMonster = await Monster.findOne().sort({ hit_points: 1 });
+      const maxHpMonster = await Monster.findOne().sort({ hit_points: -1 });
+
+      return {
+        minHp: minHpMonster?.hit_points || 1,
+        maxHp: maxHpMonster?.hit_points || 1000,
+      };
+    },
   },
 
   Mutation: {
