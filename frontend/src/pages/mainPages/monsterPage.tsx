@@ -153,7 +153,7 @@ export default function MonsterPage() {
           ) : (
             <section>
               {error ? (
-                <p>An error occurred while loading monsters.</p>
+                <p>An error occurred while loading monsters. {error.message}</p>
               ) : monsters.length > 0 ? (
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 place-items-center gap-y-[10vh] lg:gap-y-[1vh] gap-x-[10vw] lg:gap-x-[4vw] min-h-[75vh]">

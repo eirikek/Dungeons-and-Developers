@@ -61,16 +61,16 @@ export default {
 
       switch (sortOption) {
         case 'name-asc':
-          sort.name = 1;
+          sort = { name: 1 };
           break;
         case 'name-desc':
-          sort.name = -1;
+          sort = { name: -1 };
           break;
         case 'difficulty-asc':
         case 'difficulty-desc':
-        case 'reviews-desc':
-          const sortDirection = sortOption === 'difficulty-asc' ? 1 : sortOption === 'difficulty-desc' ? -1 : -1;
+          const sortDirection = sortOption === 'difficulty-asc' ? 1 : -1;
 
+          console.log('Sorting by difficulty with query:', query);
           const monstersWithCalculations = await Monster.aggregate([
             { $match: query },
             {
@@ -79,21 +79,34 @@ export default {
                   $cond: {
                     if: { $gt: [{ $size: '$reviews' }, 0] },
                     then: { $avg: '$reviews.difficulty' },
-                    else: null,
+                    else: 0,
                   },
                 },
                 reviewsCount: { $size: '$reviews' },
               },
             },
             {
-              $sort: sortOption.includes('difficulty') ? { averageDifficulty: sortDirection } : { reviewsCount: -1 },
+              $sort: { averageDifficulty: sortDirection },
             },
             { $skip: offset },
             { $limit: limit },
+            {
+              $project: {
+                id: '$_id',
+                name: 1,
+                size: 1,
+                type: 1,
+                alignment: 1,
+                hit_points: 1,
+                image: 1,
+                reviews: 1,
+                averageDifficulty: 1,
+                reviewsCount: 1,
+              },
+            },
           ]);
 
           const totalMonsters = await Monster.countDocuments(query);
-
           const minHpValue = await Monster.findOne(query)
             .sort({ hit_points: 1 })
             .then((m) => m?.hit_points ?? 1);
@@ -107,8 +120,51 @@ export default {
             minHp: minHpValue,
             maxHp: maxHpValue,
           };
+
+        case 'reviews-desc':
+          console.log('Sorting by reviews with query:', query);
+          const monstersByReviews = await Monster.aggregate([
+            { $match: query },
+            {
+              $addFields: {
+                reviewsCount: { $size: '$reviews' },
+              },
+            },
+            { $sort: { reviewsCount: -1 } },
+            { $skip: offset },
+            { $limit: limit },
+            {
+              $project: {
+                id: '$_id',
+                name: 1,
+                size: 1,
+                type: 1,
+                alignment: 1,
+                hit_points: 1,
+                image: 1,
+                reviews: 1,
+                reviewsCount: 1,
+              },
+            },
+          ]);
+
+          const totalMonstersByReviews = await Monster.countDocuments(query);
+          const minHpValueByReviews = await Monster.findOne(query)
+            .sort({ hit_points: 1 })
+            .then((m) => m?.hit_points ?? 1);
+          const maxHpValueByReviews = await Monster.findOne(query)
+            .sort({ hit_points: -1 })
+            .then((m) => m?.hit_points ?? 1000);
+
+          return {
+            monsters: monstersByReviews,
+            totalMonsters: totalMonstersByReviews,
+            minHp: minHpValueByReviews,
+            maxHp: maxHpValueByReviews,
+          };
+
         default:
-          sort.name = 1;
+          sort = { name: 1 };
       }
 
       let monsters: any[] = [];

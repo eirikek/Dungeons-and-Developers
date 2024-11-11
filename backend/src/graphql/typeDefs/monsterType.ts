@@ -10,6 +10,8 @@ export const monsterType = gql`
     hit_points: Int!
     image: String
     reviews: [Review!]!
+    averageDifficulty: Float
+    reviewsCount: Int
   }
 
   type MonsterResult {

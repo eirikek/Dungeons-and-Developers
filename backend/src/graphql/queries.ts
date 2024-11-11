@@ -27,6 +27,8 @@ export const GET_MONSTERS = gql`
         alignment
         hit_points
         image
+        averageDifficulty
+        reviewsCount
       }
       totalMonsters
       minHp
