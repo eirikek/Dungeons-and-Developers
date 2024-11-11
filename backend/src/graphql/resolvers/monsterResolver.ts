@@ -195,7 +195,7 @@ export default {
 
         totalMonsters = await Monster.countDocuments({ ...query, name: { $regex: containsRegex } });
       } else {
-        monsters = await Monster.find(query).skip(offset).limit(limit);
+        monsters = await Monster.find(query).sort(sort).skip(offset).limit(limit);
         totalMonsters = await Monster.countDocuments(query);
       }
 
