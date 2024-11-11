@@ -8,8 +8,8 @@ function useMonster(
   currentPage: number,
   monstersPerPage: number,
   selectedFilters: Set<string>,
-  minHp?: number,
-  maxHp?: number
+  minHp?: number | null,
+  maxHp?: number | null
 ) {
   const offset = (currentPage - 1) * monstersPerPage;
 

@@ -13,6 +13,7 @@ interface MonsterQueryArgs {
   types?: string[];
   minHp?: number;
   maxHp?: number;
+  suggestionsOnly?: boolean;
 }
 
 interface ReviewInput {
@@ -28,7 +29,10 @@ interface MonsterTypeCountsArgs {
 
 export default {
   Query: {
-    async monsters(_: any, { searchTerm = '', offset = 0, limit = 8, types = [], minHp, maxHp }: MonsterQueryArgs) {
+    async monsters(
+      _: any,
+      { searchTerm = '', offset = 0, limit = 8, types = [], minHp, maxHp, suggestionsOnly = false }: MonsterQueryArgs
+    ) {
       let query: any = {};
 
       if (types.length > 0) {
@@ -37,6 +41,11 @@ export default {
 
       if (minHp !== undefined && maxHp !== undefined) {
         query.hit_points = { $gte: minHp, $lte: maxHp };
+      }
+
+      if (suggestionsOnly) {
+        query.name = { $regex: new RegExp(`^${searchTerm}`, 'i') };
+        return Monster.find(query, 'id name').limit(limit);
       }
 
       let monsters: any[] = [];

@@ -28,6 +28,17 @@ export const GET_MONSTER_TYPE_COUNTS = gql`
   }
 `;
 
+export const GET_MONSTER_SUGGESTIONS = gql`
+  query GetMonsterSuggestions($searchTerm: String, $types: [String!], $minHp: Int, $maxHp: Int) {
+    monsters(searchTerm: $searchTerm, types: $types, minHp: $minHp, maxHp: $maxHp) {
+      monsters {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export const GET_USER_DUNGEON = gql`
   query GetUserDungeon($userId: ID!) {
     user(id: $userId) {
