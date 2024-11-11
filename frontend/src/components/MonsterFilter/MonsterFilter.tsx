@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Box, Slider } from '@mui/material';
 import { FiX } from 'react-icons/fi';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
+import { GET_MONSTER_HP_RANGE } from '../../../../backend/src/graphql/queries.ts';
+import { useQuery } from '@apollo/client';
 
 interface MonsterFilterProps {
   selectedFilters: Set<string>;
@@ -33,9 +35,17 @@ export default function MonsterFilter({
   monsterCounts,
 }: MonsterFilterProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [hpRange, setHpRange] = useState<number[]>([1, 546]);
+  const { data: hpRangeData, loading: hpRangeLoading } = useQuery(GET_MONSTER_HP_RANGE);
+  const initialHpRange = hpRangeData ? [hpRangeData.monsterHpRange.minHp, hpRangeData.monsterHpRange.maxHp] : [1, 546];
+  const [hpRange, setHpRange] = useState<number[]>(initialHpRange);
   const [outOfRangeFilters, setOutOfRangeFilters] = useState<Set<string>>(new Set());
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (hpRangeData && !hpRangeLoading) {
+      setHpRange([hpRangeData.monsterHpRange.minHp, hpRangeData.monsterHpRange.maxHp]);
+    }
+  }, [hpRangeData, hpRangeLoading]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -100,14 +110,15 @@ export default function MonsterFilter({
   };
 
   const handleClearFilters = () => {
-    if (selectedFilters.size > 0 || hpRange[0] !== 1 || hpRange[1] !== 546) {
+    if (selectedFilters.size > 0 || hpRange[0] !== initialHpRange[0] || hpRange[1] !== initialHpRange[1]) {
       setSelectedFilters(new Set<string>());
-      setHpRange([1, 546]);
-      onHpChange(1, 546);
+      setHpRange(initialHpRange);
+      onHpChange(initialHpRange[0], initialHpRange[1]);
       setOutOfRangeFilters(new Set());
       onClearFilters();
     }
   };
+
   return (
     <div className="relative text-white" ref={dropdownRef}>
       <button
@@ -159,8 +170,8 @@ export default function MonsterFilter({
               value={hpRange}
               onChange={handleSliderChange}
               valueLabelDisplay="auto"
-              min={1}
-              max={546}
+              min={initialHpRange[0]}
+              max={initialHpRange[1]}
               sx={{
                 '& .MuiSlider-thumb': { color: '#DB3232', width: 24, height: 24 },
                 '& .MuiSlider-track': { color: '#DB3232', height: 10 },
