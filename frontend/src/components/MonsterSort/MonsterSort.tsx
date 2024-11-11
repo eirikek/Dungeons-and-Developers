@@ -43,7 +43,7 @@ export default function SortDropdown({ selectedSort, onSortChange }: SortDropdow
       <div className="relative">
         <button
           onClick={() => setIsDropdownOpen((prev) => !prev)}
-          className="px-1 rounded-lg border-2 bg-customRed text hover:bg-transparent border-customRed hover:text-customRed transition-colors duration-200 flex items-center justify-between min-w-60"
+          className="px-1 rounded-lg border-2 bg-customRed text hover:bg-transparent border-customRed hover:text-customRed transition-colors duration-200 flex items-center justify-between min-w-48 lg:min-w-60"
         >
           {sortOptions.find((option) => option.value === selectedSort)?.label || 'Select'}
           <FaChevronDown className="ml-3" />
@@ -62,7 +62,7 @@ export default function SortDropdown({ selectedSort, onSortChange }: SortDropdow
                   key={option.value}
                   onClick={() => handleSortChange(option.value)}
                   className={`px-4 py-2 rounded cursor-pointer hover:bg-customRed ${
-                    selectedSort === option.value ? 'font-semibold' : ''
+                    selectedSort === option.value ? 'font-bold' : ''
                   }`}
                 >
                   {option.label}
