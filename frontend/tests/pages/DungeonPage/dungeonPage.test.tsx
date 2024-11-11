@@ -10,7 +10,7 @@ import DungeonPage from '../../../src/pages/mainPages/dungeonPage.tsx';
 import { GET_MONSTER_REVIEWS, GET_USER_DUNGEON, UPDATE_DUNGEON_NAME } from '../../../../backend/src/graphql/queries.ts';
 
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { DungeonContext } from '../../../src/context/DungeonContext.tsx';
 
 const mockShowToast = vi.fn();
@@ -132,21 +132,21 @@ describe('DungeonPage', () => {
 
   beforeEach(() => {
     render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <AuthContext.Provider value={{ userId, token, userName, login: vi.fn(), logout: vi.fn() }}>
-          <DungeonContext.Provider
-            value={{
-              dungeonMonsters: mockMonsters,
-              toggleDungeon: mockToggleDungeon,
-              isInDungeon: (monsterId) => monsterId !== '1',
-            }}
-          >
-            <BrowserRouter>
+      <MemoryRouter initialEntries={['/dungeon']}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <AuthContext.Provider value={{ userId, token, userName, login: vi.fn(), logout: vi.fn() }}>
+            <DungeonContext.Provider
+              value={{
+                dungeonMonsters: mockMonsters,
+                toggleDungeon: mockToggleDungeon,
+                isInDungeon: (monsterId) => monsterId !== '1',
+              }}
+            >
               <DungeonPage />
-            </BrowserRouter>
-          </DungeonContext.Provider>
-        </AuthContext.Provider>
-      </MockedProvider>
+            </DungeonContext.Provider>
+          </AuthContext.Provider>
+        </MockedProvider>
+      </MemoryRouter>
     );
   });
 

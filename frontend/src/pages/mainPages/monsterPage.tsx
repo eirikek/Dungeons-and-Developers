@@ -83,7 +83,7 @@ export default function MonsterPage() {
           </div>
 
           {loading ? (
-            <div className="flex flex-col items-center justify-center h-[79.5vh]">
+            <div className="flex flex-col items-center justify-center h-[79.5vh]" data-testid="loading-indicator">
               <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
             </div>
           ) : (
