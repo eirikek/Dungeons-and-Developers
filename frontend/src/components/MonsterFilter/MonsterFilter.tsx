@@ -4,6 +4,7 @@ import { FiX } from 'react-icons/fi';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
 import { GET_MONSTER_HP_RANGE } from '../../../../backend/src/graphql/queries.ts';
 import { useQuery } from '@apollo/client';
+import { FaChevronDown } from 'react-icons/fa';
 
 interface MonsterFilterProps {
   selectedFilters: Set<string>;
@@ -126,6 +127,7 @@ export default function MonsterFilter({
         className="text px-1 rounded-md bg-customRed hover:bg-transparent border-2 border-customRed hover:border-customRed hover:text-customRed transition-colors duration-200"
       >
         Filter Monsters
+        <FaChevronDown className="inline ml-3" />
       </button>
       {isDropdownOpen && (
         <div className="absolute left-1/2 transform -translate-x-1/2 bg-customGray shadow-xl shadow-black p-8 rounded mt-2 min-w-max w-[400px]">

@@ -7,6 +7,7 @@ import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import Pagination from '../../components/Pagination/Pagination';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 import MonsterFilter from '../../components/MonsterFilter/MonsterFilter.tsx';
+import MonsterSort from '../../components/MonsterSort/MonsterSort.tsx';
 import useMonsterSuggestions from '../../hooks/useMonsterSuggestions';
 import { useQuery } from '@apollo/client';
 import { GET_MONSTER_HP_RANGE } from '../../../../backend/src/graphql/queries.ts';
@@ -21,6 +22,7 @@ export default function MonsterPage() {
   const [suggestions, setSuggestions] = useState([]);
   const [hpFilterMin, setHpFilterMin] = useState<number>(1);
   const [hpFilterMax, setHpFilterMax] = useState<number>(1000);
+  const [sortOption, setSortOption] = useState<string>('name-asc');
 
   hourglass.register();
 
@@ -39,8 +41,13 @@ export default function MonsterPage() {
     monstersPerPage,
     selectedFilters,
     hpFilterMin,
-    hpFilterMax
+    hpFilterMax,
+    sortOption
   );
+
+  const handleSortChange = (selectedSort: string) => {
+    setSortOption(selectedSort);
+  };
 
   const { suggestions: suggestionResults, loading: suggestionsLoading } = useMonsterSuggestions(
     debouncedSearchTerm,
@@ -123,6 +130,7 @@ export default function MonsterPage() {
               onClearFilters={clearFilters}
               monsterCounts={monsterCounts}
             />
+            <MonsterSort selectedSort={sortOption} onSortChange={handleSortChange} />
             <SearchBar
               searchTerm={searchTerm}
               handleSearchChange={handleSearchChange}

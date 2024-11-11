@@ -9,7 +9,8 @@ function useMonster(
   monstersPerPage: number,
   selectedFilters: Set<string>,
   minHp?: number | null,
-  maxHp?: number | null
+  maxHp?: number | null,
+  sortOption: string = 'name-asc'
 ) {
   const offset = (currentPage - 1) * monstersPerPage;
 
@@ -18,6 +19,7 @@ function useMonster(
     offset,
     limit: monstersPerPage,
     types: Array.from(selectedFilters),
+    sortOption,
     ...(minHp !== undefined && maxHp !== undefined ? { minHp, maxHp } : {}),
   };
 
