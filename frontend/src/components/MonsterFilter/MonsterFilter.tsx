@@ -117,7 +117,7 @@ export default function MonsterFilter({
         Filter Monsters
       </button>
       {isDropdownOpen && (
-        <div className="absolute left-1/2 transform -translate-x-1/2 bg-customGray shadow-xl shadow-black p-8 rounded mt-2 min-w-max max-h-screen">
+        <div className="absolute left-1/2 transform -translate-x-1/2 bg-customGray shadow-xl shadow-black p-8 rounded mt-2 min-w-max w-[400px]">
           <div className="flex justify-between items-center mb-4">
             <button
               onClick={handleClearFilters}
