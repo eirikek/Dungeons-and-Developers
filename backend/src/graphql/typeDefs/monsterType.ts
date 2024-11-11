@@ -51,6 +51,7 @@ export const monsterType = gql`
       types: [String!]
       minHp: Int
       maxHp: Int
+      sortOption: String
       suggestionsOnly: Boolean
     ): MonsterResult!
     monster(id: ID!): Monster!

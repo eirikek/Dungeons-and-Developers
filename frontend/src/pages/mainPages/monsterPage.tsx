@@ -58,9 +58,12 @@ export default function MonsterPage() {
 
   useEffect(() => {
     if (suggestionResults && !suggestionsLoading) {
-      setSuggestions(suggestionResults.map((monster: { name: string }) => monster.name));
+      const newSuggestions = suggestionResults.map((monster: { name: string }) => monster.name);
+      if (JSON.stringify(suggestions) !== JSON.stringify(newSuggestions)) {
+        setSuggestions(newSuggestions);
+      }
     }
-  }, [suggestionResults, suggestionsLoading]);
+  }, [suggestionResults, suggestions, suggestionsLoading]);
 
   const debouncedSearch = useMemo(
     () =>
@@ -78,11 +81,11 @@ export default function MonsterPage() {
   };
 
   useEffect(() => {
-    if (hpFilterMin === null && hpFilterMax === null) {
+    if (hpFilterMin === null && hpFilterMax === null && minHp && maxHp) {
       setHpFilterMin(minHp);
       setHpFilterMax(maxHp);
     }
-  }, [minHp, maxHp, selectedFilters, hpFilterMin, hpFilterMax]);
+  }, [minHp, maxHp]);
 
   const handleHpChange = useCallback((min: number, max: number) => {
     setHpFilterMin(min);

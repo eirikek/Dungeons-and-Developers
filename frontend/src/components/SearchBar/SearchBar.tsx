@@ -42,10 +42,6 @@ const SearchBar = ({
   };
 
   useEffect(() => {
-    if (searchTerm) setIsFocused(true);
-  }, [searchTerm]);
-
-  useEffect(() => {
     setHighlightedIndex(-1);
   }, [suggestions]);
 

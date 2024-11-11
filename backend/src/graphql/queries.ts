@@ -1,8 +1,24 @@
 import { gql } from '@apollo/client';
 
 export const GET_MONSTERS = gql`
-  query GetMonsters($searchTerm: String, $offset: Int, $limit: Int, $types: [String!], $minHp: Int, $maxHp: Int) {
-    monsters(searchTerm: $searchTerm, offset: $offset, limit: $limit, types: $types, minHp: $minHp, maxHp: $maxHp) {
+  query GetMonsters(
+    $searchTerm: String
+    $offset: Int
+    $limit: Int
+    $types: [String!]
+    $minHp: Int
+    $maxHp: Int
+    $sortOption: String
+  ) {
+    monsters(
+      searchTerm: $searchTerm
+      offset: $offset
+      limit: $limit
+      types: $types
+      minHp: $minHp
+      maxHp: $maxHp
+      sortOption: $sortOption
+    ) {
       monsters {
         id
         name
