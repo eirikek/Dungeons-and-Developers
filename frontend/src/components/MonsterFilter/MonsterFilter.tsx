@@ -140,6 +140,7 @@ export default function MonsterFilter({
                   style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
                 >
                   <CustomCheckbox
+                    key={`${option}-${selectedFilters.has(option)}`}
                     checked={selectedFilters.has(option)}
                     onChange={() => handleCheckboxChange(option)}
                     scale={0.8}
