@@ -118,23 +118,26 @@ export default {
         const startsWithRegex = new RegExp(`^${searchTerm}`, 'i');
         const containsRegex = new RegExp(searchTerm, 'i');
 
-        query.name = { $regex: startsWithRegex };
-        monsters = await Monster.find(query).skip(offset).limit(limit);
+        monsters = await Monster.find({ ...query, name: { $regex: startsWithRegex } })
+          .sort(sort)
+          .skip(offset)
+          .limit(limit);
 
         if (monsters.length < limit) {
           const remainingLimit = limit - monsters.length;
-          query.name = { $regex: containsRegex };
-          query._id = { $nin: monsters.map((m) => m._id) };
-
-          const additionalMonsters = await Monster.find(query)
-            .skip(offset + monsters.length)
+          const additionalMonsters = await Monster.find({
+            ...query,
+            name: { $regex: containsRegex },
+            _id: { $nin: monsters.map((m) => m._id) },
+          })
+            .sort(sort)
+            .skip(offset)
             .limit(remainingLimit);
 
           monsters = [...monsters, ...additionalMonsters];
         }
 
-        query.name = { $regex: containsRegex };
-        totalMonsters = await Monster.countDocuments(query);
+        totalMonsters = await Monster.countDocuments({ ...query, name: { $regex: containsRegex } });
       } else {
         monsters = await Monster.find(query).skip(offset).limit(limit);
         totalMonsters = await Monster.countDocuments(query);
