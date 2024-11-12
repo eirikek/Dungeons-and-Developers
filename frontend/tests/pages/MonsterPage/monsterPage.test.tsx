@@ -1,11 +1,19 @@
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen, waitFor, act, within } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
 import MonsterPage from '../../../src/pages/mainPages/monsterPage.tsx';
-import { GET_MONSTER_REVIEWS, GET_MONSTERS } from '../../../src/graphql/queries.ts';
+import {
+  ADD_FAVORITE_MONSTER,
+  GET_MONSTER_REVIEWS,
+  GET_MONSTERS,
+  GET_USER_FAVORITES,
+  REMOVE_FAVORITE_MONSTER,
+} from '../../../src/graphql/queries.ts';
 import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
 import { GraphQLError } from 'graphql/error';
+import { afterEach, beforeEach, expect } from 'vitest';
+import { DungeonProvider } from '../../../src/context/DungeonContext.tsx';
 
 const mockShowToast = vi.fn();
 vi.mock('../../../src/hooks/useToast.ts', () => ({
@@ -37,7 +45,26 @@ const mockMonsters = [
   },
 ];
 
+const userId = '1';
+const token = 'mock-token';
+const userName = 'Mock User';
+
 const mocks = [
+  {
+    // Initial GET request with no favorited monsters
+    request: {
+      query: GET_USER_FAVORITES,
+      variables: { userId: userId },
+    },
+    result: {
+      data: {
+        user: {
+          userId: userId,
+          favoritedMonsters: [], // Start with an empty dungeon
+        },
+      },
+    },
+  },
   {
     request: {
       query: GET_MONSTERS,
@@ -53,6 +80,62 @@ const mocks = [
         monsters: {
           monsters: mockMonsters,
           totalMonsters: mockMonsters.length,
+        },
+      },
+    },
+  },
+  {
+    request: {
+      query: ADD_FAVORITE_MONSTER,
+      variables: { userId: userId, monsterId: mockMonsters[1].id },
+    },
+    result: {
+      data: {
+        addFavoriteMonster: {
+          favoritedMonsters: [mockMonsters[1].id],
+        },
+      },
+    },
+  },
+  {
+    request: {
+      query: GET_USER_FAVORITES,
+      variables: { userId: userId },
+    },
+    result: {
+      data: {
+        user: {
+          userId: userId,
+          favoritedMonsters: [mockMonsters[1]],
+        },
+      },
+    },
+  },
+  {
+    request: {
+      query: REMOVE_FAVORITE_MONSTER,
+      variables: { userId: userId, monsterId: mockMonsters[1].id },
+    },
+    result: {
+      data: {
+        addFavoriteMonster: {
+          favoritedMonsters: [],
+        },
+      },
+    },
+  },
+
+  {
+    // Mock for removing Orc from the favorites
+    request: {
+      query: GET_USER_FAVORITES,
+      variables: { userId: userId },
+    },
+    result: {
+      data: {
+        user: {
+          userId: userId,
+          favoritedMonsters: [], // Orc removed from favorites
         },
       },
     },
@@ -108,20 +191,26 @@ const mocks = [
 ];
 
 describe('MonsterPage', () => {
-  const userId = '1';
-  const token = 'mock-token';
-  const userName = 'Mock User';
-
   const renderComponent = (providerMocks = mocks) =>
     render(
       <MemoryRouter initialEntries={['/monsters']}>
         <MockedProvider mocks={providerMocks} addTypename={false}>
           <AuthContext.Provider value={{ userId, token, userName, login: vi.fn(), logout: vi.fn() }}>
-            <MonsterPage />
+            <DungeonProvider userId={userId}>
+              <MonsterPage />
+            </DungeonProvider>
           </AuthContext.Provider>
         </MockedProvider>
       </MemoryRouter>
     );
+
+  beforeEach(() => {
+    mockShowToast.mockClear();
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
 
   it('renders loading state initially', () => {
     const loadingMocks = [
@@ -144,19 +233,27 @@ describe('MonsterPage', () => {
           },
         },
       },
+      {
+        request: {
+          query: GET_USER_FAVORITES,
+          variables: { userId: userId },
+        },
+        result: {
+          data: {
+            user: {
+              userId: userId,
+              favoritedMonsters: [],
+            },
+          },
+        },
+      },
     ];
     renderComponent(loadingMocks);
     expect(screen.getByTestId('loading-indicator')).toBeInTheDocument();
   });
 
   it('renders monsters after loading', async () => {
-    render(
-      <MemoryRouter>
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <MonsterPage />
-        </MockedProvider>
-      </MemoryRouter>
-    );
+    renderComponent();
 
     await waitFor(() => {
       expect(screen.getByText('Goblin')).toBeInTheDocument();
@@ -181,6 +278,20 @@ describe('MonsterPage', () => {
         },
         error: new GraphQLError('An error occurred'),
         result: { data: { monsters: { monsters: [], totalMonsters: 0 } } },
+      },
+      {
+        request: {
+          query: GET_USER_FAVORITES,
+          variables: { userId: userId },
+        },
+        result: {
+          data: {
+            user: {
+              userId: userId,
+              favoritedMonsters: [],
+            },
+          },
+        },
       },
     ];
 
@@ -309,5 +420,113 @@ describe('MonsterPage', () => {
     });
 
     expect(screen.queryByText('Goblin')).not.toBeInTheDocument();
+  });
+  it('adds a monster to the dungeon', async () => {
+    renderComponent();
+    const orcCard = await screen.findByTestId('Orc-monster-card');
+
+    expect(orcCard).toBeInTheDocument();
+
+    const addButton = within(orcCard).getAllByRole('button', { name: 'Add to dungeon' })[0];
+    expect(addButton).toBeInTheDocument();
+
+    await userEvent.click(addButton);
+
+    await waitFor(() => {
+      expect(mockShowToast).toHaveBeenCalledWith({
+        message: 'Orc added to dungeon',
+        type: 'success',
+        duration: 3000,
+      });
+    });
+  });
+  it('removes a monster from the dungeon', async () => {
+    renderComponent();
+
+    await waitFor(() => {
+      expect(screen.getByText('Orc')).toBeInTheDocument();
+    });
+
+    const orcCard = screen.getByTestId('Orc-monster-card');
+    const removeButton = within(orcCard).getByRole('button', { name: 'Remove from dungeon' });
+
+    await userEvent.click(removeButton);
+
+    await waitFor(() => {
+      expect(mockShowToast).toHaveBeenCalledWith({
+        message: 'Orc removed from dungeon',
+        type: 'info',
+        duration: 5000,
+      });
+      expect(screen.queryByTestId('Orc-monster-card')).not.toBeInTheDocument();
+      expect(screen.getByText('Total Dungeon HP: 7')).toBeInTheDocument();
+    });
+  });
+
+  it('shows warning when adding a monster at max capacity', async () => {
+    const sixMonsters = Array.from({ length: 6 }, (_, i) => ({
+      id: `${i + 1}`,
+      name: `Monster${i + 1}`,
+      hit_points: 10,
+      type: 'Beast',
+      size: 'Medium',
+      image: '',
+      alignment: 'neutral evil',
+    }));
+
+    const maxMocks = [
+      {
+        request: {
+          query: GET_USER_FAVORITES,
+          variables: { userId: '1' },
+        },
+        result: {
+          data: {
+            user: {
+              favoritedMonsters: sixMonsters,
+            },
+          },
+        },
+      },
+      {
+        request: {
+          query: GET_MONSTERS,
+          variables: {
+            searchTerm: '',
+            offset: 0,
+            limit: monstersPerPage,
+            types: [],
+          },
+        },
+        result: {
+          data: {
+            monsters: {
+              monsters: sixMonsters,
+              totalMonsters: sixMonsters.length,
+            },
+          },
+        },
+      },
+    ];
+
+    renderComponent(maxMocks);
+
+    await waitFor(() => {
+      expect(screen.getByText('Total Dungeon HP: 60')).toBeInTheDocument();
+    });
+
+    const goblinCard = screen.getByTestId('Monster3-monster-card');
+
+    const button = within(goblinCard).getByRole('button', { name: 'Add to dungeon' });
+
+    await waitFor(() => {
+      expect(mockShowToast).toHaveBeenCalledWith({
+        message: 'You can only add 6 monsters to your dungeon',
+        type: 'warning',
+        duration: 3000,
+      });
+    });
+
+    expect(button).toHaveTextContent('Add to dungeon');
   });
 });

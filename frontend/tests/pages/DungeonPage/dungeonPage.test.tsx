@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 /*
 Mocked provider:
@@ -11,7 +11,8 @@ import DungeonPage from '../../../src/pages/mainPages/dungeonPage.tsx';
 
 import { MemoryRouter } from 'react-router-dom';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
-import { DungeonContext } from '../../../src/context/DungeonContext.tsx';
+import { DungeonContext, DungeonProvider } from '../../../src/context/DungeonContext.tsx';
+import { afterEach, expect } from 'vitest';
 
 const mockShowToast = vi.fn();
 vi.mock('../../../src/hooks/useToast.ts', () => ({
@@ -20,12 +21,20 @@ vi.mock('../../../src/hooks/useToast.ts', () => ({
   }),
 }));
 
-const mockToggleDungeon = vi.fn(() => {
-  mockShowToast({
-    message: 'Goblin added to dungeon',
-    type: 'success',
-    duration: 3000,
-  });
+const mockToggleDungeon = vi.fn((monster) => {
+  if (monster.id === '2') {
+    mockShowToast({
+      message: `${monster.name} removed from dungeon`,
+      type: 'info',
+      duration: 5000,
+    });
+  } else {
+    mockShowToast({
+      message: `${monster.name} added to dungeon`,
+      type: 'success',
+      duration: 3000,
+    });
+  }
 });
 
 const mockMonsters = [
@@ -130,30 +139,31 @@ describe('DungeonPage', () => {
   const token = 'mock-token'; // Mock token
   const userName = 'Mock User'; // Mock user name
 
-  beforeEach(() => {
+  const renderComponent = () =>
     render(
       <MemoryRouter initialEntries={['/dungeon']}>
         <MockedProvider mocks={mocks} addTypename={false}>
           <AuthContext.Provider value={{ userId, token, userName, login: vi.fn(), logout: vi.fn() }}>
-            <DungeonContext.Provider
-              value={{
-                dungeonMonsters: mockMonsters,
-                toggleDungeon: mockToggleDungeon,
-                isInDungeon: (monsterId) => monsterId !== '1',
-              }}
-            >
+            <DungeonProvider userId={userId}>
               <DungeonPage />
-            </DungeonContext.Provider>
+            </DungeonProvider>
           </AuthContext.Provider>
         </MockedProvider>
       </MemoryRouter>
     );
+  beforeEach(() => {
+    mockShowToast.mockClear();
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
   it('renders correctly and matches snapshot', async () => {
+    renderComponent();
+
     await waitFor(() => {
       expect(screen.getByTestId('dungeon-name')).toBeInTheDocument();
-
       expect(screen.getByText('Example dungeon')).toBeInTheDocument();
     });
     expect(screen.queryByText('No monsters in dungeon')).toBeNull();
@@ -162,7 +172,9 @@ describe('DungeonPage', () => {
   });
 
   it('updates dungeon name on input save', async () => {
+    renderComponent();
     const user = userEvent.setup();
+
     const editButton = screen.getByRole('button', { name: 'Edit Dungeon Name' });
 
     await waitFor(() => {
@@ -186,24 +198,79 @@ describe('DungeonPage', () => {
   });
 
   it('displays total HP when monsters are present', async () => {
+    renderComponent();
     await waitFor(() => {
       expect(screen.getByText('Total Dungeon HP: 80')).toBeInTheDocument();
     });
   });
 
-  it('handles adding a monster to the dungeon', async () => {
+  it('checks if monster is in the dungeon', async () => {
+    renderComponent();
+    await waitFor(() => {
+      const goblinCard = screen.getByTestId('Goblin-monster-card');
+      expect(within(goblinCard).queryByText('Remove from dungeon')).toBeNull();
+      expect(within(goblinCard).getByText('Add to dungeon')).toBeInTheDocument();
+
+      const orcCard = screen.getByTestId('Orc-monster-card');
+      expect(within(orcCard).queryByText('Add to dungeon')).toBeNull();
+      expect(within(orcCard).getByText('Remove from dungeon')).toBeInTheDocument();
+    });
+  });
+
+  it('handles removing a monster from dungeon', async () => {
+    renderComponent();
     const user = userEvent.setup();
-    const monsterCard = screen.getByTestId('Goblin-monster-card');
-    // const addButton = within(monsterCard).getByRole('button', { name: 'Click to add to dungeon' });
-    const addButton = within(monsterCard).getByText('Add to dungeon');
-    await user.click(addButton);
+    const monsterCard = screen.getByTestId('Orc-monster-card');
+    const removeButton = within(monsterCard).getByText('Remove from dungeon');
+    expect(removeButton).toBeInTheDocument();
+
+    await user.click(removeButton);
 
     await waitFor(() =>
       expect(mockShowToast).toHaveBeenCalledWith({
-        message: 'Goblin added to dungeon',
-        type: 'success',
-        duration: 3000,
+        message: 'Orc removed from dungeon',
+        type: 'info',
+        duration: 5000,
       })
     );
+    expect(screen.queryByTestId('Orc-monster-card')).not.toBeInTheDocument();
+    expect(screen.getByText('Total Dungeon HP: 30')).toBeInTheDocument(); // Only Goblin remains
+  });
+  it('undoes removing a monster', async () => {
+    renderComponent();
+
+    await waitFor(() => {
+      expect(screen.getByText('Orc')).toBeInTheDocument();
+    });
+
+    const orcCard = screen.getByTestId('Orc-monster-card');
+    const removeButton = within(orcCard).getByRole('button', { name: 'Remove from dungeon' });
+
+    await userEvent.click(removeButton);
+
+    await waitFor(() => {
+      expect(mockShowToast).toHaveBeenCalledWith({
+        message: 'Orc removed from dungeon',
+        type: 'info',
+        duration: 5000,
+      });
+      expect(screen.queryByTestId('Orc-monster-card')).not.toBeInTheDocument();
+      expect(screen.getByText('Total Dungeon HP: 7')).toBeInTheDocument();
+    });
+
+    const undoFunction = mockShowToast.mock.calls[0][0].undoAction;
+    await act(async () => {
+      await undoFunction();
+    });
+
+    await waitFor(() => {
+      expect(mockShowToast).toHaveBeenCalledWith({
+        message: 'Orc restored to dungeon',
+        type: 'success',
+        duration: 3000,
+      });
+      expect(screen.getByTestId('Orc-monster-card')).toBeInTheDocument();
+      expect(screen.getByText('Total Dungeon HP: 22')).toBeInTheDocument();
+    });
   });
 });

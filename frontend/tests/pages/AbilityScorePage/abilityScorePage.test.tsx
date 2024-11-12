@@ -41,7 +41,7 @@ const mocks = [
   },
   {
     request: {
-      query: GET_ABILITYSCORES, // Add GET_ABILITYSCORES here
+      query: GET_ABILITYSCORES,
       variables: { offset: 0, limit: 6 },
     },
     result: {
