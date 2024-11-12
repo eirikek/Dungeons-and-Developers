@@ -10,6 +10,7 @@ interface MonsterFilterProps {
   selectedFilters: Set<string>;
   setSelectedFilters: (filters: Set<string> | ((prev: Set<string>) => Set<string>)) => void;
   onHpChange: (min: number, max: number) => void;
+  setCurrentPage: (page: number) => void;
   onClearFilters: () => void;
   monsterCounts: Record<string, number>;
 }
@@ -32,6 +33,7 @@ export default function MonsterFilter({
   selectedFilters,
   setSelectedFilters,
   onHpChange,
+  setCurrentPage,
   onClearFilters,
   monsterCounts,
 }: MonsterFilterProps) {
@@ -88,6 +90,7 @@ export default function MonsterFilter({
       if (newFilters.has(option)) {
         newFilters.delete(option);
         outOfRange.delete(option);
+        setCurrentPage(1);
       } else {
         newFilters.add(option);
         if (monsterCounts[option] === 0) {

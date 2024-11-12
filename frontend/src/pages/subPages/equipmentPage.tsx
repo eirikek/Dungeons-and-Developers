@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import Pagination from '../../components/Pagination/Pagination.tsx';
 import EquipmentCard from '../../components/SubPages/EquipmentCard.tsx';
@@ -10,6 +10,8 @@ import { Equipment } from '../../interfaces/EquipmentProps.ts';
 import useUserEquipments from '../../hooks/useUserEquipments.ts';
 import { REMOVE_ALL_EQUIPMENTS } from '../../../../backend/src/graphql/queries.ts';
 import { useMutation } from '@apollo/client';
+import SearchBar from '../../components/SearchBar/SearchBar.tsx';
+import debounce from 'lodash/debounce';
 
 const variants = {
   enter: (direction: number) => ({
@@ -29,16 +31,18 @@ const variants = {
 const EquipmentPage = () => {
   const { userId } = useContext(AuthContext);
   const { showToast } = useToast();
-  const { userEquipments, loading, addToEquipments, removeFromEquipments } = useUserEquipments();
+  const { userEquipments, addToEquipments, removeFromEquipments } = useUserEquipments();
   const undoRemoveRef = useRef<Equipment | Equipment[] | null>(null);
   const [removeAllEquipments] = useMutation(REMOVE_ALL_EQUIPMENTS);
-
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
   const [direction, setDirection] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const equipmentsPerPage = 20;
   const maxEquipments = 10;
 
   const { equipments: fetchedEquipments, totalEquipments: fetchedTotalEquipments } = useEquipments(
+    debouncedSearchTerm,
     currentPage,
     equipmentsPerPage
   );
@@ -48,6 +52,20 @@ const EquipmentPage = () => {
   useEffect(() => {
     setEquipments(fetchedEquipments);
   }, [currentPage, fetchedEquipments]);
+
+  const debounceSearch = useMemo(
+    () =>
+      debounce((value: string) => {
+        setDebouncedSearchTerm(value);
+      }, 300),
+    []
+  );
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    debounceSearch(e.target.value);
+    setCurrentPage(1);
+  };
 
   const undoRemoveEquipment = async () => {
     if (undoRemoveRef.current && !Array.isArray(undoRemoveRef.current)) {
@@ -142,25 +160,37 @@ const EquipmentPage = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-
   return (
     <MainPageLayout>
       <main className="main before:bg-equipments">
         <div className="black-overlay" />
         <div className="wrapper py-20 min-w-[70%] flex gap-y-32 2xl:gap-0 mt-10 items-center justify-center">
-          <h1 className="header">Equipments</h1>
-          <button
-            onClick={handleRemoveAllEquipments}
-            className="text px-1 rounded-md bg-customRed hover:bg-transparent border-2 border-customRed hover:border-customRed hover:text-customRed transition-colors duration-200"
-          >
-            Remove All Equipments
-          </button>
-          <section className="w-full h-9/10">
+          <section className="h-[20vh]">
+            <h1 className=" text-center header mb-10">Equipments</h1>
+            <div className="flex flex-col xl:flex-row gap-10 items-center">
+              <button
+                onClick={handleRemoveAllEquipments}
+                className="text px-1 rounded-md bg-customRed hover:bg-transparent border-2 border-customRed hover:border-customRed hover:text-customRed transition-colors duration-200"
+              >
+                Remove All Equipments
+              </button>
+              <SearchBar
+                searchTerm={searchTerm}
+                handleSearchChange={handleSearchChange}
+                suggestions={equipments.map((e) => e.name)}
+                onSuggestionClick={(suggestion) => {
+                  setSearchTerm(suggestion);
+                  debounceSearch(suggestion);
+                }}
+                placeholder="Search for equipment..."
+              />
+            </div>
+          </section>
+          <section className="w-full h-full">
             <AnimatePresence initial={false} custom={direction} mode="wait">
               <motion.div
                 key={currentPage}
-                className="grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 gap-10 p-10 w-full h-full auto-rows-fr"
+                className="grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 gap-10 p-10 w-full h-full min-h-[55vh] auto-rows-fr"
                 custom={direction}
                 variants={variants}
                 initial="enter"
@@ -193,7 +223,13 @@ const EquipmentPage = () => {
               </motion.div>
             </AnimatePresence>
           </section>
-          <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
+
+          <div className="min-h-[5vh]">
+            {fetchedTotalEquipments > equipmentsPerPage && (
+              <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
+            )}
+            <div />
+          </div>
         </div>
       </main>
     </MainPageLayout>
