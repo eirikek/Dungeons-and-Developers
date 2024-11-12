@@ -1,12 +1,12 @@
-import { describe, expect } from 'vitest';
-import { GET_CLASSES, GET_USER_CLASS, UPDATE_USER_CLASS } from '../../../../backend/src/graphql/queries.ts';
-import { render, screen, waitFor, within } from '@testing-library/react';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
-import { AuthContext } from '../../../src/context/AuthContext.tsx';
-import { BrowserRouter } from 'react-router-dom';
-import ClassPage from '../../../src/pages/subPages/classPage.tsx';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { GraphQLError } from 'graphql/error';
+import { BrowserRouter } from 'react-router-dom';
+import { describe, expect } from 'vitest';
+import { AuthContext } from '../../../src/context/AuthContext.tsx';
+import { GET_CLASSES, GET_USER_CLASS, UPDATE_USER_CLASS } from '../../../src/graphql/queries.ts';
+import ClassPage from '../../../src/pages/subPages/classPage.tsx';
 
 const mockShowToast = vi.fn();
 

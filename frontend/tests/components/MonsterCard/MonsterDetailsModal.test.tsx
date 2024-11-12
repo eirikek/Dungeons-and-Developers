@@ -1,11 +1,11 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
-import MonsterDetailsModal from '../../../src/components/MonsterCard/MonsterDetailsModal.tsx';
-import { GET_MONSTER_REVIEWS } from '../../../../backend/src/graphql/queries';
-import { AuthContext } from '../../../src/context/AuthContext.tsx';
-import { Review } from './MonsterReviewModal.test.tsx';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import MonsterDetailsModal from '../../../src/components/MonsterCard/MonsterDetailsModal.tsx';
+import { AuthContext } from '../../../src/context/AuthContext.tsx';
+import { GET_MONSTER_REVIEWS } from '../../../src/graphql/queries.ts';
+import { Review } from './MonsterReviewModal.test.tsx';
 
 const mockProps = {
   id: 'monster-123',

@@ -6,7 +6,7 @@ import {
   GET_USER_EQUIPMENT,
   REMOVE_ALL_EQUIPMENTS,
   REMOVE_EQUIPMENT_FROM_CHARACTER,
-} from '../../../backend/src/graphql/queries.ts';
+} from '../graphql/queries';
 import { Equipment } from '../interfaces/EquipmentProps.ts';
 
 const useUserEquipments = () => {

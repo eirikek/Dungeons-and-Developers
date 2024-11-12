@@ -1,7 +1,7 @@
 import { render, screen, waitFor, act } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
 import MonsterPage from '../../../src/pages/mainPages/monsterPage.tsx';
-import { GET_MONSTER_REVIEWS, GET_MONSTERS } from '../../../../backend/src/graphql/queries';
+import { GET_MONSTER_REVIEWS, GET_MONSTERS } from '../../../src/graphql/queries.ts';
 import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';

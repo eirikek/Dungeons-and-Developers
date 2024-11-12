@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { useMemo } from 'react';
 import MonsterDataProps from '../interfaces/MonsterDataProps.ts';
-import { GET_MONSTERS } from '../../../backend/src/graphql/queries.ts';
+import { GET_MONSTERS } from '../graphql/queries';
 
 function useMonster(searchTerm: string, currentPage: number, monstersPerPage: number, selectedFilters: Set<string>) {
   const offset = (currentPage - 1) * monstersPerPage;

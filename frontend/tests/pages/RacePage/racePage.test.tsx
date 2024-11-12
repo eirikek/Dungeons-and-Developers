@@ -1,12 +1,12 @@
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
-import { GET_RACES, GET_USER_RACE, UPDATE_USER_RACE } from '../../../../backend/src/graphql/queries.ts';
 import { render, screen, waitFor, within } from '@testing-library/react';
+import { GET_RACES, GET_USER_RACE, UPDATE_USER_RACE } from '../../../src/graphql/queries.ts';
 
-import { AuthContext } from '../../../src/context/AuthContext.tsx';
-import { BrowserRouter } from 'react-router-dom';
-import RacePage from '../../../src/pages/subPages/racePage.tsx';
-import { GraphQLError } from 'graphql/error';
 import userEvent from '@testing-library/user-event';
+import { GraphQLError } from 'graphql/error';
+import { BrowserRouter } from 'react-router-dom';
+import { AuthContext } from '../../../src/context/AuthContext.tsx';
+import RacePage from '../../../src/pages/subPages/racePage.tsx';
 
 const mockShowToast = vi.fn();
 vi.mock('../../../src/hooks/useToast.ts', () => ({

@@ -1,10 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MockedProvider } from '@apollo/client/testing';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import MonsterReviewModal from '../../../src/components/MonsterCard/MonsterReviewModal.tsx';
-import { ADD_REVIEW, GET_MONSTER_REVIEWS, UPDATE_REVIEW } from '../../../../backend/src/graphql/queries';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
+import { ADD_REVIEW, GET_MONSTER_REVIEWS, UPDATE_REVIEW } from '../../../src/graphql/queries.ts';
 
 export type Review = {
   id: string;

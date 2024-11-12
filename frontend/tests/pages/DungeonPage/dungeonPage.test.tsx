@@ -6,11 +6,11 @@ Mocked provider:
 *
 *  */
 import { MockedProvider } from '@apollo/client/testing';
+import { GET_MONSTER_REVIEWS, GET_USER_DUNGEON, UPDATE_DUNGEON_NAME } from '../../../src/graphql/queries.ts';
 import DungeonPage from '../../../src/pages/mainPages/dungeonPage.tsx';
-import { GET_MONSTER_REVIEWS, GET_USER_DUNGEON, UPDATE_DUNGEON_NAME } from '../../../../backend/src/graphql/queries.ts';
 
-import { AuthContext } from '../../../src/context/AuthContext.tsx';
 import { MemoryRouter } from 'react-router-dom';
+import { AuthContext } from '../../../src/context/AuthContext.tsx';
 import { DungeonContext } from '../../../src/context/DungeonContext.tsx';
 
 const mockShowToast = vi.fn();

@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import DungeonMonsterGrid from '../../../src/components/Dungeon/DungeonMonsterGrid.tsx';
 
-import { GET_MONSTER_REVIEWS, GET_USER_DUNGEON } from '../../../../backend/src/graphql/queries.ts';
 import { MockedProvider } from '@apollo/client/testing';
-import { DungeonContext } from '../../../src/context/DungeonContext.tsx';
-import { AuthContext } from '../../../src/context/AuthContext.tsx';
 import { expect } from 'vitest';
+import { AuthContext } from '../../../src/context/AuthContext.tsx';
+import { DungeonContext } from '../../../src/context/DungeonContext.tsx';
+import { GET_MONSTER_REVIEWS, GET_USER_DUNGEON } from '../../../src/graphql/queries.ts';
 
 const mockShowToast = vi.fn();
 vi.mock('../../../src/hooks/useToast.ts', () => ({

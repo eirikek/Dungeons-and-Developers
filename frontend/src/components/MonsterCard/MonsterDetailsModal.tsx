@@ -1,7 +1,7 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import Review from './Review.tsx';
 import { useQuery } from '@apollo/client';
-import { GET_MONSTER_REVIEWS } from '../../../../backend/src/graphql/queries';
+import { GET_MONSTER_REVIEWS } from '../../graphql/queries.ts';
 import { ReviewType } from '../../interfaces/ReviewProps.ts';
 import { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';

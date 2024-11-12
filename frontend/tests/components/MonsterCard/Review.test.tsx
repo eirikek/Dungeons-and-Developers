@@ -1,12 +1,12 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { MockedProvider } from '@apollo/client/testing';
-import { DELETE_REVIEW, UPDATE_REVIEW, GET_MONSTER_REVIEWS } from '../../../../backend/src/graphql/queries';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import React from 'react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Review from '../../../src/components/MonsterCard/Review.tsx';
 import { AuthContext } from '../../../src/context/AuthContext';
+import { DELETE_REVIEW, GET_MONSTER_REVIEWS, UPDATE_REVIEW } from '../../../src/graphql/queries.ts';
 import { ReviewType } from '../../../src/interfaces/ReviewProps';
-import React from 'react';
 
 // Mock the useToast hook
 vi.mock('../../../src/hooks/useToast', () => ({

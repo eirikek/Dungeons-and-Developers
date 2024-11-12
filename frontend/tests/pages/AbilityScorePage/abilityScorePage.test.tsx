@@ -1,11 +1,11 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
-import AbilityScorePage from '../../../src/pages/subPages/abilityScorePage.tsx';
-import { GET_ABILITYSCORES, GET_ARRAY_SCORES, UPDATE_ABILITY_SCORES } from '../../../../backend/src/graphql/queries.ts';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
+import { GET_ABILITYSCORES, GET_ARRAY_SCORES, UPDATE_ABILITY_SCORES } from '../../../src/graphql/queries.ts';
+import AbilityScorePage from '../../../src/pages/subPages/abilityScorePage.tsx';
 
-import { afterEach, vi } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
+import { afterEach, vi } from 'vitest';
 
 // Mock the useToast hook
 const mockShowToast = vi.fn();
