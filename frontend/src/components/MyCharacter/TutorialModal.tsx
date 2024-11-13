@@ -80,7 +80,6 @@ const TutorialModal = () => {
               </Link>
               .
             </p>
-            i
             <img src={raceGif} alt="Race tutorial" />
           </section>
           <section className="w-full flex flex-col items-center gap-5">
