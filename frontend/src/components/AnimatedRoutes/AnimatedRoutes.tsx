@@ -11,6 +11,7 @@ import MyCharacterPage from '../../pages/mainPages/myCharacterPage.tsx';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute.tsx';
+import NotFoundPage from '../../pages/mainPages/notFoundPage.tsx';
 
 export default function AnimatedRoutes() {
   const location = useLocation();
@@ -88,6 +89,15 @@ export default function AnimatedRoutes() {
           element={
             <ProtectedRoute>
               <MyCharacterPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="*"
+          element={
+            <ProtectedRoute>
+              <NotFoundPage />
             </ProtectedRoute>
           }
         />
