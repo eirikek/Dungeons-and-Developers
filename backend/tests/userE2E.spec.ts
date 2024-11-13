@@ -7,12 +7,11 @@ test.describe('User End-to-End Test with Authentication', () => {
   let userId: string;
   let authToken: string;
 
+  // Wait for 5 seconds to ensure the server is up
   test.beforeAll(async () => {
-    // Wait for 5 seconds to ensure the server is up
     await new Promise((resolve) => setTimeout(resolve, 5000));
   });
 
-  // 1. Create a new user
   test('Create a user', async ({ request }) => {
     const response = await request.post(GRAPHQL_URL, {
       headers: {

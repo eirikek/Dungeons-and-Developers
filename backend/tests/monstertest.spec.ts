@@ -4,7 +4,6 @@ test.describe('Monster API End-to-End Test', () => {
   const GRAPHQL_URL = 'http://localhost:4000';
 
   test('Fetch monsters, filter by type, and fetch single monster details', async ({ request }) => {
-    // 1. Hent liste med monstre
     let response = await request.post(GRAPHQL_URL, {
       data: {
         query: `
@@ -57,7 +56,7 @@ test.describe('Monster API End-to-End Test', () => {
     expect(filteredMonsters.every((m: any) => m.type === monsterType)).toBe(true);
 
     // 3. Hent detaljer for et spesifikt monster
-    const monsterId = monsters[0].id; // Bruker ID fra første monster i listen
+    const monsterId = monsters[0].id;
     response = await request.post(GRAPHQL_URL, {
       data: {
         query: `
