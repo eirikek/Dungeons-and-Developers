@@ -177,7 +177,7 @@ const EquipmentPage = () => {
               <SearchBar
                 searchTerm={searchTerm}
                 handleSearchChange={handleSearchChange}
-                suggestions={equipments.map((e) => e.name)}
+                suggestions={searchTerm ? equipments.map((e) => e.name) : []}
                 onSuggestionClick={(suggestion) => {
                   setSearchTerm(suggestion);
                   debounceSearch(suggestion);
