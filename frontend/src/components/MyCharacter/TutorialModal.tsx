@@ -80,6 +80,7 @@ const TutorialModal = () => {
               </Link>
               .
             </p>
+            i
             <img src={raceGif} alt="Race tutorial" />
           </section>
           <section className="w-full flex flex-col items-center gap-5">
@@ -91,7 +92,7 @@ const TutorialModal = () => {
               does not provide at least one of the required skills, you will not be able to increase that ability score,
               and it will remain at zero. However, if an ability score does not require any specific skills, you are
               free to increase it as you like. To learn more about each class’s HP and available skills, click{' '}
-              <Link to="/project2/class" className="underline text-customRed">
+              <Link to="/class" className="underline text-customRed">
                 here
               </Link>
               .
@@ -106,7 +107,7 @@ const TutorialModal = () => {
               mentioned, some ability scores require specific skills, and your class must have at least one of these
               skills in order to increase that ability score. To learn more about the ability scores and their required
               skills, click{' '}
-              <Link to="/project2/abilityscore" className="underline text-customRed">
+              <Link to="/abilityscore" className="underline text-customRed">
                 here
               </Link>
               .
@@ -119,7 +120,7 @@ const TutorialModal = () => {
               Here you can see all the equipment you have equipped. Your choice of equipment can significantly impact
               your character’s effectiveness in combat and exploration. You can equip up to 10 items. To view all
               available equipment, see what you’re currently using, and modify your selection, click{' '}
-              <Link to="/project2/equipment" className="underline text-customRed">
+              <Link to="/equipment" className="underline text-customRed">
                 here
               </Link>
               .
