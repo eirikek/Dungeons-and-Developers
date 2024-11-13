@@ -63,7 +63,7 @@ const MonsterDetailsModal = ({ id, name, hit_points, type, image, onClose }: Mon
         {/* Scrollable Reviews Section */}
         <Box className="w-full xl:w-1/2 rounded h-full flex flex-col gap-3">
           <div className="sticky top-0 z-10 bg-black py-4">
-            <h2 className="header">Reviews</h2>
+            <h2 className="header xl:ml-[1.5vw]">Reviews</h2>
           </div>
 
           <div className="overflow-y-auto flex-1 flex flex-col gap-5 p-1">

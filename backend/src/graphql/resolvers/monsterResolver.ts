@@ -11,6 +11,10 @@ interface MonsterQueryArgs {
   offset?: number;
   limit?: number;
   types?: string[];
+  minHp?: number;
+  maxHp?: number;
+  sortOption?: string;
+  suggestionsOnly?: boolean;
 }
 
 interface ReviewInput {
@@ -19,38 +23,190 @@ interface ReviewInput {
   description: string;
 }
 
+interface MonsterTypeCountsArgs {
+  minHp?: number;
+  maxHp?: number;
+}
+
 export default {
   Query: {
-    async monsters(_: any, { searchTerm = '', offset = 0, limit = 8, types = [] }: MonsterQueryArgs) {
+    async monsters(
+      _: any,
+      {
+        searchTerm = '',
+        offset = 0,
+        limit = 8,
+        types = [],
+        minHp,
+        maxHp,
+        sortOption = 'name-asc',
+        suggestionsOnly = false,
+      }: MonsterQueryArgs
+    ) {
       let query: any = {};
-
-      if (searchTerm) {
-        const startsWithRegex = new RegExp(`^${searchTerm}`, 'i');
-        const containsRegex = new RegExp(searchTerm, 'i');
-
-        query.name = { $regex: startsWithRegex };
-
-        let monsters = await Monster.find(query).skip(offset).limit(limit);
-
-        if (monsters.length < limit) {
-          const additionalQuery = { name: { $regex: containsRegex }, _id: { $nin: monsters.map(m => m._id) } };
-          const additionalResults = await Monster.find(additionalQuery).skip(offset).limit(limit - monsters.length);
-          monsters = [...monsters, ...additionalResults];
-        }
-
-        const totalMonsters = await Monster.countDocuments({ name: { $regex: containsRegex } });
-
-        return { monsters, totalMonsters };
-      }
+      let sort: any = {};
 
       if (types.length > 0) {
         query.type = { $in: types };
       }
 
-      const monsters = await Monster.find(query).skip(offset).limit(limit);
-      const totalMonsters = await Monster.countDocuments(query);
+      if (minHp !== undefined && maxHp !== undefined) {
+        query.hit_points = { $gte: minHp, $lte: maxHp };
+      }
 
-      return { monsters, totalMonsters };
+      if (suggestionsOnly) {
+        query.name = { $regex: new RegExp(`^${searchTerm}`, 'i') };
+        return Monster.find(query, 'id name').limit(limit);
+      }
+
+      switch (sortOption) {
+        case 'name-asc':
+          sort = { name: 1 };
+          break;
+        case 'name-desc':
+          sort = { name: -1 };
+          break;
+        case 'difficulty-asc':
+        case 'difficulty-desc':
+          const sortDirection = sortOption === 'difficulty-asc' ? 1 : -1;
+
+          console.log('Sorting by difficulty with query:', query);
+          const monstersWithCalculations = await Monster.aggregate([
+            { $match: query },
+            {
+              $addFields: {
+                averageDifficulty: {
+                  $cond: {
+                    if: { $gt: [{ $size: '$reviews' }, 0] },
+                    then: { $avg: '$reviews.difficulty' },
+                    else: 0,
+                  },
+                },
+                reviewsCount: { $size: '$reviews' },
+              },
+            },
+            {
+              $sort: { averageDifficulty: sortDirection },
+            },
+            { $skip: offset },
+            { $limit: limit },
+            {
+              $project: {
+                id: '$_id',
+                name: 1,
+                size: 1,
+                type: 1,
+                alignment: 1,
+                hit_points: 1,
+                image: 1,
+                reviews: 1,
+                averageDifficulty: 1,
+                reviewsCount: 1,
+              },
+            },
+          ]);
+
+          const totalMonsters = await Monster.countDocuments(query);
+          const minHpValue = await Monster.findOne(query)
+            .sort({ hit_points: 1 })
+            .then((m) => m?.hit_points ?? 1);
+          const maxHpValue = await Monster.findOne(query)
+            .sort({ hit_points: -1 })
+            .then((m) => m?.hit_points ?? 1000);
+
+          return {
+            monsters: monstersWithCalculations,
+            totalMonsters,
+            minHp: minHpValue,
+            maxHp: maxHpValue,
+          };
+
+        case 'reviews-desc':
+          console.log('Sorting by reviews with query:', query);
+          const monstersByReviews = await Monster.aggregate([
+            { $match: query },
+            {
+              $addFields: {
+                reviewsCount: { $size: '$reviews' },
+              },
+            },
+            { $sort: { reviewsCount: -1 } },
+            { $skip: offset },
+            { $limit: limit },
+            {
+              $project: {
+                id: '$_id',
+                name: 1,
+                size: 1,
+                type: 1,
+                alignment: 1,
+                hit_points: 1,
+                image: 1,
+                reviews: 1,
+                reviewsCount: 1,
+              },
+            },
+          ]);
+
+          const totalMonstersByReviews = await Monster.countDocuments(query);
+          const minHpValueByReviews = await Monster.findOne(query)
+            .sort({ hit_points: 1 })
+            .then((m) => m?.hit_points ?? 1);
+          const maxHpValueByReviews = await Monster.findOne(query)
+            .sort({ hit_points: -1 })
+            .then((m) => m?.hit_points ?? 1000);
+
+          return {
+            monsters: monstersByReviews,
+            totalMonsters: totalMonstersByReviews,
+            minHp: minHpValueByReviews,
+            maxHp: maxHpValueByReviews,
+          };
+
+        default:
+          sort = { name: 1 };
+      }
+
+      let monsters: any[] = [];
+      let totalMonsters: number = 0;
+
+      if (searchTerm) {
+        const startsWithRegex = new RegExp(`^${searchTerm}`, 'i');
+        const containsRegex = new RegExp(searchTerm, 'i');
+
+        monsters = await Monster.find({ ...query, name: { $regex: startsWithRegex } })
+          .sort(sort)
+          .skip(offset)
+          .limit(limit);
+
+        if (monsters.length < limit) {
+          const remainingLimit = limit - monsters.length;
+          const additionalMonsters = await Monster.find({
+            ...query,
+            name: { $regex: containsRegex },
+            _id: { $nin: monsters.map((m) => m._id) },
+          })
+            .sort(sort)
+            .skip(offset)
+            .limit(remainingLimit);
+
+          monsters = [...monsters, ...additionalMonsters];
+        }
+
+        totalMonsters = await Monster.countDocuments({ ...query, name: { $regex: containsRegex } });
+      } else {
+        monsters = await Monster.find(query).sort(sort).skip(offset).limit(limit);
+        totalMonsters = await Monster.countDocuments(query);
+      }
+
+      const minHpValue = await Monster.findOne(query)
+        .sort({ hit_points: 1 })
+        .then((m) => m?.hit_points ?? 1);
+      const maxHpValue = await Monster.findOne(query)
+        .sort({ hit_points: -1 })
+        .then((m) => m?.hit_points ?? 1000);
+
+      return { monsters, totalMonsters, minHp: minHpValue, maxHp: maxHpValue };
     },
 
     async monster(_: any, { id }: MonsterArgs) {
@@ -58,6 +214,29 @@ export default {
         path: 'reviews.user',
         select: 'id userName',
       });
+    },
+
+    async monsterTypeCounts(_: any, { minHp, maxHp }: MonsterTypeCountsArgs) {
+      const matchStage: Partial<{ hit_points: { $gte: number; $lte: number } }> = {};
+      if (minHp !== undefined && maxHp !== undefined) {
+        matchStage.hit_points = { $gte: minHp, $lte: maxHp };
+      }
+
+      return Monster.aggregate([
+        { $match: matchStage },
+        { $group: { _id: '$type', count: { $sum: 1 } } },
+        { $project: { type: '$_id', count: 1, _id: 0 } },
+      ]);
+    },
+
+    async monsterHpRange() {
+      const minHpMonster = await Monster.findOne().sort({ hit_points: 1 });
+      const maxHpMonster = await Monster.findOne().sort({ hit_points: -1 });
+
+      return {
+        minHp: minHpMonster?.hit_points || 1,
+        maxHp: maxHpMonster?.hit_points || 1000,
+      };
     },
   },
 
@@ -91,31 +270,33 @@ export default {
     },
 
     async deleteReview(_: any, { monsterId, reviewId }: { monsterId: string; reviewId: string }) {
-      try {
-        const monster = await Monster.findById(monsterId);
-        if (!monster) throw new Error('Monster not found');
+      const monster = await Monster.findById(monsterId);
+      if (!monster) throw new Error('Monster not found');
 
-        const reviewIndex = monster.reviews.findIndex((review) => review._id.toString() === reviewId);
-        if (reviewIndex === -1) throw new Error('Review not found');
+      const reviewIndex = monster.reviews.findIndex((review) => review._id.toString() === reviewId);
+      if (reviewIndex === -1) throw new Error('Review not found');
 
-        monster.reviews.splice(reviewIndex, 1);
-        await monster.save();
+      monster.reviews.splice(reviewIndex, 1);
+      await monster.save();
 
-        return Monster.findById(monsterId).populate({
-          path: 'reviews.user',
-          select: 'id userName',
-        });
-      } catch (error) {
-        console.error('Error in deleteReview resolver:', error);
-        throw error;
-      }
+      return Monster.findById(monsterId).populate({
+        path: 'reviews.user',
+        select: 'id userName',
+      });
     },
 
-    async updateReview(_: any, { monsterId, reviewId, review }: {
-      monsterId: string;
-      reviewId: string;
-      review: ReviewInput;
-    }) {
+    async updateReview(
+      _: any,
+      {
+        monsterId,
+        reviewId,
+        review,
+      }: {
+        monsterId: string;
+        reviewId: string;
+        review: ReviewInput;
+      }
+    ) {
       const monster = await Monster.findById(monsterId);
       if (!monster) throw new Error('Monster not found');
 
