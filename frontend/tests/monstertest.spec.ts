@@ -30,7 +30,6 @@ test.describe('Monster API End-to-End Test', () => {
     expect(monsters).not.toBeNull();
     expect(monsters.length).toBeGreaterThan(0);
 
-    // 2. Filtrer monsterlisten etter type
     const monsterType = monsters[0].type; // For testing purposes, bruker type fra første monster
     response = await request.post(GRAPHQL_URL, {
       data: {
@@ -55,7 +54,6 @@ test.describe('Monster API End-to-End Test', () => {
     expect(filteredMonsters).not.toBeNull();
     expect(filteredMonsters.every((m: any) => m.type === monsterType)).toBe(true);
 
-    // 3. Hent detaljer for et spesifikt monster
     const monsterId = monsters[0].id;
     response = await request.post(GRAPHQL_URL, {
       data: {
