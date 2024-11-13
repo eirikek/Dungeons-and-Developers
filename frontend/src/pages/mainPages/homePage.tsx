@@ -11,6 +11,7 @@ import { useContext, useEffect, useState } from 'react';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { useToast } from '../../hooks/useToast.ts';
 import { AuthContext } from '../../context/AuthContext.tsx';
+import DownArrow from '../../components/ArrowSVG/DownArrow.tsx';
 
 export default function HomePage() {
   const { scrollYProgress } = useScroll();
@@ -60,7 +61,7 @@ export default function HomePage() {
 
   return (
     <MainPageLayout>
-      <header className="w-full h-screen bg-home bg-cover bg-center bg-black bg-opacity-40 bg-blend-overlay flex items-center justify-center relative">
+      <header className="w-full h-screen bg-home bg-cover bg-center bg-black bg-opacity-40 bg-blend-overlay flex flex-col items-center justify-center relative">
         <div
           className="absolute inset-0 z-10"
           style={{
@@ -71,6 +72,7 @@ export default function HomePage() {
         <Tilt tiltMaxAngleX={15} tiltMaxAngleY={15} scale={1.05} className="relative z-20 xl:w-1/2 md:w-3/4">
           <img src={text_logo} alt="text_logo" className="object-contain shadow-none w-full h-full p-8" />
         </Tilt>
+        <DownArrow />
       </header>
       <main className="w-full bg-black flex flex-col items-center py-48 xl:gap-36 gap-16 overflow-hidden">
         <HomeSection
