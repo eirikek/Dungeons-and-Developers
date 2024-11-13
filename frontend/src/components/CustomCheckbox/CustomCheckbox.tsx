@@ -37,6 +37,7 @@ const CustomCheckbox = ({
         type="checkbox"
         checked={checked}
         onChange={handleCheckboxChange}
+        className="opacity-0 absolute inset-0"
         disabled={disabled}
         aria-label="equipment-checkbox"
         name="checkbox"
