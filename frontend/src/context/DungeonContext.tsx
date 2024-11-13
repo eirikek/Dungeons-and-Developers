@@ -56,8 +56,8 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
             size: monster.size,
             type: monster.type,
             alignment: monster.alignment,
-            hp: monster.hit_points,
-            img: monster.image,
+            hit_points: monster.hit_points,
+            image: monster.image,
           };
         })
         .filter(Boolean);

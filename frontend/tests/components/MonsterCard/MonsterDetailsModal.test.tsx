@@ -10,7 +10,7 @@ import { Review } from './MonsterReviewModal.test.tsx';
 const mockProps = {
   id: 'monster-123',
   name: 'Goblin',
-  hp: 30,
+  hit_points: 30,
   type: 'Beast',
   image: 'goblin.jpg',
   onClose: vi.fn(),
@@ -94,7 +94,7 @@ describe('MonsterDetailsModal', () => {
       expect(screen.getByRole('img')).toHaveAttribute('alt', mockProps.name);
       expect(screen.getByText(mockProps.name)).toBeInTheDocument();
       expect(screen.getByText(`Type: ${mockProps.type}`)).toBeInTheDocument();
-      expect(screen.getByText(`HP: ${mockProps.hp}`)).toBeInTheDocument();
+      expect(screen.getByText(`HP: ${mockProps.hit_points}`)).toBeInTheDocument();
     });
   });
 

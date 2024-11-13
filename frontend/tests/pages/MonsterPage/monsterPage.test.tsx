@@ -1,5 +1,5 @@
-import { render, screen, waitFor, act, within } from '@testing-library/react';
-import { MockedProvider } from '@apollo/client/testing';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
+import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import MonsterPage from '../../../src/pages/mainPages/monsterPage.tsx';
 import {
   ADD_FAVORITE_MONSTER,
@@ -12,8 +12,9 @@ import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
 import { GraphQLError } from 'graphql/error';
-import { afterEach, beforeEach, expect } from 'vitest';
-import { DungeonProvider } from '../../../src/context/DungeonContext.tsx';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { MonsterCardProps } from '../../../src/interfaces/MonsterCardProps.ts';
+import DungeonContextMock from '../../mocks/DungeonContextMock'; // Adjust the path as necessary
 
 const mockShowToast = vi.fn();
 vi.mock('../../../src/hooks/useToast.ts', () => ({
@@ -24,7 +25,7 @@ vi.mock('../../../src/hooks/useToast.ts', () => ({
 
 const monstersPerPage = 8;
 
-const mockMonsters = [
+const initialMonsters: MonsterCardProps[] = [
   {
     id: '1',
     name: 'Goblin',
@@ -45,26 +46,51 @@ const mockMonsters = [
   },
 ];
 
-const userId = '1';
-const token = 'mock-token';
-const userName = 'Mock User';
+const generateMonsterReviewsMocks = (monsters: MonsterCardProps[]): MockedResponse[] => {
+  return monsters.map((monster) => ({
+    request: {
+      query: GET_MONSTER_REVIEWS,
+      variables: { monsterId: monster.id },
+    },
+    result: {
+      data: {
+        monster: {
+          reviews: [
+            {
+              id: `review-${monster.id}`,
+              user: {
+                id: `user-${monster.id}`,
+                userName: `User${monster.id}`,
+              },
+              difficulty: 3,
+              description: `Review for ${monster.name}.`,
+              createdAt: '2024-11-01T00:00:00Z',
+            },
+          ],
+        },
+      },
+    },
+  }));
+};
 
-const mocks = [
+const generateUserFavoritesMocks = (userId: string, favoritedMonsters: MonsterCardProps[]): MockedResponse[] => [
   {
-    // Initial GET request with no favorited monsters
     request: {
       query: GET_USER_FAVORITES,
-      variables: { userId: userId },
+      variables: { userId },
     },
     result: {
       data: {
         user: {
-          userId: userId,
-          favoritedMonsters: [], // Start with an empty dungeon
+          userId,
+          favoritedMonsters,
         },
       },
     },
   },
+];
+
+const generateMonstersMocks = (monsters: MonsterCardProps[]): MockedResponse[] => [
   {
     request: {
       query: GET_MONSTERS,
@@ -78,132 +104,65 @@ const mocks = [
     result: {
       data: {
         monsters: {
-          monsters: mockMonsters,
-          totalMonsters: mockMonsters.length,
-        },
-      },
-    },
-  },
-  {
-    request: {
-      query: ADD_FAVORITE_MONSTER,
-      variables: { userId: userId, monsterId: mockMonsters[1].id },
-    },
-    result: {
-      data: {
-        addFavoriteMonster: {
-          favoritedMonsters: [mockMonsters[1].id],
-        },
-      },
-    },
-  },
-  {
-    request: {
-      query: GET_USER_FAVORITES,
-      variables: { userId: userId },
-    },
-    result: {
-      data: {
-        user: {
-          userId: userId,
-          favoritedMonsters: [mockMonsters[1]],
-        },
-      },
-    },
-  },
-  {
-    request: {
-      query: REMOVE_FAVORITE_MONSTER,
-      variables: { userId: userId, monsterId: mockMonsters[1].id },
-    },
-    result: {
-      data: {
-        addFavoriteMonster: {
-          favoritedMonsters: [],
-        },
-      },
-    },
-  },
-
-  {
-    // Mock for removing Orc from the favorites
-    request: {
-      query: GET_USER_FAVORITES,
-      variables: { userId: userId },
-    },
-    result: {
-      data: {
-        user: {
-          userId: userId,
-          favoritedMonsters: [], // Orc removed from favorites
-        },
-      },
-    },
-  },
-  {
-    request: {
-      query: GET_MONSTER_REVIEWS,
-      variables: { monsterId: '1' },
-    },
-    result: {
-      data: {
-        monster: {
-          reviews: [
-            {
-              id: 'review-1',
-              user: {
-                id: 'user-1',
-                userName: 'Alice',
-              },
-              difficulty: 4,
-              description: 'This monster was tough!',
-              createdAt: '2024-11-06T08:00:00Z',
-            },
-          ],
-        },
-      },
-    },
-  },
-  {
-    request: {
-      query: GET_MONSTER_REVIEWS,
-      variables: { monsterId: '2' },
-    },
-    result: {
-      data: {
-        monster: {
-          reviews: [
-            {
-              id: 'review-2',
-              user: {
-                id: 'user-2',
-                userName: 'Bob',
-              },
-              difficulty: 3,
-              description: 'A challenging but fair fight.',
-              createdAt: '2024-11-05T12:00:00Z',
-            },
-          ],
+          monsters,
+          totalMonsters: monsters.length,
         },
       },
     },
   },
 ];
 
-describe('MonsterPage', () => {
-  const renderComponent = (providerMocks = mocks) =>
-    render(
-      <MemoryRouter initialEntries={['/monsters']}>
-        <MockedProvider mocks={providerMocks} addTypename={false}>
-          <AuthContext.Provider value={{ userId, token, userName, login: vi.fn(), logout: vi.fn() }}>
-            <DungeonProvider userId={userId}>
-              <MonsterPage />
-            </DungeonProvider>
-          </AuthContext.Provider>
-        </MockedProvider>
-      </MemoryRouter>
-    );
+const generateAddFavoriteMonsterMock = (userId: string, monster: MonsterCardProps): MockedResponse => ({
+  request: {
+    query: ADD_FAVORITE_MONSTER,
+    variables: { userId, monsterId: monster.id },
+  },
+  result: {
+    data: {
+      addFavoriteMonster: {
+        favoritedMonsters: [monster],
+      },
+    },
+  },
+});
 
+const generateRemoveFavoriteMonsterMock = (userId: string, monster: MonsterCardProps): MockedResponse => ({
+  request: {
+    query: REMOVE_FAVORITE_MONSTER,
+    variables: { userId, monsterId: monster.id },
+  },
+  result: {
+    data: {
+      removeFavoriteMonster: {
+        favoritedMonsters: [],
+      },
+    },
+  },
+});
+
+// Consolidated Render Function
+const renderComponent = (mocks: MockedResponse[], allMonsters: MonsterCardProps[], initialDungeon: string[] = []) =>
+  render(
+    <MemoryRouter initialEntries={['/monsters']}>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <AuthContext.Provider
+          value={{
+            userId: '1',
+            token: 'mock-token',
+            userName: 'Mock User',
+            login: vi.fn(),
+            logout: vi.fn(),
+          }}
+        >
+          <DungeonContextMock initialDungeon={initialDungeon} allMonsters={allMonsters}>
+            <MonsterPage />
+          </DungeonContextMock>
+        </AuthContext.Provider>
+      </MockedProvider>
+    </MemoryRouter>
+  );
+
+describe('MonsterPage', () => {
   beforeEach(() => {
     mockShowToast.mockClear();
   });
@@ -213,7 +172,7 @@ describe('MonsterPage', () => {
   });
 
   it('renders loading state initially', () => {
-    const loadingMocks = [
+    const loadingMocks: MockedResponse[] = [
       {
         request: {
           query: GET_MONSTERS,
@@ -233,39 +192,33 @@ describe('MonsterPage', () => {
           },
         },
       },
-      {
-        request: {
-          query: GET_USER_FAVORITES,
-          variables: { userId: userId },
-        },
-        result: {
-          data: {
-            user: {
-              userId: userId,
-              favoritedMonsters: [],
-            },
-          },
-        },
-      },
+      ...generateUserFavoritesMocks('1', []),
     ];
-    renderComponent(loadingMocks);
+
+    renderComponent(loadingMocks, initialMonsters, []);
+
     expect(screen.getByTestId('loading-indicator')).toBeInTheDocument();
   });
 
   it('renders monsters after loading', async () => {
-    renderComponent();
+    const mocks: MockedResponse[] = [
+      ...generateMonstersMocks(initialMonsters),
+      ...generateUserFavoritesMocks('1', []),
+      ...generateMonsterReviewsMocks(initialMonsters),
+    ];
 
-    await waitFor(() => {
-      expect(screen.getByText('Goblin')).toBeInTheDocument();
-      expect(screen.getByText('Orc')).toBeInTheDocument();
-    });
+    renderComponent(mocks, initialMonsters, []);
+
+    for (const monster of initialMonsters) {
+      await waitFor(() => expect(screen.getByText(monster.name)).toBeInTheDocument());
+    }
 
     const monsterCards = await screen.findAllByTestId(/-monster-card$/);
-    expect(monsterCards.length).toBe(mockMonsters.length);
+    expect(monsterCards.length).toBe(initialMonsters.length);
   });
 
   it('displays error message on error', async () => {
-    const errorMocks = [
+    const errorMocks: MockedResponse[] = [
       {
         request: {
           query: GET_MONSTERS,
@@ -277,25 +230,11 @@ describe('MonsterPage', () => {
           },
         },
         error: new GraphQLError('An error occurred'),
-        result: { data: { monsters: { monsters: [], totalMonsters: 0 } } },
       },
-      {
-        request: {
-          query: GET_USER_FAVORITES,
-          variables: { userId: userId },
-        },
-        result: {
-          data: {
-            user: {
-              userId: userId,
-              favoritedMonsters: [],
-            },
-          },
-        },
-      },
+      ...generateUserFavoritesMocks('1', []),
     ];
 
-    renderComponent(errorMocks);
+    renderComponent(errorMocks, initialMonsters, []);
 
     await waitFor(() => {
       expect(screen.getByText('An error occurred while loading monsters.')).toBeInTheDocument();
@@ -304,13 +243,25 @@ describe('MonsterPage', () => {
 
   it('updates monsters when search term is entered', async () => {
     const searchTerm = 'Dragon';
-    const searchMocks = [
-      ...mocks,
+    const dragonMonster: MonsterCardProps = {
+      id: '3',
+      name: 'Dragon',
+      type: 'dragon',
+      hit_points: 200,
+      alignment: 'chaotic evil',
+      size: 'large',
+      image: 'dragon.jpg',
+    };
+
+    const searchMocks: MockedResponse[] = [
+      ...generateMonstersMocks([...initialMonsters, dragonMonster]),
+      ...generateUserFavoritesMocks('1', []),
+      ...generateMonsterReviewsMocks([...initialMonsters, dragonMonster]),
       {
         request: {
           query: GET_MONSTERS,
           variables: {
-            searchTerm: searchTerm,
+            searchTerm,
             offset: 0,
             limit: monstersPerPage,
             types: [],
@@ -319,17 +270,7 @@ describe('MonsterPage', () => {
         result: {
           data: {
             monsters: {
-              monsters: [
-                {
-                  id: '3',
-                  name: 'Dragon',
-                  type: 'dragon',
-                  hit_points: 200,
-                  alignment: 'chaotic evil',
-                  size: 'large',
-                  image: 'dragon.jpg',
-                },
-              ],
+              monsters: [dragonMonster],
               totalMonsters: 1,
             },
           },
@@ -345,10 +286,10 @@ describe('MonsterPage', () => {
             monster: {
               reviews: [
                 {
-                  id: 'review-1',
+                  id: 'review-3',
                   user: {
-                    id: 'user-1',
-                    userName: 'Alice',
+                    id: 'user-3',
+                    userName: 'Charlie',
                   },
                   difficulty: 4,
                   description: 'This monster was tough!',
@@ -361,33 +302,34 @@ describe('MonsterPage', () => {
       },
     ];
 
-    renderComponent(searchMocks);
+    renderComponent(searchMocks, [...initialMonsters, dragonMonster], []);
 
-    await waitFor(() => {
-      expect(screen.getByText('Goblin')).toBeInTheDocument();
-    });
+    for (const monster of initialMonsters) {
+      await waitFor(() => expect(screen.getByText(monster.name)).toBeInTheDocument());
+    }
 
     const searchInput = screen.getByPlaceholderText('Search for a monster...');
     await userEvent.type(searchInput, searchTerm);
 
+    // Simulate debounce or delay
     await act(() => new Promise((resolve) => setTimeout(resolve, 500)));
 
-    await waitFor(() => {
-      expect(screen.getByText('Dragon')).toBeInTheDocument();
-    });
+    await waitFor(() => expect(screen.getByText('Dragon')).toBeInTheDocument());
 
     expect(screen.queryByText('Goblin')).not.toBeInTheDocument();
   });
 
   it('displays "No monsters found" when there are no results', async () => {
     const searchTerm = 'NonExistentMonster';
-    const noResultsMocks = [
-      ...mocks,
+    const noResultsMocks: MockedResponse[] = [
+      ...generateMonstersMocks(initialMonsters),
+      ...generateUserFavoritesMocks('1', []),
+      ...generateMonsterReviewsMocks(initialMonsters),
       {
         request: {
           query: GET_MONSTERS,
           variables: {
-            searchTerm: searchTerm,
+            searchTerm,
             offset: 0,
             limit: monstersPerPage,
             types: [],
@@ -404,120 +346,159 @@ describe('MonsterPage', () => {
       },
     ];
 
-    renderComponent(noResultsMocks);
+    renderComponent(noResultsMocks, initialMonsters, []);
 
-    await waitFor(() => {
-      expect(screen.getByText('Goblin')).toBeInTheDocument();
-    });
+    for (const monster of initialMonsters) {
+      await waitFor(() => expect(screen.getByText(monster.name)).toBeInTheDocument());
+    }
 
     const searchInput = screen.getByPlaceholderText('Search for a monster...');
     await userEvent.type(searchInput, searchTerm);
 
+    // Simulate debounce or delay
     await act(() => new Promise((resolve) => setTimeout(resolve, 500)));
 
-    await waitFor(() => {
-      expect(screen.getByText('No monsters found')).toBeInTheDocument();
-    });
+    await waitFor(() => expect(screen.getByText('No monsters found')).toBeInTheDocument());
 
-    expect(screen.queryByText('Goblin')).not.toBeInTheDocument();
+    for (const monster of initialMonsters) {
+      expect(screen.queryByText(monster.name)).not.toBeInTheDocument();
+    }
   });
-  it('adds a monster to the dungeon', async () => {
-    renderComponent();
-    const orcCard = await screen.findByTestId('Orc-monster-card');
 
+  it('adds a monster to the dungeon', async () => {
+    const addMocks: MockedResponse[] = [
+      ...generateUserFavoritesMocks('1', []),
+      ...generateMonstersMocks(initialMonsters),
+      generateAddFavoriteMonsterMock('1', initialMonsters[1]),
+      ...generateUserFavoritesMocks('1', [initialMonsters[1]]),
+      ...generateMonsterReviewsMocks(initialMonsters),
+    ];
+
+    renderComponent(addMocks, initialMonsters, []);
+
+    const orcCard = await screen.findByTestId('Orc-monster-card');
     expect(orcCard).toBeInTheDocument();
 
-    const addButton = within(orcCard).getAllByRole('button', { name: 'Add to dungeon' })[0];
+    const addButton = within(orcCard).getByText('Add to dungeon');
     expect(addButton).toBeInTheDocument();
 
     await userEvent.click(addButton);
 
     await waitFor(() => {
-      expect(mockShowToast).toHaveBeenCalledWith({
-        message: 'Orc added to dungeon',
-        type: 'success',
-        duration: 3000,
-      });
+      expect(mockShowToast).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: 'Orc added to dungeon',
+          type: 'success',
+          duration: 3000,
+        })
+      );
     });
   });
+
   it('removes a monster from the dungeon', async () => {
-    renderComponent();
+    const removeMocks: MockedResponse[] = [
+      ...generateMonstersMocks(initialMonsters),
+      ...generateUserFavoritesMocks('1', [initialMonsters[1]]),
+      generateRemoveFavoriteMonsterMock('1', initialMonsters[1]),
+      ...generateUserFavoritesMocks('1', []),
+      ...generateMonsterReviewsMocks(initialMonsters),
+    ];
+
+    renderComponent(removeMocks, initialMonsters, [initialMonsters[1].id]);
 
     await waitFor(() => {
       expect(screen.getByText('Orc')).toBeInTheDocument();
     });
 
     const orcCard = screen.getByTestId('Orc-monster-card');
-    const removeButton = within(orcCard).getByRole('button', { name: 'Remove from dungeon' });
+    expect(orcCard).toBeInTheDocument();
+
+    const removeButton = await within(orcCard).findByText('Remove from dungeon');
+    expect(removeButton).toBeInTheDocument();
 
     await userEvent.click(removeButton);
 
     await waitFor(() => {
+      expect(mockShowToast).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: 'Orc removed from dungeon',
+          type: 'info',
+          undoAction: expect.any(Function),
+          duration: 5000,
+        })
+      );
+
+      expect(within(orcCard).getByText('Add to dungeon')).toBeInTheDocument();
+
+      expect(within(orcCard).queryByText('Remove from dungeon')).not.toBeInTheDocument();
+    });
+  });
+  it('removes a monster and shows an undo option', async () => {
+    const mocks: MockedResponse[] = [
+      ...generateMonstersMocks(initialMonsters),
+      ...generateUserFavoritesMocks('1', initialMonsters),
+    ];
+
+    renderComponent(mocks, initialMonsters, ['1', '2']); // Initial dungeon has both monsters
+
+    const goblinCard = await waitFor(() => screen.getByTestId('Goblin-monster-card'));
+    const removeButton = within(goblinCard).getByText('Remove from dungeon');
+    await userEvent.click(removeButton);
+
+    await waitFor(() => {
       expect(mockShowToast).toHaveBeenCalledWith({
-        message: 'Orc removed from dungeon',
+        message: 'Goblin removed from dungeon',
         type: 'info',
+        undoAction: expect.any(Function),
         duration: 5000,
       });
-      expect(screen.queryByTestId('Orc-monster-card')).not.toBeInTheDocument();
-      expect(screen.getByText('Total Dungeon HP: 7')).toBeInTheDocument();
     });
   });
 
   it('shows warning when adding a monster at max capacity', async () => {
-    const sixMonsters = Array.from({ length: 6 }, (_, i) => ({
+    const sixMonsters: MonsterCardProps[] = Array.from({ length: 6 }, (_, i) => ({
       id: `${i + 1}`,
       name: `Monster${i + 1}`,
       hit_points: 10,
       type: 'Beast',
       size: 'Medium',
-      image: '',
+      image: `monster${i + 1}.jpg`,
       alignment: 'neutral evil',
     }));
+    const seventhMonster: MonsterCardProps = {
+      id: '7',
+      name: 'Monster7',
+      hit_points: 12,
+      type: 'Beast',
+      size: 'Large',
+      image: 'monster7.jpg',
+      alignment: 'chaotic evil',
+    };
 
-    const maxMocks = [
-      {
-        request: {
-          query: GET_USER_FAVORITES,
-          variables: { userId: '1' },
-        },
-        result: {
-          data: {
-            user: {
-              favoritedMonsters: sixMonsters,
-            },
-          },
-        },
-      },
-      {
-        request: {
-          query: GET_MONSTERS,
-          variables: {
-            searchTerm: '',
-            offset: 0,
-            limit: monstersPerPage,
-            types: [],
-          },
-        },
-        result: {
-          data: {
-            monsters: {
-              monsters: sixMonsters,
-              totalMonsters: sixMonsters.length,
-            },
-          },
-        },
-      },
+    const maxMocks: MockedResponse[] = [
+      ...generateMonstersMocks([...sixMonsters, seventhMonster]),
+      ...generateUserFavoritesMocks('1', sixMonsters),
+      ...generateMonsterReviewsMocks([...sixMonsters, seventhMonster]),
     ];
 
-    renderComponent(maxMocks);
+    renderComponent(
+      maxMocks,
+      [...sixMonsters, seventhMonster],
+      sixMonsters.map((monster) => monster.id)
+    );
 
-    await waitFor(() => {
-      expect(screen.getByText('Total Dungeon HP: 60')).toBeInTheDocument();
-    });
+    for (const monster of [...sixMonsters, seventhMonster]) {
+      await waitFor(() => expect(screen.getByText(monster.name)).toBeInTheDocument());
+    }
 
-    const goblinCard = screen.getByTestId('Monster3-monster-card');
+    const monsterCard = screen.getByTestId('Monster7-monster-card');
+    expect(monsterCard).toBeInTheDocument();
 
-    const button = within(goblinCard).getByRole('button', { name: 'Add to dungeon' });
+    const addButtons = await within(monsterCard).findAllByRole('button', { name: 'Add to dungeon' });
+    const addButton = addButtons[1];
+    expect(addButton).toBeInTheDocument();
+
+    await userEvent.click(addButton);
 
     await waitFor(() => {
       expect(mockShowToast).toHaveBeenCalledWith({
@@ -527,6 +508,27 @@ describe('MonsterPage', () => {
       });
     });
 
-    expect(button).toHaveTextContent('Add to dungeon');
+    expect(addButton).toHaveTextContent('Add to dungeon');
+  });
+  it('verifies dungeon status for a monster using DungeonContextMock', async () => {
+    const mocks: MockedResponse[] = [
+      ...generateMonstersMocks(initialMonsters),
+      ...generateUserFavoritesMocks('1', [initialMonsters[0]]),
+      ...generateMonsterReviewsMocks(initialMonsters),
+    ];
+
+    renderComponent(mocks, initialMonsters, [initialMonsters[0].id]);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('Goblin-monster-card')).toBeInTheDocument();
+      expect(screen.getByTestId('Orc-monster-card')).toBeInTheDocument();
+    });
+
+    const goblinCard = screen.getByTestId('Goblin-monster-card');
+    const addToDungeonButton = within(goblinCard).queryByText('Add to dungeon');
+    expect(addToDungeonButton).toBeNull();
+
+    const removeFromDungeonButton = within(goblinCard).queryByText('Remove from dungeon');
+    expect(removeFromDungeonButton).toBeInTheDocument();
   });
 });

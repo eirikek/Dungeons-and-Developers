@@ -49,30 +49,33 @@ exports[`DungeonPage > renders correctly and matches snapshot 1`] = `
     >
       <div
         aria-label="Goblin"
-        class="flex flex-col items-center justify-between bg-black pb-5 w-[75vw] md:w-[42vw] xl:w-[22vw] 2xl:w-[18vw] h-[40vh] sm:h-[45vh] md:h-[35vh] rounded-lg overflow-hidden   transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-black cursor-pointer"
+        class="flex flex-col items-center justify-between bg-black pb-5 w-[75vw] md:w-[42vw] xl:w-[22vw] 2xl:w-[18vw] h-[40vh] sm:h-[45vh] md:h-[35vh] rounded-lg overflow-hidden transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-black cursor-pointer"
         data-testid="Goblin-monster-card"
       >
         <div
           class="relative w-full h-[30vh] overflow-hidden"
         >
+          <div>
+            Loading image...
+          </div>
           <div
             class="relative flex justify-center w-full h-full"
           >
             <img
-              alt="No monster image found"
+              alt="Image of the monster"
               class="object-cover h-full w-full object-top"
-              src="/project2/src/assets/images/no_monster_image_found.jpg"
-              style="display: block;"
+              src="goblin.jpg"
+              style="display: none;"
             />
             <div
               class="absolute left-[75%] top-5"
             >
               <button
-                aria-label="Add to dungeon"
-                class="bg-none cursor-pointer border-none p-0 rounded-se-3xl rounded-ss-3xl transition-all duration-300 group shadow-[rgba(255,_255,_255,_0.6)_0px_30px_90px] hover:shadow-[rgba(255,_255,_255,_0.8)_0px_40px_100px] hover:scale-105 active:scale-50 hover:bg-white"
+                aria-label="Remove from dungeon"
+                class="bg-none cursor-pointer border-none p-0 rounded-se-3xl rounded-ss-3xl transition-all duration-300 group shadow-[rgba(255,_255,_255,_0.6)_0px_30px_90px] hover:shadow-[rgba(255,_255,_255,_0.8)_0px_40px_100px] hover:scale-105 active:scale-50 bg-customRed"
               >
                 <svg
-                  class="transition-all duration-300 group-hover:scale-110 text-white group-hover:text-black"
+                  class="transition-all duration-300 group-hover:scale-110 text-black"
                   fill="currentColor"
                   height="45"
                   stroke="currentColor"
@@ -87,6 +90,11 @@ exports[`DungeonPage > renders correctly and matches snapshot 1`] = `
                 </svg>
               </button>
             </div>
+          </div>
+          <div
+            class="flex justify-center w-full py-24"
+          >
+            Loading image...
           </div>
         </div>
         <div
@@ -125,27 +133,30 @@ exports[`DungeonPage > renders correctly and matches snapshot 1`] = `
             <button
               class="text-4xl md:text-2xl xl:text-lg 2xl:text-sm hover:text-customRed transition-all duration-200"
             >
-              Add to dungeon
+              Remove from dungeon
             </button>
           </div>
         </div>
       </div>
       <div
         aria-label="Orc"
-        class="flex flex-col items-center justify-between bg-black pb-5 w-[75vw] md:w-[42vw] xl:w-[22vw] 2xl:w-[18vw] h-[40vh] sm:h-[45vh] md:h-[35vh] rounded-lg overflow-hidden   transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-black cursor-pointer"
+        class="flex flex-col items-center justify-between bg-black pb-5 w-[75vw] md:w-[42vw] xl:w-[22vw] 2xl:w-[18vw] h-[40vh] sm:h-[45vh] md:h-[35vh] rounded-lg overflow-hidden transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-black cursor-pointer"
         data-testid="Orc-monster-card"
       >
         <div
           class="relative w-full h-[30vh] overflow-hidden"
         >
+          <div>
+            Loading image...
+          </div>
           <div
             class="relative flex justify-center w-full h-full"
           >
             <img
-              alt="No monster image found"
+              alt="Image of the monster"
               class="object-cover h-full w-full object-top"
-              src="/project2/src/assets/images/no_monster_image_found.jpg"
-              style="display: block;"
+              src="orc.jpg"
+              style="display: none;"
             />
             <div
               class="absolute left-[75%] top-5"
@@ -170,6 +181,11 @@ exports[`DungeonPage > renders correctly and matches snapshot 1`] = `
                 </svg>
               </button>
             </div>
+          </div>
+          <div
+            class="flex justify-center w-full py-24"
+          >
+            Loading image...
           </div>
         </div>
         <div

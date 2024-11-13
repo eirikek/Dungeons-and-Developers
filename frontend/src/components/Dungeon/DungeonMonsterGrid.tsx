@@ -14,7 +14,7 @@ const DungeonMonsterGrid = () => {
           </div>
         ) : (
           dungeonMonsters.map((monster, idx) => (
-            <MonsterCard key={idx} {...monster} hp={monster.hp} data-testid="monster-card" />
+            <MonsterCard key={idx} {...monster} hit_points={monster.hit_points} data-testid="monster-card" />
           ))
         )}
       </div>
