@@ -4,6 +4,7 @@ import MonsterGraphQL from '../interfaces/MonsterDataProps.ts';
 import { gql, Reference, useMutation, useQuery } from '@apollo/client';
 import {
   ADD_FAVORITE_MONSTER,
+  GET_USER_DUNGEON,
   GET_USER_FAVORITES,
   REMOVE_FAVORITE_MONSTER,
   UPDATE_DUNGEON_NAME,
@@ -12,7 +13,7 @@ import {
 const useDungeonMonsters = () => {
   const { userId } = useContext(AuthContext);
   const [dungeonMonsters, setDungeonMonsters] = useState<MonsterGraphQL[]>([]);
-
+  const [dungeonName, setDungeonName] = useState('My dungeon');
   const { refetch } = useQuery(GET_USER_FAVORITES, {
     variables: { userId },
     skip: !userId,
@@ -23,6 +24,18 @@ const useDungeonMonsters = () => {
       }
     },
   });
+
+  useQuery(GET_USER_DUNGEON, {
+    variables: { userId },
+    skip: !userId,
+    fetchPolicy: 'cache-first',
+    onCompleted: (data) => {
+      if (data?.user?.dungeonName) {
+        setDungeonName(data.user.dungeonName);
+      }
+    },
+  });
+
   const [addFavoriteMonster] = useMutation(ADD_FAVORITE_MONSTER, {
     update(cache, { data: { addFavoriteMonster } }) {
       const newMonster = addFavoriteMonster.favoritedMonsters[0];
@@ -85,9 +98,6 @@ const useDungeonMonsters = () => {
         },
       });
     },
-    onError: (error) => {
-      console.error('Error updating dungeon name', error);
-    },
   });
   const toggleFavorite = async (monster: MonsterGraphQL) => {
     const isFavorite = dungeonMonsters.some((favMonster) => favMonster.id === monster.id);
@@ -98,11 +108,16 @@ const useDungeonMonsters = () => {
     }
   };
 
+  const toggleDungeonName = async (newName: string) => {
+    await updateDungeonName({ variables: { userId, dungeonName: newName } });
+  };
+
   return {
     dungeonMonsters,
+    dungeonName,
     toggleFavorite,
     refetchDungeonMonsters: refetch,
-    updateDungeonName,
+    toggleDungeonName,
   };
 };
 
