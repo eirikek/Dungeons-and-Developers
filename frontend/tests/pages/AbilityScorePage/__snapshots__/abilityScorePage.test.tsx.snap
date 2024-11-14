@@ -1,0 +1,36 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AbilityScorePage > renders ability scores after loading 1`] = `
+[
+  <li
+    class="bold text"
+  >
+    Skills required:
+  </li>,
+  <li
+    class="bold text"
+  >
+    Skills required:
+  </li>,
+  <li
+    class="bold text"
+  >
+    Skills required:
+  </li>,
+  <li
+    class="bold text"
+  >
+    Skills required:
+  </li>,
+  <li
+    class="bold text"
+  >
+    Skills required:
+  </li>,
+  <li
+    class="bold text"
+  >
+    Skills required:
+  </li>,
+]
+`;

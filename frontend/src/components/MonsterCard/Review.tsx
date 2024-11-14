@@ -1,7 +1,7 @@
 import { Box, IconButton, Button } from '@mui/material';
 import { MdDelete, MdEdit, MdSave, MdCancel } from 'react-icons/md';
 import { useMutation } from '@apollo/client';
-import { DELETE_REVIEW, UPDATE_REVIEW, GET_MONSTER_REVIEWS, ADD_REVIEW } from '../../../../backend/src/graphql/queries';
+import { DELETE_REVIEW, UPDATE_REVIEW, GET_MONSTER_REVIEWS, ADD_REVIEW } from '../../graphql/queries';
 import { ReviewType } from '../../interfaces/ReviewProps.ts';
 import { AuthContext } from '../../context/AuthContext';
 import { useContext, useState, useRef } from 'react';
@@ -117,6 +117,7 @@ const Review = ({ review, monsterId, monsterName }: ReviewProps) => {
                 color: '#DB3232',
               },
             }}
+            aria-label="Delete"
           >
             <MdDelete size={30} />
           </IconButton>
@@ -133,6 +134,7 @@ const Review = ({ review, monsterId, monsterName }: ReviewProps) => {
                 color: '#DB3232',
               },
             }}
+            aria-label="Edit"
           >
             {editMode ? <MdCancel size={30} /> : <MdEdit size={30} />}
           </IconButton>

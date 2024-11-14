@@ -33,6 +33,7 @@ const TutorialModal = () => {
             color: '#DB3232',
           },
         }}
+        aria-label="Help"
       >
         <FiHelpCircle size={35} />
       </IconButton>
@@ -62,6 +63,7 @@ const TutorialModal = () => {
               color: '#DB3232',
             },
           }}
+          aria-label="Close"
         >
           <FiX size={40} />
         </IconButton>

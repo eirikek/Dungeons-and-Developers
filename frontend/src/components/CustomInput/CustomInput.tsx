@@ -105,6 +105,7 @@ const CustomInput = ({ placeholder, inputName, value, onSave }: InputProps) => {
               id={inputName}
               type="text"
               value={inputValue}
+              aria-label="Edit name"
               onChange={handleChange}
               onBlur={handleBlur}
               autoFocus
@@ -114,7 +115,8 @@ const CustomInput = ({ placeholder, inputName, value, onSave }: InputProps) => {
         ) : (
           <h2
             className=" text-6xl md:text-5xl lg:text-4xl xl:text-3xl 2xl:text-2xl"
-            aria-label={isEditing ? `Save ${inputName}` : `Edit ${inputName}`}
+            aria-label="Name of your dungeon"
+            data-testid="dungeon-name"
           >
             {inputValue}
           </h2>
@@ -122,7 +124,7 @@ const CustomInput = ({ placeholder, inputName, value, onSave }: InputProps) => {
 
         <button
           className=" p-[2px] lg:p-[5px] rounded-lg bg-customRed hover:bg-transparent border-2 border-customRed hover:border-customRed transition-colors duration-100 group"
-          aria-label={`Edit ${inputName}`}
+          aria-label={isEditing ? `Save ${inputName}` : `Edit ${inputName}`}
           onClick={isEditing ? handleSaveClick : handleEditClick}
         >
           {isEditing ? (

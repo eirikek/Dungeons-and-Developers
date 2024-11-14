@@ -3,7 +3,7 @@ import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 import useRace from '../../hooks/useRaces.ts';
 import { useQuery } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
-import { GET_USER_RACE } from '../../../../backend/src/graphql/queries.ts';
+import { GET_USER_RACE } from '../../graphql/queries';
 import { AuthContext } from '../../context/AuthContext';
 
 export default function RacePage() {

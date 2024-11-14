@@ -8,8 +8,6 @@ import useEquipments from '../../hooks/useEquipments.ts';
 import { useToast } from '../../hooks/useToast.ts';
 import { Equipment } from '../../interfaces/EquipmentProps.ts';
 import useUserEquipments from '../../hooks/useUserEquipments.ts';
-import { REMOVE_ALL_EQUIPMENTS } from '../../../../backend/src/graphql/queries.ts';
-import { useMutation } from '@apollo/client';
 
 const variants = {
   enter: (direction: number) => ({
@@ -29,9 +27,10 @@ const variants = {
 const EquipmentPage = () => {
   const { userId } = useContext(AuthContext);
   const { showToast } = useToast();
-  const { userEquipments, loading, addToEquipments, removeFromEquipments } = useUserEquipments();
+  const { userEquipments, loading, addToEquipments, removeFromEquipments, removeAllUserEquipments } =
+    useUserEquipments();
+
   const undoRemoveRef = useRef<Equipment | Equipment[] | null>(null);
-  const [removeAllEquipments] = useMutation(REMOVE_ALL_EQUIPMENTS);
 
   const [direction, setDirection] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
@@ -116,7 +115,7 @@ const EquipmentPage = () => {
     undoRemoveRef.current = [...userEquipments];
 
     try {
-      await removeAllEquipments({ variables: { userId } });
+      await removeAllUserEquipments();
       showToast({
         message: 'All equipments removed',
         type: 'info',
@@ -174,6 +173,7 @@ const EquipmentPage = () => {
 
                   return (
                     <EquipmentCard
+                      aria-label="equipment-card"
                       key={index}
                       userId={userId}
                       equipment={equipment}

@@ -65,11 +65,15 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
         onMouseLeave={clearTimer}
         onTouchStart={startIncrement}
         onTouchEnd={clearTimer}
+        aria-label="Increment"
       >
         <FaChevronUp size={22} />
       </button>
 
-      <div className="text-5xl md:text-4xl lg:text-3xl xl:text-2xl 2xl:text-lg text-white w-12 text-center">
+      <div
+        className="text-5xl md:text-4xl lg:text-3xl xl:text-2xl 2xl:text-lg text-white w-12 text-center"
+        aria-label="ability score value"
+      >
         {value}
       </div>
 
@@ -80,6 +84,7 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
         onMouseLeave={clearTimer}
         onTouchStart={startDecrement}
         onTouchEnd={clearTimer}
+        aria-label="Decrement"
       >
         <FaChevronDown size={22} />
       </button>
