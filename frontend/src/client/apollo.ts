@@ -1,4 +1,4 @@
-import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, createHttpLink, InMemoryCache, Reference } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 
 const httpLink = createHttpLink({
@@ -17,6 +17,7 @@ const authLink = setContext((_, { headers }) => {
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
+  connectToDevTools: true,
   cache: new InMemoryCache({
     typePolicies: {
       Query: {
@@ -24,6 +25,16 @@ const client = new ApolloClient({
           user: {
             merge(existing = {}, incoming) {
               return { ...existing, ...incoming };
+            },
+          },
+        },
+      },
+      User: {
+        fields: {
+          favoritedMonsters: {
+            merge(existing: Reference[] = [], incoming: Reference[], { readField }) {
+              const existingIDs = new Set(existing.map((monster) => readField<string>('id', monster)));
+              return [...existing, ...incoming.filter((monster) => !existingIDs.has(readField<string>('id', monster)))];
             },
           },
         },

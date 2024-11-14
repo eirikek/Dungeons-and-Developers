@@ -53,7 +53,7 @@ function useMonster(
       id: monster.id,
       name: monster.name,
       type: monster.type,
-      hp: monster.hit_points,
+      hit_points: monster.hit_points,
       alignment: monster.alignment,
       size: monster.size,
       img: monster.image,

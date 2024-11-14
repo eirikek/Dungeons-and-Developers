@@ -6,7 +6,7 @@ import MonsterReviewModal from './MonsterReviewModal.tsx';
 import MonsterDetailsModal from './MonsterDetailsModal.tsx';
 import { MonsterCardProps } from '../../interfaces/MonsterCardProps.ts';
 
-const MonsterCard = ({ id, name, type, hp, alignment, size, img }: MonsterCardProps) => {
+const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: MonsterCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,10 +14,10 @@ const MonsterCard = ({ id, name, type, hp, alignment, size, img }: MonsterCardPr
   const { toggleDungeon, isInDungeon } = useContext(DungeonContext);
 
   useEffect(() => {
-    if (id && !img) {
+    if (id && !image) {
       setImageLoaded(true);
     }
-  }, [img, id]);
+  }, [image, id]);
 
   const handleImageLoad = () => {
     setImageLoaded(true);
@@ -28,11 +28,10 @@ const MonsterCard = ({ id, name, type, hp, alignment, size, img }: MonsterCardPr
     setImageLoaded(true);
   };
 
-  const monsterImageURL = img ? img : NoMonsterImageFound;
+  const monsterImageURL = image ? image : NoMonsterImageFound;
 
   const handleToggleDungeon = () => {
-    console.log('Toggling dungeon for monster:', { id, name, type, hp, alignment, size, img });
-    toggleDungeon({ id, name, type, hp, alignment, size, img });
+    toggleDungeon({ id, name, type, hit_points, alignment, size, image });
   };
 
   // Function to open the modal when the card is clicked
@@ -64,7 +63,7 @@ const MonsterCard = ({ id, name, type, hp, alignment, size, img }: MonsterCardPr
             <div className="relative flex justify-center w-full h-full">
               <img
                 src={monsterImageURL}
-                alt={img ? 'Image of the monster' : 'No monster image found'}
+                alt={image ? 'Image of the monster' : 'No monster image found'}
                 className="object-cover h-full w-full object-top"
                 onLoad={handleImageLoad}
                 onError={handleImageError}
@@ -76,23 +75,25 @@ const MonsterCard = ({ id, name, type, hp, alignment, size, img }: MonsterCardPr
             </div>
           )}
           {!imageLoaded && <div className="flex justify-center w-full py-24">Loading image...</div>}
-
-
         </div>
         <div className="flex flex-col gap-1 w-full p-3">
           <h2 className="text-5xl md:text-3xl lg:text-2xl xl:text-xl 2xl:text-lg bold">{name}</h2>
           <p className="text-4xl md:text-2xl xl:text-lg 2xl:text-sm">Type: {type}</p>
-          <p className="text-4xl md:text-2xl xl:text-lg 2xl:text-sm">HP: {hp}</p>
+          <p className="text-4xl md:text-2xl xl:text-lg 2xl:text-sm">HP: {hit_points}</p>
           <div className="flex w-full justify-between">
             {/* stopPropagation to prevent showing the details modal when the review button is clicked */}
             <div onClick={(e) => e.stopPropagation()}>
               <MonsterReviewModal monsterId={id} name={name} image={monsterImageURL} />
             </div>
-            <button onClick={(e) => {
-              e.stopPropagation();
-              handleToggleDungeon();
-            }}
-                    className="text-4xl md:text-2xl xl:text-lg 2xl:text-sm hover:text-customRed transition-all duration-200">{isInDungeon(id) ? 'Remove from dungeon' : 'Add to dungeon'}</button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggleDungeon();
+              }}
+              className="text-4xl md:text-2xl xl:text-lg 2xl:text-sm hover:text-customRed transition-all duration-200"
+            >
+              {isInDungeon(id) ? 'Remove from dungeon' : 'Add to dungeon'}
+            </button>
           </div>
         </div>
       </div>
@@ -101,7 +102,7 @@ const MonsterCard = ({ id, name, type, hp, alignment, size, img }: MonsterCardPr
         <MonsterDetailsModal
           id={id}
           name={name}
-          hp={hp}
+          hit_points={hit_points}
           type={type}
           image={monsterImageURL}
           onClose={handleCloseModal}

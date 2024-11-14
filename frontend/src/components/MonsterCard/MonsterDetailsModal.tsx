@@ -9,13 +9,13 @@ import { AuthContext } from '../../context/AuthContext';
 type MonsterDetailsModalProps = {
   id: string;
   name: string;
-  hp: number;
+  hit_points: number;
   type: string;
   image: string;
   onClose: () => void;
 };
 
-const MonsterDetailsModal = ({ id, name, hp, type, image, onClose }: MonsterDetailsModalProps) => {
+const MonsterDetailsModal = ({ id, name, hit_points, type, image, onClose }: MonsterDetailsModalProps) => {
   const { userId } = useContext(AuthContext);
   const { data, loading, error } = useQuery(GET_MONSTER_REVIEWS, { variables: { monsterId: id } });
   const reviews: ReviewType[] = data?.monster?.reviews || [];
@@ -55,7 +55,7 @@ const MonsterDetailsModal = ({ id, name, hp, type, image, onClose }: MonsterDeta
 
           <div className="flex flex-col gap-2">
             <p className="text">Type: {type}</p>
-            <p className="text">HP: {hp}</p>
+            <p className="text">HP: {hit_points}</p>
             <p className="text">Average Difficulty: {averageDifficulty}</p>
           </div>
         </Box>

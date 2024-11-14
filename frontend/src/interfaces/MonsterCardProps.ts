@@ -2,8 +2,8 @@ export interface MonsterCardProps {
   id: string;
   name: string;
   type: string;
-  hp: number;
+  hit_points: number;
   alignment: string;
   size: string;
-  img?: string;
+  image?: string;
 }
