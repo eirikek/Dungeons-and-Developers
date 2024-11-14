@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MonsterFilter Component > renders correctly and matches snapshot 1`] = `
+<div>
+  <div
+    class="relative text-white"
+  >
+    <button
+      class="text px-1 rounded-md bg-customRed hover:bg-transparent border-2 border-customRed hover:border-customRed hover:text-customRed transition-colors duration-200"
+    >
+      Filter Monsters
+    </button>
+  </div>
+</div>
+`;

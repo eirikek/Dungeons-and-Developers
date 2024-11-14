@@ -50,6 +50,8 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
         onClick={handleCardClick}
         className="flex flex-col items-center justify-between bg-black pb-5 w-[75vw] md:w-[42vw] xl:w-[22vw] 2xl:w-[18vw] h-[40vh] sm:h-[45vh] md:h-[35vh] rounded-lg overflow-hidden
            transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-black cursor-pointer"
+        aria-label={name}
+        data-testid={`${name}-monster-card`}
       >
         <div className="relative w-full h-[30vh] overflow-hidden">
           {!imageLoaded && <div>Loading image...</div>}
@@ -70,7 +72,11 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
                 style={{ display: imageLoaded ? 'block' : 'none' }}
               />
               <div className="absolute left-[75%] top-5">
-                <DungeonButton onAddToDungeonClick={handleToggleDungeon} isInDungeon={isInDungeon(id)} />
+                <DungeonButton
+                  onAddToDungeonClick={handleToggleDungeon}
+                  isInDungeon={isInDungeon(id)}
+                  aria-label={isInDungeon(id) ? 'Remove from dungeon' : 'Add to dungeon'}
+                />
               </div>
             </div>
           )}

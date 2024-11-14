@@ -15,7 +15,8 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, onPageChange, tota
         <button
           className="flex items-center hover:text-gray-400"
           onClick={() => onPageChange(-1)}
-          disabled={currentPage === 1}  // Disable if on first page
+          disabled={currentPage === 1} // Disable if on first page
+          aria-label="navigate previous"
         >
           <FaChevronLeft className="mr-2" />
           Prev Page
@@ -27,7 +28,8 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, onPageChange, tota
         <button
           className="flex items-center hover:text-gray-400"
           onClick={() => onPageChange(1)}
-          disabled={currentPage === totalPages}  // Disable if on last page
+          disabled={currentPage === totalPages} // Disable if on last page
+          aria-label="navigate next"
         >
           Next Page
           <FaChevronRight className="ml-2" />

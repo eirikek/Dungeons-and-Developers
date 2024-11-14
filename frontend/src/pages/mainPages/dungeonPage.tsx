@@ -28,6 +28,8 @@ export default function DungeonPage() {
             inputName="Dungeon Name"
             value={thisDungeonName}
             onSave={handleSaveDungeonName}
+            aria-label="Enter dungeon name"
+            data-testid="input-for-dungeon-name"
           />
           <DungeonStats />
           <DungeonMonsterGrid />

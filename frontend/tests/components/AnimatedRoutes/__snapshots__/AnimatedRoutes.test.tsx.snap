@@ -1,0 +1,51 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AnimatedRoutes > renders a snapshot of the AbilityScorePage route 1`] = `
+<DocumentFragment>
+  <div>
+    <div>
+      Home Page
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`AnimatedRoutes > renders a snapshot of the ClassPage route 1`] = `
+<DocumentFragment>
+  <div>
+    <div>
+      Home Page
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`AnimatedRoutes > renders a snapshot of the EquipmentPage route 1`] = `
+<DocumentFragment>
+  <div>
+    <div>
+      Home Page
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`AnimatedRoutes > renders a snapshot of the RacePage route 1`] = `
+<DocumentFragment>
+  <div>
+    <div>
+      Home Page
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`AnimatedRoutes > renders the correct component based on the route 1`] = `
+<DocumentFragment>
+  <div>
+    <div>
+      Home Page
+    </div>
+  </div>
+</DocumentFragment>
+`;

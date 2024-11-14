@@ -1,7 +1,5 @@
 import Equipment from '../model/Equipment.js';
 import fetchData from '../../scripts/fetchData.js';
-import User from '../model/User.js';
-import { Types } from 'mongoose';
 
 interface EquipmentArgs {
   id: string;

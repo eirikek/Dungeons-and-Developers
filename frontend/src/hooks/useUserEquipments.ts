@@ -4,8 +4,9 @@ import { useMutation, useQuery } from '@apollo/client';
 import {
   ADD_EQUIPMENT_TO_CHARACTER,
   GET_USER_EQUIPMENT,
+  REMOVE_ALL_EQUIPMENTS,
   REMOVE_EQUIPMENT_FROM_CHARACTER,
-} from '../../../backend/src/graphql/queries.ts';
+} from '../graphql/queries';
 import { Equipment } from '../interfaces/EquipmentProps.ts';
 
 const useUserEquipments = () => {
@@ -25,11 +26,15 @@ const useUserEquipments = () => {
   }, [data]);
 
   const [addEquipment] = useMutation(ADD_EQUIPMENT_TO_CHARACTER, {
-    onCompleted: refetch,
+    onCompleted: () => refetch(),
   });
 
   const [removeEquipment] = useMutation(REMOVE_EQUIPMENT_FROM_CHARACTER, {
-    onCompleted: refetch,
+    onCompleted: () => refetch(),
+  });
+
+  const [removeAllEquipments] = useMutation(REMOVE_ALL_EQUIPMENTS, {
+    onCompleted: () => refetch(),
   });
 
   const addToEquipments = async (equipId: string) => {
@@ -39,7 +44,19 @@ const useUserEquipments = () => {
   const removeFromEquipments = async (equipId: string) => {
     await removeEquipment({ variables: { userId, equipmentId: equipId } });
   };
-  return { userEquipments, loading, refetchEquipments: refetch, addToEquipments, removeFromEquipments };
+
+  const removeAllUserEquipments = async () => {
+    if (!userId || userEquipments.length === 0) return;
+    await removeAllEquipments({ variables: { userId } });
+  };
+  return {
+    userEquipments,
+    loading,
+    refetchEquipments: refetch,
+    addToEquipments,
+    removeFromEquipments,
+    removeAllUserEquipments,
+  };
 };
 
 export default useUserEquipments;

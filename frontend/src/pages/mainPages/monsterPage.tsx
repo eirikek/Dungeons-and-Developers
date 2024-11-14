@@ -1,16 +1,16 @@
+import { useQuery } from '@apollo/client';
+import { hourglass } from 'ldrs';
 import debounce from 'lodash/debounce';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import MonsterCard from '../../components/MonsterCard/MonsterCard';
-import useMonster from '../../hooks/useMonster.ts';
-import { hourglass } from 'ldrs';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
-import Pagination from '../../components/Pagination/Pagination';
-import SearchBar from '../../components/SearchBar/SearchBar.tsx';
+import MonsterCard from '../../components/MonsterCard/MonsterCard';
 import MonsterFilter from '../../components/MonsterFilter/MonsterFilter.tsx';
 import MonsterSort from '../../components/MonsterSort/MonsterSort.tsx';
+import Pagination from '../../components/Pagination/Pagination';
+import SearchBar from '../../components/SearchBar/SearchBar.tsx';
+import { GET_MONSTER_HP_RANGE } from '../../graphql/queries.ts';
+import useMonster from '../../hooks/useMonster.ts';
 import useMonsterSuggestions from '../../hooks/useMonsterSuggestions';
-import { useQuery } from '@apollo/client';
-import { GET_MONSTER_HP_RANGE } from '../../../../backend/src/graphql/queries.ts';
 
 const monstersPerPage = 8;
 
@@ -147,7 +147,7 @@ export default function MonsterPage() {
           </div>
 
           {loading ? (
-            <div className="flex flex-col items-center justify-center h-[79.5vh]">
+            <div className="flex flex-col items-center justify-center h-[79.5vh]" data-testid="loading-indicator">
               <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
             </div>
           ) : (
