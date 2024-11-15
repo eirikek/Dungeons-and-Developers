@@ -4,6 +4,7 @@ import MonsterCard from '../MonsterCard/MonsterCard';
 
 const DungeonMonsterGrid = () => {
   const { dungeonMonsters } = useContext(DungeonContext);
+  console.log('Dungeonmonsters:', dungeonMonsters);
 
   return (
     <>
@@ -13,8 +14,8 @@ const DungeonMonsterGrid = () => {
             <p className="sub-header">No monsters in dungeon</p>
           </div>
         ) : (
-          dungeonMonsters.map((monster, idx) => (
-            <MonsterCard key={idx} {...monster} hit_points={monster.hit_points} data-testid="monster-card" />
+          dungeonMonsters.map((monster) => (
+            <MonsterCard key={monster.id} {...monster} hit_points={monster.hit_points} data-testid="monster-card" />
           ))
         )}
       </div>

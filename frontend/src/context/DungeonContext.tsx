@@ -1,12 +1,12 @@
-import { createContext, ReactNode, useRef, useState } from 'react';
+import { createContext, ReactNode, useRef } from 'react';
 
 import { MonsterCardProps } from '../interfaces/MonsterCardProps.ts';
 import { useToast } from '../hooks/useToast.ts';
-import useDungeonMonsters from '../hooks/useDungeonMonsters.ts';
+import useDungeon from '../hooks/useDungeon.ts';
 
 interface DungeonContextType {
   dungeonMonsters: MonsterCardProps[];
-  thisDungeonName: string;
+  dungeonName: string;
   toggleDungeon: (monster: MonsterCardProps) => void;
   isInDungeon: (monsterIndex: string) => boolean;
   undoRemoveMonster: () => void;
@@ -20,7 +20,7 @@ interface DungeonProviderProps {
 
 export const DungeonContext = createContext<DungeonContextType>({
   dungeonMonsters: [],
-  thisDungeonName: '',
+  dungeonName: '',
   toggleDungeon: () => {},
   isInDungeon: () => false,
   undoRemoveMonster: () => {},
@@ -32,8 +32,8 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
   const undoRemoveRef = useRef<MonsterCardProps | null>(null);
   const { showToast } = useToast();
 
-  const { dungeonMonsters, dungeonName, toggleFavorite, toggleDungeonName } = useDungeonMonsters();
-  const [thisDungeonName, setDungeonName] = useState(dungeonName);
+  const { dungeonMonsters, dungeonName, toggleFavorite, toggleDungeonName } = useDungeon();
+
   const isInDungeon = (monsterId: string) => dungeonMonsters.some((favMonster) => favMonster.id === monsterId);
 
   const toggleDungeon = async (monster: MonsterCardProps) => {
@@ -72,7 +72,6 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
 
   const updateDungeonName = async (newName: string) => {
     await toggleDungeonName(newName);
-    setDungeonName(newName);
   };
 
   const undoRemoveMonster = async () => {
@@ -90,7 +89,7 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
 
   return (
     <DungeonContext.Provider
-      value={{ dungeonMonsters, thisDungeonName, toggleDungeon, isInDungeon, undoRemoveMonster, updateDungeonName }}
+      value={{ dungeonMonsters, dungeonName, toggleDungeon, isInDungeon, undoRemoveMonster, updateDungeonName }}
     >
       {children}
     </DungeonContext.Provider>

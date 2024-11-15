@@ -9,8 +9,7 @@ import { DungeonContext } from '../../context/DungeonContext.tsx';
 
 export default function DungeonPage() {
   const { userId } = useContext(AuthContext);
-
-  const { thisDungeonName, updateDungeonName } = useContext(DungeonContext);
+  const { dungeonName, updateDungeonName } = useContext(DungeonContext);
 
   const handleSaveDungeonName = (newName: string) => {
     if (userId) {
@@ -26,7 +25,7 @@ export default function DungeonPage() {
           <CustomInput
             placeholder="Enter dungeon name"
             inputName="Dungeon Name"
-            value={thisDungeonName}
+            value={dungeonName}
             onSave={handleSaveDungeonName}
             aria-label="Enter dungeon name"
             data-testid="input-for-dungeon-name"

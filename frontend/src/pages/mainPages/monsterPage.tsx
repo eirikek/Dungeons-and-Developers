@@ -157,8 +157,8 @@ export default function MonsterPage() {
               ) : monsters.length > 0 ? (
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 place-items-center gap-y-[10vh] lg:gap-y-[1vh] gap-x-[10vw] lg:gap-x-[4vw] min-h-[75vh]">
-                    {monsters.map((monster, idx) => (
-                      <MonsterCard key={idx} {...monster} />
+                    {monsters.map((monster) => (
+                      <MonsterCard key={monster.id} {...monster} />
                     ))}
                   </div>
                   <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
