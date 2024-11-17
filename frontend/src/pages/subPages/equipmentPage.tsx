@@ -187,7 +187,7 @@ const EquipmentPage = () => {
       <main className="main before:bg-equipments">
         <div className="black-overlay" />
         <div className="wrapper py-20 min-w-[70%] flex gap-y-32 2xl:gap-0 mt-10 items-center justify-center">
-          <section className="h-[30vh]">
+          <section>
             <h1 className=" text-center header mb-10">Equipments</h1>
             <div className="flex flex-col xl:flex-row gap-10 items-center">
               <button
@@ -201,7 +201,7 @@ const EquipmentPage = () => {
                 handleSearchChange={handleSearchChange}
                 suggestions={
                   Array.isArray(equipmentSuggestions.equipments)
-                    ? equipmentSuggestions.equipments.map((e) => e.name)
+                    ? equipmentSuggestions.equipments.map((e: { name: never }) => e.name)
                     : []
                 }
                 onSuggestionClick={(suggestion) => {
@@ -218,7 +218,7 @@ const EquipmentPage = () => {
             {debouncedSearchTerm && (
               <div className="mt-5 flex flex-col items-center">
                 <p className="text">
-                  Search results for: <span className="font-bold">{debouncedSearchTerm}</span>
+                  Search results for: <span className="bold">{debouncedSearchTerm}</span>
                 </p>
                 <button
                   onClick={() => {
@@ -242,7 +242,7 @@ const EquipmentPage = () => {
             ) : isMobileOrTablet ? (
               loading ? (
                 <div className="flex justify-center items-center w-full h-[40vh]">
-                  <LoadingHourglass /> {/* Replace this with your actual loading component */}
+                  <LoadingHourglass />
                 </div>
               ) : (
                 <div className="grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 gap-10 p-10 w-full h-full min-h-[40vh] auto-rows-fr">
