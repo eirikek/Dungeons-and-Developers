@@ -13,6 +13,8 @@ import { useMutation } from '@apollo/client';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 import useEquipmentSuggestions from '../../hooks/useEquipmentsSuggestions.ts';
 import CustomButton from '../../components/CustomButton/CustomButton.tsx';
+import { useMediaQuery } from 'react-responsive';
+import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 
 const variants = {
   enter: (direction: number) => ({
@@ -30,6 +32,7 @@ const variants = {
 };
 
 const EquipmentPage = () => {
+  const isMobileOrTablet = useMediaQuery({ maxWidth: 1024 });
   const { userId } = useContext(AuthContext);
   const { showToast } = useToast();
   const { userEquipments, addToEquipments, removeFromEquipments } = useUserEquipments();
@@ -169,6 +172,13 @@ const EquipmentPage = () => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
       setDirection(newDirection);
+
+      if (isMobileOrTablet) {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+      }
     }
   };
 
@@ -225,12 +235,43 @@ const EquipmentPage = () => {
             )}
           </section>
           <section className="w-full h-full">
-            <AnimatePresence initial={false} custom={direction} mode="wait">
-              {noResults ? (
+            {noResults ? (
+              <div className="flex justify-center items-center w-full h-[40vh]">
+                <h2 className="text-center sub-header">No Equipments Found</h2>
+              </div>
+            ) : isMobileOrTablet ? (
+              loading ? (
                 <div className="flex justify-center items-center w-full h-[40vh]">
-                  <h2 className="text-center sub-header">No Equipments Found</h2>
+                  <LoadingHourglass /> {/* Replace this with your actual loading component */}
                 </div>
               ) : (
+                <div className="grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 gap-10 p-10 w-full h-full min-h-[40vh] auto-rows-fr">
+                  {equipments.map((equipment, index) => {
+                    const isChecked = userEquipments.some((userEquip) => userEquip.id === equipment.id);
+                    const isDisabled = userEquipments.length >= maxEquipments && !isChecked;
+
+                    return (
+                      <EquipmentCard
+                        key={index}
+                        userId={userId}
+                        equipment={equipment}
+                        isChecked={isChecked}
+                        onChange={handleEquipmentChange}
+                        disabled={isDisabled}
+                        onDisabledClick={() => {
+                          showToast({
+                            message: 'Cannot add any more items, inventory is full',
+                            type: 'warning',
+                            duration: 2000,
+                          });
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              )
+            ) : (
+              <AnimatePresence initial={false} custom={direction} mode="wait">
                 <motion.div
                   key={currentPage}
                   className="grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 gap-10 p-10 w-full h-full min-h-[40vh] auto-rows-fr"
@@ -264,8 +305,8 @@ const EquipmentPage = () => {
                     );
                   })}
                 </motion.div>
-              )}
-            </AnimatePresence>
+              </AnimatePresence>
+            )}
           </section>
 
           <div className="min-h-[5vh]">
