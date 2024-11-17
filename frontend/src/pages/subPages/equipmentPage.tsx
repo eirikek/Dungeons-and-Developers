@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import Pagination from '../../components/Pagination/Pagination.tsx';
 import EquipmentCard from '../../components/SubPages/EquipmentCard.tsx';
@@ -11,7 +11,7 @@ import useUserEquipments from '../../hooks/useUserEquipments.ts';
 import { REMOVE_ALL_EQUIPMENTS } from '../../graphql/queries.ts';
 import { useMutation } from '@apollo/client';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
-import debounce from 'lodash/debounce';
+import useEquipmentSuggestions from '../../hooks/useEquipmentsSuggestions.ts';
 
 const variants = {
   enter: (direction: number) => ({
@@ -40,6 +40,7 @@ const EquipmentPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const equipmentsPerPage = 20;
   const maxEquipments = 10;
+  const { suggestions: equipmentSuggestions } = useEquipmentSuggestions(searchTerm);
 
   const { equipments: fetchedEquipments, totalEquipments: fetchedTotalEquipments } = useEquipments(
     debouncedSearchTerm,
@@ -53,17 +54,12 @@ const EquipmentPage = () => {
     setEquipments(fetchedEquipments);
   }, [currentPage, fetchedEquipments]);
 
-  const debounceSearch = useMemo(
-    () =>
-      debounce((value: string) => {
-        setDebouncedSearchTerm(value);
-      }, 300),
-    []
-  );
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    debounceSearch(e.target.value);
+  };
+
+  const triggerSearch = () => {
+    setDebouncedSearchTerm(searchTerm);
     setCurrentPage(1);
   };
 
@@ -177,13 +173,23 @@ const EquipmentPage = () => {
               <SearchBar
                 searchTerm={searchTerm}
                 handleSearchChange={handleSearchChange}
-                suggestions={searchTerm ? equipments.map((e) => e.name) : []}
+                suggestions={
+                  Array.isArray(equipmentSuggestions.equipments)
+                    ? equipmentSuggestions.equipments.map((e) => e.name)
+                    : []
+                }
                 onSuggestionClick={(suggestion) => {
                   setSearchTerm(suggestion);
-                  debounceSearch(suggestion);
+                  setDebouncedSearchTerm(suggestion);
                 }}
                 placeholder="Search for equipment..."
               />
+              <button
+                onClick={triggerSearch}
+                className="px-4 py-2 rounded-md bg-customBlue text-white hover:bg-blue-700 transition-colors duration-200"
+              >
+                Search
+              </button>
             </div>
           </section>
           <section className="w-full h-full">

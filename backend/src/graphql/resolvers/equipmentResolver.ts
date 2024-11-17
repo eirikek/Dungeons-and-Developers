@@ -9,11 +9,31 @@ interface EquipmentQueryArgs {
   searchTerm?: string;
   offset?: number;
   limit?: number;
+  suggestionsOnly?: boolean;
 }
 
 export default {
   Query: {
-    async equipments(_: any, { searchTerm = '', offset = 0, limit = 20 }: EquipmentQueryArgs) {
+    async equipments(_: any, { searchTerm = '', offset = 0, limit = 20, suggestionsOnly = false }: EquipmentQueryArgs) {
+      if (suggestionsOnly) {
+        const escapedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const startsWithRegex = new RegExp(`^${escapedSearchTerm}`, 'i');
+        const suggestions = await Equipment.find({ name: { $regex: startsWithRegex } }, 'name')
+          .limit(limit)
+          .lean();
+        
+        return {
+          equipments: suggestions.map((equipment) => ({
+            id: equipment._id,
+            name: equipment.name,
+            index: null,
+            category: null,
+            value: null,
+          })),
+          totalCount: suggestions.length,
+        };
+      }
+
       let equipments: any[] = [];
       let totalEquipments = 0;
 
@@ -45,13 +65,11 @@ export default {
         totalEquipments = await Equipment.countDocuments();
       }
 
-      const equipmentsWithId = equipments.map((equipment) => ({
-        id: equipment._id,
-        ...equipment,
-      }));
-
       return {
-        equipments: equipmentsWithId,
+        equipments: equipments.map((equipment) => ({
+          id: equipment._id,
+          ...equipment,
+        })),
         totalCount: totalEquipments,
       };
     },

@@ -133,7 +133,7 @@ export default function MonsterFilter({
         <FaChevronDown className="inline ml-3" />
       </button>
       {isDropdownOpen && (
-        <div className="absolute left-1/2 transform -translate-x-1/2 bg-customGray shadow-xl shadow-black p-8 rounded mt-2 min-w-max w-[20vw]">
+        <div className="absolute left-1/2 transform -translate-x-1/2 bg-customGray shadow-xl shadow-black p-8 rounded mt-2 min-w-[30vw] w-max">
           <div className="flex justify-between items-center mb-4">
             <button
               onClick={handleClearFilters}

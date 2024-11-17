@@ -13,7 +13,7 @@ export const equipmentType = gql`
     totalCount: Int!
   }
   extend type Query {
-    equipments(searchTerm: String, offset: Int, limit: Int): EquipmentResult!
+    equipments(searchTerm: String, offset: Int, limit: Int, suggestionsOnly: Boolean): EquipmentResult!
     equipment(id: ID!): Equipment!
   }
   extend type Mutation {
