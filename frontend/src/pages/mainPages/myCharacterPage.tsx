@@ -12,7 +12,7 @@ import {
   UPDATE_ABILITY_SCORES,
   UPDATE_USER_CLASS,
   UPDATE_USER_RACE,
-} from '../../../../backend/src/graphql/queries.ts';
+} from '../../graphql/queries.ts';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import useClasses from '../../hooks/useClasses.ts';

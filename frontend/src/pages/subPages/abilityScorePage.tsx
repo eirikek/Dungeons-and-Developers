@@ -3,7 +3,7 @@ import useAbilityScores from '../../hooks/useAbilityScores.ts';
 import AbilityScoreCard from '../../components/SubPages/AbilityScoreCard.tsx';
 import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_ARRAY_SCORES, UPDATE_ABILITY_SCORES } from '../../../../backend/src/graphql/queries.ts';
+import { GET_ARRAY_SCORES, UPDATE_ABILITY_SCORES } from '../../graphql/queries';
 import { useToast } from '../../hooks/useToast.ts';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { notifyScoreChanges } from '../../utils/abilityScoreMapping.ts';

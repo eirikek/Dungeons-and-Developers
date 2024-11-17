@@ -1,7 +1,7 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import Review from './Review.tsx';
 import { useQuery } from '@apollo/client';
-import { GET_MONSTER_REVIEWS } from '../../../../backend/src/graphql/queries';
+import { GET_MONSTER_REVIEWS } from '../../graphql/queries.ts';
 import { ReviewType } from '../../interfaces/ReviewProps.ts';
 import { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
@@ -9,13 +9,13 @@ import { AuthContext } from '../../context/AuthContext';
 type MonsterDetailsModalProps = {
   id: string;
   name: string;
-  hp: number;
+  hit_points: number;
   type: string;
   image: string;
   onClose: () => void;
 };
 
-const MonsterDetailsModal = ({ id, name, hp, type, image, onClose }: MonsterDetailsModalProps) => {
+const MonsterDetailsModal = ({ id, name, hit_points, type, image, onClose }: MonsterDetailsModalProps) => {
   const { userId } = useContext(AuthContext);
   const { data, loading, error } = useQuery(GET_MONSTER_REVIEWS, { variables: { monsterId: id } });
   const reviews: ReviewType[] = data?.monster?.reviews || [];
@@ -55,7 +55,7 @@ const MonsterDetailsModal = ({ id, name, hp, type, image, onClose }: MonsterDeta
 
           <div className="flex flex-col gap-2">
             <p className="text">Type: {type}</p>
-            <p className="text">HP: {hp}</p>
+            <p className="text">HP: {hit_points}</p>
             <p className="text">Average Difficulty: {averageDifficulty}</p>
           </div>
         </Box>
@@ -91,6 +91,7 @@ const MonsterDetailsModal = ({ id, name, hp, type, image, onClose }: MonsterDeta
             fontFamily: 'MedievalSharp',
             fontSize: '1.5rem',
           }}
+          aria-label="Close modal"
         >
           Close
         </Button>

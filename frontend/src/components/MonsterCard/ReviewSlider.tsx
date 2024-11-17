@@ -31,9 +31,11 @@ const ReviewSlider: React.FC<SliderProps> = ({ value, onChange, disabled = false
   return (
     <Box>
       <Slider
+        data-testid="review-slider"
         value={value}
         onChange={onChange}
         getAriaValueText={getStringValue}
+        aria-valuenow={value}
         marks={marks}
         disabled={disabled}
         min={0}

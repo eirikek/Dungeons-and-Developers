@@ -1,0 +1,33 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CustomInput Component > matches snapshot 1`] = `
+<div>
+  <section
+    class="flex flex-row items-center justify-center gap-4 "
+  >
+    <h2
+      aria-label="Name of your dungeon"
+      class=" text-6xl md:text-5xl lg:text-4xl xl:text-3xl 2xl:text-2xl"
+      data-testid="dungeon-name"
+    >
+      My dungeon
+    </h2>
+    <button
+      aria-label="Edit Dungeon"
+      class=" p-[2px] lg:p-[5px] rounded-lg bg-customRed hover:bg-transparent border-2 border-customRed hover:border-customRed transition-colors duration-100 group"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium text-white group-hover:text-customRed duration-100 lg:!w-6 lg:!h-6 xl:!w-8 xl:!h-8 css-20bmp1-MuiSvgIcon-root"
+        data-testid="ModeEditOutlineIcon"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 5.63l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41"
+        />
+      </svg>
+    </button>
+  </section>
+</div>
+`;

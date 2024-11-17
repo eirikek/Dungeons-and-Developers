@@ -1,15 +1,11 @@
 import { createContext, ReactNode, useEffect, useState, useRef } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import {
-  ADD_FAVORITE_MONSTER,
-  REMOVE_FAVORITE_MONSTER,
-  GET_USER_FAVORITES,
-} from '../../../backend/src/graphql/queries.ts';
+import { ADD_FAVORITE_MONSTER, REMOVE_FAVORITE_MONSTER, GET_USER_FAVORITES } from '../graphql/queries';
 import { MonsterCardProps } from '../interfaces/MonsterCardProps.ts';
 import MonsterDataProps from '../interfaces/MonsterDataProps.ts';
 import { useToast } from '../hooks/useToast.ts';
 
-interface DungeonContextType {
+export interface DungeonContextType {
   dungeonMonsters: MonsterCardProps[];
   toggleDungeon: (monster: MonsterCardProps) => void;
   isInDungeon: (monsterIndex: string) => boolean;
@@ -60,8 +56,8 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
             size: monster.size,
             type: monster.type,
             alignment: monster.alignment,
-            hp: monster.hit_points,
-            img: monster.image,
+            hit_points: monster.hit_points,
+            image: monster.image,
           };
         })
         .filter(Boolean);

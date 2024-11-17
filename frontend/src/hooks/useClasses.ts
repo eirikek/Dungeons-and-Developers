@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useQuery } from '@apollo/client';
-import { GET_CLASSES } from '../../../backend/src/graphql/queries.ts';
+import { GET_CLASSES } from '../graphql/queries';
 import ClassData from '../interfaces/ClassProps.ts';
 
 function useClass(currentPage: number, classesPerPage: number) {

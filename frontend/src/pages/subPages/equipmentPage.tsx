@@ -8,7 +8,7 @@ import useEquipments from '../../hooks/useEquipments.ts';
 import { useToast } from '../../hooks/useToast.ts';
 import { Equipment } from '../../interfaces/EquipmentProps.ts';
 import useUserEquipments from '../../hooks/useUserEquipments.ts';
-import { REMOVE_ALL_EQUIPMENTS } from '../../../../backend/src/graphql/queries.ts';
+import { REMOVE_ALL_EQUIPMENTS } from '../../graphql/queries.ts';
 import { useMutation } from '@apollo/client';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 import debounce from 'lodash/debounce';

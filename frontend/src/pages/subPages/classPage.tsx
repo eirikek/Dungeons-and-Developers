@@ -2,7 +2,7 @@ import ClassCard from '../../components/SubPages/ClassCard.tsx';
 import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 import useClass from '../../hooks/useClasses.ts';
 import { useQuery } from '@apollo/client';
-import { GET_USER_CLASS } from '../../../../backend/src/graphql/queries.ts';
+import { GET_USER_CLASS } from '../../graphql/queries';
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 

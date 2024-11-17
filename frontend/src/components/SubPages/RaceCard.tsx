@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { motion } from 'framer-motion';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
-import { UPDATE_USER_RACE } from '../../../../backend/src/graphql/queries.ts';
+import { UPDATE_USER_RACE } from '../../graphql/queries';
 import { AuthContext } from '../../context/AuthContext';
 import { useMutation } from '@apollo/client';
 import RaceProps from '../../interfaces/RaceProps.ts';

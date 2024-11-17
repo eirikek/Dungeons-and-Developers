@@ -1,4 +1,7 @@
 ### Node template
+
+# test
+./frontend/tests/coverage/
 # Logs
 logs
 *.log

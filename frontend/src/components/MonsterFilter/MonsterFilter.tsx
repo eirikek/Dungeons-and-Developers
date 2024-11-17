@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
-import { Box, Slider } from '@mui/material';
-import { FiX } from 'react-icons/fi';
-import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
-import { GET_MONSTER_HP_RANGE } from '../../../../backend/src/graphql/queries.ts';
 import { useQuery } from '@apollo/client';
+import { Box, Slider } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
+import { FiX } from 'react-icons/fi';
+import { GET_MONSTER_HP_RANGE } from '../../graphql/queries.ts';
+import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
 
 interface MonsterFilterProps {
   selectedFilters: Set<string>;
@@ -141,7 +141,11 @@ export default function MonsterFilter({
             >
               Clear Filters
             </button>
-            <FiX className="h-8 w-8 text-white hover:text-customRed cursor-pointer" onClick={toggleDropdown} />
+            <FiX
+              className="h-8 w-8 text-white hover:text-customRed cursor-pointer"
+              onClick={toggleDropdown}
+              aria-label="Close"
+            />
           </div>
           <h2 className="text bold mb-2 ">Type:</h2>
           <div className="grid grid-cols-2 gap-y-4 gap-x-8 mb-4">

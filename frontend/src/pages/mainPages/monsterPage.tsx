@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import debounce from 'lodash/debounce';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import MonsterCard from '../../components/MonsterCard/MonsterCard';
@@ -8,9 +9,8 @@ import Pagination from '../../components/Pagination/Pagination';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 import MonsterFilter from '../../components/MonsterFilter/MonsterFilter.tsx';
 import MonsterSort from '../../components/MonsterSort/MonsterSort.tsx';
+import { GET_MONSTER_HP_RANGE } from '../../graphql/queries.ts';
 import useMonsterSuggestions from '../../hooks/useMonsterSuggestions';
-import { useQuery } from '@apollo/client';
-import { GET_MONSTER_HP_RANGE } from '../../../../backend/src/graphql/queries.ts';
 
 const monstersPerPage = 8;
 
@@ -83,7 +83,7 @@ export default function MonsterPage() {
       setHpFilterMin(minHp);
       setHpFilterMax(maxHp);
     }
-  }, [minHp, maxHp]);
+  }, [minHp, maxHp, hpFilterMin, hpFilterMax]);
 
   const handleHpChange = useCallback((min: number, max: number) => {
     setHpFilterMin(min);

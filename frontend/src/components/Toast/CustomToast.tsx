@@ -14,14 +14,14 @@ const CustomToast = ({ message, type, undoAction, closeToast }: ToastProps) => {
   const getIcon = () => {
     switch (type) {
       case 'success':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
+        return <CheckCircle data-testid="CheckCircleIcon" />;
       case 'error':
-        return <IoCloseCircleOutline className="w-5 h-5 text-red-500" />;
+        return <IoCloseCircleOutline data-testid="IoCloseCircleOutlineIcon" />;
       case 'warning':
-        return <IoAlertCircleOutline className="w-5 h-5 text-yellow-500" />;
+        return <IoAlertCircleOutline data-testid="IoAlertCircleOutlineIcon" />;
       case 'info':
       default:
-        return <IoIosInformationCircleOutline className="w-5 h-5 text-blue-400" />;
+        return <IoIosInformationCircleOutline data-testid="IoInformationCircleIcon" />;
     }
   };
 
@@ -39,6 +39,7 @@ const CustomToast = ({ message, type, undoAction, closeToast }: ToastProps) => {
           onClick={handleUndoClick}
           className={`undo-button  ${undoVisible ? 'visible' : 'hidden'} px-3 py-1 rounded-md bg-customRed hover:bg-transparent border-2 border-customRed hover:border-customRed hover:text-customRed transition-colors duration-100`}
           style={{ fontFamily: 'MedievalSharp, sans-serif' }}
+          data-testid="undo-button"
         >
           <span className="flex items-center gap-2">
             <FaUndoAlt className="w-4 h-4" />
