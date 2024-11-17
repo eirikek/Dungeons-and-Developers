@@ -20,6 +20,7 @@ function useAbilityScores(currentPage: number, abilitiesPerPage: number) {
   const transformedAbilities = useMemo(() => {
     if (!data || !data.abilities) return [];
     return data.abilities.abilities.map((ability) => ({
+      id: ability.id,
       index: ability.index,
       name: ability.name,
       skills: ability.skills,

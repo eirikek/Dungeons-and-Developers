@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import Class from '../model/Class.js';
 import Race from '../model/Race.js';
 import User from '../model/User.ts';
+import AbilityScore from '../model/AbilityScore.js';
 
 const SECRET_KEY = process.env.SECRET_KEY || 'secret_key';
 
@@ -21,7 +22,8 @@ export default {
         })
         .populate('race')
         .populate('class')
-        .populate('equipments');
+        .populate('equipments')
+        .populate('abilityScores');
     },
 
     async checkUsername(_: any, { userName }: UserArgs) {
@@ -30,9 +32,16 @@ export default {
     },
 
     async getArrayScores(_: any, { userId }: { userId: string }) {
-      const user = await User.findById(userId).select('abilityScores');
+      const user = await User.findById(userId).populate('abilityScores.ability');
       if (!user) throw new Error('User not found');
-      return user.abilityScores;
+
+      return user.abilityScores.map((abilityScore) => ({
+        ability: {
+          id: abilityScore.ability._id.toString(),
+          name: abilityScore.ability.name,
+        },
+        score: abilityScore.score,
+      }));
     },
   },
 
@@ -50,21 +59,31 @@ export default {
         throw new Error('Default race or class not found in the database');
       }
 
+      const defaultAbilityScores = await AbilityScore.find({});
+      if (!defaultAbilityScores || defaultAbilityScores.length === 0) {
+        throw new Error('No ability scores found in the database');
+      }
+
       const user = new User({
         userName,
         race: defaultRace._id,
         class: defaultClass._id,
+        abilityScores: defaultAbilityScores.map((ability) => ({
+          ability: ability._id,
+          score: 10,
+        })),
       });
 
       await user.save();
 
       const token = jwt.sign({ id: user._id, userName: user.userName }, SECRET_KEY, { expiresIn: '2h' });
 
-      return { user: await user.populate('race class'), token };
+      return { user: await user.populate('race class abilityScores.ability'), token };
     },
 
     async loginUser(_: any, { userName }: UserArgs) {
       const user = await User.findOne({ userName })
+        .populate('abilityScores.ability')
         .populate('race')
         .populate('class')
         .populate('favoritedMonsters')
@@ -73,6 +92,7 @@ export default {
           model: 'Equipment',
           select: 'id name category value',
         });
+
       if (!user) throw new Error('User not found');
 
       const token = jwt.sign({ id: user._id, userName: user.userName }, SECRET_KEY, { expiresIn: '2h' });
@@ -141,6 +161,7 @@ export default {
 
       return user.populate('class');
     },
+
     async addEquipmentToCharacter(_: any, { userId, equipmentId }: { userId: string; equipmentId: string }) {
       const user = await User.findById(userId).populate('equipments');
       if (!user) throw new Error('User not found');
@@ -162,10 +183,16 @@ export default {
         throw new Error('Ability scores array must have exactly 6 elements');
       }
 
-      user.abilityScores = scores;
+      const updatedAbilityScores = await AbilityScore.find({});
+
+      user.abilityScores = updatedAbilityScores.map((ability, index) => ({
+        ability: ability._id,
+        score: scores[index],
+      }));
+
       await user.save();
 
-      return user.populate('race class');
+      return user.populate('abilityScores.ability');
     },
 
     async removeEquipmentFromCharacter(_: any, { userId, equipmentId }: { userId: string; equipmentId: string }) {
@@ -187,7 +214,7 @@ export default {
       const removedEquipments = user.equipments;
       user.equipments = [];
       await user.save();
-      
+
       return user.populate('equipments');
     },
   },

@@ -7,6 +7,7 @@ import { GET_ARRAY_SCORES, UPDATE_ABILITY_SCORES } from '../../graphql/queries';
 import { useToast } from '../../hooks/useToast.ts';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { notifyScoreChanges } from '../../utils/abilityScoreMapping.ts';
+import AbilityScore from '../../interfaces/AbilityScoreProps.ts';
 
 export default function AbilityScorePage() {
   const { userId } = useContext(AuthContext);
@@ -21,8 +22,9 @@ export default function AbilityScorePage() {
 
   useEffect(() => {
     if (data && data.getArrayScores) {
-      setLocalScores(data.getArrayScores);
-      setScores(data.getArrayScores);
+      const fetchedScores = data.getArrayScores.abilityScores.map((score: AbilityScore) => score.score);
+      setLocalScores(fetchedScores);
+      setScores(fetchedScores);
     }
   }, [data]);
 
@@ -65,6 +67,7 @@ export default function AbilityScorePage() {
         {abilities.map((ability, index) => (
           <AbilityScoreCard
             key={ability.index}
+            id={ability.id}
             name={ability.name}
             index={ability.index}
             skills={ability.skills}

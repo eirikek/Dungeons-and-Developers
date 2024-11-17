@@ -6,13 +6,29 @@ export default {
     async abilities(_: any, offset = 0, limit = 1) {
       const totalAbilities = await AbilityScore.countDocuments();
       const abilities = await AbilityScore.find().skip(offset).limit(limit);
-      console.log('Fetched abilities:', abilities);
+
+      const abilitiesWithId = abilities.map((ability) => ({
+        ...ability.toObject(),
+        id: ability._id.toString(),
+      }));
+
+      console.log('Fetched abilities:', abilitiesWithId);
       console.log('Total abilities count:', totalAbilities);
-      return { abilities, totalAbilities };
+
+      return { abilities: abilitiesWithId, totalAbilities };
     },
 
     async ability(_: any, { id }: any) {
-      return AbilityScore.findOne({ index: id });
+      const ability = await AbilityScore.findOne({ index: id });
+
+      if (!ability) {
+        throw new Error(`Ability not found for index: ${id}`);
+      }
+
+      return {
+        ...ability.toObject(),
+        id: ability._id.toString(),
+      };
     },
   },
 
