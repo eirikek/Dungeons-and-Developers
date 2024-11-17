@@ -12,6 +12,7 @@ import { REMOVE_ALL_EQUIPMENTS } from '../../graphql/queries.ts';
 import { useMutation } from '@apollo/client';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 import useEquipmentSuggestions from '../../hooks/useEquipmentsSuggestions.ts';
+import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 
 const variants = {
   enter: (direction: number) => ({
@@ -41,26 +42,41 @@ const EquipmentPage = () => {
   const equipmentsPerPage = 20;
   const maxEquipments = 10;
   const { suggestions: equipmentSuggestions } = useEquipmentSuggestions(searchTerm);
+  const [noResults, setNoResults] = useState(false);
 
-  const { equipments: fetchedEquipments, totalEquipments: fetchedTotalEquipments } = useEquipments(
-    debouncedSearchTerm,
-    currentPage,
-    equipmentsPerPage
-  );
+  const {
+    equipments: fetchedEquipments,
+    totalEquipments: fetchedTotalEquipments,
+    loading,
+  } = useEquipments(debouncedSearchTerm, currentPage, equipmentsPerPage);
 
   const [equipments, setEquipments] = useState<Equipment[]>(fetchedEquipments);
 
   useEffect(() => {
     setEquipments(fetchedEquipments);
-  }, [currentPage, fetchedEquipments]);
+
+    if (!loading && debouncedSearchTerm) {
+      setNoResults(fetchedTotalEquipments === 0);
+    }
+  }, [fetchedEquipments, fetchedTotalEquipments, debouncedSearchTerm, loading]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
   const triggerSearch = () => {
-    setDebouncedSearchTerm(searchTerm);
-    setCurrentPage(1);
+    const trimmedSearchTerm = searchTerm.trim();
+    if (trimmedSearchTerm) {
+      setDebouncedSearchTerm(trimmedSearchTerm);
+      setCurrentPage(1);
+    } else {
+      showToast({
+        message: 'Please enter a valid search term.',
+        type: 'warning',
+        duration: 2000,
+      });
+      setNoResults(false);
+    }
   };
 
   const undoRemoveEquipment = async () => {
@@ -161,7 +177,7 @@ const EquipmentPage = () => {
       <main className="main before:bg-equipments">
         <div className="black-overlay" />
         <div className="wrapper py-20 min-w-[70%] flex gap-y-32 2xl:gap-0 mt-10 items-center justify-center">
-          <section className="h-[20vh]">
+          <section className="h-[30vh]">
             <h1 className=" text-center header mb-10">Equipments</h1>
             <div className="flex flex-col xl:flex-row gap-10 items-center">
               <button
@@ -182,51 +198,73 @@ const EquipmentPage = () => {
                   setSearchTerm(suggestion);
                   setDebouncedSearchTerm(suggestion);
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') triggerSearch();
+                }}
                 placeholder="Search for equipment..."
               />
-              <button
-                onClick={triggerSearch}
-                className="px-4 py-2 rounded-md bg-customBlue text-white hover:bg-blue-700 transition-colors duration-200"
-              >
-                Search
-              </button>
+              <CustomButton text="Search" onClick={triggerSearch} />
             </div>
+            {debouncedSearchTerm && (
+              <div className="mt-5 flex flex-col items-center">
+                <p className="text">
+                  Search results for: <span className="font-bold">{debouncedSearchTerm}</span>
+                </p>
+                <button
+                  onClick={() => {
+                    setSearchTerm('');
+                    setDebouncedSearchTerm('');
+                    setCurrentPage(1);
+                    setNoResults(false);
+                  }}
+                  className="text mt-2 px-1 rounded-md bg-customRed hover:bg-transparent border-2 border-customRed hover:border-customRed hover:text-customRed transition-colors duration-200"
+                >
+                  Clear Search
+                </button>
+              </div>
+            )}
           </section>
           <section className="w-full h-full">
             <AnimatePresence initial={false} custom={direction} mode="wait">
-              <motion.div
-                key={currentPage}
-                className="grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 gap-10 p-10 w-full h-full min-h-[55vh] auto-rows-fr"
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{ duration: 0.3 }}
-              >
-                {equipments.map((equipment, index) => {
-                  const isChecked = userEquipments.some((userEquip) => userEquip.id === equipment.id);
-                  const isDisabled = userEquipments.length >= maxEquipments && !isChecked;
+              {noResults ? (
+                <div className="flex justify-center items-center w-full h-[40vh]">
+                  <h2 className="text-center sub-header">No Equipments Found</h2>
+                </div>
+              ) : (
+                <motion.div
+                  key={currentPage}
+                  className="grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 gap-10 p-10 w-full h-full min-h-[40vh] auto-rows-fr"
+                  custom={direction}
+                  variants={variants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.3 }}
+                >
+                  {equipments.map((equipment, index) => {
+                    const isChecked = userEquipments.some((userEquip) => userEquip.id === equipment.id);
+                    const isDisabled = userEquipments.length >= maxEquipments && !isChecked;
 
-                  return (
-                    <EquipmentCard
-                      key={index}
-                      userId={userId}
-                      equipment={equipment}
-                      isChecked={isChecked}
-                      onChange={handleEquipmentChange}
-                      disabled={isDisabled}
-                      onDisabledClick={() => {
-                        showToast({
-                          message: 'Cannot add any more items, inventory is full',
-                          type: 'warning',
-                          duration: 2000,
-                        });
-                      }}
-                    />
-                  );
-                })}
-              </motion.div>
+                    return (
+                      <EquipmentCard
+                        key={index}
+                        userId={userId}
+                        equipment={equipment}
+                        isChecked={isChecked}
+                        onChange={handleEquipmentChange}
+                        disabled={isDisabled}
+                        onDisabledClick={() => {
+                          showToast({
+                            message: 'Cannot add any more items, inventory is full',
+                            type: 'warning',
+                            duration: 2000,
+                          });
+                        }}
+                      />
+                    );
+                  })}
+                </motion.div>
+              )}
             </AnimatePresence>
           </section>
 
