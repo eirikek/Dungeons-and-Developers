@@ -13,12 +13,10 @@ function useAbilityScores(currentPage: number, abilitiesPerPage: number) {
     fetchPolicy: 'network-only',
   });
 
-  console.log('GraphQL Data:', data);
-  console.log('Loading:', loading);
-  console.log('Error:', error);
-
   const transformedAbilities = useMemo(() => {
-    if (!data || !data.abilities) return [];
+    if (!data || !data.abilities) {
+      return [];
+    }
     return data.abilities.abilities.map((ability) => ({
       id: ability.id,
       index: ability.index,

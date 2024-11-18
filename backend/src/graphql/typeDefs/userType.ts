@@ -45,7 +45,7 @@ export const userType = gql`
     updateDungeonName(userId: ID!, dungeonName: String!): User!
     updateUserRace(userId: ID!, raceId: ID!): User!
     updateUserClass(userId: ID!, classId: ID!): User!
-    updateAbilityScores(userId: ID!, scores: [ID!]!): User!
+    updateAbilityScores(userId: ID!, scores: [Int!]!): User!
     addEquipmentToCharacter(userId: ID!, equipmentId: ID!): User!
     removeEquipmentFromCharacter(userId: ID!, equipmentId: ID!): User!
     removeAllEquipments(userId: ID!): User!

@@ -22,9 +22,10 @@ export default function AbilityScorePage() {
 
   useEffect(() => {
     if (data && data.getArrayScores) {
-      const fetchedScores = data.getArrayScores.abilityScores.map((score: AbilityScore) => score.score);
+      const fetchedScores = data.getArrayScores.map((score: AbilityScore) => score.score);
       setLocalScores(fetchedScores);
       setScores(fetchedScores);
+    } else {
     }
   }, [data]);
 
@@ -38,7 +39,9 @@ export default function AbilityScorePage() {
   const updateScoresToBackend = useCallback(() => {
     if (!hasInteracted) return;
 
-    updateAbilityScores({ variables: { userId, scores: localScores } })
+    updateAbilityScores({
+      variables: { userId, scores: localScores },
+    })
       .then(() => {
         notifyScoreChanges(localScores, scores, setScores, showToast);
       })
@@ -58,8 +61,13 @@ export default function AbilityScorePage() {
     }
   }, [localScores, updateScoresToBackend, hasInteracted]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error loading abilities.</div>;
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading abilities.</div>;
+  }
 
   return (
     <SubPageLayout>
