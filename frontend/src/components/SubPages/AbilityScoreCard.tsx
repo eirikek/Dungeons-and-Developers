@@ -1,7 +1,7 @@
-import { motion } from 'framer-motion';
 import React from 'react';
-import AbilityScoreCardProps from '../../interfaces/AbilityScoreProps.ts';
+import { motion } from 'framer-motion';
 import Counter from '../Counter/Counter.tsx';
+import AbilityScoreCardProps from '../../interfaces/AbilityScoreProps.ts';
 
 const AbilityScoreCard: React.FC<AbilityScoreCardProps & { score: number; onChange: (value: number) => void }> = ({
   name,
@@ -27,7 +27,7 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps & { score: number; onChan
       </div>
 
       <ul className="w-full justify-start xl:w-auto xl:justify-center xl:min-w-[15vw] 2xl:min-w-[10vw] text-center xl:text-left">
-        <li className="bold text">Skills:</li>
+        <li className="bold text">Skills required:</li>
         {skills.map((skill, skillIndex) => (
           <li key={skillIndex} className="text">
             {skill}

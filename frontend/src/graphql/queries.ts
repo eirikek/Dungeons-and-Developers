@@ -374,7 +374,7 @@ export const GET_ARRAY_SCORES = gql`
 `;
 
 export const UPDATE_USER_RACE = gql`
-  mutation UpdateUserRace($userId: ID!, $raceId: [ID!]!) {
+  mutation UpdateUserRace($userId: ID!, $raceId: ID!) {
     updateUserRace(userId: $userId, raceId: $raceId) {
       id
       race {

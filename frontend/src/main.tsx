@@ -8,7 +8,6 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { AuthProvider } from './context/AuthContext.tsx';
 import { DungeonProvider } from './context/DungeonContext.tsx';
 import ToastProvider from './components/Toast/CustomToast.tsx';
-import { CharacterProvider } from './context/CharacterContext.tsx';
 
 const queryClient = new QueryClient();
 const userId = localStorage.getItem('userId') || '';
@@ -19,11 +18,9 @@ createRoot(document.getElementById('root')!).render(
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <ToastProvider>
-            <CharacterProvider userId={userId}>
-              <DungeonProvider userId={userId}>
-                <App />
-              </DungeonProvider>
-            </CharacterProvider>
+            <DungeonProvider userId={userId}>
+              <App />
+            </DungeonProvider>
           </ToastProvider>
         </AuthProvider>
       </QueryClientProvider>

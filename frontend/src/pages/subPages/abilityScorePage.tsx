@@ -1,7 +1,6 @@
-import { useContext, useEffect, useState } from 'react';
-import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
+import { useEffect, useState, useCallback, useContext } from 'react';
+import useAbilityScores from '../../hooks/useAbilityScores.ts';
 import AbilityScoreCard from '../../components/SubPages/AbilityScoreCard.tsx';
-import { CharacterContext } from '../../context/CharacterContext';
 import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_ARRAY_SCORES, UPDATE_ABILITY_SCORES } from '../../graphql/queries';
@@ -11,15 +10,15 @@ import { notifyScoreChanges } from '../../utils/abilityScoreMapping.ts';
 import AbilityScore from '../../interfaces/AbilityScoreProps.ts';
 
 export default function AbilityScorePage() {
-  const characterContext = useContext(CharacterContext);
+  const { userId } = useContext(AuthContext);
+  const { loading, error, abilities } = useAbilityScores(1, 6);
+  const { showToast } = useToast();
+  const { data } = useQuery(GET_ARRAY_SCORES, { variables: { userId }, fetchPolicy: 'network-only' });
+  const [updateAbilityScores] = useMutation(UPDATE_ABILITY_SCORES);
 
-  if (!characterContext) {
-    throw new Error('CharacterContext must be used within a CharacterProvider');
-  }
-
-  const { abilities, updateAbilities, loading, error } = characterContext;
-
-  const [localScores, setLocalScores] = useState<number[]>([]);
+  const [localScores, setLocalScores] = useState<number[]>(Array(6).fill(0));
+  const [scores, setScores] = useState<number[]>(Array(6).fill(0));
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   useEffect(() => {
     if (data && data.getArrayScores) {
@@ -59,7 +58,7 @@ export default function AbilityScorePage() {
 
       return () => clearTimeout(timer);
     }
-  }, [localScores, updateScoresToBackend]);
+  }, [localScores, updateScoresToBackend, hasInteracted]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -77,15 +76,13 @@ export default function AbilityScorePage() {
             key={ability.index}
             id={ability.id}
             name={ability.name}
+            index={ability.index}
             skills={ability.skills}
             score={localScores[index]}
             onChange={(newValue) => handleScoreChange(index, newValue)}
           />
         ))}
       </section>
-      <button onClick={saveScores} className="btn-primary">
-        Save Scores
-      </button>
     </SubPageLayout>
   );
 }
