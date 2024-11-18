@@ -2,6 +2,13 @@ import { useContext, useEffect, useState } from 'react';
 import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 import AbilityScoreCard from '../../components/SubPages/AbilityScoreCard.tsx';
 import { CharacterContext } from '../../context/CharacterContext';
+import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
+import { useMutation, useQuery } from '@apollo/client';
+import { GET_ARRAY_SCORES, UPDATE_ABILITY_SCORES } from '../../graphql/queries';
+import { useToast } from '../../hooks/useToast.ts';
+import { AuthContext } from '../../context/AuthContext.tsx';
+import { notifyScoreChanges } from '../../utils/abilityScoreMapping.ts';
+import AbilityScore from '../../interfaces/AbilityScoreProps.ts';
 
 export default function AbilityScorePage() {
   const characterContext = useContext(CharacterContext);
@@ -15,30 +22,60 @@ export default function AbilityScorePage() {
   const [localScores, setLocalScores] = useState<number[]>([]);
 
   useEffect(() => {
-    setLocalScores([...abilities.map((ability) => ability.score)]); // Initialize scores
-  }, [abilities]);
+    if (data && data.getArrayScores) {
+      const fetchedScores = data.getArrayScores.map((score: AbilityScore) => score.score);
+      setLocalScores(fetchedScores);
+      setScores(fetchedScores);
+    }
+  }, [data]);
 
   const handleScoreChange = (index: number, newValue: number) => {
-    const updatedScores = [...localScores];
-    updatedScores[index] = newValue;
-    setLocalScores(updatedScores); // Update local state
+    const updatedLocalScores = [...localScores];
+    updatedLocalScores[index] = newValue;
+    setLocalScores(updatedLocalScores);
+    setHasInteracted(true);
   };
 
-  const saveScores = async () => {
-    if (JSON.stringify(localScores) !== JSON.stringify(abilities.map((ability) => ability.score))) {
-      await updateAbilities(localScores); // Save scores to backend
+  const updateScoresToBackend = useCallback(() => {
+    if (!hasInteracted) return;
+
+    updateAbilityScores({
+      variables: { userId, scores: localScores },
+    })
+      .then(() => {
+        notifyScoreChanges(localScores, scores, setScores, showToast);
+      })
+      .catch((error) => {
+        console.error('Error updating ability scores:', error);
+      });
+  }, [hasInteracted, updateAbilityScores, userId, localScores, scores, showToast]);
+
+  useEffect(() => {
+    if (hasInteracted) {
+      const timer = setTimeout(() => {
+        updateScoresToBackend();
+        setHasInteracted(false);
+      }, 150);
+
+      return () => clearTimeout(timer);
     }
-  };
+  }, [localScores, updateScoresToBackend]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error loading abilities.</div>;
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading abilities.</div>;
+  }
 
   return (
     <SubPageLayout>
       <section className="flex flex-col items-center w-full gap-10">
         {abilities.map((ability, index) => (
           <AbilityScoreCard
-            key={index}
+            key={ability.index}
+            id={ability.id}
             name={ability.name}
             skills={ability.skills}
             score={localScores[index]}

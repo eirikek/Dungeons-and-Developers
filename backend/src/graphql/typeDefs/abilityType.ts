@@ -2,9 +2,11 @@ import { gql } from 'apollo-server';
 
 export const abilityType = gql`
   type AbilityScore {
+    id: ID!
     name: String!
     index: String!
     skills: [String]
+    score: Int!
   }
 
   type AbilityResult {
