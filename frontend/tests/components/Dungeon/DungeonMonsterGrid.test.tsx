@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import DungeonMonsterGrid from '../../../src/components/Dungeon/DungeonMonsterGrid.tsx';
+import MonsterGrid from '../../../src/components/Dungeon/MonsterGrid.tsx';
 
 import { MockedProvider } from '@apollo/client/testing';
 import { expect } from 'vitest';
@@ -78,7 +78,7 @@ describe('DungeonMonsterGrid', () => {
               isInDungeon: (monsterId) => monsterId !== '1',
             }}
           >
-            <DungeonMonsterGrid />
+            <MonsterGrid />
           </DungeonContext.Provider>
         </AuthContext.Provider>
       </MockedProvider>
@@ -103,7 +103,7 @@ describe('DungeonMonsterGrid', () => {
               isInDungeon: (monsterId) => monsterId !== '1',
             }}
           >
-            <DungeonMonsterGrid />
+            <MonsterGrid />
           </DungeonContext.Provider>
         </AuthContext.Provider>
       </MockedProvider>

@@ -69,10 +69,8 @@ export const GET_MONSTER_SUGGESTIONS = gql`
 export const GET_USER_DUNGEON = gql`
   query GetUserDungeon($userId: ID!) {
     user(id: $userId) {
+      id
       dungeonName
-      favoritedMonsters {
-        id
-      }
     }
   }
 `;
@@ -80,6 +78,7 @@ export const GET_USER_DUNGEON = gql`
 export const UPDATE_DUNGEON_NAME = gql`
   mutation UpdateDungeonName($userId: ID!, $dungeonName: String!) {
     updateDungeonName(userId: $userId, dungeonName: $dungeonName) {
+      id
       dungeonName
     }
   }

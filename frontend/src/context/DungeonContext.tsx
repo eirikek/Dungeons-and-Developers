@@ -1,16 +1,15 @@
-import { createContext, ReactNode, useCallback, useRef } from 'react';
+import { createContext, ReactNode, useCallback } from 'react';
 
-import MonsterGraphQL from 'src/interfaces/MonsterDataProps.ts';
 import useDungeon from '../hooks/useDungeon.ts';
 import { useToast } from '../hooks/useToast.ts';
 import { MonsterCardProps } from '../interfaces/MonsterCardProps.ts';
+import { makeVar, useReactiveVar } from '@apollo/client';
 
 interface DungeonContextType {
   dungeonMonsters: MonsterCardProps[];
   dungeonName: string;
   toggleDungeon: (monster: MonsterCardProps) => void;
   isInDungeon: (monsterIndex: string) => boolean;
-  undoRemoveMonster: () => void;
   updateDungeonName: (newName: string) => void;
 }
 
@@ -19,27 +18,29 @@ interface DungeonProviderProps {
   userId: string;
 }
 
+export const dungeonMonstersVar = makeVar<MonsterCardProps[]>([]);
+
 export const DungeonContext = createContext<DungeonContextType>({
   dungeonMonsters: [],
   dungeonName: '',
   toggleDungeon: () => {},
   isInDungeon: () => false,
-  undoRemoveMonster: () => {},
   updateDungeonName: () => {},
 });
 
 export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
   const maxFavorites = 6;
-  const undoRemoveRef = useRef<MonsterCardProps | null>(null);
   const { showToast } = useToast();
 
   const { dungeonMonsters, dungeonName, toggleFavorite, toggleDungeonName } = useDungeon();
 
+  const currentDungeonMonsters = useReactiveVar(dungeonMonstersVar);
+
   const isInDungeon = useCallback(
     (monsterId: string) => {
-      return dungeonMonsters.some((favMonster: MonsterGraphQL) => favMonster.id === monsterId);
+      return currentDungeonMonsters.some((favMonster) => favMonster.id === monsterId);
     },
-    [dungeonMonsters]
+    [currentDungeonMonsters]
   );
   const toggleDungeon = async (monster: MonsterCardProps) => {
     if (!userId) {
@@ -52,18 +53,18 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
       return;
     }
 
+    const wasInDungeon = isInDungeon(monster.id);
+
     try {
-      await toggleFavorite(monster, false);
-      if (isInDungeon(monster.id)) {
-        undoRemoveRef.current = monster;
+      await toggleFavorite(monster);
+      if (wasInDungeon) {
         showToast({
           message: `${monster.name} removed from dungeon`,
           type: 'info',
           duration: 5000,
-          undoAction: undoRemoveMonster,
+          undoAction: () => undoRemoveMonster(monster),
         });
       } else {
-        undoRemoveRef.current = null;
         showToast({
           message: `${monster.name} added to dungeon`,
           type: 'success',
@@ -93,40 +94,32 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
     }
   };
 
-  const undoRemoveMonster = async () => {
-    console.log('Before undo: ', dungeonMonsters);
-    if (undoRemoveRef.current) {
-      const monster = undoRemoveRef.current;
-      if (!isInDungeon(monster.id)) {
-        try {
-          await toggleFavorite(monster, true);
-          undoRemoveRef.current = null;
-          showToast({
-            message: `${monster.name} restored to dungeon`,
-            type: 'success',
-            duration: 3000,
-          });
-          console.log('After undo: ', dungeonMonsters);
-        } catch (error) {
-          console.error('Error restoring monster to dungeon:', error);
-          showToast({
-            message: 'Failed to restore monster. Please try again.',
-            type: 'error',
-            duration: 3000,
-          });
-        }
-      }
+  const undoRemoveMonster = async (monster: MonsterCardProps) => {
+    try {
+      await toggleFavorite(monster);
+      showToast({
+        message: `${monster.name} restored to dungeon`,
+        type: 'success',
+        duration: 3000,
+      });
+      console.log('After undo: ', dungeonMonstersVar());
+    } catch (error) {
+      console.error('Error restoring monster to dungeon:', error);
+      showToast({
+        message: 'Failed to restore monster. Please try again.',
+        type: 'error',
+        duration: 3000,
+      });
     }
   };
 
   return (
     <DungeonContext.Provider
       value={{
-        dungeonMonsters,
+        dungeonMonsters: currentDungeonMonsters,
         dungeonName,
         toggleDungeon,
         isInDungeon,
-        undoRemoveMonster,
         updateDungeonName,
       }}
     >

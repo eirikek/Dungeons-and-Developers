@@ -1,20 +1,16 @@
 import { useContext } from 'react';
 import CustomInput from '../../components/CustomInput/CustomInput.tsx';
-import DungeonMonsterGrid from '../../components/Dungeon/DungeonMonsterGrid.tsx';
+import MonsterGrid from '../../components/Dungeon/MonsterGrid.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 
-import { AuthContext } from '../../context/AuthContext.tsx';
 import DungeonStats from '../../components/Dungeon/DungeonStats.tsx';
 import { DungeonContext } from '../../context/DungeonContext.tsx';
 
 export default function DungeonPage() {
-  const { userId } = useContext(AuthContext);
   const { dungeonName, updateDungeonName } = useContext(DungeonContext);
 
   const handleSaveDungeonName = (newName: string) => {
-    if (userId) {
-      updateDungeonName(newName);
-    }
+    updateDungeonName(newName);
   };
 
   return (
@@ -31,7 +27,7 @@ export default function DungeonPage() {
             data-testid="input-for-dungeon-name"
           />
           <DungeonStats />
-          <DungeonMonsterGrid />
+          <MonsterGrid isDungeonPage={true} />
         </div>
       </main>
     </MainPageLayout>
