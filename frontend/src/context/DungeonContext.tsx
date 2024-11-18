@@ -1,8 +1,9 @@
-import { createContext, ReactNode, useRef } from 'react';
+import { createContext, ReactNode, useCallback, useRef } from 'react';
 
-import { MonsterCardProps } from '../interfaces/MonsterCardProps.ts';
-import { useToast } from '../hooks/useToast.ts';
+import MonsterGraphQL from 'src/interfaces/MonsterDataProps.ts';
 import useDungeon from '../hooks/useDungeon.ts';
+import { useToast } from '../hooks/useToast.ts';
+import { MonsterCardProps } from '../interfaces/MonsterCardProps.ts';
 
 interface DungeonContextType {
   dungeonMonsters: MonsterCardProps[];
@@ -34,8 +35,12 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
 
   const { dungeonMonsters, dungeonName, toggleFavorite, toggleDungeonName } = useDungeon();
 
-  const isInDungeon = (monsterId: string) => dungeonMonsters.some((favMonster) => favMonster.id === monsterId);
-
+  const isInDungeon = useCallback(
+    (monsterId: string) => {
+      return dungeonMonsters.some((favMonster: MonsterGraphQL) => favMonster.id === monsterId);
+    },
+    [dungeonMonsters]
+  );
   const toggleDungeon = async (monster: MonsterCardProps) => {
     if (!userId) {
       showToast({ message: 'You must be logged in to add monsters to dungeon', type: 'error', duration: 3000 });
@@ -48,7 +53,7 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
     }
 
     try {
-      await toggleFavorite(monster);
+      await toggleFavorite(monster, false);
       if (isInDungeon(monster.id)) {
         undoRemoveRef.current = monster;
         showToast({
@@ -71,25 +76,59 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
   };
 
   const updateDungeonName = async (newName: string) => {
-    await toggleDungeonName(newName);
-  };
-
-  const undoRemoveMonster = async () => {
-    if (undoRemoveRef.current) {
-      const monster = undoRemoveRef.current;
-      undoRemoveRef.current = null;
-      await toggleFavorite(monster);
+    try {
+      await toggleDungeonName(newName);
       showToast({
-        message: `${monster.name} restored to dungeon`,
+        message: `Dungeon name updated to "${newName}"`,
         type: 'success',
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error('Error updating dungeon name:', error);
+      showToast({
+        message: 'Failed to update dungeon name. Please try again.',
+        type: 'error',
         duration: 3000,
       });
     }
   };
 
+  const undoRemoveMonster = async () => {
+    console.log('Before undo: ', dungeonMonsters);
+    if (undoRemoveRef.current) {
+      const monster = undoRemoveRef.current;
+      if (!isInDungeon(monster.id)) {
+        try {
+          await toggleFavorite(monster, true);
+          undoRemoveRef.current = null;
+          showToast({
+            message: `${monster.name} restored to dungeon`,
+            type: 'success',
+            duration: 3000,
+          });
+          console.log('After undo: ', dungeonMonsters);
+        } catch (error) {
+          console.error('Error restoring monster to dungeon:', error);
+          showToast({
+            message: 'Failed to restore monster. Please try again.',
+            type: 'error',
+            duration: 3000,
+          });
+        }
+      }
+    }
+  };
+
   return (
     <DungeonContext.Provider
-      value={{ dungeonMonsters, dungeonName, toggleDungeon, isInDungeon, undoRemoveMonster, updateDungeonName }}
+      value={{
+        dungeonMonsters,
+        dungeonName,
+        toggleDungeon,
+        isInDungeon,
+        undoRemoveMonster,
+        updateDungeonName,
+      }}
     >
       {children}
     </DungeonContext.Provider>

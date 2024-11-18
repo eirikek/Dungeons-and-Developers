@@ -88,6 +88,7 @@ export const UPDATE_DUNGEON_NAME = gql`
 export const GET_USER_FAVORITES = gql`
   query GetUserFavorites($userId: ID!) {
     user(id: $userId) {
+      id
       favoritedMonsters {
         id
         name
@@ -104,8 +105,15 @@ export const GET_USER_FAVORITES = gql`
 export const ADD_FAVORITE_MONSTER = gql`
   mutation AddFavoriteMonster($userId: ID!, $monsterId: ID!) {
     addFavoriteMonster(userId: $userId, monsterId: $monsterId) {
+      id
       favoritedMonsters {
         id
+        name
+        size
+        type
+        alignment
+        hit_points
+        image
       }
     }
   }
@@ -114,8 +122,15 @@ export const ADD_FAVORITE_MONSTER = gql`
 export const REMOVE_FAVORITE_MONSTER = gql`
   mutation RemoveFavoriteMonster($userId: ID!, $monsterId: ID!) {
     removeFavoriteMonster(userId: $userId, monsterId: $monsterId) {
+      id
       favoritedMonsters {
         id
+        name
+        size
+        type
+        alignment
+        hit_points
+        image
       }
     }
   }

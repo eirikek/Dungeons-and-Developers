@@ -187,7 +187,7 @@ export default {
       const removedEquipments = user.equipments;
       user.equipments = [];
       await user.save();
-      
+
       return user.populate('equipments');
     },
   },

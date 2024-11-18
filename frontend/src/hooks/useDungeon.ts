@@ -1,7 +1,6 @@
+import { useMutation, useQuery } from '@apollo/client';
+import { useContext, useMemo, useState } from 'react';
 import { AuthContext } from '../context/AuthContext.tsx';
-import { useContext, useState } from 'react';
-import MonsterGraphQL from '../interfaces/MonsterDataProps.ts';
-import { gql, Reference, useMutation, useQuery } from '@apollo/client';
 import {
   ADD_FAVORITE_MONSTER,
   GET_USER_DUNGEON,
@@ -9,24 +8,36 @@ import {
   REMOVE_FAVORITE_MONSTER,
   UPDATE_DUNGEON_NAME,
 } from '../graphql/queries.ts';
-//https://www.apollographql.com/docs/react/caching/cache-interaction#using-cachemodify
+import MonsterGraphQL from '../interfaces/MonsterDataProps.ts';
+import { MonsterCardProps } from '../interfaces/MonsterCardProps.ts';
+
 const useDungeon = () => {
   const { userId } = useContext(AuthContext);
-  const [dungeonMonsters, setDungeonMonsters] = useState<MonsterGraphQL[]>([]);
   const [dungeonName, setDungeonName] = useState('');
 
-  const { refetch } = useQuery(GET_USER_FAVORITES, {
+  const {
+    data: dataMonsters,
+    loading,
+    error,
+    refetch,
+  } = useQuery(GET_USER_FAVORITES, {
     variables: { userId },
     skip: !userId,
     fetchPolicy: 'cache-and-network',
     onCompleted: (data) => {
-      if (data?.user?.favoritedMonsters) {
-        setDungeonMonsters(data.user.favoritedMonsters);
-      }
+      console.log('Favorites query completed:', data);
+      console.log('Favorited monsters:', data?.user?.favoritedMonsters);
+    },
+    onError: (error) => {
+      console.error('Favorites query error:', error);
     },
   });
+  const dungeonMonsters: MonsterGraphQL[] = useMemo(() => {
+    console.log('Processing dungeonMonsters:', dataMonsters?.user?.favoritedMonsters);
+    return dataMonsters?.user?.favoritedMonsters || [];
+  }, [dataMonsters]);
 
-  const { data: dungeonData, loading: dungeonLoad } = useQuery(GET_USER_DUNGEON, {
+  useQuery(GET_USER_DUNGEON, {
     variables: { userId },
     skip: !userId,
     fetchPolicy: 'cache-and-network',
@@ -37,105 +48,43 @@ const useDungeon = () => {
     },
   });
 
-  const [addFavoriteMonster] = useMutation(ADD_FAVORITE_MONSTER, {
-    update(cache, { data }) {
-      const newMonsterFromResponse = data?.addFavoriteMonster?.favoritedMonsters.id;
-      const existingMonsters = cache.readQuery({
-        query: GET_USER_FAVORITES,
-        variables: { userId },
-      });
-      if (existingMonsters && newMonsterFromResponse) {
-        cache.writeQuery({
-          query: GET_USER_FAVORITES,
-          data: {
-            favoritedMonsters: [...existingMonsters?.favoritedMonsters, newMonsterFromResponse],
-          },
-        });
-      }
-      return { data };
-    },
-  });
-  const [removeFavoriteMonster] = useMutation(REMOVE_FAVORITE_MONSTER, {
-    refetchQueries: [{ query: GET_USER_FAVORITES, variables: { userId } }],
-    awaitRefetchQueries: true,
-    update(cache, { data: { removeFavoriteMonster } }) {
-      const updatedFavoritedMonsters = removeFavoriteMonster?.favoritedMonsters;
-      if (!updatedFavoritedMonsters) {
-        console.error('No favorited monsters found in removeFavoriteMonster response');
-        return;
-      }
-      cache.modify({
-        id: cache.identify({ __typename: 'User', id: userId }),
-        fields: {
-          favoritedMonsters() {
-            return updatedFavoritedMonsters.map((monster) =>
-              cache.writeFragment({
-                data: monster,
-                fragment: gql`
-                  fragment MonsterFragment on Monster {
-                    id
-                    name
-                    size
-                    type
-                    alignment
-                    hit_points
-                    image
-                  }
-                `,
-              })
-            );
-          },
-        },
-      });
-      setDungeonMonsters(updatedFavoritedMonsters);
-    },
-    onError: (error) => {
-      console.error('Error removing monster from dungeon', error);
-    },
-  });
-  const [updateDungeonName] = useMutation(UPDATE_DUNGEON_NAME, {
-    refetchQueries: [{ query: GET_USER_DUNGEON, variables: { userId } }],
-    awaitRefetchQueries: true,
-    update(cache, { data: { updateDungeonName } }) {
-      const newName = updateDungeonName.dungeonName;
-      cache.modify({
-        id: cache.identify({ __typename: 'User', id: userId }),
-        fields: {
-          dungeonName() {
-            return newName;
-          },
-        },
-      });
-      setDungeonName(newName);
-    },
-  });
-  const toggleFavorite = async (monster: MonsterGraphQL) => {
+  const [addFavoriteMonster] = useMutation(ADD_FAVORITE_MONSTER);
+  const [removeFavoriteMonster] = useMutation(REMOVE_FAVORITE_MONSTER);
+
+  const [updateDungeonName] = useMutation(UPDATE_DUNGEON_NAME);
+
+  const toggleFavorite = async (monster: MonsterCardProps, isUndo: boolean) => {
     const isFavorite = dungeonMonsters.some((favMonster) => favMonster.id === monster.id);
-    if (isFavorite) {
-      await removeFavoriteMonster({
-        variables: { userId, monsterId: monster.id },
-        optimisticResponse: {
-          removeFavoriteMonster: {
-            __typename: 'RemoveFavoriteMonsterPayload',
-            favoritedMonsters: dungeonMonsters.filter((currMonster) => currMonster.id !== monster.id),
-          },
-        },
-      });
-    } else {
-      await addFavoriteMonster({
-        variables: { userId, monsterId: monster.id },
-        optimisticResponse: {
-          addFavoriteMonster: {
-            __typename: 'AddFavoriteMonsterPayload',
-            favoritedMonsters: [...dungeonMonsters, monster],
-          },
-        },
-      });
+
+    try {
+      if (isFavorite && !isUndo) {
+        const result = await removeFavoriteMonster({
+          variables: { userId, monsterId: monster.id },
+        });
+        console.log('Remove result:', result);
+      } else if (!isFavorite) {
+        const result = await addFavoriteMonster({
+          variables: { userId, monsterId: monster.id },
+        });
+        console.log('Add result:', result);
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      refetch();
     }
   };
 
   const toggleDungeonName = async (newName: string) => {
-    await updateDungeonName({ variables: { userId, dungeonName: newName } });
+    await updateDungeonName({
+      variables: { userId, dungeonName: newName },
+      optimisticResponse: {
+        updateDungeonName: {
+          __typename: 'User',
+          id: userId,
+          dungeonName: newName,
+        },
+      },
+    });
   };
 
   return {
@@ -144,6 +93,8 @@ const useDungeon = () => {
     toggleFavorite,
     refetchDungeonMonsters: refetch,
     toggleDungeonName,
+    loading,
+    error,
   };
 };
 

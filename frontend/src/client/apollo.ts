@@ -1,5 +1,6 @@
 import { ApolloClient, createHttpLink, InMemoryCache, Reference } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import MonsterGraphQL from '../interfaces/MonsterDataProps.ts';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000/graphql',
@@ -23,6 +24,7 @@ const client = new ApolloClient({
       Query: {
         fields: {
           user: {
+            keyArgs: ['id'],
             merge(existing = {}, incoming) {
               return { ...existing, ...incoming };
             },
@@ -30,14 +32,23 @@ const client = new ApolloClient({
         },
       },
       User: {
+        keyFields: ['id'],
         fields: {
           favoritedMonsters: {
-            merge(existing: Reference[] = [], incoming: Reference[], { readField }) {
-              const existingIDs = new Set(existing.map((monster) => readField<string>('id', monster)));
-              return [...existing, ...incoming.filter((monster) => !existingIDs.has(readField<string>('id', monster)))];
+            merge(existing = [], incoming: MonsterGraphQL[]) {
+              const existingIds = new Set(existing.map((monster: MonsterGraphQL) => monster.id));
+              return [...existing, ...incoming.filter((monster) => !existingIds.has(monster.id))];
+            },
+          },
+          dungeonName: {
+            merge(existing = '', incoming) {
+              return incoming;
             },
           },
         },
+      },
+      Monster: {
+        keyFields: ['id'],
       },
     },
   }),
