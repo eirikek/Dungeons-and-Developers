@@ -7,6 +7,7 @@ interface SearchBarProps {
   suggestions: string[];
   onSuggestionClick: (suggestion: string) => void;
   placeholder?: string;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 const SearchBar = ({
@@ -15,6 +16,7 @@ const SearchBar = ({
   suggestions,
   onSuggestionClick,
   placeholder = 'Search for a monster...',
+  onKeyDown,
 }: SearchBarProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -28,9 +30,12 @@ const SearchBar = ({
     } else if (e.key === 'Enter') {
       if (highlightedIndex >= 0) {
         onSuggestionClick(suggestions[highlightedIndex]);
+        setIsFocused(false);
+        setHighlightedIndex(-1);
+        inputRef.current?.blur();
+      } else if (onKeyDown) {
+        onKeyDown(e);
       }
-      setIsFocused(false);
-      inputRef.current?.blur();
     }
   };
 

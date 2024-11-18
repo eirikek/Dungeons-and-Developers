@@ -1,15 +1,15 @@
 import { useQuery } from '@apollo/client';
-import { hourglass } from 'ldrs';
 import debounce from 'lodash/debounce';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import MonsterCard from '../../components/MonsterCard/MonsterCard';
-import MonsterFilter from '../../components/MonsterFilter/MonsterFilter.tsx';
-import MonsterSort from '../../components/MonsterSort/MonsterSort.tsx';
+import useMonster from '../../hooks/useMonster.ts';
+import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
+import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 import Pagination from '../../components/Pagination/Pagination';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
+import MonsterFilter from '../../components/MonsterFilter/MonsterFilter.tsx';
+import MonsterSort from '../../components/MonsterSort/MonsterSort.tsx';
 import { GET_MONSTER_HP_RANGE } from '../../graphql/queries.ts';
-import useMonster from '../../hooks/useMonster.ts';
 import useMonsterSuggestions from '../../hooks/useMonsterSuggestions';
 
 const monstersPerPage = 8;
@@ -23,8 +23,6 @@ export default function MonsterPage() {
   const [hpFilterMin, setHpFilterMin] = useState<number>(1);
   const [hpFilterMax, setHpFilterMax] = useState<number>(1000);
   const [sortOption, setSortOption] = useState<string>('name-asc');
-
-  hourglass.register();
 
   const { data: hpRangeData, loading: hpRangeLoading } = useQuery(GET_MONSTER_HP_RANGE);
 
@@ -85,7 +83,7 @@ export default function MonsterPage() {
       setHpFilterMin(minHp);
       setHpFilterMax(maxHp);
     }
-  }, [minHp, maxHp]);
+  }, [minHp, maxHp, hpFilterMin, hpFilterMax]);
 
   const handleHpChange = useCallback((min: number, max: number) => {
     setHpFilterMin(min);
@@ -125,11 +123,12 @@ export default function MonsterPage() {
         <div className="black-overlay" />
 
         <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start">
-          <div className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row'}>
+          <div className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row xl:min-h-[6vh]'}>
             <MonsterFilter
               selectedFilters={selectedFilters}
               setSelectedFilters={setSelectedFilters}
               onHpChange={debouncedHandleHpChange}
+              setCurrentPage={setCurrentPage}
               onClearFilters={clearFilters}
               monsterCounts={monsterCounts}
             />
@@ -147,9 +146,7 @@ export default function MonsterPage() {
           </div>
 
           {loading ? (
-            <div className="flex flex-col items-center justify-center h-[79.5vh]" data-testid="loading-indicator">
-              <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
-            </div>
+            <LoadingHourglass />
           ) : (
             <section>
               {error ? (
@@ -161,7 +158,13 @@ export default function MonsterPage() {
                       <MonsterCard key={idx} {...monster} />
                     ))}
                   </div>
-                  <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
+                  <div className="min-h-[5vh]">
+                    {totalMonsters > monstersPerPage ? (
+                      <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
+                    ) : (
+                      <div />
+                    )}
+                  </div>
                 </>
               ) : (
                 <div className="flex h-[79.5vh] items-center justify-center">
