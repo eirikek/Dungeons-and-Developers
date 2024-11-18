@@ -251,6 +251,18 @@ export const REMOVE_EQUIPMENT_FROM_CHARACTER = gql`
   }
 `;
 
+export const GET_EQUIPMENT_SUGGESTIONS = gql`
+  query GetEquipmentSuggestions($searchTerm: String!) {
+    equipments(searchTerm: $searchTerm, suggestionsOnly: true) {
+      equipments {
+        id
+        name
+      }
+      totalCount
+    }
+  }
+`;
+
 export const REMOVE_ALL_EQUIPMENTS = gql`
   mutation RemoveAllEquipments($userId: ID!) {
     removeAllEquipments(userId: $userId) {

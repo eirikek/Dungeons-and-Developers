@@ -7,16 +7,65 @@ import favoriteImg from '../../assets/images/dungeon-gate.svg';
 import Tilt from 'react-parallax-tilt';
 import HomeSection from '../../components/Home/HomeSection.tsx';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { useToast } from '../../hooks/useToast.ts';
 import { AuthContext } from '../../context/AuthContext.tsx';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 export default function HomePage() {
   const { scrollYProgress } = useScroll();
   const [isMobile, setIsMobile] = useState(false);
   const { userName } = useContext(AuthContext);
   const { showToast } = useToast();
+  const sectionsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const [currentSection, setCurrentSection] = useState(0);
+  const [isBottom, setIsBottom] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
+
+  const handleChevronClick = () => {
+    if (!isScrolling) {
+      setIsScrolling(true);
+
+      if (!isBottom && currentSection < sectionsRef.current.length - 1) {
+        sectionsRef.current[currentSection + 1]?.scrollIntoView({ behavior: 'smooth' });
+        setCurrentSection(currentSection + 1);
+      } else if (isBottom) {
+        sectionsRef.current[0]?.scrollIntoView({ behavior: 'smooth' });
+        setCurrentSection(0);
+      }
+      setTimeout(() => setIsScrolling(false), 1000);
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isScrolling) return;
+
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
+
+      const newSection = sectionsRef.current.findIndex((section) => {
+        if (!section) return false;
+        const { top, bottom } = section.getBoundingClientRect();
+        const absoluteTop = top + window.scrollY;
+        const absoluteBottom = bottom + window.scrollY;
+        return scrollPosition >= absoluteTop && scrollPosition < absoluteBottom;
+      });
+
+      if (newSection !== -1 && newSection !== currentSection) {
+        setCurrentSection(newSection);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [currentSection, isScrolling]);
+
+  useEffect(() => {
+    setIsBottom(currentSection === sectionsRef.current.length - 1);
+  }, [currentSection]);
 
   useEffect(() => {
     const loginToast = localStorage.getItem('loginToast');
@@ -60,7 +109,10 @@ export default function HomePage() {
 
   return (
     <MainPageLayout>
-      <header className="w-full h-screen bg-home bg-cover bg-center bg-black bg-opacity-40 bg-blend-overlay flex items-center justify-center relative">
+      <header
+        ref={(el) => (sectionsRef.current[0] = el as HTMLDivElement)}
+        className="w-full h-screen bg-home bg-cover bg-center bg-black bg-opacity-40 bg-blend-overlay flex items-center justify-center relative"
+      >
         <div
           className="absolute inset-0 z-10"
           style={{
@@ -74,6 +126,7 @@ export default function HomePage() {
       </header>
       <main className="w-full bg-black flex flex-col items-center py-48 xl:gap-36 gap-16 overflow-hidden">
         <HomeSection
+          ref={(el: HTMLDivElement | null) => (sectionsRef.current[1] = el)}
           title="Create Your Character"
           text={
             <>
@@ -115,6 +168,7 @@ export default function HomePage() {
         />
 
         <HomeSection
+          ref={(el) => (sectionsRef.current[2] = el)}
           title="Explore Monsters"
           text={
             <>
@@ -150,6 +204,7 @@ export default function HomePage() {
         />
 
         <HomeSection
+          ref={(el) => (sectionsRef.current[3] = el)}
           title="Build Your Dungeon"
           text={
             <>
@@ -173,6 +228,23 @@ export default function HomePage() {
           image={hammerImg}
         />
       </main>
+      <motion.div
+        className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer"
+        onClick={handleChevronClick}
+        animate={{
+          y: [0, -10, 0],
+        }}
+        transition={{
+          repeat: Infinity,
+          duration: 1.5,
+        }}
+      >
+        {isBottom ? (
+          <FaChevronUp className="hover:opacity-70" size={30} color="white" />
+        ) : (
+          <FaChevronDown className="hover:opacity-70" size={30} color="white" />
+        )}
+      </motion.div>
     </MainPageLayout>
   );
 }

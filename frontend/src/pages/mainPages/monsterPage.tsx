@@ -85,7 +85,7 @@ export default function MonsterPage() {
       setHpFilterMin(minHp);
       setHpFilterMax(maxHp);
     }
-  }, [minHp, maxHp]);
+  }, [minHp, maxHp, hpFilterMin, hpFilterMax]);
 
   const handleHpChange = useCallback((min: number, max: number) => {
     setHpFilterMin(min);
@@ -100,9 +100,11 @@ export default function MonsterPage() {
   const handlePageChange = useCallback(
     (direction: number) => {
       setCurrentPage((prev) => {
-        const nextPage = prev + direction;
-        if (nextPage >= 1 && nextPage <= totalPages) {
-          return nextPage;
+        if (direction === 1 && prev < totalPages) {
+          return prev + direction;
+        }
+        if (direction === -1 && prev > 1) {
+          return prev + direction;
         }
         return prev;
       });
@@ -130,6 +132,7 @@ export default function MonsterPage() {
               onHpChange={debouncedHandleHpChange}
               onClearFilters={clearFilters}
               monsterCounts={monsterCounts}
+              setCurrentPage={setCurrentPage}
             />
             <MonsterSort selectedSort={sortOption} onSortChange={handleSortChange} />
             <SearchBar
