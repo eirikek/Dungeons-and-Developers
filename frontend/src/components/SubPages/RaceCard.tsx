@@ -1,40 +1,19 @@
-import React, { useContext } from 'react';
 import { motion } from 'framer-motion';
-import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
-import { UPDATE_USER_RACE } from '../../graphql/queries';
-import { AuthContext } from '../../context/AuthContext';
-import { useMutation } from '@apollo/client';
+
 import RaceProps from '../../interfaces/RaceProps.ts';
-import { useToast } from '../../hooks/useToast.ts';
 import raceImageMapping from '../../utils/raceImageMapping.ts';
+import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
 
 interface RaceCardProps extends RaceProps {
   selectedRaceId: string;
   onSelect: (id: string) => void;
 }
 
-const RaceCard: React.FC<RaceCardProps> = ({ id, index, name, alignment, size, speed, selectedRaceId, onSelect }) => {
-  const { userId } = useContext(AuthContext);
-  const [updateUserRace] = useMutation(UPDATE_USER_RACE);
-  const { showToast } = useToast();
+const RaceCard = ({ id, index, name, alignment, size, speed, selectedRaceId, onSelect }: RaceCardProps) => {
   const raceImage = raceImageMapping[index];
   const handleSelectRace = () => {
     if (selectedRaceId !== id) {
       onSelect(id);
-      updateUserRace({
-        variables: { userId, raceId: id },
-      })
-        .then((response) => {
-          showToast({
-            message: `Race changed to ${name}`,
-            type: 'success',
-            duration: 3000,
-          });
-          console.log('Race updated:', response.data.updateUserRace.race);
-        })
-        .catch((error) => {
-          console.error('Error updating race:', error);
-        });
     }
   };
 

@@ -23,6 +23,7 @@ function useAbilityScores(currentPage: number, abilitiesPerPage: number) {
       index: ability.index,
       name: ability.name,
       skills: ability.skills,
+      score: ability.score,
     }));
   }, [data]);
 

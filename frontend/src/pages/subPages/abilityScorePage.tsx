@@ -1,60 +1,34 @@
-import { useEffect, useState, useCallback, useContext } from 'react';
-import useAbilityScores from '../../hooks/useAbilityScores.ts';
-import AbilityScoreCard from '../../components/SubPages/AbilityScoreCard.tsx';
+import { useContext, useEffect, useState } from 'react';
 import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
-import { useMutation, useQuery } from '@apollo/client';
-import { GET_ARRAY_SCORES, UPDATE_ABILITY_SCORES } from '../../graphql/queries';
-import { useToast } from '../../hooks/useToast.ts';
-import { AuthContext } from '../../context/AuthContext.tsx';
-import { notifyScoreChanges } from '../../utils/abilityScoreMapping.ts';
+import AbilityScoreCard from '../../components/SubPages/AbilityScoreCard.tsx';
+import { CharacterContext } from '../../context/CharacterContext';
 
 export default function AbilityScorePage() {
-  const { userId } = useContext(AuthContext);
-  const { loading, error, abilities } = useAbilityScores(1, 6);
-  const { showToast } = useToast();
-  const { data } = useQuery(GET_ARRAY_SCORES, { variables: { userId }, fetchPolicy: 'network-only' });
-  const [updateAbilityScores] = useMutation(UPDATE_ABILITY_SCORES);
+  const characterContext = useContext(CharacterContext);
 
-  const [localScores, setLocalScores] = useState<number[]>(Array(6).fill(0));
-  const [scores, setScores] = useState<number[]>(Array(6).fill(0));
-  const [hasInteracted, setHasInteracted] = useState(false);
+  if (!characterContext) {
+    throw new Error('CharacterContext must be used within a CharacterProvider');
+  }
+
+  const { abilities, updateAbilities, loading, error } = characterContext;
+
+  const [localScores, setLocalScores] = useState<number[]>([]);
 
   useEffect(() => {
-    if (data && data.getArrayScores) {
-      setLocalScores(data.getArrayScores);
-      setScores(data.getArrayScores);
-    }
-  }, [data]);
+    setLocalScores([...abilities.map((ability) => ability.score)]); // Initialize scores
+  }, [abilities]);
 
   const handleScoreChange = (index: number, newValue: number) => {
     const updatedScores = [...localScores];
     updatedScores[index] = newValue;
-    setLocalScores(updatedScores);
-    setHasInteracted(true);
+    setLocalScores(updatedScores); // Update local state
   };
 
-  const updateScoresToBackend = useCallback(() => {
-    if (!hasInteracted) return;
-
-    updateAbilityScores({ variables: { userId, scores: localScores } })
-      .then(() => {
-        notifyScoreChanges(localScores, scores, setScores, showToast);
-      })
-      .catch((error) => {
-        console.error('Error updating ability scores:', error);
-      });
-  }, [hasInteracted, updateAbilityScores, userId, localScores, scores, showToast]);
-
-  useEffect(() => {
-    if (hasInteracted) {
-      const timer = setTimeout(() => {
-        updateScoresToBackend();
-        setHasInteracted(false);
-      }, 150);
-
-      return () => clearTimeout(timer);
+  const saveScores = async () => {
+    if (JSON.stringify(localScores) !== JSON.stringify(abilities.map((ability) => ability.score))) {
+      await updateAbilities(localScores); // Save scores to backend
     }
-  }, [localScores, updateScoresToBackend, hasInteracted]);
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error loading abilities.</div>;
@@ -64,15 +38,17 @@ export default function AbilityScorePage() {
       <section className="flex flex-col items-center w-full gap-10">
         {abilities.map((ability, index) => (
           <AbilityScoreCard
-            key={ability.index}
+            key={index}
             name={ability.name}
-            index={ability.index}
             skills={ability.skills}
             score={localScores[index]}
             onChange={(newValue) => handleScoreChange(index, newValue)}
           />
         ))}
       </section>
+      <button onClick={saveScores} className="btn-primary">
+        Save Scores
+      </button>
     </SubPageLayout>
   );
 }

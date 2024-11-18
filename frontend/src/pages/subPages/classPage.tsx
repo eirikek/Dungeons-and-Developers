@@ -1,28 +1,19 @@
-import ClassCard from '../../components/SubPages/ClassCard.tsx';
+import { useContext } from 'react';
 import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
-import useClass from '../../hooks/useClasses.ts';
-import { useQuery } from '@apollo/client';
-import { GET_USER_CLASS } from '../../graphql/queries';
-import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../../context/AuthContext';
+import ClassCard from '../../components/SubPages/ClassCard.tsx';
+import { CharacterContext } from '../../context/CharacterContext';
 
 export default function ClassPage() {
-  const { loading, error, classes } = useClass(1, 12);
-  const { userId } = useContext(AuthContext);
-  const { data: userData } = useQuery(GET_USER_CLASS, {
-    variables: { userId },
-    skip: !userId,
-  });
-  const [selectedClassId, setSelectedClassId] = useState<string>('');
+  const characterContext = useContext(CharacterContext);
 
-  useEffect(() => {
-    if (userData?.user?.class?.id) {
-      setSelectedClassId(userData.user.class.id);
-    }
-  }, [userData]);
+  if (!characterContext) {
+    throw new Error('CharacterContext must be used within a CharacterProvider');
+  }
 
-  const handleClassSelect = (classId: string) => {
-    setSelectedClassId(classId);
+  const { classes, selectedClassId, updateClass, loading, error } = characterContext;
+
+  const handleClassSelect = async (classId: string) => {
+    await updateClass(classId);
   };
 
   if (loading) return <div>Loading...</div>;
