@@ -7,14 +7,13 @@ const reviewSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-
 const monsterSchema = new Schema({
-  name: String,
-  size: String,
-  type: String,
-  alignment: String,
-  hit_points: Number,
-  image: String,
+  name: { type: String, required: true },
+  size: { type: String, required: true },
+  type: { type: String, required: true },
+  alignment: { type: String, required: true },
+  hit_points: { type: Number, required: true },
+  image: { type: String, required: false },
   reviews: [reviewSchema],
 });
 

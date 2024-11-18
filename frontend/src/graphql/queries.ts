@@ -426,7 +426,6 @@ export const GET_ABILITYSCORES = gql`
         index
         name
         skills
-        score
       }
       totalAbilities
     }

@@ -1,7 +1,7 @@
 import { model, Schema, Types } from 'mongoose';
 
 const playerSchema = new Schema({
-  userName: String,
+  userName: { type: String, required: true },
   class: { type: Types.ObjectId, ref: 'Class' },
   race: { type: Types.ObjectId, ref: 'Race' },
   abilityScores: [

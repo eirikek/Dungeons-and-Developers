@@ -1,13 +1,13 @@
 import { model, Schema } from 'mongoose';
 
 const RaceSchema = new Schema({
-  index: String,
-  name: String,
-  speed: String,
-  alignment: String,
-  size: String,
-  size_description: String,
-  img: String,
+  index: { type: String, required: true },
+  name: { type: String, required: true },
+  speed: { type: String, required: true },
+  alignment: { type: String, required: true },
+  size: { type: String, required: true },
+  size_description: { type: String, required: true },
+  img: { type: String, required: false },
 });
 
 export default model('Race', RaceSchema);
