@@ -39,6 +39,9 @@ const client = new ApolloClient({
           dungeonName: {
             merge: false,
           },
+          class: {
+            merge: false,
+          },
         },
       },
       Monster: {

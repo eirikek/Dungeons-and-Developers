@@ -1,9 +1,9 @@
 import { createContext, ReactNode, useCallback } from 'react';
 
+import { makeVar, useReactiveVar } from '@apollo/client';
 import useDungeon from '../hooks/useDungeon.ts';
 import { useToast } from '../hooks/useToast.ts';
 import { MonsterCardProps } from '../interfaces/MonsterCardProps.ts';
-import { makeVar, useReactiveVar } from '@apollo/client';
 
 interface DungeonContextType {
   dungeonMonsters: MonsterCardProps[];

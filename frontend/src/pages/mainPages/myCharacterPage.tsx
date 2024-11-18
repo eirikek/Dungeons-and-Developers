@@ -1,121 +1,98 @@
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
-import abilityScoreMap, { notifyScoreChanges } from '../../utils/abilityScoreMapping.ts';
-import TutorialModal from '../../components/MyCharacter/TutorialModal.tsx';
-import useUserEquipments from '../../hooks/useUserEquipments.ts';
-import { useMutation, useQuery } from '@apollo/client';
-import { useToast } from '../../hooks/useToast.ts';
-import AbilityScore from '../../interfaces/AbilityScoreProps.ts';
-
-import {
-  GET_ARRAY_SCORES,
-  GET_USER_CLASS,
-  GET_USER_RACE,
-  UPDATE_ABILITY_SCORES,
-  UPDATE_USER_CLASS,
-  UPDATE_USER_RACE,
-} from '../../graphql/queries.ts';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../../context/AuthContext.tsx';
-import useClasses from '../../hooks/useClasses.ts';
-import Counter from '../../components/Counter/Counter.tsx';
-import classImageMapping from '../../utils/classImageMapping.ts';
-import useRaces from '../../hooks/useRaces.ts';
-import raceImageMapping from '../../utils/raceImageMapping.ts';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import Counter from '../../components/Counter/Counter';
+import MainPageLayout from '../../components/Layouts/MainPageLayout';
+import TutorialModal from '../../components/MyCharacter/TutorialModal';
+import { AuthContext } from '../../context/AuthContext';
+import useCharacterContext from '../../hooks/useCharacter';
+import useClasses from '../../hooks/useClasses';
+import useRaces from '../../hooks/useRaces';
+import { useToast } from '../../hooks/useToast';
+import abilityScoreMap, { notifyScoreChanges } from '../../utils/abilityScoreMapping';
+import classImageMapping from '../../utils/classImageMapping';
+import raceImageMapping from '../../utils/raceImageMapping';
 
 const MyCharacterPage = () => {
-  const { userEquipments } = useUserEquipments();
+  const {
+    selectedClassId,
+    updateClass,
+    selectedRaceId,
+    updateRace,
+    abilityScores,
+    updateAbilityScores,
+    userEquipments,
+    loading,
+  } = useCharacterContext();
+
   const { userId } = useContext(AuthContext);
   const { showToast } = useToast();
 
-  const { data: userClassData } = useQuery(GET_USER_CLASS, {
-    variables: { userId },
-    skip: !userId,
-  });
-  const [updateUserClass] = useMutation(UPDATE_USER_CLASS);
-  const currentPage = 1;
-  const classesPerPage = 12;
-  const { classes: classData } = useClasses(currentPage, classesPerPage);
+  const { classes: classData } = useClasses(1, 12);
+  const { races: raceData } = useRaces(1, 12);
+
+  const [localScores, setLocalScores] = useState([...abilityScores]);
   const [classIndex, setClassIndex] = useState(0);
-  const [classImageLoaded, setClassImageLoaded] = useState(false);
+  const [raceIndex, setRaceIndex] = useState(0);
   const [hasInteractedScores, setHasInteractedScores] = useState(false);
   const [initialized, setInitialized] = useState(false);
-
-  const { data, loading } = useQuery(GET_ARRAY_SCORES, {
-    variables: { userId },
-    fetchPolicy: 'network-only',
-  });
-  const [updateAbilityScores] = useMutation(UPDATE_ABILITY_SCORES);
-  const [localScores, setLocalScores] = useState<number[]>(Array(6).fill(0));
-  const [scores, setScores] = useState<number[]>(Array(6).fill(0));
-
-  const { data: userRaceData } = useQuery(GET_USER_RACE, {
-    variables: { userId },
-    skip: !userId,
-  });
-  const { races: raceData } = useRaces(currentPage, classesPerPage);
   const [raceImageLoaded, setRaceImageLoaded] = useState(false);
-  const [raceIndex, setRaceIndex] = useState(0);
-  const [updateUserRace] = useMutation(UPDATE_USER_RACE);
+  const [classImageLoaded, setClassImageLoaded] = useState(false);
+
+  const currentClass = classData[classIndex];
+  const currentRace = raceData[raceIndex];
+  const currentClassImage = currentClass ? classImageMapping[currentClass.index] : '';
+  const currentRaceImage = currentRace ? raceImageMapping[currentRace.index] : '';
 
   useEffect(() => {
-    if (data && data.getArrayScores) {
-      const fetchedScores = data.getArrayScores.map((score: AbilityScore) => score.score);
-      setLocalScores(fetchedScores);
-      setScores(fetchedScores);
-      setInitialized(true);
-    }
-  }, [data]);
+    setLocalScores([...abilityScores]);
+  }, [abilityScores]);
 
   useEffect(() => {
-    if (userClassData?.user?.class?.id) {
-      const selectedIndex = classData.findIndex((c) => c.id === userClassData.user.class.id);
-      if (selectedIndex !== -1) setClassIndex(selectedIndex);
+    if (selectedClassId) {
+      const index = classData.findIndex((cls) => cls.id === selectedClassId);
+      if (index >= 0) setClassIndex(index);
     }
-  }, [userClassData, classData]);
+  }, [selectedClassId, classData]);
 
   useEffect(() => {
-    if (userRaceData?.user?.race?.id) {
-      const selectedIndex = raceData.findIndex((r) => r.id === userRaceData.user.race.id);
-      if (selectedIndex !== -1) setRaceIndex(selectedIndex);
+    if (selectedRaceId) {
+      const index = raceData.findIndex((race) => race.id === selectedRaceId);
+      if (index >= 0) setRaceIndex(index);
     }
-  }, [userRaceData, raceData]);
+  }, [selectedRaceId, raceData]);
 
   const handleCounterChange = (index: number, newValue: number) => {
-    const updatedLocalScores = [...localScores];
-    updatedLocalScores[index] = newValue;
-    setLocalScores(updatedLocalScores);
+    const updatedScores = [...localScores];
+    updatedScores[index] = newValue;
+    setLocalScores(updatedScores);
     setHasInteractedScores(true);
   };
 
   const handleUpdateScores = useCallback(() => {
     if (!hasInteractedScores || !initialized) return;
 
-    updateAbilityScores({ variables: { userId, scores: localScores } })
-      .then(() => {
-        notifyScoreChanges(localScores, scores, setScores, showToast); // Use notifyScoreChanges function here
-      })
-      .catch((error) => console.error('Error updating ability scores:', error));
-  }, [userId, localScores, scores, initialized, hasInteractedScores, updateAbilityScores, showToast]);
+    updateAbilityScores(localScores).then(() => {
+      notifyScoreChanges(localScores, abilityScores, setLocalScores, showToast);
+      setHasInteractedScores(false);
+    });
+  }, [hasInteractedScores, initialized, localScores, abilityScores, updateAbilityScores, showToast]);
 
   useEffect(() => {
     if (hasInteractedScores) {
       const timer = setTimeout(() => {
         handleUpdateScores();
-        setHasInteractedScores(false);
       }, 100);
 
       return () => clearTimeout(timer);
     }
-  }, [localScores, handleUpdateScores, hasInteractedScores]);
+  }, [handleUpdateScores, hasInteractedScores]);
 
   const handleChange = async (type: 'race' | 'class', direction: 'next' | 'prev') => {
     const isRace = type === 'race';
     const data = isRace ? raceData : classData;
     const index = isRace ? raceIndex : classIndex;
     const setIndex = isRace ? setRaceIndex : setClassIndex;
-    const updateMutation = isRace ? updateUserRace : updateUserClass;
-    const toastType = isRace ? 'Race' : 'Class';
+    const updateFn = isRace ? updateRace : updateClass;
 
     const newIndex = direction === 'next' ? (index + 1) % data.length : (index - 1 + data.length) % data.length;
 
@@ -123,24 +100,18 @@ const MyCharacterPage = () => {
     const newItem = data[newIndex];
 
     try {
-      await updateMutation({
-        variables: { userId, [`${type}Id`]: newItem.id },
-      });
+      await updateFn(newItem.id);
       showToast({
-        message: `${toastType} changed to ${newItem.name}`,
+        message: `${isRace ? 'Race' : 'Class'} changed to ${newItem.name}`,
         type: 'success',
         duration: 3000,
       });
     } catch (error) {
-      console.error(`Error updating ${toastType.toLowerCase()}:`, error);
+      console.error(`Error updating ${type}:`, error);
     }
   };
 
-  const currentClass = classData[classIndex];
-  const currentClassImage = currentClass ? classImageMapping[currentClass.index] : '';
-
-  const currentRace = raceData[raceIndex];
-  const currentRaceImage = currentRace ? raceImageMapping[currentRace.index] : '';
+  if (loading) return <div>Loading...</div>;
 
   return (
     <MainPageLayout>
@@ -149,7 +120,8 @@ const MyCharacterPage = () => {
         <div className="wrapper w-full py-[15vh] gap-32">
           <h1 className="header">My Character</h1>
           <TutorialModal />
-          {/* Race section */}
+
+          {/* Race Section */}
           <section className="w-full flex flex-col lg:flex-row justify-between">
             <article className="w-full xl:w-1/2 flex flex-col items-center">
               <h2 className="header">Race:</h2>
@@ -158,7 +130,7 @@ const MyCharacterPage = () => {
                   <FaChevronLeft />
                 </button>
                 {currentRace && (
-                  <article className="flex flex-col justify-center items-center gap-4 min-w-52">
+                  <div className="flex flex-col justify-center items-center gap-4 min-w-52">
                     <h3 className="sub-header">{currentRace.name}</h3>
                     <div className="flex justify-center items-center w-[70vw] h-[30vh] lg:w-[20vw] lg:h-[25vh] overflow-hidden">
                       {!raceImageLoaded && <div className="flex justify-center w-full">Loading image...</div>}
@@ -170,7 +142,7 @@ const MyCharacterPage = () => {
                         style={{ display: raceImageLoaded ? 'block' : 'none' }}
                       />
                     </div>
-                  </article>
+                  </div>
                 )}
                 <button className="arrow-button" onClick={() => handleChange('race', 'next')}>
                   <FaChevronRight />
@@ -178,7 +150,7 @@ const MyCharacterPage = () => {
               </div>
             </article>
 
-            {/* Class section */}
+            {/* Class Section */}
             <article className="w-full xl:w-1/2 flex flex-col items-center mt-[10vh] lg:mt-0">
               <h2 className="header">Class:</h2>
               <div className="flex items-center gap-4">
@@ -186,7 +158,7 @@ const MyCharacterPage = () => {
                   <FaChevronLeft />
                 </button>
                 {currentClass && (
-                  <article className="flex flex-col items-center gap-4">
+                  <div className="flex flex-col items-center gap-4">
                     <h3 className="sub-header">{currentClass.name}</h3>
                     <div className="flex justify-center items-center w-[65vw] h-[25vh] lg:w-[25vw] lg:h-[25vh] overflow-hidden">
                       {!classImageLoaded && <div className="flex justify-center w-full py-24">Loading image...</div>}
@@ -198,7 +170,7 @@ const MyCharacterPage = () => {
                         style={{ display: classImageLoaded ? 'block' : 'none' }}
                       />
                     </div>
-                  </article>
+                  </div>
                 )}
                 <button className="arrow-button" onClick={() => handleChange('class', 'next')}>
                   <FaChevronRight />
@@ -206,7 +178,8 @@ const MyCharacterPage = () => {
               </div>
             </article>
           </section>
-          {/* Ability scores section */}
+
+          {/* Ability Scores Section */}
           <article className="flex flex-col items-center w-full">
             <h2 className="header mb-[8vh]">Ability Scores:</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[12vh] gap-x-[25vw]">
@@ -223,7 +196,7 @@ const MyCharacterPage = () => {
             </div>
           </article>
 
-          {/* Equipment section */}
+          {/* Equipment Section */}
           <article className="flex flex-col items-center w-full mt-10">
             <h2 className="header mb-[5vh]">Equipments:</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[5vh] gap-x-[40vw] xl:gap-y-[10vh]">
