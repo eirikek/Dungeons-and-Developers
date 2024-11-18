@@ -1,11 +1,11 @@
 export type ToastFunction = (options: { message: string; type: 'success' | 'error'; duration: number }) => void;
 const abilityScoreMap: { [key: string]: number } = {
-  Wisdom: 5,
-  Strength: 4,
-  Intelligence: 3,
-  Dexterity: 2,
-  Constitution: 1,
   Charisma: 0,
+  Constitution: 1,
+  Dexterity: 2,
+  Intelligence: 3,
+  Strength: 4,
+  Wisdom: 5,
 };
 
 export function notifyScoreChanges(

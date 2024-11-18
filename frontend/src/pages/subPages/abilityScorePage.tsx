@@ -25,14 +25,13 @@ export default function AbilityScorePage() {
       const fetchedScores = data.getArrayScores.map((score: AbilityScore) => score.score);
       setLocalScores(fetchedScores);
       setScores(fetchedScores);
-    } else {
     }
   }, [data]);
 
   const handleScoreChange = (index: number, newValue: number) => {
-    const updatedScores = [...localScores];
-    updatedScores[index] = newValue;
-    setLocalScores(updatedScores);
+    const updatedLocalScores = [...localScores];
+    updatedLocalScores[index] = newValue;
+    setLocalScores(updatedLocalScores);
     setHasInteracted(true);
   };
 
