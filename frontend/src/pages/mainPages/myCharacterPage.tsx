@@ -5,6 +5,8 @@ import TutorialModal from '../../components/MyCharacter/TutorialModal.tsx';
 import useUserEquipments from '../../hooks/useUserEquipments.ts';
 import { useMutation, useQuery } from '@apollo/client';
 import { useToast } from '../../hooks/useToast.ts';
+import AbilityScore from '../../interfaces/AbilityScoreProps.ts';
+
 import {
   GET_ARRAY_SCORES,
   GET_USER_CLASS,
@@ -58,8 +60,9 @@ const MyCharacterPage = () => {
 
   useEffect(() => {
     if (data && data.getArrayScores) {
-      setLocalScores(data.getArrayScores);
-      setScores(data.getArrayScores);
+      const fetchedScores = data.getArrayScores.map((score: AbilityScore) => score.score);
+      setLocalScores(fetchedScores);
+      setScores(fetchedScores);
       setInitialized(true);
     }
   }, [data]);

@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import Class from '../model/Class.js';
 import Race from '../model/Race.js';
 import User from '../model/User.ts';
+import AbilityScore from '../model/AbilityScore.js';
 
 const SECRET_KEY = process.env.SECRET_KEY || 'secret_key';
 
@@ -21,7 +22,8 @@ export default {
         })
         .populate('race')
         .populate('class')
-        .populate('equipments');
+        .populate('equipments')
+        .populate('abilityScores');
     },
 
     async checkUsername(_: any, { userName }: UserArgs) {
@@ -30,9 +32,26 @@ export default {
     },
 
     async getArrayScores(_: any, { userId }: { userId: string }) {
-      const user = await User.findById(userId).select('abilityScores');
-      if (!user) throw new Error('User not found');
-      return user.abilityScores;
+      try {
+        const user = await User.findById(userId).populate('abilityScores.ability');
+
+        if (!user) {
+          throw new Error('User not found');
+        }
+
+        console.log('Fetched user with populated ability scores:', user);
+
+        return user.abilityScores.map((abilityScore) => ({
+          ability: {
+            id: abilityScore.ability.id,
+            name: abilityScore.ability.name,
+          },
+          score: abilityScore.score,
+        }));
+      } catch (error) {
+        console.error('Error fetching ability scores:', error);
+        throw new Error('Error fetching ability scores');
+      }
     },
   },
 
@@ -50,21 +69,30 @@ export default {
         throw new Error('Default race or class not found in the database');
       }
 
+      const defaultAbilityScores = await AbilityScore.find({});
+      if (!defaultAbilityScores || defaultAbilityScores.length === 0) {
+        throw new Error('No ability scores found in the database');
+      }
       const user = new User({
         userName,
         race: defaultRace._id,
         class: defaultClass._id,
+        abilityScores: defaultAbilityScores.map((ability) => ({
+          ability: ability.id,
+          score: 0,
+        })),
       });
 
       await user.save();
 
       const token = jwt.sign({ id: user._id, userName: user.userName }, SECRET_KEY, { expiresIn: '2h' });
 
-      return { user: await user.populate('race class'), token };
+      return { user: await user.populate('race class abilityScores.ability'), token };
     },
 
     async loginUser(_: any, { userName }: UserArgs) {
       const user = await User.findOne({ userName })
+        .populate('abilityScores.ability')
         .populate('race')
         .populate('class')
         .populate('favoritedMonsters')
@@ -73,6 +101,7 @@ export default {
           model: 'Equipment',
           select: 'id name category value',
         });
+
       if (!user) throw new Error('User not found');
 
       const token = jwt.sign({ id: user._id, userName: user.userName }, SECRET_KEY, { expiresIn: '2h' });
@@ -141,6 +170,7 @@ export default {
 
       return user.populate('class');
     },
+
     async addEquipmentToCharacter(_: any, { userId, equipmentId }: { userId: string; equipmentId: string }) {
       const user = await User.findById(userId).populate('equipments');
       if (!user) throw new Error('User not found');
@@ -155,17 +185,34 @@ export default {
     },
 
     async updateAbilityScores(_: any, { userId, scores }: { userId: string; scores: number[] }) {
-      const user = await User.findById(userId);
-      if (!user) throw new Error('User not found');
+      try {
+        const user = await User.findById(userId);
+        if (!user) {
+          throw new Error('User not found');
+        }
 
-      if (scores.length !== 6) {
-        throw new Error('Ability scores array must have exactly 6 elements');
+        if (scores.length !== 6) {
+          throw new Error('Ability scores array must have exactly 6 elements');
+        }
+
+        const updatedAbilityScores = await AbilityScore.find({}).limit(6);
+        if (updatedAbilityScores.length !== 6) {
+          throw new Error('There must be exactly 6 ability scores in the database.');
+        }
+
+        user.abilityScores = updatedAbilityScores.map((ability, index) => ({
+          ability: ability._id,
+          score: scores[index],
+        }));
+
+        await user.save();
+        await user.populate('abilityScores.ability');
+
+        return user;
+      } catch (error) {
+        console.error('Error updating ability scores:', error);
+        throw new Error('Failed to update ability scores.');
       }
-
-      user.abilityScores = scores;
-      await user.save();
-
-      return user.populate('race class');
     },
 
     async removeEquipmentFromCharacter(_: any, { userId, equipmentId }: { userId: string; equipmentId: string }) {
@@ -187,7 +234,7 @@ export default {
       const removedEquipments = user.equipments;
       user.equipments = [];
       await user.save();
-      
+
       return user.populate('equipments');
     },
   },

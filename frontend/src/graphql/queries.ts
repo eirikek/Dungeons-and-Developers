@@ -276,7 +276,13 @@ export const CREATE_USER = gql`
         race {
           name
         }
-        abilityScores
+        abilityScores {
+          ability {
+            id
+            name
+          }
+          score
+        }
         equipments {
           name
         }
@@ -298,7 +304,13 @@ export const LOGIN_USER = gql`
         race {
           name
         }
-        abilityScores
+        abilityScores {
+          ability {
+            id
+            name
+          }
+          score
+        }
         equipments {
           name
         }
@@ -323,7 +335,13 @@ export const UPDATE_ABILITY_SCORES = gql`
   mutation UpdateAbilityScores($userId: ID!, $scores: [Int!]!) {
     updateAbilityScores(userId: $userId, scores: $scores) {
       id
-      abilityScores
+      abilityScores {
+        ability {
+          id
+          name
+        }
+        score
+      }
     }
   }
 `;
@@ -343,12 +361,18 @@ export const GET_USER_CLASS = gql`
 
 export const GET_ARRAY_SCORES = gql`
   query GetArrayScores($userId: ID!) {
-    getArrayScores(userId: $userId)
+    getArrayScores(userId: $userId) {
+      ability {
+        id
+        name
+      }
+      score
+    }
   }
 `;
 
 export const UPDATE_USER_RACE = gql`
-  mutation UpdateUserRace($userId: ID!, $raceId: ID!) {
+  mutation UpdateUserRace($userId: ID!, $raceId: [ID!]!) {
     updateUserRace(userId: $userId, raceId: $raceId) {
       id
       race {
@@ -402,6 +426,7 @@ export const GET_ABILITYSCORES = gql`
         index
         name
         skills
+        score
       }
       totalAbilities
     }

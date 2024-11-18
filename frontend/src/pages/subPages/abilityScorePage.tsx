@@ -7,6 +7,7 @@ import { GET_ARRAY_SCORES, UPDATE_ABILITY_SCORES } from '../../graphql/queries';
 import { useToast } from '../../hooks/useToast.ts';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { notifyScoreChanges } from '../../utils/abilityScoreMapping.ts';
+import AbilityScore from '../../interfaces/AbilityScoreProps.ts';
 
 export default function AbilityScorePage() {
   const { userId } = useContext(AuthContext);
@@ -21,22 +22,25 @@ export default function AbilityScorePage() {
 
   useEffect(() => {
     if (data && data.getArrayScores) {
-      setLocalScores(data.getArrayScores);
-      setScores(data.getArrayScores);
+      const fetchedScores = data.getArrayScores.map((score: AbilityScore) => score.score);
+      setLocalScores(fetchedScores);
+      setScores(fetchedScores);
     }
   }, [data]);
 
   const handleScoreChange = (index: number, newValue: number) => {
-    const updatedScores = [...localScores];
-    updatedScores[index] = newValue;
-    setLocalScores(updatedScores);
+    const updatedLocalScores = [...localScores];
+    updatedLocalScores[index] = newValue;
+    setLocalScores(updatedLocalScores);
     setHasInteracted(true);
   };
 
   const updateScoresToBackend = useCallback(() => {
     if (!hasInteracted) return;
 
-    updateAbilityScores({ variables: { userId, scores: localScores } })
+    updateAbilityScores({
+      variables: { userId, scores: localScores },
+    })
       .then(() => {
         notifyScoreChanges(localScores, scores, setScores, showToast);
       })
@@ -56,8 +60,13 @@ export default function AbilityScorePage() {
     }
   }, [localScores, updateScoresToBackend, hasInteracted]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error loading abilities.</div>;
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading abilities.</div>;
+  }
 
   return (
     <SubPageLayout>
@@ -65,6 +74,7 @@ export default function AbilityScorePage() {
         {abilities.map((ability, index) => (
           <AbilityScoreCard
             key={ability.index}
+            id={ability.id}
             name={ability.name}
             index={ability.index}
             skills={ability.skills}
