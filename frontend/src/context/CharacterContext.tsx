@@ -1,5 +1,5 @@
 import { makeVar, useMutation, useQuery, useReactiveVar } from '@apollo/client';
-import { createContext, ReactNode, useEffect, useMemo, useState } from 'react';
+import { createContext, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import {
   GET_ARRAY_SCORES,
   GET_USER_CLASS,
@@ -263,19 +263,14 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
     const scores = Object.keys(abilityScoreMap).map((key) => abilityScores.get(key) ?? 0);
     await updateAbilityScoresMutation({ variables: { userId, scores } });
   };
-
+  let toastTimeout: NodeJS.Timeout;
   const updateAbilityScores = async (scores: Map<string, number>, name: string) => {
     if (!checkUser('Abilities')) return;
 
     try {
       setAbilityScores(scores);
-      await saveScores();
 
-      showToast({
-        message: `Ability ${name} updated`,
-        type: 'success',
-        duration: 3000,
-      });
+      debounceSaveAndToast(name);
     } catch (error) {
       showToast({
         message: `Failed to update ability scores: ${error}`,
@@ -283,6 +278,26 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
         duration: 3000,
       });
     }
+  };
+
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const debounceSaveAndToast = (abilityName: string) => {
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    debounceTimeout.current = setTimeout(async () => {
+      await saveScores();
+
+      showToast({
+        message: `Ability scores updated successfully (${abilityName})!`,
+        type: 'success',
+        duration: 3000,
+      });
+
+      debounceTimeout.current = null;
+    }, 500);
   };
 
   const updateClass = async (classId: string) => {

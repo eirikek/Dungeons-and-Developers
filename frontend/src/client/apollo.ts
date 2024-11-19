@@ -52,7 +52,7 @@ const client = new ApolloClient({
         },
       },
       Class: {
-        keyFields: ['name', 'index'],
+        keyFields: ['name'],
       },
       Race: {
         keyFields: ['name'],
