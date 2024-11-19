@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import Counter from '../../components/Counter/Counter';
 import MainPageLayout from '../../components/Layouts/MainPageLayout';
@@ -8,94 +8,43 @@ import abilityScoreMap from '../../utils/abilityScoreMapping';
 import classImageMapping from '../../utils/classImageMapping';
 import raceImageMapping from '../../utils/raceImageMapping';
 import { makeVar, useReactiveVar } from '@apollo/client';
+import { classVar } from '../subPages/classPage';
+import { raceVar } from '../subPages/racePage.tsx';
+import useAbilityScoreManagement from '../../utils/useAbilityScoreManagement.ts';
 
 export const abilitiesVar = makeVar<Map<string, number>>(new Map());
 
 const MyCharacterPage = () => {
-  const {
-    classes,
-    races,
-    selectedClassId,
-    selectedRaceId,
-    updateClass,
-    updateRace,
-    userAbilityScores,
-    updateAbilityScores,
-    userEquipments,
-  } = useCharacterContext();
-  const currentArrayScores = useReactiveVar(abilitiesVar);
+  const { classes, races, selectedClassId, selectedRaceId, updateClass, updateRace, userEquipments } =
+    useCharacterContext();
+
+  const { handleCounterChange, currentArrayScores } = useAbilityScoreManagement();
+
+  const currentClass = useReactiveVar(classVar);
+  const currentRace = useReactiveVar(raceVar);
 
   const [classIndex, setClassIndex] = useState(0);
   const [raceIndex, setRaceIndex] = useState(0);
-  // const [localScores, setLocalScores] = useState([0]);
-  const [hasInteractedScores, setHasInteractedScores] = useState(false);
   const [raceImageLoaded, setRaceImageLoaded] = useState(false);
   const [classImageLoaded, setClassImageLoaded] = useState(false);
 
-  const currentClass = classes?.[classIndex];
-  const currentRace = races?.[raceIndex];
-  const currentClassImage = currentClass ? classImageMapping[currentClass.index] : '';
-  const currentRaceImage = currentRace ? raceImageMapping[currentRace.index] : '';
+  const currentClassData = classes?.find((cls) => cls.id === currentClass) ?? null;
+  const currentRaceData = races?.find((rcs) => rcs.id === currentRace) ?? null;
+
+  const currentClassImage = currentClassData ? classImageMapping[currentClassData.index] : '';
+  const currentRaceImage = currentRaceData ? raceImageMapping[currentRaceData.index] : '';
 
   useEffect(() => {
-    if (selectedClassId) {
-      const index = classes?.findIndex((cls) => cls.id === selectedClassId);
-      if (index >= 0) setClassIndex(index);
+    if (!currentClass && classes?.length) {
+      classVar(classes[0].id);
     }
-  }, [selectedClassId, classes]);
+  }, [selectedClassId, currentClass, classes]);
 
   useEffect(() => {
-    if (selectedRaceId) {
-      const index = races?.findIndex((race) => race.id === selectedRaceId);
-      if (index >= 0) setRaceIndex(index);
+    if (!currentRace && races?.length) {
+      raceVar(races[0].id);
     }
-  }, [selectedRaceId, races]);
-
-  const handleCounterChange = async (index: number, newValue: number) => {
-    if (!Number.isFinite(newValue)) {
-      console.error(`Invalid score value: ${newValue}`);
-      return;
-    }
-    const updatedScores = new Map(userAbilityScores);
-    let updatedAbilityName = '';
-
-    Object.entries(abilityScoreMap).forEach(([key, idx]) => {
-      const value = idx === index ? newValue : (updatedScores.get(key) ?? 0);
-      updatedScores.set(key, value);
-
-      if (idx === index) {
-        updatedAbilityName = key;
-      }
-    });
-    setHasInteractedScores(true);
-    abilitiesVar(updatedScores);
-    await saveToContext(updatedScores, updatedAbilityName);
-  };
-
-  const saveToContext = useCallback(
-    async (newMap: Map<string, number>, updatedAbilityName: string) => {
-      await updateAbilityScores(newMap, updatedAbilityName);
-    },
-    [updateAbilityScores]
-  );
-
-  const handleUpdateScores = useCallback(() => {
-    if (!hasInteractedScores) return;
-    currentArrayScores.forEach((value, key) => {
-      handleCounterChange(abilityScoreMap[key], value);
-    });
-  }, [currentArrayScores, handleCounterChange, hasInteractedScores]);
-
-  useEffect(() => {
-    if (hasInteractedScores) {
-      const timer = setTimeout(() => {
-        handleUpdateScores();
-        setHasInteractedScores(false);
-      }, 100);
-
-      return () => clearTimeout(timer);
-    }
-  }, [handleUpdateScores, hasInteractedScores]);
+  }, [selectedRaceId, races, currentRace]);
 
   const handleChange = async (type: 'race' | 'class', direction: 'next' | 'prev') => {
     const isRace = type === 'race';
@@ -132,14 +81,14 @@ const MyCharacterPage = () => {
                 <button className="arrow-button" onClick={() => handleChange('race', 'prev')}>
                   <FaChevronLeft />
                 </button>
-                {currentRace && (
+                {currentRaceData && (
                   <div className="flex flex-col justify-center items-center gap-4 min-w-52">
-                    <h3 className="sub-header">{currentRace.name}</h3>
+                    <h3 className="sub-header">{currentRaceData.name}</h3>
                     <div className="flex justify-center items-center w-[70vw] h-[30vh] lg:w-[20vw] lg:h-[25vh] overflow-hidden">
                       {!raceImageLoaded && <div className="flex justify-center w-full">Loading image...</div>}
                       <img
                         src={currentRaceImage}
-                        alt={currentRace.name}
+                        alt={currentRaceData.name}
                         className="w-full h-full object-contain shadow-none"
                         onLoad={() => setRaceImageLoaded(true)}
                         style={{ display: raceImageLoaded ? 'block' : 'none' }}
@@ -160,14 +109,14 @@ const MyCharacterPage = () => {
                 <button className="arrow-button" onClick={() => handleChange('class', 'prev')}>
                   <FaChevronLeft />
                 </button>
-                {currentClass && (
+                {currentClassData && (
                   <div className="flex flex-col items-center gap-4">
-                    <h3 className="sub-header">{currentClass.name}</h3>
+                    <h3 className="sub-header">{currentClassData.name}</h3>
                     <div className="flex justify-center items-center w-[65vw] h-[25vh] lg:w-[25vw] lg:h-[25vh] overflow-hidden">
                       {!classImageLoaded && <div className="flex justify-center w-full py-24">Loading image...</div>}
                       <img
                         src={currentClassImage}
-                        alt={currentClass.name}
+                        alt={currentClassData.name}
                         className="w-full h-full object-contain shadow-none"
                         onLoad={() => setClassImageLoaded(true)}
                         style={{ display: classImageLoaded ? 'block' : 'none' }}
@@ -192,7 +141,7 @@ const MyCharacterPage = () => {
                   <Counter
                     scale={1.5}
                     value={currentArrayScores.get(key) ?? 0}
-                    onChange={(newValue) => handleCounterChange(abilityScoreMap[key], newValue)}
+                    onChange={(newValue) => handleCounterChange(index, newValue, abilityScoreMap)}
                   />
                 </div>
               ))}
