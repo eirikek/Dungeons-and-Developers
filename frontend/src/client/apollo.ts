@@ -40,9 +40,22 @@ const client = new ApolloClient({
             merge: false,
           },
           class: {
-            merge: false,
+            merge(existing = [], incoming) {
+              return incoming;
+            },
+          },
+          race: {
+            merge(existing = [], incoming) {
+              return incoming;
+            },
           },
         },
+      },
+      Class: {
+        keyFields: ['name', 'index'],
+      },
+      Race: {
+        keyFields: ['name'],
       },
       Monster: {
         keyFields: ['id'],

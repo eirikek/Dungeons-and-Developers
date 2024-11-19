@@ -1,86 +1,96 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import Counter from '../../components/Counter/Counter';
 import MainPageLayout from '../../components/Layouts/MainPageLayout';
 import TutorialModal from '../../components/MyCharacter/TutorialModal';
-import { AuthContext } from '../../context/AuthContext';
 import useCharacterContext from '../../hooks/useCharacter';
-import useClasses from '../../hooks/useClasses';
-import useRaces from '../../hooks/useRaces';
-import { useToast } from '../../hooks/useToast';
-import abilityScoreMap, { notifyScoreChanges } from '../../utils/abilityScoreMapping';
+import abilityScoreMap from '../../utils/abilityScoreMapping';
 import classImageMapping from '../../utils/classImageMapping';
 import raceImageMapping from '../../utils/raceImageMapping';
+import { makeVar, useReactiveVar } from '@apollo/client';
+
+export const abilitiesVar = makeVar<Map<string, number>>(new Map());
 
 const MyCharacterPage = () => {
   const {
+    classes,
+    races,
     selectedClassId,
-    updateClass,
     selectedRaceId,
+    updateClass,
     updateRace,
-    abilityScores,
+    userAbilityScores,
     updateAbilityScores,
     userEquipments,
-    loading,
   } = useCharacterContext();
+  const currentArrayScores = useReactiveVar(abilitiesVar);
 
-  const { userId } = useContext(AuthContext);
-  const { showToast } = useToast();
-
-  const { classes: classData } = useClasses(1, 12);
-  const { races: raceData } = useRaces(1, 12);
-
-  const [localScores, setLocalScores] = useState([...abilityScores]);
   const [classIndex, setClassIndex] = useState(0);
   const [raceIndex, setRaceIndex] = useState(0);
+  // const [localScores, setLocalScores] = useState([0]);
   const [hasInteractedScores, setHasInteractedScores] = useState(false);
-  const [initialized, setInitialized] = useState(false);
   const [raceImageLoaded, setRaceImageLoaded] = useState(false);
   const [classImageLoaded, setClassImageLoaded] = useState(false);
 
-  const currentClass = classData[classIndex];
-  const currentRace = raceData[raceIndex];
+  const currentClass = classes?.[classIndex];
+  const currentRace = races?.[raceIndex];
   const currentClassImage = currentClass ? classImageMapping[currentClass.index] : '';
   const currentRaceImage = currentRace ? raceImageMapping[currentRace.index] : '';
 
   useEffect(() => {
-    setLocalScores([...abilityScores]);
-  }, [abilityScores]);
-
-  useEffect(() => {
     if (selectedClassId) {
-      const index = classData.findIndex((cls) => cls.id === selectedClassId);
+      const index = classes?.findIndex((cls) => cls.id === selectedClassId);
       if (index >= 0) setClassIndex(index);
     }
-  }, [selectedClassId, classData]);
+  }, [selectedClassId, classes]);
 
   useEffect(() => {
     if (selectedRaceId) {
-      const index = raceData.findIndex((race) => race.id === selectedRaceId);
+      const index = races?.findIndex((race) => race.id === selectedRaceId);
       if (index >= 0) setRaceIndex(index);
     }
-  }, [selectedRaceId, raceData]);
+  }, [selectedRaceId, races]);
 
-  const handleCounterChange = (index: number, newValue: number) => {
-    const updatedScores = [...localScores];
-    updatedScores[index] = newValue;
-    setLocalScores(updatedScores);
+  const handleCounterChange = async (index: number, newValue: number) => {
+    if (!Number.isFinite(newValue)) {
+      console.error(`Invalid score value: ${newValue}`);
+      return;
+    }
+    const updatedScores = new Map(userAbilityScores);
+    let updatedAbilityName = '';
+
+    Object.entries(abilityScoreMap).forEach(([key, idx]) => {
+      const value = idx === index ? newValue : (updatedScores.get(key) ?? 0);
+      updatedScores.set(key, value);
+
+      if (idx === index) {
+        updatedAbilityName = key;
+      }
+    });
     setHasInteractedScores(true);
+    abilitiesVar(updatedScores);
+    await saveToContext(updatedScores, updatedAbilityName);
   };
 
-  const handleUpdateScores = useCallback(() => {
-    if (!hasInteractedScores || !initialized) return;
+  const saveToContext = useCallback(
+    async (newMap: Map<string, number>, updatedAbilityName: string) => {
+      await updateAbilityScores(newMap, updatedAbilityName);
+    },
+    [updateAbilityScores]
+  );
 
-    updateAbilityScores(localScores).then(() => {
-      notifyScoreChanges(localScores, abilityScores, setLocalScores, showToast);
-      setHasInteractedScores(false);
+  const handleUpdateScores = useCallback(() => {
+    if (!hasInteractedScores) return;
+    currentArrayScores.forEach((value, key) => {
+      handleCounterChange(abilityScoreMap[key], value);
     });
-  }, [hasInteractedScores, initialized, localScores, abilityScores, updateAbilityScores, showToast]);
+  }, [currentArrayScores, handleCounterChange, hasInteractedScores]);
 
   useEffect(() => {
     if (hasInteractedScores) {
       const timer = setTimeout(() => {
         handleUpdateScores();
+        setHasInteractedScores(false);
       }, 100);
 
       return () => clearTimeout(timer);
@@ -89,7 +99,7 @@ const MyCharacterPage = () => {
 
   const handleChange = async (type: 'race' | 'class', direction: 'next' | 'prev') => {
     const isRace = type === 'race';
-    const data = isRace ? raceData : classData;
+    const data = isRace ? races : classes;
     const index = isRace ? raceIndex : classIndex;
     const setIndex = isRace ? setRaceIndex : setClassIndex;
     const updateFn = isRace ? updateRace : updateClass;
@@ -101,17 +111,10 @@ const MyCharacterPage = () => {
 
     try {
       await updateFn(newItem.id);
-      showToast({
-        message: `${isRace ? 'Race' : 'Class'} changed to ${newItem.name}`,
-        type: 'success',
-        duration: 3000,
-      });
     } catch (error) {
       console.error(`Error updating ${type}:`, error);
     }
   };
-
-  if (loading) return <div>Loading...</div>;
 
   return (
     <MainPageLayout>
@@ -188,7 +191,7 @@ const MyCharacterPage = () => {
                   <label className="sub-header w-32 mr-[85px]">{key}:</label>
                   <Counter
                     scale={1.5}
-                    value={localScores[abilityScoreMap[key]]}
+                    value={currentArrayScores.get(key) ?? 0}
                     onChange={(newValue) => handleCounterChange(abilityScoreMap[key], newValue)}
                   />
                 </div>
@@ -200,7 +203,6 @@ const MyCharacterPage = () => {
           <article className="flex flex-col items-center w-full mt-10">
             <h2 className="header mb-[5vh]">Equipments:</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[5vh] gap-x-[40vw] xl:gap-y-[10vh]">
-              {loading && <div>Loading equipments...</div>}
               {userEquipments.length < 1 && (
                 <div className="flex items-center justify-center h-full w-full col-span-full text-center">
                   <p className="sub-header">No equipments added</p>

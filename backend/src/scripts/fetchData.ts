@@ -109,7 +109,6 @@ async function fetchAbilityScores() {
           index: abilityDetails.data.index,
           name: abilityDetails.data.full_name,
           skills: skillNames,
-          score: 0,
         });
 
         await abilityDocument.save();

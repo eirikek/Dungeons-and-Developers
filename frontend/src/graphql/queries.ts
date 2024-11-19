@@ -337,6 +337,7 @@ export const UPDATE_USER_CLASS = gql`
     updateUserClass(userId: $userId, classId: $classId) {
       id
       class {
+        id
         name
         index
         hit_die
@@ -353,6 +354,8 @@ export const UPDATE_ABILITY_SCORES = gql`
         ability {
           id
           name
+          index
+          skills
         }
         score
       }
@@ -363,6 +366,7 @@ export const UPDATE_ABILITY_SCORES = gql`
 export const GET_USER_CLASS = gql`
   query GetUserClass($userId: ID!) {
     user(id: $userId) {
+      id
       class {
         id
         name
@@ -390,6 +394,7 @@ export const UPDATE_USER_RACE = gql`
     updateUserRace(userId: $userId, raceId: $raceId) {
       id
       race {
+        id
         name
         speed
         alignment
@@ -440,7 +445,6 @@ export const GET_ABILITYSCORES = gql`
         index
         name
         skills
-        score
       }
       totalAbilities
     }

@@ -3,5 +3,4 @@ export default interface AbilityScoreCardProps {
   name: string;
   index: string;
   skills: string[];
-  score: number;
 }
