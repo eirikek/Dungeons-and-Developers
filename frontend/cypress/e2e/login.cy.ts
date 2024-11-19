@@ -41,6 +41,8 @@ describe('Logs user inn, views monsters, adds to dungeon', () => {
         }
       });
 
-    // TODO: Check monster successfully added to page, apply filtering to monstersearch
+    // navigate to dungeon, check "Aboleth" is present
+    cy.get('a').eq(3).should('have.text', 'Dungeon').click();
+    cy.get('div').children('div').children('div').get('h2').should('exist').should('have.text', 'Aboleth');
   });
 });
