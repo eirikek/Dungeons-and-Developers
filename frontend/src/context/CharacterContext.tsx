@@ -24,7 +24,7 @@ import AbilityScoreCardProps from '../interfaces/AbilityScoreProps.ts';
 interface CharacterContextType {
   stateAbilities: AbilityScoreCardProps[];
   userAbilityScores: Map<string, number>;
-  updateAbilityScores: (scores: Map<string, number>, updatedAbilityName: string) => Promise<void>;
+  updateAbilityScores: (newValue: number, updatedAbilityName: string) => Promise<void>;
   classes: ClassData[];
   selectedClassId: string;
   updateClass: (classId: string) => Promise<void>;
@@ -274,11 +274,15 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
     await updateAbilityScoresMutation({ variables: { userId, scores } });
   };
 
-  const updateAbilityScores = async (scores: Map<string, number>, name: string) => {
+  const updateAbilityScores = async (newValue: number, name: string) => {
     if (!checkUser('Abilities')) return;
 
     try {
-      setAbilityScores(scores);
+      setAbilityScores((prevScores) => {
+        const updatedScores = new Map(prevScores);
+        updatedScores.set(name, newValue); // Update only the specific ability
+        return updatedScores;
+      });
 
       debounceSaveAndToast(name);
     } catch (error) {
@@ -292,26 +296,29 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
 
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const abilityNameRef = useRef<string | null>(null); // Ref to store the latest ability name
-
   const debounceSaveAndToast = (abilityName: string) => {
-    abilityNameRef.current = abilityName; // Update ref with the latest ability name
-
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
     }
 
     debounceTimeout.current = setTimeout(async () => {
-      await saveScores();
+      try {
+        await saveScores();
 
-      // Use the latest ability name from the ref
-      showToast({
-        message: `Ability scores updated successfully (${abilityNameRef.current})!`,
-        type: 'success',
-        duration: 3000,
-      });
-
-      debounceTimeout.current = null;
+        showToast({
+          message: `Ability scores updated successfully (${abilityName})!`,
+          type: 'success',
+          duration: 3000,
+        });
+      } catch (error) {
+        showToast({
+          message: `Failed to update ability scores: ${error}`,
+          type: 'error',
+          duration: 3000,
+        });
+      } finally {
+        debounceTimeout.current = null;
+      }
     }, 500);
   };
 

@@ -10,8 +10,8 @@ const useAbilityScoreManagement = () => {
   const [hasInteractedScores, setHasInteractedScores] = useState(false);
 
   const saveToContext = useCallback(
-    async (newMap: Map<string, number>, updatedAbilityName: string) => {
-      await updateAbilityScores(newMap, updatedAbilityName);
+    async (value: number, updatedAbilityName: string) => {
+      await updateAbilityScores(value, updatedAbilityName);
     },
     [updateAbilityScores]
   );
@@ -22,21 +22,17 @@ const useAbilityScoreManagement = () => {
         console.error(`Invalid score value: ${newValue}`);
         return;
       }
+      const updatedAbilityName = Object.entries(abilityScoreMap).find(([_, idx]) => idx === index)?.[0];
+      if (!updatedAbilityName) {
+        console.error(`Invalid index: ${index}`);
+        return;
+      }
       const updatedScores = new Map(userAbilityScores);
-      let updatedAbilityName = '';
-
-      Object.entries(abilityScoreMap).forEach(([key, idx]) => {
-        const value = idx === index ? newValue : (updatedScores.get(key) ?? 0);
-        updatedScores.set(key, value);
-
-        if (idx === index) {
-          updatedAbilityName = key;
-        }
-      });
+      updatedScores.set(updatedAbilityName, newValue);
 
       setHasInteractedScores(true);
       abilitiesVar(updatedScores);
-      await saveToContext(updatedScores, updatedAbilityName);
+      await saveToContext(newValue, updatedAbilityName);
     },
     [saveToContext, userAbilityScores]
   );
