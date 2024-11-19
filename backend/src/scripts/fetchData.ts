@@ -99,24 +99,25 @@ async function fetchAbilityScores() {
     const { data } = await axios.get(urls.abilities);
     const abilities = data.results;
 
-    const abilityPromises = abilities.map(async (ability: any) => {
+    for (const ability of abilities) {
       const abilityDetails = await axios.get(`${urls.abilities}/${ability.index}`);
       const inDB = await AbilityScore.exists({ index: abilityDetails.data.index });
+
       if (!inDB) {
         const skillNames = abilityDetails.data.skills ? abilityDetails.data.skills.map((skill: any) => skill.name) : [];
 
-        const abilityDocument = new AbilityScore({
+        await new AbilityScore({
           index: abilityDetails.data.index,
           name: abilityDetails.data.full_name,
           skills: skillNames,
-        });
+        }).save();
 
-        await abilityDocument.save();
         console.log(`Ability score saved: ${abilityDetails.data.full_name}`);
+      } else {
+        console.log(`Ability score ${abilityDetails.data.full_name} already exists.`);
       }
-    });
+    }
 
-    await Promise.all(abilityPromises);
     console.log('All abilities saved to MongoDB!');
   } catch (error) {
     console.error('Error fetching or saving abilities:', error);
