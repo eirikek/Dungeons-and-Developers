@@ -6,6 +6,35 @@
 
 An application to explore the various functionalities and mechanics of the popular roleplaying game Dungeons & Dragons. Where you can create your own character, explore the games classes, monsters, races and abilityscores!
 
+## Table of Contents
+
+1. ###  [Dungeon & Developers](#dungeon--developers)
+2. ### [Features](#features)
+   - [Explore Monsters](#explore-monsters)
+   - [Dungeon](#dungeon)
+   - [My Character](#my-character)
+3. ### [Tech Stack](#tech-stack)
+   - [Frontend](#frontend)
+   - [Backend](#backend)
+4. ### [Run Locally](#run-locally)
+   - [Run the Frontend](#run-the-frontend)
+   - [Run the Backend](#run-the-backend)
+5. ### [Backend Details](#backend)
+   - [GraphQL API](#graphql-api)
+     - [Schema](#schema)
+     - [MongoDB Models](#mongodb-models)
+     - [Resolvers](#resolvers)
+     - [Use in Frontend](#use-in-frontend)
+6. ### [Tests](#tests)
+  - [E2E Testing](#e2e-testing)
+  - [Component Testing](#component-testing)
+    - [Running the Tests](#running-the-tests)
+7. ### [D&D API](#dd-api)
+  - [Specifications](#specifications)
+8. ### [Accessibility](#accessibility)
+9. ### [Authors](#authors)
+10. ### [License](#license)
+
 
 ## Features
 
@@ -134,15 +163,30 @@ For E2E testing we have used Cypress to simulate different user stories. We have
 - **Login.cy**: Tests login, searching, and user interaction with data
 - **Filtering.cy**: tests login and filtering. 
 
-To run the E2E tests you need to be in the frontend folder and run: 
+To run the E2E tests you need a running frontend and backend, be in the frontend folder and run: 
 
 ```bash
   npx cypress open   
 ```
 
-This should open an Cypress desktop where you need to navigate to E2E testing.
+This should open a Cypress desktop where you need to navigate to E2E testing.
 From here you can select the tests and watch as they are ran in a virtual desktop!
 
+### Component testing
+We have also made several component testing in the _tests_ folder in our frontend folder. These are to make sure the component 
+renders correctly, and behaves as expected during interactions. 
+
+We have used _AuthContext_ and _AuthProvider_.
+
+We have made sure to use _MockedProvider_ to mock requests, and the components are tested for correct data handling from GraphQL-requests
+  
+#### Running the tests: 
+
+Be in the frontend folder, and you can run:
+
+```bash
+  npm test   
+```
 
 
 ## D&D API
@@ -151,7 +195,9 @@ From here you can select the tests and watch as they are ran in a virtual deskto
 
 We use the [D&D 5e API](https://www.dnd5eapi.co/) to fetch the different objects used for the page. Such at the different classes, monsters, equipment etc. Which helps us keep the page true to how D&D works and what is possible in the game.
 
-
+## Accesability
+For better accesability we have provided ARIA-labels for the essential elements for our code. 
+Which helps us provide context for our custom elements, and provide information to assistive technologies. 
 
 
 ## Authors
