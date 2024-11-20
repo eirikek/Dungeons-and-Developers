@@ -1,13 +1,14 @@
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/AuthContext.tsx';
 import { useMutation, useQuery } from '@apollo/client';
+
+import { Equipment } from '../interfaces/EquipmentProps.ts';
+import { GET_USER_EQUIPMENT } from '../graphql/userQueries.ts';
 import {
   ADD_EQUIPMENT_TO_CHARACTER,
-  GET_USER_EQUIPMENT,
   REMOVE_ALL_EQUIPMENTS,
   REMOVE_EQUIPMENT_FROM_CHARACTER,
-} from '../graphql/queries';
-import { Equipment } from '../interfaces/EquipmentProps.ts';
+} from '../graphql/equipmentQueries.ts';
 
 const useUserEquipments = () => {
   const { userId } = useContext(AuthContext);

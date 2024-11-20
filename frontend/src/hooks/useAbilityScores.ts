@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useQuery } from '@apollo/client';
 import AbilityScoreCardProps from '../interfaces/AbilityScoreProps.ts';
-import { GET_ABILITYSCORES } from '../graphql/queries';
+import { GET_ABILITYSCORES } from '../graphql/abilityScoreQueries.ts';
 
 function useAbilityScores(currentPage: number, abilitiesPerPage: number) {
   const offset = (currentPage - 1) * abilitiesPerPage;

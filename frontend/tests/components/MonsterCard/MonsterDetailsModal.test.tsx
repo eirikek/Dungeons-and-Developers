@@ -4,8 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import MonsterDetailsModal from '../../../src/components/MonsterCard/MonsterDetailsModal.tsx';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
-import { GET_MONSTER_REVIEWS } from '../../../src/graphql/queries.ts';
 import { Review } from './MonsterReviewModal.test.tsx';
+import { GET_MONSTER_REVIEWS } from '../../../src/graphql/getMonsterQuerie.ts';
 
 const mockProps = {
   id: 'monster-123',

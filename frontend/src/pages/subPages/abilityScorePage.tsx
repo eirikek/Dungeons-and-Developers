@@ -3,11 +3,12 @@ import useAbilityScores from '../../hooks/useAbilityScores.ts';
 import AbilityScoreCard from '../../components/SubPages/AbilityScoreCard.tsx';
 import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_ARRAY_SCORES, UPDATE_ABILITY_SCORES } from '../../graphql/queries';
 import { useToast } from '../../hooks/useToast.ts';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { notifyScoreChanges } from '../../utils/abilityScoreMapping.ts';
 import AbilityScore from '../../interfaces/AbilityScoreProps.ts';
+import { GET_ARRAY_SCORES } from '../../graphql/userQueries.ts';
+import { UPDATE_ABILITY_SCORES } from '../../graphql/updateUserQueries.ts';
 
 export default function AbilityScorePage() {
   const { userId } = useContext(AuthContext);

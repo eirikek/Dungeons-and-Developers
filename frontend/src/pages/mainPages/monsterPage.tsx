@@ -9,8 +9,8 @@ import Pagination from '../../components/Pagination/Pagination';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 import MonsterFilter from '../../components/MonsterFilter/MonsterFilter.tsx';
 import MonsterSort from '../../components/MonsterSort/MonsterSort.tsx';
-import { GET_MONSTER_HP_RANGE } from '../../graphql/queries.ts';
 import useMonsterSuggestions from '../../hooks/useMonsterSuggestions';
+import { GET_MONSTER_HP_RANGE } from '../../graphql/getMonsterQuerie.ts';
 
 const monstersPerPage = 8;
 

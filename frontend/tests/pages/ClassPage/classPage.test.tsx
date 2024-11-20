@@ -5,8 +5,10 @@ import { GraphQLError } from 'graphql/error';
 import { BrowserRouter } from 'react-router-dom';
 import { describe, expect } from 'vitest';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
-import { GET_CLASSES, GET_USER_CLASS, UPDATE_USER_CLASS } from '../../../src/graphql/queries.ts';
 import ClassPage from '../../../src/pages/subPages/classPage.tsx';
+import { GET_CLASSES } from '../../../src/graphql/classQueries.ts';
+import { GET_USER_CLASS } from '../../../src/graphql/userQueries.ts';
+import { UPDATE_USER_CLASS } from '../../../src/graphql/updateUserQueries.ts';
 
 const mockShowToast = vi.fn();
 

@@ -8,13 +8,13 @@ import useEquipments from '../../hooks/useEquipments.ts';
 import { useToast } from '../../hooks/useToast.ts';
 import { Equipment } from '../../interfaces/EquipmentProps.ts';
 import useUserEquipments from '../../hooks/useUserEquipments.ts';
-import { REMOVE_ALL_EQUIPMENTS } from '../../graphql/queries.ts';
 import { useMutation } from '@apollo/client';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 import useEquipmentSuggestions from '../../hooks/useEquipmentsSuggestions.ts';
 import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import { useMediaQuery } from 'react-responsive';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
+import { REMOVE_ALL_EQUIPMENTS } from '../../graphql/equipmentQueries.ts';
 
 const variants = {
   enter: (direction: number) => ({
