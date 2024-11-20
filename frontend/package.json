@@ -2,7 +2,6 @@
   "name": "t20-project-2",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -50,6 +49,7 @@
     "@vitest/coverage-istanbul": "^2.1.4",
     "@vitest/ui": "^2.1.4",
     "autoprefixer": "^10.4.20",
+    "cypress": "^13.16.0",
     "eslint": "^9.9.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
