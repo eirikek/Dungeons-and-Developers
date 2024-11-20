@@ -177,13 +177,14 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
     raceVar(selectedRaceId);
   }, [selectedRaceId]);
 
-  const mappedScores = useMemo(() => {
-    return new Map(scoreData?.getArrayScores.map((item: AbilityScorePair) => [item.ability.name, item.score]) || []);
-  }, [scoreData?.getArrayScores]);
-
   useEffect(() => {
-    abilitiesVar(mappedScores);
-  }, [mappedScores]);
+    if (scoreData?.getArrayScores) {
+      const mappedScores = new Map(
+        scoreData.getArrayScores.map((item: AbilityScorePair) => [item.ability.name, item.score])
+      );
+      abilitiesVar(mappedScores);
+    }
+  }, [scoreData]);
 
   const classes = useMemo(() => fetchedClasses || [], [fetchedClasses]);
   const races = useMemo(() => fetchedRaces || [], [fetchedRaces]);

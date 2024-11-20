@@ -36,6 +36,8 @@ const MyCharacterPage = () => {
 
   const currentEquipments = useReactiveVar(equipmentsVar);
 
+  const abilityScoresLoading = currentArrayScores.size === 0;
+
   useEffect(() => {
     if (!currentClass && classes?.length) {
       classVar(classes[0].id);
@@ -66,6 +68,16 @@ const MyCharacterPage = () => {
       console.error(`Error updating ${type}:`, error);
     }
   };
+
+  if (abilityScoresLoading) {
+    return (
+      <MainPageLayout>
+        <div className="loading-container">
+          <h1>Loading ability scores...</h1>
+        </div>
+      </MainPageLayout>
+    );
+  }
 
   return (
     <MainPageLayout>
