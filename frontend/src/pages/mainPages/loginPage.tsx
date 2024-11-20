@@ -4,8 +4,8 @@ import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { useMutation, useLazyQuery } from '@apollo/client';
 import { AuthContext } from '../../context/AuthContext.tsx';
-import { CREATE_USER, LOGIN_USER, CHECK_USERNAME } from '../../graphql/queries';
 import { useToast } from '../../hooks/useToast.ts';
+import { CHECK_USERNAME, CREATE_USER, LOGIN_USER } from '../../graphql/userQueries.ts';
 
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',

@@ -4,9 +4,9 @@ import classImages from '../../utils/classImageMapping.ts';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { useMutation } from '@apollo/client';
-import { UPDATE_USER_CLASS } from '../../graphql/queries';
 import ClassProps from '../../interfaces/ClassProps.ts';
 import { useToast } from '../../hooks/useToast.ts';
+import { UPDATE_USER_CLASS } from '../../graphql/updateUserQueries.ts';
 
 interface ClassCardProps extends ClassProps {
   selectedClassId: string;

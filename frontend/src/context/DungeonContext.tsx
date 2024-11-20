@@ -1,9 +1,11 @@
 import { createContext, ReactNode, useEffect, useState, useRef } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import { ADD_FAVORITE_MONSTER, REMOVE_FAVORITE_MONSTER, GET_USER_FAVORITES } from '../graphql/queries';
+
 import { MonsterCardProps } from '../interfaces/MonsterCardProps.ts';
 import MonsterDataProps from '../interfaces/MonsterDataProps.ts';
 import { useToast } from '../hooks/useToast.ts';
+import { ADD_FAVORITE_MONSTER, REMOVE_FAVORITE_MONSTER } from '../graphql/favouriteMonsterQueries.ts';
+import { GET_USER_FAVORITES } from '../graphql/userQueries.ts';
 
 export interface DungeonContextType {
   dungeonMonsters: MonsterCardProps[];

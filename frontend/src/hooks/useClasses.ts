@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useQuery } from '@apollo/client';
-import { GET_CLASSES } from '../graphql/queries';
 import ClassData from '../interfaces/ClassProps.ts';
+import { GET_CLASSES } from '../graphql/classQueries.ts';
 
 function useClass(currentPage: number, classesPerPage: number) {
   const offset = (currentPage - 1) * classesPerPage;

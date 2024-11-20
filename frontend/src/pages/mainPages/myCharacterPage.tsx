@@ -7,14 +7,6 @@ import { useMutation, useQuery } from '@apollo/client';
 import { useToast } from '../../hooks/useToast.ts';
 import AbilityScore from '../../interfaces/AbilityScoreProps.ts';
 
-import {
-  GET_ARRAY_SCORES,
-  GET_USER_CLASS,
-  GET_USER_RACE,
-  UPDATE_ABILITY_SCORES,
-  UPDATE_USER_CLASS,
-  UPDATE_USER_RACE,
-} from '../../graphql/queries.ts';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import useClasses from '../../hooks/useClasses.ts';
@@ -22,6 +14,8 @@ import Counter from '../../components/Counter/Counter.tsx';
 import classImageMapping from '../../utils/classImageMapping.ts';
 import useRaces from '../../hooks/useRaces.ts';
 import raceImageMapping from '../../utils/raceImageMapping.ts';
+import { GET_ARRAY_SCORES, GET_USER_CLASS, GET_USER_RACE } from '../../graphql/userQueries.ts';
+import { UPDATE_ABILITY_SCORES, UPDATE_USER_CLASS, UPDATE_USER_RACE } from '../../graphql/updateUserQueries.ts';
 
 const MyCharacterPage = () => {
   const { userEquipments } = useUserEquipments();
