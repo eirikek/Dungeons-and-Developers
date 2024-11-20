@@ -4,7 +4,7 @@ describe('Logs user inn, views monsters, adds to dungeon', () => {
     cy.viewport(1280, 720);
   });
 
-  it('logs in', () => {
+  it('Performs user story', () => {
     /*
       As a user, I wish to login to the app, view monsters. And add a monster to my dungeon
      */
