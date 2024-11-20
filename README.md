@@ -134,7 +134,7 @@ For E2E testing we have used Cypress to simulate different user stories. We have
 - **Login.cy**: Tests login, searching, and user interaction with data
 - **Filtering.cy**: tests login and filtering. 
 
-To run the E2E tests you need to be in the frontend folder and run: 
+To run the E2E tests you need a running frontend and backend, be in the frontend folder and run: 
 
 ```bash
   npx cypress open   
@@ -151,7 +151,9 @@ From here you can select the tests and watch as they are ran in a virtual deskto
 
 We use the [D&D 5e API](https://www.dnd5eapi.co/) to fetch the different objects used for the page. Such at the different classes, monsters, equipment etc. Which helps us keep the page true to how D&D works and what is possible in the game.
 
-
+## Accesability
+For better accesability we have provided ARIA-labels for the essential elements for our code. 
+Which helps us provide context for our custom elements, and provide information to assistive technologies. 
 
 
 ## Authors
