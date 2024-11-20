@@ -3,21 +3,12 @@ import AbilityScoreCard from '../../components/SubPages/AbilityScoreCard.tsx';
 
 import useCharacterContext from '../../hooks/useCharacter.ts';
 
-import abilityScoreMap from '../../utils/abilityScoreMapping.ts';
-import useAbilityScoreManagement from '../../utils/useAbilityScoreManagement.ts';
+import abilityScoreManagement from '../../utils/abilityScoreManagement.ts';
 
 export default function AbilityScorePage() {
   const { stateAbilities } = useCharacterContext();
-  const { handleCounterChange, currentArrayScores } = useAbilityScoreManagement();
+  const { handleCounterChange, currentArrayScores } = abilityScoreManagement();
   const abilityScoresLoading = currentArrayScores.size === 0;
-
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
-  //
-  // if (error) {
-  //   return <div>Error loading abilities.</div>;
-  // }
 
   return (
     <>
@@ -26,13 +17,13 @@ export default function AbilityScorePage() {
           <section className="flex flex-col items-center w-full gap-10">
             {stateAbilities.map((ability, index) => (
               <AbilityScoreCard
-                key={ability.index}
+                key={`${ability.id}-${index}`}
                 id={ability.id}
                 name={ability.name}
                 index={ability.index}
                 skills={ability.skills}
                 score={currentArrayScores.get(ability.name) ?? 0}
-                onChange={(newValue) => handleCounterChange(index, newValue, abilityScoreMap)}
+                onChange={(newValue) => handleCounterChange(ability.name, newValue)}
               />
             ))}
           </section>

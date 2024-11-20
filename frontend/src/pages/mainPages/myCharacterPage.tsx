@@ -6,19 +6,18 @@ import MainPageLayout from '../../components/Layouts/MainPageLayout';
 import TutorialModal from '../../components/MyCharacter/TutorialModal';
 import { equipmentsVar } from '../../context/CharacterContext.tsx';
 import useCharacterContext from '../../hooks/useCharacter';
-import abilityScoreMap from '../../utils/abilityScoreMapping';
 import classImageMapping from '../../utils/classImageMapping';
 import raceImageMapping from '../../utils/raceImageMapping';
-import useAbilityScoreManagement from '../../utils/useAbilityScoreManagement.ts';
+import abilityScoreManagement from '../../utils/abilityScoreManagement.ts';
 import { classVar } from '../subPages/classPage';
 import { raceVar } from '../subPages/racePage.tsx';
 
 export const abilitiesVar = makeVar<Map<string, number>>(new Map());
 
 const MyCharacterPage = () => {
-  const { classes, races, updateClass, updateRace } = useCharacterContext();
+  const { stateAbilities, classes, races, updateClass, updateRace } = useCharacterContext();
 
-  const { handleCounterChange, currentArrayScores } = useAbilityScoreManagement();
+  const { handleCounterChange, currentArrayScores } = abilityScoreManagement();
 
   const currentClass = useReactiveVar(classVar);
   const currentRace = useReactiveVar(raceVar);
@@ -140,13 +139,13 @@ const MyCharacterPage = () => {
             <article className="flex flex-col items-center w-full">
               <h2 className="header mb-[8vh]">Ability Scores:</h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[12vh] gap-x-[25vw]">
-                {Object.keys(abilityScoreMap).map((key, index) => (
+                {stateAbilities.map((ability, index) => (
                   <div key={index} className="flex items-center">
-                    <label className="sub-header w-32 mr-[85px]">{key}:</label>
+                    <label className="sub-header w-32 mr-[85px]">{ability.name}:</label>
                     <AbilityCounterWrapper
-                      abilityName={key}
-                      initialValue={currentArrayScores.get(key) ?? 0}
-                      onUpdate={(newValue) => handleCounterChange(index, newValue, abilityScoreMap)}
+                      abilityName={ability.name}
+                      initialValue={currentArrayScores.get(ability.name) ?? 0}
+                      onUpdate={(newValue) => handleCounterChange(ability.name, newValue)}
                     />
                   </div>
                 ))}
