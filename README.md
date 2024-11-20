@@ -6,6 +6,35 @@
 
 An application to explore the various functionalities and mechanics of the popular roleplaying game Dungeons & Dragons. Where you can create your own character, explore the games classes, monsters, races and abilityscores!
 
+## Table of Contents
+
+1. ###  [Dungeon & Developers](#dungeon--developers)
+2. ### [Features](#features)
+   - [Explore Monsters](#explore-monsters)
+   - [Dungeon](#dungeon)
+   - [My Character](#my-character)
+3. ### [Tech Stack](#tech-stack)
+   - [Frontend](#frontend)
+   - [Backend](#backend)
+4. ### [Run Locally](#run-locally)
+   - [Run the Frontend](#run-the-frontend)
+   - [Run the Backend](#run-the-backend)
+5. ### [Backend Details](#backend)
+   - [GraphQL API](#graphql-api)
+     - [Schema](#schema)
+     - [MongoDB Models](#mongodb-models)
+     - [Resolvers](#resolvers)
+     - [Use in Frontend](#use-in-frontend)
+6. ### [Tests](#tests)
+  - [E2E Testing](#e2e-testing)
+  - [Component Testing](#component-testing)
+    - [Running the Tests](#running-the-tests)
+7. ### [D&D API](#dd-api)
+  - [Specifications](#specifications)
+8. ### [Accessibility](#accessibility)
+9. ### [Authors](#authors)
+10. ### [License](#license)
+
 
 ## Features
 
@@ -140,9 +169,24 @@ To run the E2E tests you need a running frontend and backend, be in the frontend
   npx cypress open   
 ```
 
-This should open an Cypress desktop where you need to navigate to E2E testing.
+This should open a Cypress desktop where you need to navigate to E2E testing.
 From here you can select the tests and watch as they are ran in a virtual desktop!
 
+### Component testing
+We have also made several component testing in the _tests_ folder in our frontend folder. These are to make sure the component 
+renders correctly, and behaves as expected during interactions. 
+
+We have used _AuthContext_ and _AuthProvider_.
+
+We have made sure to use _MockedProvider_ to mock requests, and the components are tested for correct data handling from GraphQL-requests
+  
+#### Running the tests: 
+
+Be in the frontend folder, and you can run:
+
+```bash
+  npm test   
+```
 
 
 ## D&D API
