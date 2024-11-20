@@ -38,15 +38,15 @@ const useUserEquipments = () => {
     onCompleted: () => refetch(),
   });
 
-  const addToEquipments = async (equipId: string) => {
+  const addToEquipmentsMutation = async (equipId: string) => {
     await addEquipment({ variables: { userId, equipmentId: equipId } });
   };
 
-  const removeFromEquipments = async (equipId: string) => {
+  const removeFromEquipmentsMutation = async (equipId: string) => {
     await removeEquipment({ variables: { userId, equipmentId: equipId } });
   };
 
-  const removeAllUserEquipments = async () => {
+  const removeAllUserEquipmentsMutation = async () => {
     if (!userId || userEquipments.length === 0) return;
     await removeAllEquipments({ variables: { userId } });
   };
@@ -54,9 +54,9 @@ const useUserEquipments = () => {
     userEquipments,
     loading,
     refetchEquipments: refetch,
-    addToEquipments,
-    removeFromEquipments,
-    removeAllUserEquipments,
+    addToEquipmentsMutation,
+    removeFromEquipmentsMutation,
+    removeAllUserEquipmentsMutation,
   };
 };
 

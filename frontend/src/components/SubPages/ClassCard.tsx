@@ -1,12 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import classImages from '../../utils/classImageMapping.ts';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
-import { AuthContext } from '../../context/AuthContext.tsx';
-import { useMutation } from '@apollo/client';
+
 import ClassProps from '../../interfaces/ClassProps.ts';
-import { useToast } from '../../hooks/useToast.ts';
-import { UPDATE_USER_CLASS } from '../../graphql/updateUserQueries.ts';
 
 interface ClassCardProps extends ClassProps {
   selectedClassId: string;
@@ -15,27 +12,10 @@ interface ClassCardProps extends ClassProps {
 
 const ClassCard: React.FC<ClassCardProps> = ({ id, name, hit_die, index, skills = [], selectedClassId, onSelect }) => {
   const classImage = classImages[index];
-  const { userId } = useContext(AuthContext);
-  const [updateUserClass] = useMutation(UPDATE_USER_CLASS);
-  const { showToast } = useToast();
 
   const handleSelectClass = () => {
     if (selectedClassId !== id) {
       onSelect(id);
-      updateUserClass({
-        variables: { userId, classId: id },
-      })
-        .then((response) => {
-          showToast({
-            message: `Class changed to ${name}`,
-            type: 'success',
-            duration: 3000,
-          });
-          console.log('Class updated:', response.data.updateUserClass.class);
-        })
-        .catch((error) => {
-          console.error('Error updating class:', error);
-        });
     }
   };
 

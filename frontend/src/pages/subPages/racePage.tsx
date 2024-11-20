@@ -1,32 +1,22 @@
 import RaceCard from '../../components/SubPages/RaceCard.tsx';
 import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
-import useRace from '../../hooks/useRaces.ts';
-import { useQuery } from '@apollo/client';
-import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../../context/AuthContext';
-import { GET_USER_RACE } from '../../graphql/userQueries.ts';
+import { makeVar, useReactiveVar } from '@apollo/client';
+
+import useCharacterContext from '../../hooks/useCharacter.ts';
+export const raceVar = makeVar<string>('');
 
 export default function RacePage() {
-  const { loading, error, races } = useRace(1, 9);
-  const { userId } = useContext(AuthContext);
-  const { data: userData } = useQuery(GET_USER_RACE, {
-    variables: { userId },
-    skip: !userId,
-  });
-  const [selectedRaceId, setSelectedRaceId] = useState<string>('');
+  const currentRace = useReactiveVar(raceVar);
 
-  useEffect(() => {
-    if (userData?.user?.race?.id) {
-      setSelectedRaceId(userData.user.race.id);
-    }
-  }, [userData]);
+  const { races, updateRace } = useCharacterContext();
 
-  const handleRaceSelect = (raceId: string) => {
-    setSelectedRaceId(raceId);
+  const handleRaceSelect = async (raceId: string) => {
+    await updateRace(raceId);
+    raceVar(raceId);
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error loading races.</div>;
+  // if (loading) return <div>Loading...</div>;
+  // if (error) return <div>Error loading races.</div>;
 
   return (
     <SubPageLayout>
@@ -40,7 +30,7 @@ export default function RacePage() {
             alignment={race.alignment}
             size={race.size}
             speed={race.speed}
-            selectedRaceId={selectedRaceId}
+            selectedRaceId={currentRace}
             onSelect={handleRaceSelect}
           />
         ))}

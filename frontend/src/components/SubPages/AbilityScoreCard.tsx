@@ -1,7 +1,7 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import Counter from '../Counter/Counter.tsx';
+import React from 'react';
 import AbilityScoreCardProps from '../../interfaces/AbilityScoreProps.ts';
+import Counter from '../Counter/Counter.tsx';
 
 const AbilityScoreCard: React.FC<AbilityScoreCardProps & { score: number; onChange: (value: number) => void }> = ({
   name,
@@ -23,7 +23,12 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps & { score: number; onChan
     >
       <div className="flex items-center gap-16 xl:flex-row flex-col">
         <h2 className="sub-header">{name}</h2>
-        <Counter value={score} onChange={onChange} scale={1.5} />
+        <Counter
+          value={score}
+          onChange={(newValue) => console.log('Local update:', newValue)}
+          scale={1.5}
+          onValueFinalized={(finalValue) => onChange(finalValue)}
+        />
       </div>
 
       <ul className="w-full justify-start xl:w-auto xl:justify-center xl:min-w-[15vw] 2xl:min-w-[10vw] text-center xl:text-left">

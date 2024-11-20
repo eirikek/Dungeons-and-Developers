@@ -9,8 +9,7 @@ export interface Equipment {
 export interface EquipmentCardProps {
   equipment: Equipment;
   isChecked: boolean;
-  userId: string;
-  onChange: (equipId: string, checked: boolean, equipment: Equipment) => void;
+  onChange: (checked: boolean, equipment: Equipment) => void;
   disabled: boolean;
   onDisabledClick: () => void;
 }

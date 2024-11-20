@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 export const ADD_REVIEW = gql`
   mutation AddReview($monsterId: ID!, $review: ReviewInput!) {
     addReview(monsterId: $monsterId, review: $review) {
+      id
       reviews {
         user {
           id
@@ -18,6 +19,7 @@ export const ADD_REVIEW = gql`
 export const DELETE_REVIEW = gql`
   mutation DeleteReview($monsterId: ID!, $reviewId: ID!) {
     deleteReview(monsterId: $monsterId, reviewId: $reviewId) {
+      id
       reviews {
         id
         user {

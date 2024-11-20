@@ -7,7 +7,7 @@ const EquipmentCard = ({ equipment, isChecked, onChange, disabled, onDisabledCli
       onDisabledClick?.();
       return;
     }
-    onChange(equipment.id, checked, equipment);
+    onChange(checked, equipment);
   };
 
   return (

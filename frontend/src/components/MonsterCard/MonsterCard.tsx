@@ -31,7 +31,6 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
   const monsterImageURL = image ? image : NoMonsterImageFound;
 
   const handleToggleDungeon = () => {
-    console.log('Toggling dungeon for monster:', { id, name, type, hit_points, alignment, size, image });
     toggleDungeon({ id, name, type, hit_points, alignment, size, image });
   };
 
