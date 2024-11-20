@@ -1,20 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
-import { abilitiesVar } from '../pages/mainPages/myCharacterPage.tsx';
+import { useCallback } from 'react';
+import { abilitiesVar } from '../pages/mainPages/myCharacterPage';
 import { useReactiveVar } from '@apollo/client';
-import useCharacterContext from '../hooks/useCharacter.ts';
-import abilityScoreMap from './abilityScoreMapping.ts';
+import useCharacterContext from '../hooks/useCharacter';
 
 const useAbilityScoreManagement = () => {
-  const { userAbilityScores, updateAbilityScores } = useCharacterContext();
+  const { updateAbilityScores } = useCharacterContext();
   const currentArrayScores = useReactiveVar(abilitiesVar);
-  const [hasInteractedScores, setHasInteractedScores] = useState(false);
-
-  const saveToContext = useCallback(
-    async (value: number, updatedAbilityName: string) => {
-      await updateAbilityScores(value, updatedAbilityName);
-    },
-    [updateAbilityScores]
-  );
 
   const handleCounterChange = useCallback(
     async (index: number, newValue: number, abilityScoreMap: Record<string, number>) => {
@@ -22,49 +13,21 @@ const useAbilityScoreManagement = () => {
         console.error(`Invalid score value: ${newValue}`);
         return;
       }
+
       const updatedAbilityName = Object.entries(abilityScoreMap).find(([_, idx]) => idx === index)?.[0];
       if (!updatedAbilityName) {
         console.error(`Invalid index: ${index}`);
         return;
       }
-      const updatedScores = new Map(userAbilityScores);
-      updatedScores.set(updatedAbilityName, newValue);
 
-      setHasInteractedScores(true);
-      abilitiesVar(updatedScores);
-      await saveToContext(newValue, updatedAbilityName);
+      await updateAbilityScores(newValue, updatedAbilityName);
     },
-    [saveToContext, userAbilityScores]
+    [updateAbilityScores]
   );
-
-  const handleUpdateScores = useCallback(
-    (abilityScoreMap: Record<string, number>) => {
-      if (!hasInteractedScores) return;
-
-      currentArrayScores.forEach((value, key) => {
-        handleCounterChange(abilityScoreMap[key], value, abilityScoreMap);
-      });
-    },
-    [currentArrayScores, handleCounterChange, hasInteractedScores]
-  );
-
-  useEffect(() => {
-    if (hasInteractedScores) {
-      const timer = setTimeout(() => {
-        handleUpdateScores(abilityScoreMap);
-        setHasInteractedScores(false);
-      }, 100);
-
-      return () => clearTimeout(timer);
-    }
-  }, [handleUpdateScores, hasInteractedScores]);
 
   return {
-    saveToContext,
     handleCounterChange,
-    handleUpdateScores,
     currentArrayScores,
-    setHasInteractedScores,
   };
 };
 

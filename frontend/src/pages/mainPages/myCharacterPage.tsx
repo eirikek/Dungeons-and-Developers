@@ -11,12 +11,12 @@ import { makeVar, useReactiveVar } from '@apollo/client';
 import { classVar } from '../subPages/classPage';
 import { raceVar } from '../subPages/racePage.tsx';
 import useAbilityScoreManagement from '../../utils/useAbilityScoreManagement.ts';
+import { equipmentsVar } from '../../context/CharacterContext.tsx';
 
 export const abilitiesVar = makeVar<Map<string, number>>(new Map());
 
 const MyCharacterPage = () => {
-  const { classes, races, selectedClassId, selectedRaceId, updateClass, updateRace, userEquipments } =
-    useCharacterContext();
+  const { classes, races, updateClass, updateRace } = useCharacterContext();
 
   const { handleCounterChange, currentArrayScores } = useAbilityScoreManagement();
 
@@ -34,17 +34,19 @@ const MyCharacterPage = () => {
   const currentClassImage = currentClassData ? classImageMapping[currentClassData.index] : '';
   const currentRaceImage = currentRaceData ? raceImageMapping[currentRaceData.index] : '';
 
+  const currentEquipments = useReactiveVar(equipmentsVar);
+
   useEffect(() => {
     if (!currentClass && classes?.length) {
       classVar(classes[0].id);
     }
-  }, [selectedClassId, currentClass, classes]);
+  }, [currentClass, classes]);
 
   useEffect(() => {
     if (!currentRace && races?.length) {
       raceVar(races[0].id);
     }
-  }, [selectedRaceId, races, currentRace]);
+  }, [races, currentRace]);
 
   const handleChange = async (type: 'race' | 'class', direction: 'next' | 'prev') => {
     const isRace = type === 'race';
@@ -152,12 +154,12 @@ const MyCharacterPage = () => {
           <article className="flex flex-col items-center w-full mt-10">
             <h2 className="header mb-[5vh]">Equipments:</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[5vh] gap-x-[40vw] xl:gap-y-[10vh]">
-              {userEquipments.length < 1 && (
+              {currentEquipments.length < 1 && (
                 <div className="flex items-center justify-center h-full w-full col-span-full text-center">
                   <p className="sub-header">No equipments added</p>
                 </div>
               )}
-              {userEquipments.map((equipment, index) => (
+              {currentEquipments.map((equipment, index) => (
                 <li key={index} className="list-disc list-inside sub-header">
                   {equipment.name}
                 </li>

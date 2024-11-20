@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 
 interface CounterProps {
@@ -7,11 +7,13 @@ interface CounterProps {
   scale?: number;
   onPointerUp?: () => void;
   onMouseUp?: () => void;
+  onValueFinalized?: (finalValue: number) => void;
 }
 
-export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp }: CounterProps) {
+export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp, onValueFinalized }: CounterProps) {
   const changeTimer = useRef<NodeJS.Timeout | null>(null);
   const rate = 100;
+  const [localValue, setLocalValue] = useState(value);
 
   const clearTimer = () => {
     if (changeTimer.current) {
@@ -19,6 +21,8 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
       changeTimer.current = null;
       onPointerUp?.();
       onMouseUp?.();
+
+      onValueFinalized?.(localValue);
     }
   };
 
@@ -29,13 +33,14 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
     changeTimer.current = setInterval(() => {
       const elapsedTime = Date.now() - startTime;
       const incrementValue = Math.floor(elapsedTime / rate);
-      let newValue = value + incrementValue;
+      let newValue = localValue + incrementValue;
 
       if (newValue > 100) {
         newValue = newValue % 101;
       }
 
-      onChange(newValue);
+      setLocalValue(newValue); // Update local state
+      onChange(newValue); // Propagate changes locally
     }, 100);
   };
 
@@ -46,13 +51,14 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
     changeTimer.current = setInterval(() => {
       const elapsedTime = Date.now() - startTime;
       const decrementValue = Math.floor(elapsedTime / rate);
-      let newValue = value - decrementValue;
+      let newValue = localValue - decrementValue;
 
       if (newValue < 0) {
         newValue = 100 - (Math.abs(newValue) % 101);
       }
 
-      onChange(newValue);
+      setLocalValue(newValue); // Update local state
+      onChange(newValue); // Propagate changes locally
     }, 100);
   };
 
@@ -74,7 +80,7 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
         className="text-5xl md:text-4xl lg:text-3xl xl:text-2xl 2xl:text-lg text-white w-12 text-center"
         aria-label="ability score value"
       >
-        {value}
+        {localValue}
       </div>
 
       <button
