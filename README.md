@@ -126,11 +126,31 @@ Resolvers are functions that handle GraphQL queries and mutations. We implemente
 ### Use in frontend
 To be able to use all this functionality we have defined multiple GraphQL queries and mutations in the frontend, by using Apollo Client.
 
+## Tests
+
+### E2E testing
+For E2E testing we have used Cypress to simulate different user stories. We have made; 
+
+- **Login.cy**: Tests login, searching, and user interaction with data
+- **Filtering.cy**: tests login and filtering. 
+
+To run the E2E tests you need to be in the frontend folder and run: 
+
+```bash
+  npx cypress open   
+```
+
+This should open an Cypress desktop where you need to navigate to E2E testing.
+From here you can select the tests and watch as they are ran in a virtual desktop!
+
+
+
 ## D&D API
 
 #### Specifications
 
 We use the [D&D 5e API](https://www.dnd5eapi.co/) to fetch the different objects used for the page. Such at the different classes, monsters, equipment etc. Which helps us keep the page true to how D&D works and what is possible in the game.
+
 
 
 
