@@ -1,16 +1,17 @@
 import { useQuery } from '@apollo/client';
+import { hourglass } from 'ldrs';
 import debounce from 'lodash/debounce';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import MonsterCard from '../../components/MonsterCard/MonsterCard';
-import useMonster from '../../hooks/useMonster.ts';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
-import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
-import Pagination from '../../components/Pagination/Pagination';
-import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 import MonsterFilter from '../../components/MonsterFilter/MonsterFilter.tsx';
 import MonsterSort from '../../components/MonsterSort/MonsterSort.tsx';
-import useMonsterSuggestions from '../../hooks/useMonsterSuggestions';
+import Pagination from '../../components/Pagination/Pagination';
+import SearchBar from '../../components/SearchBar/SearchBar.tsx';
+
+import MonsterGrid from '../../components/Dungeon/MonsterGrid.tsx';
 import { GET_MONSTER_HP_RANGE } from '../../graphql/getMonsterQuerie.ts';
+import useMonster from '../../hooks/useMonster.ts';
+import useMonsterSuggestions from '../../hooks/useMonsterSuggestions';
 
 const monstersPerPage = 8;
 
@@ -23,6 +24,8 @@ export default function MonsterPage() {
   const [hpFilterMin, setHpFilterMin] = useState<number>(1);
   const [hpFilterMax, setHpFilterMax] = useState<number>(1000);
   const [sortOption, setSortOption] = useState<string>('name-asc');
+
+  hourglass.register();
 
   const { data: hpRangeData, loading: hpRangeLoading } = useQuery(GET_MONSTER_HP_RANGE);
 
@@ -93,7 +96,7 @@ export default function MonsterPage() {
 
   const debouncedHandleHpChange = useMemo(() => debounce(handleHpChange, 300), [handleHpChange]);
 
-  const totalPages = Math.min(Math.ceil(totalMonsters / monstersPerPage), 10);
+  const totalPages = loading ? 1 : Math.min(Math.ceil(totalMonsters / monstersPerPage), 10);
 
   const handlePageChange = useCallback(
     (direction: number) => {
@@ -119,18 +122,18 @@ export default function MonsterPage() {
 
   return (
     <MainPageLayout>
-      <main className="main before:bg-monsters xl:h-screen xl:overflow-hidden">
+      <main className="main before:bg-monsters xl:h-screen xl:overflow-hidden ">
         <div className="black-overlay" />
 
-        <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start">
-          <div className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row xl:min-h-[6vh]'}>
+        <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start mb-6">
+          <div className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row'}>
             <MonsterFilter
               selectedFilters={selectedFilters}
               setSelectedFilters={setSelectedFilters}
               onHpChange={debouncedHandleHpChange}
-              setCurrentPage={setCurrentPage}
               onClearFilters={clearFilters}
               monsterCounts={monsterCounts}
+              setCurrentPage={setCurrentPage}
             />
             <MonsterSort selectedSort={sortOption} onSortChange={handleSortChange} />
             <SearchBar
@@ -144,26 +147,19 @@ export default function MonsterPage() {
               placeholder="Search for a monster..."
             />
           </div>
-
           {loading ? (
-            <LoadingHourglass />
+            <div className="flex flex-col items-center justify-center h-[79.5vh]" data-testid="loading-indicator">
+              <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
+            </div>
           ) : (
-            <section>
+            <section className="flex flex-col items-center w-full  ">
               {error ? (
                 <p>An error occurred while loading monsters. {error.message}</p>
               ) : monsters.length > 0 ? (
                 <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 place-items-center gap-y-[10vh] lg:gap-y-[1vh] gap-x-[10vw] lg:gap-x-[4vw] min-h-[75vh]">
-                    {monsters.map((monster, idx) => (
-                      <MonsterCard key={idx} {...monster} />
-                    ))}
-                  </div>
-                  <div className="min-h-[5vh]">
-                    {totalMonsters > monstersPerPage ? (
-                      <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
-                    ) : (
-                      <div />
-                    )}
+                  <MonsterGrid monsters={monsters} isDungeonPage={false} />
+                  <div className="relative xl:sticky bottom-0 ">
+                    <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
                   </div>
                 </>
               ) : (

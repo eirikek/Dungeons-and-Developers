@@ -27,7 +27,9 @@ const CustomToast = ({ message, type, undoAction, closeToast }: ToastProps) => {
 
   const handleUndoClick = () => {
     setUndoVisible(false); // Trigger the height reduction
-    if (undoAction) undoAction();
+    if (undoAction) {
+      undoAction();
+    }
     closeToast?.();
   };
 

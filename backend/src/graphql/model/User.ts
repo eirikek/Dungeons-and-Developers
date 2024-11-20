@@ -16,3 +16,4 @@ const playerSchema = new Schema({
 });
 
 export default model('User', playerSchema);
+

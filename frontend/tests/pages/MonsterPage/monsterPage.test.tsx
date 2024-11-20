@@ -1,16 +1,17 @@
-import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
-import MonsterPage from '../../../src/pages/mainPages/monsterPage.tsx';
-import { MemoryRouter } from 'react-router-dom';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { AuthContext } from '../../../src/context/AuthContext.tsx';
 import { GraphQLError } from 'graphql/error';
+import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { AuthContext } from '../../../src/context/AuthContext.tsx';
+
+import { ADD_FAVORITE_MONSTER, REMOVE_FAVORITE_MONSTER } from 'src/graphql/favouriteMonsterQueries.ts';
+import { GET_MONSTER_REVIEWS, GET_MONSTERS } from 'src/graphql/getMonsterQuerie.ts';
+import { GET_USER_FAVORITES } from 'src/graphql/userQueries.ts';
 import { MonsterCardProps } from '../../../src/interfaces/MonsterCardProps.ts';
-import DungeonContextMock from '../../mocks/DungeonContextMock';
-import { GET_MONSTER_REVIEWS, GET_MONSTERS } from '../../../src/graphql/getMonsterQuerie.ts';
-import { GET_USER_FAVORITES } from '../../../src/graphql/userQueries.ts';
-import { ADD_FAVORITE_MONSTER, REMOVE_FAVORITE_MONSTER } from '../../../src/graphql/favouriteMonsterQueries.ts'; // Adjust the path as necessary
+import MonsterPage from '../../../src/pages/mainPages/monsterPage.tsx';
+import DungeonContextMock from '../../mocks/DungeonContextMock'; // Adjust the path as necessary
 
 const mockShowToast = vi.fn();
 vi.mock('../../../src/hooks/useToast.ts', () => ({

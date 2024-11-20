@@ -1,10 +1,10 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
-import Review from './Review.tsx';
 import { useQuery } from '@apollo/client';
-import { ReviewType } from '../../interfaces/ReviewProps.ts';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { GET_MONSTER_REVIEWS } from '../../graphql/getMonsterQuerie.ts';
+import { ReviewType } from '../../interfaces/ReviewProps.ts';
+import Review from './Review.tsx';
 
 type MonsterDetailsModalProps = {
   id: string;

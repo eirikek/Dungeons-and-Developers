@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
 import { useQuery } from '@apollo/client';
-import AbilityScoreCardProps from '../interfaces/AbilityScoreProps.ts';
+import { useEffect, useMemo } from 'react';
 import { GET_ABILITYSCORES } from '../graphql/abilityScoreQueries.ts';
+import AbilityScoreCardProps from '../interfaces/AbilityScoreProps.ts';
 
 function useAbilityScores(currentPage: number, abilitiesPerPage: number) {
   const offset = (currentPage - 1) * abilitiesPerPage;
@@ -24,6 +24,10 @@ function useAbilityScores(currentPage: number, abilitiesPerPage: number) {
       skills: ability.skills,
     }));
   }, [data]);
+
+  useEffect(() => {
+    console.log('useAbilities', transformedAbilities);
+  }, [transformedAbilities]);
 
   return {
     abilities: transformedAbilities,

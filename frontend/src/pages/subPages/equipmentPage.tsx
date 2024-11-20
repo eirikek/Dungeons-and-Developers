@@ -1,20 +1,19 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import Pagination from '../../components/Pagination/Pagination.tsx';
 import EquipmentCard from '../../components/SubPages/EquipmentCard.tsx';
-import { AuthContext } from '../../context/AuthContext.tsx';
 import useEquipments from '../../hooks/useEquipments.ts';
 import { useToast } from '../../hooks/useToast.ts';
 import { Equipment } from '../../interfaces/EquipmentProps.ts';
-import useUserEquipments from '../../hooks/useUserEquipments.ts';
-import { useMutation } from '@apollo/client';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 import useEquipmentSuggestions from '../../hooks/useEquipmentsSuggestions.ts';
 import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import { useMediaQuery } from 'react-responsive';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
-import { REMOVE_ALL_EQUIPMENTS } from '../../graphql/equipmentQueries.ts';
+import useCharacterContext from '../../hooks/useCharacter.ts';
+import { useReactiveVar } from '@apollo/client';
+import { equipmentsVar } from '../../context/CharacterContext.tsx';
 
 const variants = {
   enter: (direction: number) => ({
@@ -33,11 +32,14 @@ const variants = {
 
 const EquipmentPage = () => {
   const isMobileOrTablet = useMediaQuery({ maxWidth: 1024 });
-  const { userId } = useContext(AuthContext);
+
+  const currentEquipments = useReactiveVar(equipmentsVar);
+
+  const { addToEquipments, removeFromEquipments, removeAllEquipments } = useCharacterContext();
+
   const { showToast } = useToast();
-  const { userEquipments, addToEquipments, removeFromEquipments } = useUserEquipments();
+
   const undoRemoveRef = useRef<Equipment | Equipment[] | null>(null);
-  const [removeAllEquipments] = useMutation(REMOVE_ALL_EQUIPMENTS);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
   const [direction, setDirection] = useState(1);
@@ -86,8 +88,9 @@ const EquipmentPage = () => {
     if (undoRemoveRef.current && !Array.isArray(undoRemoveRef.current)) {
       const equipment = undoRemoveRef.current;
       undoRemoveRef.current = null;
+      equipmentsVar([...equipmentsVar(), equipment]);
 
-      await addToEquipments(equipment.id);
+      addToEquipments(equipment);
       showToast({
         message: `${equipment.name} restored to equipments`,
         type: 'success',
@@ -101,7 +104,9 @@ const EquipmentPage = () => {
       const equipmentsToRestore = undoRemoveRef.current;
       undoRemoveRef.current = null;
 
-      await Promise.all(equipmentsToRestore.map((equipment) => addToEquipments(equipment.id)));
+      equipmentsVar([...equipmentsVar(), ...equipmentsToRestore]);
+
+      await Promise.all(equipmentsToRestore.map((equipment) => addToEquipments(equipment)));
 
       showToast({
         message: 'All equipments restored',
@@ -111,10 +116,10 @@ const EquipmentPage = () => {
     }
   };
 
-  const handleEquipmentChange = async (equipId: string, checked: boolean, equipment: Equipment) => {
+  const handleEquipmentChange = async (checked: boolean, equipment: Equipment) => {
     try {
       if (checked) {
-        if (userEquipments.length >= maxEquipments) {
+        if (currentEquipments.length >= maxEquipments) {
           showToast({
             message: 'Cannot add any more items, inventory is full',
             type: 'warning',
@@ -123,14 +128,14 @@ const EquipmentPage = () => {
           return;
         }
 
-        await addToEquipments(equipId);
+        addToEquipments(equipment);
         showToast({
           message: `${equipment.name} was added to your equipments`,
           type: 'success',
           duration: 3000,
         });
       } else {
-        await removeFromEquipments(equipId);
+        removeFromEquipments(equipment);
         undoRemoveRef.current = equipment;
         showToast({
           message: `${equipment.name} removed from equipments`,
@@ -145,11 +150,11 @@ const EquipmentPage = () => {
   };
 
   const handleRemoveAllEquipments = async () => {
-    if (!userId || userEquipments.length === 0) return;
-    undoRemoveRef.current = [...userEquipments];
+    if (currentEquipments.length === 0) return;
+    undoRemoveRef.current = [...currentEquipments];
 
     try {
-      await removeAllEquipments({ variables: { userId } });
+      removeAllEquipments();
       showToast({
         message: 'All equipments removed',
         type: 'info',
@@ -247,13 +252,12 @@ const EquipmentPage = () => {
               ) : (
                 <div className="grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 gap-10 p-10 w-full h-full min-h-[40vh] auto-rows-fr">
                   {equipments.map((equipment, index) => {
-                    const isChecked = userEquipments.some((userEquip) => userEquip.id === equipment.id);
-                    const isDisabled = userEquipments.length >= maxEquipments && !isChecked;
+                    const isChecked = currentEquipments.some((userEquip) => userEquip.id === equipment.id);
+                    const isDisabled = currentEquipments.length >= maxEquipments && !isChecked;
 
                     return (
                       <EquipmentCard
                         key={index}
-                        userId={userId}
                         equipment={equipment}
                         isChecked={isChecked}
                         onChange={handleEquipmentChange}
@@ -283,13 +287,12 @@ const EquipmentPage = () => {
                   transition={{ duration: 0.3 }}
                 >
                   {equipments.map((equipment, index) => {
-                    const isChecked = userEquipments.some((userEquip) => userEquip.id === equipment.id);
-                    const isDisabled = userEquipments.length >= maxEquipments && !isChecked;
+                    const isChecked = currentEquipments.some((userEquip) => userEquip.id === equipment.id);
+                    const isDisabled = currentEquipments.length >= maxEquipments && !isChecked;
 
                     return (
                       <EquipmentCard
                         key={index}
-                        userId={userId}
                         equipment={equipment}
                         isChecked={isChecked}
                         onChange={handleEquipmentChange}

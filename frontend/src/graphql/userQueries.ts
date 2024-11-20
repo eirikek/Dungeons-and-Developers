@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 export const GET_USER_FAVORITES = gql`
   query GetUserFavorites($userId: ID!) {
     user(id: $userId) {
+      id
       favoritedMonsters {
         id
         name
@@ -79,6 +80,7 @@ export const LOGIN_USER = gql`
 export const GET_USER_CLASS = gql`
   query GetUserClass($userId: ID!) {
     user(id: $userId) {
+      id
       class {
         id
         name
@@ -126,6 +128,15 @@ export const GET_USER_EQUIPMENT = gql`
         category
         value
       }
+    }
+  }
+`;
+
+export const GET_USER_DUNGEON_NAME = gql`
+  query GetUserDungeon($userId: ID!) {
+    user(id: $userId) {
+      id
+      dungeonName
     }
   }
 `;
