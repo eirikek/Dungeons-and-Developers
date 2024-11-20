@@ -1,4 +1,4 @@
-import Counter from '../Counter/Counter';
+import Counter from './Counter.tsx';
 
 const AbilityCounterWrapper = ({
   initialValue,

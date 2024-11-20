@@ -1,11 +1,12 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import AbilityCounterWrapper from '../../components/Counter/AbilityScoreCounterWrapper.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout';
 import TutorialModal from '../../components/MyCharacter/TutorialModal';
 import { equipmentsVar } from '../../context/CharacterContext.tsx';
 import useCharacterContext from '../../hooks/useCharacter';
+import { AuthContext } from '../../context/AuthContext';
 import classImageMapping from '../../utils/classImageMapping';
 import raceImageMapping from '../../utils/raceImageMapping';
 import abilityScoreManagement from '../../utils/abilityScoreManagement.ts';
@@ -15,6 +16,7 @@ import { raceVar } from '../subPages/racePage.tsx';
 export const abilitiesVar = makeVar<Map<string, number>>(new Map());
 
 const MyCharacterPage = () => {
+  const { userName } = useContext(AuthContext);
   const { stateAbilities, classes, races, updateClass, updateRace } = useCharacterContext();
 
   const { handleCounterChange, currentArrayScores } = abilityScoreManagement();
@@ -73,7 +75,7 @@ const MyCharacterPage = () => {
       <main className="main before:bg-myCharacter">
         <div className="black-overlay" />
         <div className="wrapper w-full py-[15vh] gap-32">
-          <h1 className="header">My Character</h1>
+          <h1 className="header">{userName ? `${userName}'s Character` : 'My Character'}</h1>
           <TutorialModal />
 
           {/* Race Section */}
