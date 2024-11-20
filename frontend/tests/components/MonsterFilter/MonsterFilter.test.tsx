@@ -121,11 +121,11 @@ describe('MonsterFilter Component', () => {
     // Open dropdown
     await userEvent.click(filterButton);
     await waitFor(() => {
-      expect(screen.getByText('dragon')).toBeInTheDocument();
+      expect(screen.getByText('dragon (5)')).toBeInTheDocument();
     });
 
     // Select "dragon" filter
-    const dragonLabel = screen.getByText('dragon');
+    const dragonLabel = screen.getByText('dragon (5)');
     await userEvent.click(dragonLabel);
     await waitFor(() => {
       expect(mockSetSelectedFilters).toHaveBeenCalledTimes(1);

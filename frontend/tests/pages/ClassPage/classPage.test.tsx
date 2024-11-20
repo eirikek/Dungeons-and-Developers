@@ -67,6 +67,7 @@ const mocks: MockedResponse[] = [
     },
     result: {
       data: {
+        id: '1',
         user: {
           id: mockUserId,
           class: mockClasses[0],
@@ -116,7 +117,7 @@ describe('Classpage component', () => {
         result: {
           data: null,
         },
-        delay: 1000, // test delay
+        delay: 1000,
       },
     ];
 
@@ -142,6 +143,7 @@ describe('Classpage component', () => {
         },
         result: {
           data: {
+            id: '1',
             user: {
               id: mockUserId,
               class: null,
@@ -169,6 +171,7 @@ describe('Classpage component', () => {
         },
         result: {
           data: {
+            id: '1',
             user: {
               id: mockUserId,
               class: null,
@@ -183,6 +186,7 @@ describe('Classpage component', () => {
         },
         result: {
           data: {
+            id: '1',
             updateUserClass: {
               id: mockUserId,
               class: mockClasses[1],

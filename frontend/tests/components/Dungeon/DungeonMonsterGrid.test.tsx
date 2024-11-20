@@ -15,18 +15,18 @@ vi.mock('../../../src/hooks/useToast.ts', () => ({
   }),
 }));
 const mockMonsters = [
-  { id: '1', name: 'Goblin', hp: 30, type: 'Beast', size: 'Small', img: '', alignment: 'neutral evil' },
-  { id: '2', name: 'Orc', hp: 50, type: 'Humanoid', size: 'Medium', img: '', alignment: 'chaotic evil' },
-  { id: '3', name: 'Dragon', hp: 200, type: 'Dragon', size: 'Huge', img: '', alignment: 'chaotic neutral' },
-  { id: '4', name: 'Troll', hp: 120, type: 'Giant', size: 'Large', img: '', alignment: 'chaotic evil' },
-  { id: '5', name: 'Vampire', hp: 150, type: 'Undead', size: 'Medium', img: '', alignment: 'lawful evil' },
-  { id: '6', name: 'Giant Spider', hp: 75, type: 'Beast', size: 'Medium', img: '', alignment: 'neutral' },
+  { id: '1', name: 'Goblin', hit_points: 30, type: 'Beast', size: 'Small', image: '', alignment: 'neutral evil' },
+  { id: '2', name: 'Orc', hit_points: 50, type: 'Humanoid', size: 'Medium', image: '', alignment: 'chaotic evil' },
+  { id: '3', name: 'Dragon', hit_points: 200, type: 'Dragon', size: 'Huge', image: '', alignment: 'chaotic neutral' },
+  { id: '4', name: 'Troll', hit_points: 120, type: 'Giant', size: 'Large', image: '', alignment: 'chaotic evil' },
+  { id: '5', name: 'Vampire', hit_points: 150, type: 'Undead', size: 'Medium', image: '', alignment: 'lawful evil' },
+  { id: '6', name: 'Giant Spider', hit_points: 75, type: 'Beast', size: 'Medium', image: '', alignment: 'neutral' },
 ];
 
 const mocks = [
   {
     request: {
-      query: GET_USER_DUNGEON,
+      query: GET_USER_DUNGEON_NAME,
       variables: { userId: '1' },
     },
     result: {
@@ -75,6 +75,8 @@ describe('DungeonMonsterGrid', () => {
           <DungeonContext.Provider
             value={{
               dungeonMonsters: mockMonsters,
+              dungeonName: '',
+              updateDungeonName: vi.fn(),
               toggleDungeon: vi.fn(),
               isInDungeon: (monsterId) => monsterId !== '1',
             }}
@@ -100,6 +102,8 @@ describe('DungeonMonsterGrid', () => {
           <DungeonContext.Provider
             value={{
               dungeonMonsters: mockMonsters,
+              dungeonName: '',
+              updateDungeonName: vi.fn(),
               toggleDungeon: vi.fn(),
               isInDungeon: (monsterId) => monsterId !== '1',
             }}

@@ -53,7 +53,9 @@ const mocks = [
     },
     result: {
       data: {
+        id: '1',
         monster: {
+          id: 'monster-123',
           reviews: mockReviews,
         },
       },
@@ -125,7 +127,9 @@ describe('MonsterDetailsModal', () => {
         },
         result: {
           data: {
+            id: '1',
             monster: {
+              id: 'monster-123',
               reviews: [], // No reviews
             },
           },
