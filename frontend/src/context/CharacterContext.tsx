@@ -1,26 +1,21 @@
 import { makeVar, useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { createContext, ReactNode, useCallback, useEffect, useMemo } from 'react';
-import {
-  GET_ARRAY_SCORES,
-  GET_USER_CLASS,
-  GET_USER_RACE,
-  UPDATE_ABILITY_SCORES,
-  UPDATE_USER_CLASS,
-  UPDATE_USER_RACE,
-} from '../graphql/queries';
-import useUserEquipments from '../hooks/useUserEquipments';
-import { Equipment } from '../interfaces/EquipmentProps';
-import { useToast } from '../hooks/useToast.ts';
+
+import { UPDATE_ABILITY_SCORES, UPDATE_USER_CLASS, UPDATE_USER_RACE } from '../graphql/updateUserQueries.ts';
+import { GET_ARRAY_SCORES, GET_USER_CLASS, GET_USER_RACE } from '../graphql/userQueries.ts';
 import useAbilityScores from '../hooks/useAbilityScores.ts';
 import useClasses from '../hooks/useClasses.ts';
 import useRaces from '../hooks/useRaces.ts';
+import { useToast } from '../hooks/useToast.ts';
+import useUserEquipments from '../hooks/useUserEquipments';
+import AbilityScoreCardProps from '../interfaces/AbilityScoreProps.ts';
 import ClassData from '../interfaces/ClassProps.ts';
+import { Equipment } from '../interfaces/EquipmentProps';
 import RaceData from '../interfaces/RaceProps.ts';
-import { notifyScoreChanges } from '../utils/abilityScoreMapping.ts';
 import { abilitiesVar } from '../pages/mainPages/myCharacterPage.tsx';
 import { classVar } from '../pages/subPages/classPage.tsx';
 import { raceVar } from '../pages/subPages/racePage.tsx';
-import AbilityScoreCardProps from '../interfaces/AbilityScoreProps.ts';
+import { notifyScoreChanges } from '../utils/abilityScoreMapping.ts';
 
 interface CharacterContextType {
   stateAbilities: AbilityScoreCardProps[];
@@ -134,8 +129,6 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
   const { races: fetchedRaces } = useRaces(1, 12);
   const { abilities: dataAbilities } = useAbilityScores(1, 6);
 
-  const abilityScores = useReactiveVar(abilitiesVar);
-
   const { data: scoreData, loading: abilityScoresLoading } = useQuery<ArrayScores, ArrayVar>(GET_ARRAY_SCORES, {
     variables: { userId },
     skip: !userId,
@@ -153,6 +146,8 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
     skip: !userId,
     fetchPolicy: 'cache-and-network',
   });
+
+  const abilityScores = useReactiveVar(abilitiesVar);
 
   const {
     userEquipments,
@@ -235,10 +230,12 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
   const [updateAbilityScoresMutation] = useMutation(UPDATE_ABILITY_SCORES, {
     update: (cache, { data }) => {
       if (!data) return;
+
       const existing = cache.readQuery<UserAbilities>({
         query: GET_ARRAY_SCORES,
         variables: { userId },
       });
+
       if (existing?.user) {
         cache.writeQuery({
           query: GET_ARRAY_SCORES,

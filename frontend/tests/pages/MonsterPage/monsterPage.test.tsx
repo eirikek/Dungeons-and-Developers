@@ -5,13 +5,10 @@ import { GraphQLError } from 'graphql/error';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
-import {
-  ADD_FAVORITE_MONSTER,
-  GET_MONSTER_REVIEWS,
-  GET_MONSTERS,
-  GET_USER_FAVORITES,
-  REMOVE_FAVORITE_MONSTER,
-} from '../../../src/graphql/queries.ts';
+
+import { ADD_FAVORITE_MONSTER, REMOVE_FAVORITE_MONSTER } from 'src/graphql/favouriteMonsterQueries.ts';
+import { GET_MONSTER_REVIEWS, GET_MONSTERS } from 'src/graphql/getMonsterQuerie.ts';
+import { GET_USER_FAVORITES } from 'src/graphql/userQueries.ts';
 import { MonsterCardProps } from '../../../src/interfaces/MonsterCardProps.ts';
 import MonsterPage from '../../../src/pages/mainPages/monsterPage.tsx';
 import DungeonContextMock from '../../mocks/DungeonContextMock'; // Adjust the path as necessary

@@ -1,16 +1,13 @@
-import { useContext, useEffect } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
+import { useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import {
-  ADD_FAVORITE_MONSTER,
-  GET_USER_DUNGEON,
-  GET_USER_FAVORITES,
-  REMOVE_FAVORITE_MONSTER,
-  UPDATE_DUNGEON_NAME,
-} from '../graphql/queries';
-import type MonsterGraphQL from '../interfaces/MonsterDataProps';
-import type { MonsterCardProps } from '../interfaces/MonsterCardProps';
+
 import { dungeonMonstersVar } from '../context/DungeonContext';
+import { ADD_FAVORITE_MONSTER, REMOVE_FAVORITE_MONSTER } from '../graphql/favouriteMonsterQueries';
+import { UPDATE_DUNGEON_NAME } from '../graphql/updateUserQueries';
+import { GET_USER_DUNGEON_NAME, GET_USER_FAVORITES } from '../graphql/userQueries';
+import type { MonsterCardProps } from '../interfaces/MonsterCardProps';
+import type MonsterGraphQL from '../interfaces/MonsterDataProps';
 
 interface UserFavorites {
   user: {
@@ -46,7 +43,7 @@ export const useDungeon = () => {
     fetchPolicy: 'cache-and-network',
   });
 
-  const { data: dungeonData } = useQuery(GET_USER_DUNGEON, {
+  const { data: dungeonData } = useQuery(GET_USER_DUNGEON_NAME, {
     variables: { userId },
     skip: !userId,
     fetchPolicy: 'cache-and-network',

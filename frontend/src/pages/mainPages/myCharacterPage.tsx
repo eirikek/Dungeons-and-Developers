@@ -1,17 +1,17 @@
+import { makeVar, useReactiveVar } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import Counter from '../../components/Counter/Counter';
+import AbilityCounterWrapper from '../../components/Counter/AbilityScoreCounterWrapper.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout';
 import TutorialModal from '../../components/MyCharacter/TutorialModal';
+import { equipmentsVar } from '../../context/CharacterContext.tsx';
 import useCharacterContext from '../../hooks/useCharacter';
 import abilityScoreMap from '../../utils/abilityScoreMapping';
 import classImageMapping from '../../utils/classImageMapping';
 import raceImageMapping from '../../utils/raceImageMapping';
-import { makeVar, useReactiveVar } from '@apollo/client';
+import useAbilityScoreManagement from '../../utils/useAbilityScoreManagement.ts';
 import { classVar } from '../subPages/classPage';
 import { raceVar } from '../subPages/racePage.tsx';
-import useAbilityScoreManagement from '../../utils/useAbilityScoreManagement.ts';
-import { equipmentsVar } from '../../context/CharacterContext.tsx';
 
 export const abilitiesVar = makeVar<Map<string, number>>(new Map());
 
@@ -68,16 +68,6 @@ const MyCharacterPage = () => {
       console.error(`Error updating ${type}:`, error);
     }
   };
-
-  if (abilityScoresLoading) {
-    return (
-      <MainPageLayout>
-        <div className="loading-container">
-          <h1>Loading ability scores...</h1>
-        </div>
-      </MainPageLayout>
-    );
-  }
 
   return (
     <MainPageLayout>
@@ -146,21 +136,27 @@ const MyCharacterPage = () => {
           </section>
 
           {/* Ability Scores Section */}
-          <article className="flex flex-col items-center w-full">
-            <h2 className="header mb-[8vh]">Ability Scores:</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[12vh] gap-x-[25vw]">
-              {Object.keys(abilityScoreMap).map((key, index) => (
-                <div key={index} className="flex items-center">
-                  <label className="sub-header w-32 mr-[85px]">{key}:</label>
-                  <Counter
-                    scale={1.5}
-                    value={currentArrayScores.get(key) ?? 0}
-                    onChange={(newValue) => handleCounterChange(index, newValue, abilityScoreMap)}
-                  />
-                </div>
-              ))}
-            </div>
-          </article>
+          {!abilityScoresLoading ? (
+            <article className="flex flex-col items-center w-full">
+              <h2 className="header mb-[8vh]">Ability Scores:</h2>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[12vh] gap-x-[25vw]">
+                {Object.keys(abilityScoreMap).map((key, index) => (
+                  <div key={index} className="flex items-center">
+                    <label className="sub-header w-32 mr-[85px]">{key}:</label>
+                    <AbilityCounterWrapper
+                      abilityName={key}
+                      initialValue={currentArrayScores.get(key) ?? 0}
+                      onUpdate={(newValue) => handleCounterChange(index, newValue, abilityScoreMap)}
+                    />
+                  </div>
+                ))}
+              </div>
+            </article>
+          ) : (
+            <article className="flex flex-col items-center w-full">
+              <h2 className="header mb-[8vh]">Loading ability scores...</h2>
+            </article>
+          )}
 
           {/* Equipment Section */}
           <article className="flex flex-col items-center w-full mt-10">

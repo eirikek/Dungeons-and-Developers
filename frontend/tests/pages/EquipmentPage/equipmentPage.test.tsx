@@ -2,16 +2,16 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { MockedProvider } from '@apollo/client/testing';
 import EquipmentPage from '../../../src/pages/subPages/equipmentPage.tsx';
-import {
-  ADD_EQUIPMENT_TO_CHARACTER,
-  GET_USER_EQUIPMENT,
-  REMOVE_ALL_EQUIPMENTS,
-  REMOVE_EQUIPMENT_FROM_CHARACTER,
-} from '../../../src/graphql/queries.ts';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
 import { BrowserRouter } from 'react-router-dom';
-import { GET_EQUIPMENTS } from '../../../src/hooks/useEquipments.ts';
 import { expect } from 'vitest';
+import {
+  ADD_EQUIPMENT_TO_CHARACTER,
+  GET_EQUIPMENTS,
+  REMOVE_ALL_EQUIPMENTS,
+  REMOVE_EQUIPMENT_FROM_CHARACTER,
+} from '../../../src/graphql/equipmentQueries.ts';
+import { GET_USER_EQUIPMENT } from '../../../src/graphql/userQueries.ts';
 
 const mockShowToast = vi.fn();
 vi.mock('../../../src/hooks/useToast.ts', () => ({

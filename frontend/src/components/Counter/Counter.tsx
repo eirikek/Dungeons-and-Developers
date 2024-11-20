@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 interface CounterProps {
   value: number;
@@ -39,8 +39,8 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
         newValue = newValue % 101;
       }
 
-      setLocalValue(newValue); // Update local state
-      onChange(newValue); // Propagate changes locally
+      setLocalValue(newValue);
+      onChange(newValue);
     }, 100);
   };
 

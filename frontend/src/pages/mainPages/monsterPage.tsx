@@ -7,10 +7,11 @@ import MonsterFilter from '../../components/MonsterFilter/MonsterFilter.tsx';
 import MonsterSort from '../../components/MonsterSort/MonsterSort.tsx';
 import Pagination from '../../components/Pagination/Pagination';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
-import { GET_MONSTER_HP_RANGE } from '../../graphql/queries.ts';
+
+import MonsterGrid from '../../components/Dungeon/MonsterGrid.tsx';
+import { GET_MONSTER_HP_RANGE } from '../../graphql/getMonsterQuerie.ts';
 import useMonster from '../../hooks/useMonster.ts';
 import useMonsterSuggestions from '../../hooks/useMonsterSuggestions';
-import MonsterGrid from '../../components/Dungeon/MonsterGrid.tsx';
 
 const monstersPerPage = 8;
 

@@ -4,7 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import MonsterReviewModal from '../../../src/components/MonsterCard/MonsterReviewModal.tsx';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
-import { ADD_REVIEW, GET_MONSTER_REVIEWS, UPDATE_REVIEW } from '../../../src/graphql/queries.ts';
+import { GET_MONSTER_REVIEWS } from '../../../src/graphql/getMonsterQuerie.ts';
+import { ADD_REVIEW, UPDATE_REVIEW } from '../../../src/graphql/reviewQueries.ts';
 
 export type Review = {
   id: string;

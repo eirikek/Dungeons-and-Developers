@@ -1,8 +1,9 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
-import { ADD_REVIEW, GET_MONSTER_REVIEWS, UPDATE_REVIEW } from '../../graphql/queries';
 import { AuthContext } from '../../context/AuthContext';
+import { GET_MONSTER_REVIEWS } from '../../graphql/getMonsterQuerie.ts';
+import { ADD_REVIEW, UPDATE_REVIEW } from '../../graphql/reviewQueries.ts';
 import { useToast } from '../../hooks/useToast';
 import { ReviewFormType, ReviewType } from '../../interfaces/ReviewProps.ts';
 import ReviewSlider from './ReviewSlider.tsx';

@@ -1,21 +1,7 @@
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { useMemo } from 'react';
 import { Equipment } from '../interfaces/EquipmentProps';
-
-const GET_EQUIPMENTS = gql`
-  query GetEquipments($searchTerm: String, $offset: Int, $limit: Int) {
-    equipments(searchTerm: $searchTerm, offset: $offset, limit: $limit) {
-      equipments {
-        id
-        index
-        name
-        category
-        value
-      }
-      totalCount
-    }
-  }
-`;
+import { GET_EQUIPMENTS } from '../graphql/equipmentQueries.ts';
 
 function useEquipments(searchTerm: string, currentPage: number, equipmentsPerPage: number) {
   const offset = (currentPage - 1) * equipmentsPerPage;

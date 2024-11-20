@@ -1,7 +1,7 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import Counter from '../Counter/Counter.tsx';
+import React from 'react';
 import AbilityScoreCardProps from '../../interfaces/AbilityScoreProps.ts';
+import Counter from '../Counter/Counter.tsx';
 
 const AbilityScoreCard: React.FC<AbilityScoreCardProps & { score: number; onChange: (value: number) => void }> = ({
   name,
