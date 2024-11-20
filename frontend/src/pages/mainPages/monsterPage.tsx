@@ -120,10 +120,12 @@ export default function MonsterPage() {
   return (
     <MainPageLayout>
       <main className="main before:bg-monsters xl:h-screen xl:overflow-hidden">
-        <div className="black-overlay" />
+        <section className="black-overlay" />
 
         <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start">
-          <div className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row xl:min-h-[6vh]'}>
+          <article
+            className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row xl:min-h-[6vh]'}
+          >
             <MonsterFilter
               selectedFilters={selectedFilters}
               setSelectedFilters={setSelectedFilters}
@@ -143,7 +145,7 @@ export default function MonsterPage() {
               }}
               placeholder="Search for a monster..."
             />
-          </div>
+          </article>
 
           {loading ? (
             <LoadingHourglass />

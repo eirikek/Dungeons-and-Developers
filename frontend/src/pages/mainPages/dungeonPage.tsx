@@ -49,8 +49,8 @@ export default function DungeonPage() {
   return (
     <MainPageLayout>
       <main className="main before:bg-dungeon xl:h-screen xl:overflow-hidden">
-        <div className="black-overlay" />
-        <div className="wrapper min-w-[70%] mt-[10vh] h-full !justify-start">
+        <section className="black-overlay" />
+        <article className="wrapper min-w-[70%] mt-[10vh] h-full !justify-start">
           <CustomInput
             placeholder="Enter dungeon name"
             inputName="Dungeon Name"
@@ -61,7 +61,7 @@ export default function DungeonPage() {
           />
           <DungeonStats />
           <DungeonMonsterGrid />
-        </div>
+        </article>
       </main>
     </MainPageLayout>
   );

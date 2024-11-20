@@ -177,7 +177,7 @@ export default function LoginPage() {
   return (
     <MainPageLayout isLoginTransition={true}>
       <main className="relative flex items-center justify-center h-screen overflow-hidden z-0 before:absolute before:inset-0 before:bg-login before:bg-cover before:bg-center before:animate-background-zoom before:z-0">
-        <div className="black-overlay"></div>
+        <section className="black-overlay"></section>
         <section className="w-[90%] h-3/4 relative z-10 flex flex-col items-center justify-center">
           <header className="absolute top-0 w-full">
             <h1
@@ -202,7 +202,7 @@ export default function LoginPage() {
                 {isLogin ? (
                   <>
                     <h2 className="sub-header mb-5">Log in to continue your adventure</h2>
-                    <div className="flex flex-col items-center gap-5">
+                    <article className="flex flex-col items-center gap-5">
                       <input
                         id="log-in-input"
                         className={`text w-60 xs:w-72 p-2 border-2 border-gray-500 rounded bg-transparent text-center focus:outline-none 
@@ -214,8 +214,8 @@ export default function LoginPage() {
                         maxLength={40}
                       />
                       <CustomButton text="Log in" onClick={handleLogin} />
-                    </div>
-                    <div className="text">
+                    </article>
+                    <article className="text">
                       Don't have an account?{' '}
                       <button
                         className="underline transition-all hover:text-gray-300 outline-none"
@@ -223,7 +223,7 @@ export default function LoginPage() {
                       >
                         Register
                       </button>
-                    </div>
+                    </article>
                   </>
                 ) : (
                   <>
