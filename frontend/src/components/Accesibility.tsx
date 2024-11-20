@@ -3,13 +3,21 @@ import { useState, useEffect } from 'react';
 const AccessibilityToggle = () => {
   const [isAccessibilityMode, setIsAccessibilityMode] = useState(false);
 
+  useEffect(() => {
+    if (localStorage.getItem('accesibility-mode') === 'true') {
+      setIsAccessibilityMode(true);
+    }
+  }, []);
+
   const toggleAccessibilityMode = () => {
     setIsAccessibilityMode((prev) => !prev);
   };
   useEffect(() => {
     if (isAccessibilityMode) {
+      localStorage.setItem('accesibility-mode', 'true');
       document.body.classList.add('accessibility-mode');
     } else {
+      localStorage.setItem('accesibility-mode', 'false');
       document.body.classList.remove('accessibility-mode');
     }
   }, [isAccessibilityMode]);
