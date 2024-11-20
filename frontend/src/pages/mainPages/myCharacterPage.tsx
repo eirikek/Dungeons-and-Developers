@@ -6,7 +6,7 @@ import useUserEquipments from '../../hooks/useUserEquipments.ts';
 import { useMutation, useQuery } from '@apollo/client';
 import { useToast } from '../../hooks/useToast.ts';
 import AbilityScore from '../../interfaces/AbilityScoreProps.ts';
-
+import Accesibility from '../../components/Accesibility.tsx';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import useClasses from '../../hooks/useClasses.ts';
@@ -142,6 +142,7 @@ const MyCharacterPage = () => {
         <div className="black-overlay" />
         <div className="wrapper w-full py-[15vh] gap-32">
           <h1 className="header">My Character</h1>
+          <Accesibility></Accesibility>
           <TutorialModal />
           {/* Race section */}
           <section className="w-full flex flex-col lg:flex-row justify-between">
