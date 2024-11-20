@@ -123,6 +123,14 @@ export default {
       return user.populate('favoritedMonsters');
     },
 
+    async deleteUser(_: any, { userId }: { userId: string }) {
+      const user = await User.findById(userId);
+      if (!user) throw new Error('User not found');
+
+      await User.findByIdAndDelete(userId);
+      return 'User successfully deleted';
+    },
+
     async removeFavoriteMonster(_: any, { userId, monsterId }: { userId: string; monsterId: string }) {
       const user = await User.findById(userId).populate('favoritedMonsters');
       if (!user) throw new Error('User not found');
