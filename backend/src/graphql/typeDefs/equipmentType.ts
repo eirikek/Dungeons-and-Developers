@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server';
+import { gql } from 'graphql-tag';
 
 export const equipmentType = gql`
   type Equipment {
@@ -13,7 +13,7 @@ export const equipmentType = gql`
     totalCount: Int!
   }
   extend type Query {
-    equipments(offset: Int, limit: Int): EquipmentResult!
+    equipments(searchTerm: String, offset: Int, limit: Int, suggestionsOnly: Boolean): EquipmentResult!
     equipment(id: ID!): Equipment!
   }
   extend type Mutation {

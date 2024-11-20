@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server';
+import { gql } from 'graphql-tag';
 import { abilityType } from './abilityType.ts';
 import { classType } from './classType.ts';
 import { equipmentType } from './equipmentType.js';

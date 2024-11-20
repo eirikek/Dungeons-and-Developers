@@ -1,7 +1,8 @@
-import { gql } from 'apollo-server';
+import { gql } from 'graphql-tag';
 
 export const abilityType = gql`
   type AbilityScore {
+    id: ID!
     name: String!
     index: String!
     skills: [String]

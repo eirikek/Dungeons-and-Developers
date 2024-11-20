@@ -4,8 +4,8 @@ import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { useMutation, useLazyQuery } from '@apollo/client';
 import { AuthContext } from '../../context/AuthContext.tsx';
-import { CREATE_USER, LOGIN_USER, CHECK_USERNAME } from '../../../../backend/src/graphql/queries';
 import { useToast } from '../../hooks/useToast.ts';
+import { CHECK_USERNAME, CREATE_USER, LOGIN_USER } from '../../graphql/userQueries.ts';
 
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',
@@ -64,10 +64,12 @@ export default function LoginPage() {
   const [createUser] = useMutation(CREATE_USER, {
     onCompleted: (data) => {
       const { token, user } = data.createUser;
+      console.log('User created:', user); // Log user data
       login({ token, userId: user.id, userName: user.userName });
       window.location.href = '/project2/home';
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('Error creating user:', error); // Log error
       setShakeInput(true);
     },
   });
@@ -79,7 +81,7 @@ export default function LoginPage() {
       window.location.href = '/project2/home';
     },
     onError: (error) => {
-      console.error('Error logging in:', error);
+      console.error('Error logging in:', error); // Log error
       setShakeInput(true);
       showToast({
         message: `No user found with username: ${logInUsername}`,
@@ -90,7 +92,10 @@ export default function LoginPage() {
   });
 
   const [checkUsername] = useLazyQuery(CHECK_USERNAME, {
-    onCompleted: (data) => setIsUsernameAvailable(data.checkUsername),
+    onCompleted: (data) => {
+      console.log('Username availability:', data.checkUsername); // Log username availability result
+      setIsUsernameAvailable(data.checkUsername);
+    },
   });
 
   // Toggle between login and register form
@@ -106,6 +111,7 @@ export default function LoginPage() {
     const value = e.target.value;
     setRegisterUsername(value);
     setShakeInput(false);
+    console.log('Register username changed:', value); // Log the username value on change
     if (value) {
       await checkUsername({ variables: { userName: value } });
     }
@@ -114,16 +120,22 @@ export default function LoginPage() {
   // Register user if username is available
   const handleRegister = async () => {
     if (!registerUsername) {
+      console.log('No username entered for registration'); // Log when username is empty
       setShakeInput(true);
       return;
     }
+
+    console.log('Attempting to register with username:', registerUsername); // Log before mutation
+
     if (isUsernameAvailable) {
       try {
+        console.log('Username is available. Proceeding with registration...'); // Log username availability
         await createUser({ variables: { userName: registerUsername } });
       } catch (error) {
-        console.error('Error registering user:', error);
+        console.error('Error registering user:', error); // Log registration error
       }
     } else {
+      console.log('Username not available'); // Log if username is not available
       setShakeInput(true);
       showToast({
         message: `Username ${registerUsername} is already taken`,
@@ -148,15 +160,17 @@ export default function LoginPage() {
   // Log in user
   const handleLogin = async () => {
     if (!logInUsername) {
+      console.log('No username entered for login'); // Log when login username is empty
       setShakeInput(true);
       setTimeout(() => setShakeInput(false), 500);
       return;
     }
 
     try {
+      console.log('Attempting to log in with username:', logInUsername); // Log before mutation
       await loginUser({ variables: { userName: logInUsername } });
     } catch (error) {
-      console.error('Error logging in:', error);
+      console.error('Error logging in:', error); // Log error during login
     }
   };
 

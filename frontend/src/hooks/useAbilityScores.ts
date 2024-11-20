@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useQuery } from '@apollo/client';
 import AbilityScoreCardProps from '../interfaces/AbilityScoreProps.ts';
-import { GET_ABILITYSCORES } from '../../../backend/src/graphql/queries.ts';
+import { GET_ABILITYSCORES } from '../graphql/abilityScoreQueries.ts';
 
 function useAbilityScores(currentPage: number, abilitiesPerPage: number) {
   const offset = (currentPage - 1) * abilitiesPerPage;
@@ -13,13 +13,12 @@ function useAbilityScores(currentPage: number, abilitiesPerPage: number) {
     fetchPolicy: 'network-only',
   });
 
-  console.log('GraphQL Data:', data);
-  console.log('Loading:', loading);
-  console.log('Error:', error);
-
   const transformedAbilities = useMemo(() => {
-    if (!data || !data.abilities) return [];
+    if (!data || !data.abilities) {
+      return [];
+    }
     return data.abilities.abilities.map((ability) => ({
+      id: ability.id,
       index: ability.index,
       name: ability.name,
       skills: ability.skills,

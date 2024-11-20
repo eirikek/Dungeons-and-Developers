@@ -1,7 +1,19 @@
-import { useState } from 'react';
-import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
+import { useQuery } from '@apollo/client';
+import { Box, Slider } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import { FaChevronDown } from 'react-icons/fa';
 import { FiX } from 'react-icons/fi';
-import { MonsterFilterProps } from '../../interfaces/MonsterFilterProps.ts';
+import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
+import { GET_MONSTER_HP_RANGE } from '../../graphql/getMonsterQuerie.ts';
+
+interface MonsterFilterProps {
+  selectedFilters: Set<string>;
+  setSelectedFilters: (filters: Set<string> | ((prev: Set<string>) => Set<string>)) => void;
+  onHpChange: (min: number, max: number) => void;
+  setCurrentPage: (page: number) => void;
+  onClearFilters: () => void;
+  monsterCounts: Record<string, number>;
+}
 
 const filterOptions = [
   'dragon',
@@ -13,22 +25,80 @@ const filterOptions = [
   'construct',
   'fiend',
   'fey',
-  'giant',
   'undead',
   'elemental',
 ];
 
-export default function MonsterFilter({ selectedFilters, setSelectedFilters }: MonsterFilterProps) {
+export default function MonsterFilter({
+  selectedFilters,
+  setSelectedFilters,
+  onHpChange,
+  setCurrentPage,
+  onClearFilters,
+  monsterCounts,
+}: MonsterFilterProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { data: hpRangeData, loading: hpRangeLoading } = useQuery(GET_MONSTER_HP_RANGE);
+  const initialHpRange = hpRangeData ? [hpRangeData.monsterHpRange.minHp, hpRangeData.monsterHpRange.maxHp] : [1, 546];
+  const [hpRange, setHpRange] = useState<number[]>(initialHpRange);
+  const [outOfRangeFilters, setOutOfRangeFilters] = useState<Set<string>>(new Set());
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (hpRangeData && !hpRangeLoading) {
+      setHpRange([hpRangeData.monsterHpRange.minHp, hpRangeData.monsterHpRange.maxHp]);
+    }
+  }, [hpRangeData, hpRangeLoading]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownRef]);
+
+  useEffect(() => {
+    setOutOfRangeFilters((prevOutOfRange) => {
+      const updatedOutOfRange = new Set(prevOutOfRange);
+      let modified = false;
+
+      selectedFilters.forEach((filter) => {
+        if (monsterCounts[filter] === 0) {
+          updatedOutOfRange.add(filter);
+          modified = true;
+        } else if (updatedOutOfRange.has(filter)) {
+          updatedOutOfRange.delete(filter);
+          modified = true;
+        }
+      });
+
+      return modified ? updatedOutOfRange : prevOutOfRange;
+    });
+  }, [monsterCounts, selectedFilters]);
 
   const handleCheckboxChange = (option: string) => {
     setSelectedFilters((prev: Set<string>) => {
-      const newFilters = new Set(prev);
+      const newFilters = new Set<string>(prev);
+      const outOfRange = new Set(outOfRangeFilters);
+
       if (newFilters.has(option)) {
         newFilters.delete(option);
+        outOfRange.delete(option);
+        setCurrentPage(1);
       } else {
         newFilters.add(option);
+        if (monsterCounts[option] === 0) {
+          outOfRange.add(option);
+        }
       }
+
+      setOutOfRangeFilters(outOfRange);
       return newFilters;
     });
   };
@@ -37,36 +107,91 @@ export default function MonsterFilter({ selectedFilters, setSelectedFilters }: M
     setIsDropdownOpen((prev) => !prev);
   };
 
-  const clearFilters = () => {
-    setSelectedFilters(new Set());
+  const handleSliderChange = (_: Event, newValue: number | number[]) => {
+    const [min, max] = newValue as number[];
+    setHpRange([min, max]);
+    onHpChange(min, max);
+  };
+
+  const handleClearFilters = () => {
+    if (selectedFilters.size > 0 || hpRange[0] !== initialHpRange[0] || hpRange[1] !== initialHpRange[1]) {
+      setSelectedFilters(new Set<string>());
+      setHpRange(initialHpRange);
+      onHpChange(initialHpRange[0], initialHpRange[1]);
+      setOutOfRangeFilters(new Set());
+      onClearFilters();
+    }
   };
 
   return (
-    <div className="relative text-white">
+    <div className="relative text-white" ref={dropdownRef}>
       <button
         onClick={toggleDropdown}
         className="text px-1 rounded-md bg-customRed hover:bg-transparent border-2 border-customRed hover:border-customRed hover:text-customRed transition-colors duration-200"
       >
         Filter Monsters
+        <FaChevronDown className="inline ml-3" />
       </button>
       {isDropdownOpen && (
-        <div className="absolute bg-customGray shadow-xl shadow-black p-4 rounded mt-2 w-48">
-          <div className="flex justify-between items-center mb-6">
-            <button onClick={clearFilters} className="underline transition-all hover:text-gray-300 outline-none">
+        <div className="absolute left-1/2 transform -translate-x-1/2 bg-customGray shadow-xl shadow-black p-8 rounded mt-2 min-w-[30vw] w-max">
+          <div className="flex justify-between items-center mb-4">
+            <button
+              onClick={handleClearFilters}
+              className="underline transition-all hover:text-customRed text outline-none"
+            >
               Clear Filters
             </button>
-            <FiX className="h-6 w-6 text-white hover:text-customRed cursor-pointer" onClick={toggleDropdown} />
+            <FiX
+              className="h-8 w-8 text-white hover:text-customRed cursor-pointer"
+              onClick={toggleDropdown}
+              aria-label="Close"
+            />
           </div>
-          {filterOptions.map((option) => (
-            <label key={option} className="flex items-center gap-5 mb-4 hover:cursor-pointer">
-              <CustomCheckbox
-                checked={selectedFilters.has(option)}
-                onChange={() => handleCheckboxChange(option)}
-                scale={0.8}
-              />
-              <span>{option}</span>
-            </label>
-          ))}
+          <h2 className="text bold mb-2 ">Type:</h2>
+          <div className="grid grid-cols-2 gap-y-4 gap-x-8 mb-4">
+            {filterOptions.map((option) => {
+              const count = monsterCounts[option] || 0;
+              const isDisabled = count === 0 && !selectedFilters.has(option);
+
+              return (
+                <label
+                  key={option}
+                  className={`flex items-center gap-5 mb-2 ${isDisabled ? 'text-gray-500' : ''} ${window.innerWidth < 1280 ? 'text' : ''}`}
+                  style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
+                >
+                  <CustomCheckbox
+                    key={`${option}-${selectedFilters.has(option)}`}
+                    checked={selectedFilters.has(option)}
+                    onChange={() => handleCheckboxChange(option)}
+                    scale={0.8}
+                    disabled={isDisabled}
+                  />
+                  <span>
+                    {option} {count > 0 && `(${count})`}
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+          <Box>
+            <h2 className="text bold">Hit Points:</h2>
+            <Slider
+              value={hpRange}
+              onChange={handleSliderChange}
+              valueLabelDisplay="auto"
+              min={initialHpRange[0]}
+              max={initialHpRange[1]}
+              sx={{
+                '& .MuiSlider-thumb': { color: '#DB3232', width: 24, height: 24 },
+                '& .MuiSlider-track': { color: '#DB3232', height: 10 },
+                '& .MuiSlider-rail': { color: '#DB3232', height: 10 },
+              }}
+            />
+            <Box display="flex" justifyContent="space-between" mt={1}>
+              <span>min: {hpRange[0]}</span>
+              <span>max: {hpRange[1]}</span>
+            </Box>
+          </Box>
         </div>
       )}
     </div>

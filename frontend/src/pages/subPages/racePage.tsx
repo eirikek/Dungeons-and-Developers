@@ -3,8 +3,8 @@ import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 import useRace from '../../hooks/useRaces.ts';
 import { useQuery } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
-import { GET_USER_RACE } from '../../../../backend/src/graphql/queries.ts';
 import { AuthContext } from '../../context/AuthContext';
+import { GET_USER_RACE } from '../../graphql/userQueries.ts';
 
 export default function RacePage() {
   const { loading, error, races } = useRace(1, 9);

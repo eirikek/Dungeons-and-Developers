@@ -1,17 +1,47 @@
 import { useQuery } from '@apollo/client';
 import { useMemo } from 'react';
 import MonsterDataProps from '../interfaces/MonsterDataProps.ts';
-import { GET_MONSTERS } from '../../../backend/src/graphql/queries.ts';
+import { GET_MONSTER_TYPE_COUNTS, GET_MONSTERS } from '../graphql/getMonsterQuerie.ts';
 
-function useMonster(searchTerm: string, currentPage: number, monstersPerPage: number, selectedFilters: Set<string>) {
+function useMonster(
+  searchTerm: string,
+  currentPage: number,
+  monstersPerPage: number,
+  selectedFilters: Set<string>,
+  minHp?: number | null,
+  maxHp?: number | null,
+  sortOption: string = 'name-asc'
+) {
   const offset = (currentPage - 1) * monstersPerPage;
 
+  const queryVariables = {
+    searchTerm,
+    offset,
+    limit: monstersPerPage,
+    types: Array.from(selectedFilters),
+    sortOption,
+    ...(minHp !== undefined && maxHp !== undefined ? { minHp, maxHp } : {}),
+  };
+
   const { data, error, loading } = useQuery<{
-    monsters: { monsters: MonsterDataProps[]; totalMonsters: number };
+    monsters: { monsters: MonsterDataProps[]; totalMonsters: number; minHp: number; maxHp: number };
   }>(GET_MONSTERS, {
-    variables: { searchTerm, offset, limit: monstersPerPage, types: Array.from(selectedFilters) },
+    variables: queryVariables,
     fetchPolicy: 'network-only',
   });
+
+  const { data: typeCountsData } = useQuery(GET_MONSTER_TYPE_COUNTS, {
+    variables: { minHp, maxHp },
+    fetchPolicy: 'network-only',
+  });
+
+  const monsterCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    typeCountsData?.monsterTypeCounts.forEach((entry: { type: string; count: number }) => {
+      counts[entry.type] = entry.count;
+    });
+    return counts;
+  }, [typeCountsData]);
 
   const transformedMonsters = useMemo(() => {
     if (!data || !data.monsters) return [];
@@ -23,16 +53,19 @@ function useMonster(searchTerm: string, currentPage: number, monstersPerPage: nu
       id: monster.id,
       name: monster.name,
       type: monster.type,
-      hp: monster.hit_points,
+      hit_points: monster.hit_points,
       alignment: monster.alignment,
       size: monster.size,
-      img: monster.image,
+      image: monster.image,
     }));
   }, [data, selectedFilters]);
 
   return {
     monsters: transformedMonsters,
     totalMonsters: data?.monsters.totalMonsters || 0,
+    minHp: data?.monsters.minHp || 1,
+    maxHp: data?.monsters.maxHp || 1000,
+    monsterCounts,
     loading,
     error,
   };

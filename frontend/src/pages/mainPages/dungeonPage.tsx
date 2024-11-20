@@ -2,10 +2,11 @@ import { useContext, useEffect, useState } from 'react';
 import CustomInput from '../../components/CustomInput/CustomInput.tsx';
 import DungeonMonsterGrid from '../../components/Dungeon/DungeonMonsterGrid.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
-import { GET_USER_DUNGEON, UPDATE_DUNGEON_NAME } from '../../../../backend/src/graphql/queries.ts';
 import { useMutation, useQuery } from '@apollo/client';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import DungeonStats from '../../components/Dungeon/DungeonStats.tsx';
+import { GET_USER_DUNGEON } from '../../graphql/getDungeonQueries.ts';
+import { UPDATE_DUNGEON_NAME } from '../../graphql/updateUserQueries.ts';
 
 export default function DungeonPage() {
   const { userId } = useContext(AuthContext);
@@ -55,6 +56,8 @@ export default function DungeonPage() {
             inputName="Dungeon Name"
             value={dungeonName}
             onSave={handleSaveDungeonName}
+            aria-label="Enter dungeon name"
+            data-testid="input-for-dungeon-name"
           />
           <DungeonStats />
           <DungeonMonsterGrid />

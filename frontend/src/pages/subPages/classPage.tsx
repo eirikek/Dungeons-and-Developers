@@ -2,9 +2,9 @@ import ClassCard from '../../components/SubPages/ClassCard.tsx';
 import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 import useClass from '../../hooks/useClasses.ts';
 import { useQuery } from '@apollo/client';
-import { GET_USER_CLASS } from '../../../../backend/src/graphql/queries.ts';
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import { GET_USER_CLASS } from '../../graphql/userQueries.ts';
 
 export default function ClassPage() {
   const { loading, error, classes } = useClass(1, 12);

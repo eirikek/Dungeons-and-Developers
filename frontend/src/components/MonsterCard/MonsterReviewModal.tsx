@@ -1,12 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
-import { ADD_REVIEW, GET_MONSTER_REVIEWS, UPDATE_REVIEW } from '../../../../backend/src/graphql/queries';
 import { AuthContext } from '../../context/AuthContext';
 import { useToast } from '../../hooks/useToast';
 import { ReviewFormType, ReviewType } from '../../interfaces/ReviewProps.ts';
 import ReviewSlider from './ReviewSlider.tsx';
 import ReviewTextField from './ReviewTextField.tsx';
+import { GET_MONSTER_REVIEWS } from '../../graphql/getMonsterQuerie.ts';
+import { ADD_REVIEW, UPDATE_REVIEW } from '../../graphql/reviewQueries.ts';
 
 const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
   const { userId } = useContext(AuthContext);
@@ -127,6 +128,7 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
           },
           textTransform: 'none',
         }}
+        aria-label="Review button"
       >
         Review
       </Button>

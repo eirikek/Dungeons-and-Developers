@@ -1,8 +1,12 @@
-import { gql } from 'apollo-server';
+import { gql } from 'graphql-tag';
 
 export const userType = gql`
   type UserEquipments {
     equipments: [Equipment!]
+  }
+  type AbilityScorePair {
+    ability: AbilityScore!
+    score: Int!
   }
 
   type User {
@@ -10,7 +14,7 @@ export const userType = gql`
     userName: String!
     class: Class!
     race: Race!
-    abilityScores: [Int!]!
+    abilityScores: [AbilityScorePair!]!
     equipments: [Equipment]!
     favoritedMonsters: [Monster!]!
     dungeonName: String!
@@ -30,7 +34,7 @@ export const userType = gql`
     getUser(amount: Int): [User]
     checkUsername(userName: String!): Boolean!
     user(id: ID!): User!
-    getArrayScores(userId: ID!): [Int!]!
+    getArrayScores(userId: ID!): [AbilityScorePair!]!
   }
 
   extend type Mutation {
