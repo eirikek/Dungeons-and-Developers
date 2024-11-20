@@ -1,25 +1,25 @@
-import { gql } from 'apollo-server';
+import { gql } from 'graphql-tag';
 
 export const classType = gql`
-    type Class {
-        id: ID!
-        index: String!
-        name: String!
-        hit_die: Int!
-        skills: [String!]
-    }
+  type Class {
+    id: ID!
+    index: String!
+    name: String!
+    hit_die: Int!
+    skills: [String!]
+  }
 
-    type ClassResult {
-        classes: [Class!]!
-        totalClasses: Int!
-    }
+  type ClassResult {
+    classes: [Class!]!
+    totalClasses: Int!
+  }
 
-    extend type Query {
-        classes(offset: Int, limit: Int): ClassResult!
-        class(id: ID!): Class!
-    }
+  extend type Query {
+    classes(offset: Int, limit: Int): ClassResult!
+    class(id: ID!): Class!
+  }
 
-    extend type Mutation {
-        fetchClasses: String!
-    }
+  extend type Mutation {
+    fetchClasses: String!
+  }
 `;
