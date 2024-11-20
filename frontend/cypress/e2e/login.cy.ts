@@ -29,7 +29,7 @@ describe('Logs user inn, views monsters, adds to dungeon', () => {
       .children('div')
       .children('div')
       .get('button')
-      .eq(6)
+      .eq(7)
       .then((button) => {
         // conditional click, if monster already added to dungeon or not
         if (button.text() === 'Add to dungeon') {
