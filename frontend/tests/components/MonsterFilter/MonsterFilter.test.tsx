@@ -2,11 +2,43 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MonsterFilter from '../../../src/components/MonsterFilter/MonsterFilter.tsx';
 import { describe, it, expect, vi, afterEach } from 'vitest';
+import { MockedProvider } from '@apollo/client/testing';
+import { AuthContext } from '../../../src/context/AuthContext.tsx';
+import { GET_MONSTER_HP_RANGE } from '../../../src/graphql/getMonsterQuerie.ts';
 
 // Mock props for the MonsterFilter component
 const mockSetSelectedFilters = vi.fn();
 let selectedFilters = new Set<string>();
+const mockMonsterCounts = {
+  dragon: 5,
+  fiend: 0,
+};
+const mockOnClearFilters = () => {};
+const mockOnHpChange = () => {};
+const mockSetCurrentPage = () => {};
 
+const mockUserId = 'user-321';
+const mockToken = 'mock-token';
+const mockUsername = 'Bob';
+const mockLogin = vi.fn();
+const mockLogout = vi.fn();
+
+const mocks = [
+  {
+    request: {
+      query: GET_MONSTER_HP_RANGE,
+    },
+    result: {
+      data: {
+        monsterHpRange: {
+          minHp: 10,
+          maxHp: 50,
+          __typename: 'MonsterHpRange',
+        },
+      },
+    },
+  },
+];
 describe('MonsterFilter Component', () => {
   afterEach(() => {
     vi.restoreAllMocks();
@@ -15,13 +47,41 @@ describe('MonsterFilter Component', () => {
 
   it('renders correctly and matches snapshot', () => {
     const { container } = render(
-      <MonsterFilter selectedFilters={selectedFilters} setSelectedFilters={mockSetSelectedFilters} />
+      <MockedProvider mocks={mocks}>
+        <AuthContext.Provider
+          value={{ userId: mockUserId, userName: mockUsername, logout: mockLogout, login: mockLogin, token: mockToken }}
+        >
+          <MonsterFilter
+            selectedFilters={selectedFilters}
+            setSelectedFilters={mockSetSelectedFilters}
+            monsterCounts={mockMonsterCounts}
+            onClearFilters={mockOnClearFilters}
+            onHpChange={mockOnHpChange}
+            setCurrentPage={mockSetCurrentPage}
+          />
+        </AuthContext.Provider>
+      </MockedProvider>
     );
     expect(container).toMatchSnapshot();
   });
 
   it('opens and closes the dropdown menu', async () => {
-    render(<MonsterFilter selectedFilters={selectedFilters} setSelectedFilters={mockSetSelectedFilters} />);
+    render(
+      <MockedProvider mocks={mocks}>
+        <AuthContext.Provider
+          value={{ userId: mockUserId, userName: mockUsername, logout: mockLogout, login: mockLogin, token: mockToken }}
+        >
+          <MonsterFilter
+            selectedFilters={selectedFilters}
+            setSelectedFilters={mockSetSelectedFilters}
+            monsterCounts={mockMonsterCounts}
+            onClearFilters={mockOnClearFilters}
+            onHpChange={mockOnHpChange}
+            setCurrentPage={mockSetCurrentPage}
+          />
+        </AuthContext.Provider>
+      </MockedProvider>
+    );
     const filterButton = screen.getByText('Filter Monsters');
 
     // Click to open dropdown
@@ -40,17 +100,32 @@ describe('MonsterFilter Component', () => {
   });
 
   it('toggles filters and updates selected filters correctly', async () => {
-    render(<MonsterFilter selectedFilters={selectedFilters} setSelectedFilters={mockSetSelectedFilters} />);
+    render(
+      <MockedProvider mocks={mocks}>
+        <AuthContext.Provider
+          value={{ userId: mockUserId, userName: mockUsername, logout: mockLogout, login: mockLogin, token: mockToken }}
+        >
+          <MonsterFilter
+            selectedFilters={selectedFilters}
+            setSelectedFilters={mockSetSelectedFilters}
+            monsterCounts={mockMonsterCounts}
+            onClearFilters={mockOnClearFilters}
+            onHpChange={mockOnHpChange}
+            setCurrentPage={mockSetCurrentPage}
+          />
+        </AuthContext.Provider>
+      </MockedProvider>
+    );
     const filterButton = screen.getByText('Filter Monsters');
 
     // Open dropdown
     await userEvent.click(filterButton);
     await waitFor(() => {
-      expect(screen.getByText('dragon')).toBeInTheDocument();
+      expect(screen.getByText('dragon (5)')).toBeInTheDocument();
     });
 
     // Select "dragon" filter
-    const dragonLabel = screen.getByText('dragon');
+    const dragonLabel = screen.getByText('dragon (5)');
     await userEvent.click(dragonLabel);
     await waitFor(() => {
       expect(mockSetSelectedFilters).toHaveBeenCalledTimes(1);
@@ -71,7 +146,22 @@ describe('MonsterFilter Component', () => {
 
   it('clears all selected filters', async () => {
     selectedFilters = new Set(['dragon', 'humanoid']);
-    render(<MonsterFilter selectedFilters={selectedFilters} setSelectedFilters={mockSetSelectedFilters} />);
+    render(
+      <MockedProvider mocks={mocks}>
+        <AuthContext.Provider
+          value={{ userId: mockUserId, userName: mockUsername, logout: mockLogout, login: mockLogin, token: mockToken }}
+        >
+          <MonsterFilter
+            selectedFilters={selectedFilters}
+            setSelectedFilters={mockSetSelectedFilters}
+            monsterCounts={mockMonsterCounts}
+            onClearFilters={mockOnClearFilters}
+            onHpChange={mockOnHpChange}
+            setCurrentPage={mockSetCurrentPage}
+          />
+        </AuthContext.Provider>
+      </MockedProvider>
+    );
 
     // Open dropdown
     const filterButton = screen.getByText('Filter Monsters');

@@ -9,8 +9,17 @@ describe('Searchbar component', () => {
 
   const initialSearchTerm = 'Dragon';
   const handleSearchChangeMock = vi.fn();
+  const mockOnSuggestionClick = vi.fn();
+  const mockSuggestions = ['giant', 'dragon'];
   it('renders correctly with default placeholder and search term', () => {
-    render(<SearchBar searchTerm={initialSearchTerm} handleSearchChange={handleSearchChangeMock} />);
+    render(
+      <SearchBar
+        searchTerm={initialSearchTerm}
+        handleSearchChange={handleSearchChangeMock}
+        onSuggestionClick={mockOnSuggestionClick}
+        suggestions={mockSuggestions}
+      />
+    );
     const inputElement = screen.getByPlaceholderText(defaultPlaceholder);
     expect(inputElement).toBeInTheDocument();
     expect(inputElement).toHaveValue(initialSearchTerm);
@@ -18,7 +27,14 @@ describe('Searchbar component', () => {
 
   it('calls handleSearchChange on input change', async () => {
     const user = userEvent.setup();
-    render(<SearchBar searchTerm="" handleSearchChange={handleSearchChangeMock} />);
+    render(
+      <SearchBar
+        searchTerm=""
+        handleSearchChange={handleSearchChangeMock}
+        onSuggestionClick={mockOnSuggestionClick}
+        suggestions={mockSuggestions}
+      />
+    );
     const inputElement = screen.getByPlaceholderText(defaultPlaceholder);
     await user.type(inputElement, 'Goblin');
     expect(handleSearchChangeMock).toHaveBeenCalledTimes(6);
@@ -31,7 +47,14 @@ describe('Searchbar component', () => {
       const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
       };
-      return <SearchBar searchTerm={searchTerm} handleSearchChange={handleSearchChange} />;
+      return (
+        <SearchBar
+          searchTerm={searchTerm}
+          handleSearchChange={handleSearchChange}
+          onSuggestionClick={mockOnSuggestionClick}
+          suggestions={mockSuggestions}
+        />
+      );
     };
     render(<WrapperComponent />);
     const inputElement = screen.getByPlaceholderText(defaultPlaceholder);
@@ -41,14 +64,24 @@ describe('Searchbar component', () => {
   });
   it('renders the search icon', () => {
     const { container } = render(
-      <SearchBar searchTerm={initialSearchTerm} handleSearchChange={handleSearchChangeMock} />
+      <SearchBar
+        searchTerm={initialSearchTerm}
+        handleSearchChange={handleSearchChangeMock}
+        onSuggestionClick={mockOnSuggestionClick}
+        suggestions={mockSuggestions}
+      />
     );
     const svgElement = container.querySelector('svg');
     expect(svgElement).toBeInTheDocument();
   });
   it('matches snapshot', () => {
     const { container } = render(
-      <SearchBar searchTerm={initialSearchTerm} handleSearchChange={handleSearchChangeMock} />
+      <SearchBar
+        searchTerm={initialSearchTerm}
+        handleSearchChange={handleSearchChangeMock}
+        onSuggestionClick={mockOnSuggestionClick}
+        suggestions={mockSuggestions}
+      />
     );
     expect(container).toMatchSnapshot();
   });

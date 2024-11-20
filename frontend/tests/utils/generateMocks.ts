@@ -1,8 +1,8 @@
 import { MockedResponse } from '@apollo/client/testing';
 import { MonsterCardProps } from '../../src/interfaces/MonsterCardProps.ts';
-import { GET_USER_DUNGEON } from '../../src/graphql/getDungeonQueries.ts';
 import { UPDATE_DUNGEON_NAME } from '../../src/graphql/updateUserQueries.ts';
 import { GET_MONSTER_REVIEWS } from '../../src/graphql/getMonsterQuerie.ts';
+import { GET_USER_DUNGEON_NAME } from '../../src/graphql/userQueries.ts';
 
 interface UserDungeonData {
   dungeonName: string;
@@ -26,7 +26,7 @@ interface MonsterReviewsData {
 
 export const generateGetUserDungeonMock = (userId: string, data: UserDungeonData): MockedResponse => ({
   request: {
-    query: GET_USER_DUNGEON,
+    query: GET_USER_DUNGEON_NAME,
     variables: { userId },
   },
   result: {
