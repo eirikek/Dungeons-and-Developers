@@ -41,6 +41,7 @@ const CustomCheckbox = ({
         disabled={disabled}
         aria-label="equipment-checkbox"
         name="checkbox"
+        data-testid="equipment-checkbox"
       />
       <span
         className={`absolute h-6 w-6 rounded transition-all duration-300 ${checked ? 'bg-red-600' : 'bg-gray-300'}`}
