@@ -5,7 +5,6 @@ import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
 import RaceProps from '../../interfaces/RaceProps.ts';
 
 import raceImageMapping from '../../utils/raceImageMapping.ts';
-import { UPDATE_USER_RACE } from '../../graphql/updateUserQueries.ts';
 
 interface RaceCardProps extends RaceProps {
   selectedRaceId: string;

@@ -6,12 +6,10 @@ import App from './App.tsx';
 import client from './client/apollo.ts';
 import ToastProvider from './components/Toast/CustomToast.tsx';
 import { AuthProvider } from './context/AuthContext.tsx';
-import { CharacterProvider } from './context/CharacterContext.tsx';
-import { DungeonProvider } from './context/DungeonContext.tsx';
+
 import './index.css';
 
 const queryClient = new QueryClient();
-const userId = localStorage.getItem('userId') || '';
 
 createRoot(document.getElementById('root')!).render(
   <ApolloProvider client={client}>
@@ -19,11 +17,7 @@ createRoot(document.getElementById('root')!).render(
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <ToastProvider>
-            <CharacterProvider userId={userId}>
-              <DungeonProvider userId={userId}>
-                <App />
-              </DungeonProvider>
-            </CharacterProvider>
+            <App />
           </ToastProvider>
         </AuthProvider>
       </QueryClientProvider>
