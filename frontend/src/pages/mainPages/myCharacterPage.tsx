@@ -12,14 +12,16 @@ import raceImageMapping from '../../utils/raceImageMapping';
 import abilityScoreManagement from '../../utils/abilityScoreManagement.ts';
 import { classVar } from '../subPages/classPage';
 import { raceVar } from '../subPages/racePage.tsx';
+import { useToast } from '../../hooks/useToast.ts';
 
 export const abilitiesVar = makeVar<Map<string, number>>(new Map());
 
 const MyCharacterPage = () => {
   const { userName } = useContext(AuthContext);
+  const { showToast } = useToast();
   const { stateAbilities, classes, races, updateClass, updateRace } = useCharacterContext();
 
-  const { handleCounterChange, currentArrayScores } = abilityScoreManagement();
+  const { handleCounterChange, currentArrayScores } = abilityScoreManagement(showToast);
 
   const currentClass = useReactiveVar(classVar);
   const currentRace = useReactiveVar(raceVar);
