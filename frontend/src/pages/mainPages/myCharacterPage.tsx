@@ -19,7 +19,7 @@ export const abilitiesVar = makeVar<Map<string, number>>(new Map());
 const MyCharacterPage = () => {
   const { userName } = useContext(AuthContext);
   const { showToast } = useToast();
-  const { stateAbilities, classes, races, updateClass, updateRace } = useCharacterContext();
+  const { stateAbilities, classes, races, updateClass, updateRace, loadingStates } = useCharacterContext();
 
   const { handleCounterChange, currentArrayScores } = abilityScoreManagement(showToast);
 
@@ -39,7 +39,7 @@ const MyCharacterPage = () => {
 
   const currentEquipments = useReactiveVar(equipmentsVar);
 
-  const abilityScoresLoading = currentArrayScores.size === 0;
+  const { abilityScoresLoading } = loadingStates;
 
   useEffect(() => {
     if (!currentClass && classes?.length) {

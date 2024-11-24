@@ -1,19 +1,20 @@
 import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 import AbilityScoreCard from '../../components/SubPages/AbilityScoreCard.tsx';
-
+import { useToast } from '../../hooks/useToast.ts';
 import useCharacterContext from '../../hooks/useCharacter.ts';
-
 import abilityScoreManagement from '../../utils/abilityScoreManagement.ts';
+import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 
 export default function AbilityScorePage() {
-  const { stateAbilities } = useCharacterContext();
-  const { handleCounterChange, currentArrayScores } = abilityScoreManagement();
-  const abilityScoresLoading = currentArrayScores.size === 0;
+  const { stateAbilities, loadingStates } = useCharacterContext();
+  const { showToast } = useToast();
+  const { handleCounterChange, currentArrayScores } = abilityScoreManagement(showToast);
+  const { abilityScoresLoading } = loadingStates;
 
   return (
     <>
-      {!abilityScoresLoading ? (
-        <SubPageLayout>
+      <SubPageLayout>
+        {!abilityScoresLoading ? (
           <section className="flex flex-col items-center w-full gap-10">
             {stateAbilities.map((ability, index) => (
               <AbilityScoreCard
@@ -27,12 +28,12 @@ export default function AbilityScorePage() {
               />
             ))}
           </section>
-        </SubPageLayout>
-      ) : (
-        <section className="flex flex-col items-center w-full gap-10">
-          <h2 className="header mb-[8vh]">Loading ability scores...</h2>
-        </section>
-      )}
+        ) : (
+          <section className="flex flex-col items-center w-full">
+            <LoadingHourglass />
+          </section>
+        )}
+      </SubPageLayout>
     </>
   );
 }
