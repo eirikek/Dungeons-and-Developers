@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 import { FiX } from 'react-icons/fi';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
-import { GET_MONSTER_HP_RANGE } from '../../graphql/getMonsterQuerie.ts';
+import { GET_MONSTER_HP_RANGE } from '../../graphql/queries/monsterQueries.ts';
 
 interface MonsterFilterProps {
   selectedFilters: Set<string>;

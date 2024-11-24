@@ -5,13 +5,13 @@ import EquipmentPage from '../../../src/pages/subPages/equipmentPage.tsx';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
 import { BrowserRouter } from 'react-router-dom';
 import { expect } from 'vitest';
+import { GET_EQUIPMENTS } from '../../../src/graphql/queries/equipmentQueries.ts';
 import {
   ADD_EQUIPMENT_TO_CHARACTER,
-  GET_EQUIPMENTS,
   REMOVE_ALL_EQUIPMENTS,
   REMOVE_EQUIPMENT_FROM_CHARACTER,
-} from '../../../src/graphql/equipmentQueries.ts';
-import { GET_USER_EQUIPMENT } from '../../../src/graphql/userQueries.ts';
+} from '../../../src/graphql/mutations/userMutations.ts';
+import { GET_USER_EQUIPMENT } from '../../../src/graphql/queries/userQueries.ts';
 
 const mockShowToast = vi.fn();
 vi.mock('../../../src/hooks/useToast.ts', () => ({

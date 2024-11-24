@@ -9,7 +9,7 @@ import Pagination from '../../components/Pagination/Pagination';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 
 import MonsterGrid from '../../components/Dungeon/MonsterGrid.tsx';
-import { GET_MONSTER_HP_RANGE } from '../../graphql/getMonsterQuerie.ts';
+import { GET_MONSTER_HP_RANGE } from '../../graphql/queries/monsterQueries.ts';
 import useMonster from '../../hooks/useMonster.ts';
 import useMonsterSuggestions from '../../hooks/useMonsterSuggestions';
 

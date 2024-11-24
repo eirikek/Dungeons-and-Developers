@@ -3,12 +3,12 @@ import { AuthContext } from '../context/AuthContext.tsx';
 import { useMutation, useQuery } from '@apollo/client';
 
 import { Equipment } from '../interfaces/EquipmentProps.ts';
-import { GET_USER_EQUIPMENT } from '../graphql/userQueries.ts';
+import { GET_USER_EQUIPMENT } from '../graphql/queries/userQueries.ts';
 import {
   ADD_EQUIPMENT_TO_CHARACTER,
   REMOVE_ALL_EQUIPMENTS,
   REMOVE_EQUIPMENT_FROM_CHARACTER,
-} from '../graphql/equipmentQueries.ts';
+} from '../graphql/mutations/userMutations.ts';
 
 const useUserEquipments = () => {
   const { userId } = useContext(AuthContext);

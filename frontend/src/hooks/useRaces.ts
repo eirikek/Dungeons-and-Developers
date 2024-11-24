@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { useMemo } from 'react';
 import RaceProps from '../interfaces/RaceProps.ts';
-import { GET_RACES } from '../graphql/raceQueries.ts';
+import { GET_RACES } from '../graphql/queries/raceQueries.ts';
 
 function useRaces(currentPage: number, racesPerPage: number) {
   const offset = (currentPage - 1) * racesPerPage;

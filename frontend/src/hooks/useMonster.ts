@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { useMemo } from 'react';
 import MonsterDataProps from '../interfaces/MonsterDataProps.ts';
-import { GET_MONSTER_TYPE_COUNTS, GET_MONSTERS } from '../graphql/getMonsterQuerie.ts';
+import { GET_MONSTER_TYPE_COUNTS, GET_MONSTERS } from '../graphql/queries/monsterQueries.ts';
 
 function useMonster(
   searchTerm: string,
