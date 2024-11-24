@@ -64,12 +64,12 @@ export default function LoginPage() {
   const [createUser] = useMutation(CREATE_USER, {
     onCompleted: (data) => {
       const { token, user } = data.createUser;
-      console.log('User created:', user); // Log user data
+      console.log('User created:', user);
       login({ token, userId: user.id, userName: user.userName });
       window.location.href = '/project2/home';
     },
     onError: (error) => {
-      console.error('Error creating user:', error); // Log error
+      console.error('Error creating user:', error);
       setShakeInput(true);
     },
   });
@@ -81,7 +81,7 @@ export default function LoginPage() {
       window.location.href = '/project2/home';
     },
     onError: (error) => {
-      console.error('Error logging in:', error); // Log error
+      console.error('Error logging in:', error);
       setShakeInput(true);
       showToast({
         message: `No user found with username: ${logInUsername}`,
@@ -93,7 +93,7 @@ export default function LoginPage() {
 
   const [checkUsername] = useLazyQuery(CHECK_USERNAME, {
     onCompleted: (data) => {
-      console.log('Username availability:', data.checkUsername); // Log username availability result
+      console.log('Username availability:', data.checkUsername);
       setIsUsernameAvailable(data.checkUsername);
     },
   });
@@ -111,7 +111,7 @@ export default function LoginPage() {
     const value = e.target.value;
     setRegisterUsername(value);
     setShakeInput(false);
-    console.log('Register username changed:', value); // Log the username value on change
+    console.log('Register username changed:', value);
     if (value) {
       await checkUsername({ variables: { userName: value } });
     }
@@ -120,22 +120,22 @@ export default function LoginPage() {
   // Register user if username is available
   const handleRegister = async () => {
     if (!registerUsername) {
-      console.log('No username entered for registration'); // Log when username is empty
+      console.log('No username entered for registration');
       setShakeInput(true);
       return;
     }
 
-    console.log('Attempting to register with username:', registerUsername); // Log before mutation
+    console.log('Attempting to register with username:', registerUsername);
 
     if (isUsernameAvailable) {
       try {
-        console.log('Username is available. Proceeding with registration...'); // Log username availability
+        console.log('Username is available. Proceeding with registration...');
         await createUser({ variables: { userName: registerUsername } });
       } catch (error) {
-        console.error('Error registering user:', error); // Log registration error
+        console.error('Error registering user:', error);
       }
     } else {
-      console.log('Username not available'); // Log if username is not available
+      console.log('Username not available');
       setShakeInput(true);
       showToast({
         message: `Username ${registerUsername} is already taken`,
@@ -160,7 +160,7 @@ export default function LoginPage() {
   // Log in user
   const handleLogin = async () => {
     if (!logInUsername) {
-      console.log('No username entered for login'); // Log when login username is empty
+      console.log('No username entered for login');
       setShakeInput(true);
       setTimeout(() => setShakeInput(false), 500);
       return;
@@ -170,7 +170,17 @@ export default function LoginPage() {
       console.log('Attempting to log in with username:', logInUsername); // Log before mutation
       await loginUser({ variables: { userName: logInUsername } });
     } catch (error) {
-      console.error('Error logging in:', error); // Log error during login
+      console.error('Error logging in:', error);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      if (isLogin) {
+        handleLogin();
+      } else {
+        handleRegister();
+      }
     }
   };
 
@@ -210,6 +220,7 @@ export default function LoginPage() {
                         placeholder="Username"
                         value={logInUsername}
                         onChange={handleLoginChange}
+                        onKeyDown={handleKeyDown}
                         onAnimationEnd={() => setShakeInput(false)}
                         maxLength={40}
                       />
@@ -233,6 +244,7 @@ export default function LoginPage() {
                       value={registerUsername}
                       onChange={handleRegisterUsernameChange}
                       onFocus={() => setShakeInput(false)}
+                      onKeyDown={handleKeyDown}
                       maxLength={40}
                       className={`text w-60 xs:w-72 p-2 border-2 rounded bg-transparent text-center focus:outline-none ${
                         shakeInput
