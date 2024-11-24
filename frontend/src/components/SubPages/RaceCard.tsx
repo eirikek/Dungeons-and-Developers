@@ -36,8 +36,12 @@ const RaceCard: React.FC<RaceCardProps> = ({ id, index, name, alignment, size, s
         <div>
           <h2 className="sub-header bold">{name}</h2>
           <p className="text">{alignment}</p>
-          <p className="text">Size: {size}</p>
-          <p className="text">Speed: {speed}</p>
+          <p className="text">
+            <span className="bold">Size:</span> {size}
+          </p>
+          <p className="text">
+            <span className="bold">Speed:</span> {speed}
+          </p>
         </div>
       </div>
       <div className="w-1/5 flex items-center justify-center xl:justify-end">
