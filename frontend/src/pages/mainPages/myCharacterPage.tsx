@@ -123,7 +123,7 @@ const MyCharacterPage = () => {
 
   return (
     <MainPageLayout>
-      <main className="main before:bg-myCharacter">
+      <main className="main xl:before:bg-myCharacter">
         <div className="black-overlay" />
         <div className="wrapper w-full py-[15vh] gap-32">
           <h1 className="header">{userName ? `${userName}'s Character` : 'My Character'}</h1>

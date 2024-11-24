@@ -79,6 +79,10 @@ export default function MonsterPage() {
     setSearchTerm(value);
     debouncedSearch(value);
     setCurrentPage(1);
+
+    if (value) {
+      setSelectedFilters(new Set<string>());
+    }
   };
 
   useEffect(() => {
@@ -122,7 +126,7 @@ export default function MonsterPage() {
 
   return (
     <MainPageLayout>
-      <main className="main before:bg-monsters xl:h-screen xl:overflow-hidden">
+      <main className="main xl:before:bg-monsters xl:h-screen xl:overflow-hidden">
         <div className="black-overlay" />
 
         <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start mb-6">
@@ -152,7 +156,7 @@ export default function MonsterPage() {
               <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
             </div>
           ) : (
-            <section className="flex flex-col items-center w-full h-screen justify-between">
+            <section className="flex flex-col items-center w-full xl:h-screen justify-between">
               {error ? (
                 <p>An error occurred while loading monsters. {error.message}</p>
               ) : monsters.length > 0 ? (
