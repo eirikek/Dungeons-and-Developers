@@ -90,7 +90,6 @@ export default function MonsterFilter({
       if (newFilters.has(option)) {
         newFilters.delete(option);
         outOfRange.delete(option);
-        setCurrentPage(1);
       } else {
         newFilters.add(option);
         if (monsterCounts[option] === 0) {
@@ -101,6 +100,7 @@ export default function MonsterFilter({
       setOutOfRangeFilters(outOfRange);
       return newFilters;
     });
+    setCurrentPage(1);
   };
 
   const toggleDropdown = () => {
