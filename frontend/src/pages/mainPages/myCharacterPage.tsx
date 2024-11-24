@@ -1,6 +1,6 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
-import { useContext, useEffect, useState } from 'react';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { useContext, useEffect, useState, useRef } from 'react';
+import { FaChevronLeft, FaChevronRight, FaTrash } from 'react-icons/fa';
 import AbilityCounterWrapper from '../../components/Counter/AbilityScoreCounterWrapper.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout';
 import TutorialModal from '../../components/MyCharacter/TutorialModal';
@@ -13,13 +13,23 @@ import abilityScoreManagement from '../../utils/abilityScoreManagement.ts';
 import { classVar } from '../subPages/classPage';
 import { raceVar } from '../subPages/racePage.tsx';
 import { useToast } from '../../hooks/useToast.ts';
+import { Equipment } from '../../interfaces/EquipmentProps.ts';
 
 export const abilitiesVar = makeVar<Map<string, number>>(new Map());
 
 const MyCharacterPage = () => {
   const { userName } = useContext(AuthContext);
   const { showToast } = useToast();
-  const { stateAbilities, classes, races, updateClass, updateRace, loadingStates } = useCharacterContext();
+  const {
+    stateAbilities,
+    classes,
+    races,
+    updateClass,
+    updateRace,
+    removeFromEquipments,
+    addToEquipments,
+    loadingStates,
+  } = useCharacterContext();
 
   const { handleCounterChange, currentArrayScores } = abilityScoreManagement(showToast);
 
@@ -38,6 +48,31 @@ const MyCharacterPage = () => {
   const currentRaceImage = currentRaceData ? raceImageMapping[currentRaceData.index] : '';
 
   const currentEquipments = useReactiveVar(equipmentsVar);
+  const undoRemoveRef = useRef<Equipment | null>(null);
+
+  const handleRemoveEquipment = (equipment: Equipment) => {
+    undoRemoveRef.current = equipment;
+    removeFromEquipments(equipment);
+
+    showToast({
+      message: `${equipment.name} removed from your equipments`,
+      type: 'info',
+      duration: 3000,
+      undoAction: () => undoRemoveEquipment(),
+    });
+  };
+
+  const undoRemoveEquipment = () => {
+    if (undoRemoveRef.current) {
+      addToEquipments(undoRemoveRef.current);
+      showToast({
+        message: `${undoRemoveRef.current.name} restored to your equipments`,
+        type: 'success',
+        duration: 3000,
+      });
+      undoRemoveRef.current = null;
+    }
+  };
 
   const { abilityScoresLoading } = loadingStates;
 
@@ -171,8 +206,13 @@ const MyCharacterPage = () => {
                 </div>
               )}
               {currentEquipments.map((equipment, index) => (
-                <li key={index} className="list-disc list-inside sub-header">
-                  {equipment.name}
+                <li key={index} className="flex items-center gap-4">
+                  <p className="sub-header">{equipment.name}</p>
+                  <FaTrash
+                    size={30}
+                    className="delete-icon text-white cursor-pointer hover:text-customRed transition-colors"
+                    onClick={() => handleRemoveEquipment(equipment)}
+                  />
                 </li>
               ))}
             </div>
