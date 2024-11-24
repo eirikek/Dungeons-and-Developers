@@ -5,6 +5,7 @@ import DungeonButton from './DungeonButton.tsx';
 import MonsterReviewModal from './MonsterReviewModal.tsx';
 import MonsterDetailsModal from './MonsterDetailsModal.tsx';
 import { MonsterCardProps } from '../../interfaces/MonsterCardProps.ts';
+import LoadingHourglass from '../LoadingHourglass/LoadingHourglass.tsx';
 
 const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: MonsterCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -54,7 +55,11 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
         data-testid={`${name}-monster-card`}
       >
         <div className="relative w-full h-[30vh] overflow-hidden">
-          {!imageLoaded && <div>Loading image...</div>}
+          {!imageLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center z-20 bg-black bg-opacity-50">
+              <LoadingHourglass />
+            </div>
+          )}
           {imageError ? (
             <img
               src={NoMonsterImageFound}
