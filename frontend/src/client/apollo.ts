@@ -51,6 +51,11 @@ const client = new ApolloClient({
               return incoming;
             },
           },
+          equipments: {
+            merge(existing = [], incoming) {
+              return [...existing, ...incoming];
+            },
+          },
         },
       },
       Class: {
