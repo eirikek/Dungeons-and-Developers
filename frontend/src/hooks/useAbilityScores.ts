@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { useEffect, useMemo } from 'react';
-import { GET_ABILITYSCORES } from '../graphql/abilityScoreQueries.ts';
+import { GET_ABILITYSCORES } from '../graphql/queries/abilityScoreQueries.ts';
 import AbilityScoreCardProps from '../interfaces/AbilityScoreProps.ts';
 
 function useAbilityScores(currentPage: number, abilitiesPerPage: number) {

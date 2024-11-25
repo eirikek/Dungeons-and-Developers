@@ -12,20 +12,20 @@ const Pagination = ({ currentPage, onPageChange, totalPages }: PaginationProps) 
       <div className="flex justify-between items-center w-[70vw] xl:w-[30vw] w-text-2xl xl:text-lg 2xl:text-md ">
         {/* Previous button - disabled when on the first page */}
         <button
-          className="flex items-center hover:text-gray-400 text-lg"
+          className="flex items-center hover:text-gray-400 text"
           onClick={() => onPageChange(-1)}
-          disabled={currentPage === 1} // Disable if on first page
+          disabled={currentPage === 1}
           aria-label="navigate previous"
         >
           <FaChevronLeft className="mr-2" size={20} />
           Prev Page
         </button>
 
-        <span className="w-2 text-lg">{currentPage}</span>
+        <span className="w-2 text">{currentPage}</span>
 
         {/* Next button - disabled when on the last page */}
         <button
-          className="flex items-center hover:text-gray-400 text-lg"
+          className="flex items-center hover:text-gray-400 text"
           onClick={() => onPageChange(1)}
           disabled={currentPage === totalPages} // Disable if on last page
           aria-label="navigate next"

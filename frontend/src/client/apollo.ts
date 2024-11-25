@@ -42,12 +42,12 @@ const client = new ApolloClient({
             merge: false,
           },
           class: {
-            merge(existing = [], incoming) {
+            merge(_, incoming) {
               return incoming;
             },
           },
           race: {
-            merge(existing = [], incoming) {
+            merge(_, incoming) {
               return incoming;
             },
           },

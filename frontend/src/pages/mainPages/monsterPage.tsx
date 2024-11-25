@@ -9,9 +9,11 @@ import Pagination from '../../components/Pagination/Pagination';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 
 import MonsterGrid from '../../components/Dungeon/MonsterGrid.tsx';
-import { GET_MONSTER_HP_RANGE } from '../../graphql/getMonsterQuerie.ts';
+import { GET_MONSTER_HP_RANGE } from '../../graphql/queries/monsterQueries.ts';
 import useMonster from '../../hooks/useMonster.ts';
 import useMonsterSuggestions from '../../hooks/useMonsterSuggestions';
+import { IconButton } from '@mui/material';
+import { MdCancel } from 'react-icons/md';
 
 const monstersPerPage = 8;
 
@@ -79,6 +81,10 @@ export default function MonsterPage() {
     setSearchTerm(value);
     debouncedSearch(value);
     setCurrentPage(1);
+
+    if (value) {
+      setSelectedFilters(new Set<string>());
+    }
   };
 
   useEffect(() => {
@@ -122,7 +128,7 @@ export default function MonsterPage() {
 
   return (
     <MainPageLayout>
-      <main className="main before:bg-monsters xl:h-screen xl:overflow-hidden ">
+      <main className="main xl:before:bg-monsters xl:h-screen xl:overflow-hidden">
         <div className="black-overlay" />
 
         <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start mb-6">
@@ -134,33 +140,58 @@ export default function MonsterPage() {
               onClearFilters={clearFilters}
               monsterCounts={monsterCounts}
               setCurrentPage={setCurrentPage}
+              searchTerm={searchTerm}
             />
             <MonsterSort selectedSort={sortOption} onSortChange={handleSortChange} />
-            <SearchBar
-              searchTerm={searchTerm}
-              handleSearchChange={handleSearchChange}
-              suggestions={suggestions}
-              onSuggestionClick={(suggestion) => {
-                setSearchTerm(suggestion);
-                debouncedSearch(suggestion);
-              }}
-              placeholder="Search for a monster..."
-            />
+            <div className="relative flex items-center">
+              <SearchBar
+                searchTerm={searchTerm}
+                handleSearchChange={handleSearchChange}
+                suggestions={suggestions}
+                onSuggestionClick={(suggestion) => {
+                  setSearchTerm(suggestion);
+                  debouncedSearch(suggestion);
+                }}
+                placeholder="Search for a monster..."
+              />
+              {searchTerm && (
+                <IconButton
+                  onClick={() => {
+                    setSearchTerm('');
+                    setDebouncedSearchTerm('');
+                    setCurrentPage(1);
+                  }}
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    right: '10px',
+                    transform: 'translateY(-50%)',
+                    color: '#DB3232',
+                    borderColor: '#DB3232',
+                  }}
+                  aria-label="Clear search"
+                >
+                  <MdCancel size={24} />
+                </IconButton>
+              )}
+            </div>
           </div>
           {loading ? (
             <div className="flex flex-col items-center justify-center h-[79.5vh]" data-testid="loading-indicator">
               <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
             </div>
           ) : (
-            <section className="flex flex-col items-center w-full  ">
+            <section className="flex flex-col items-center w-full xl:h-screen justify-between">
               {error ? (
                 <p>An error occurred while loading monsters. {error.message}</p>
               ) : monsters.length > 0 ? (
                 <>
                   <MonsterGrid monsters={monsters} isDungeonPage={false} />
-                  <div className="relative xl:sticky bottom-0 ">
-                    <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
-                  </div>
+                  {totalMonsters > monstersPerPage && (
+                    <div className="relative xl:sticky bottom-0 ">
+                      <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
+                    </div>
+                  )}
                 </>
               ) : (
                 <div className="flex h-[79.5vh] items-center justify-center">

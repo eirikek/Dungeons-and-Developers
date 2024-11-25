@@ -3,9 +3,12 @@ import { useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 
 import { dungeonMonstersVar } from '../context/DungeonContext';
-import { ADD_FAVORITE_MONSTER, REMOVE_FAVORITE_MONSTER } from '../graphql/favouriteMonsterQueries';
-import { UPDATE_DUNGEON_NAME } from '../graphql/updateUserQueries';
-import { GET_USER_DUNGEON_NAME, GET_USER_FAVORITES } from '../graphql/userQueries';
+import {
+  ADD_FAVORITE_MONSTER,
+  REMOVE_FAVORITE_MONSTER,
+  UPDATE_DUNGEON_NAME,
+} from '../graphql/mutations/userMutations.ts';
+import { GET_USER_DUNGEON_NAME, GET_USER_FAVORITES } from '../graphql/queries/userQueries.ts';
 import type { MonsterCardProps } from '../interfaces/MonsterCardProps';
 import type MonsterGraphQL from '../interfaces/MonsterDataProps';
 

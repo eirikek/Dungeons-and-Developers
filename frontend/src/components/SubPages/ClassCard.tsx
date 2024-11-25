@@ -35,8 +35,12 @@ const ClassCard: React.FC<ClassCardProps> = ({ id, name, hit_die, index, skills 
         <img src={classImage} alt={name} className="max-w-44 shadow-none" />
         <div>
           <h2 className="sub-header bold">{name}</h2>
-          <p className="text">HP: {hit_die}</p>
-          <p className="text">Skills: {skills.join(', ')}</p>
+          <p className="text">
+            <span className="bold">HP:</span> {hit_die}
+          </p>
+          <p className="text">
+            <span className="bold">Skills:</span> {skills.join(', ')}
+          </p>
         </div>
       </div>
       <div className="w-1/5 flex items-center justify-center xl:justify-end">

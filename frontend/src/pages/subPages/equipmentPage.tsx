@@ -189,7 +189,7 @@ const EquipmentPage = () => {
 
   return (
     <MainPageLayout>
-      <main className="main before:bg-equipments">
+      <main className="main xl:before:bg-equipments">
         <div className="black-overlay" />
         <div className="wrapper py-20 min-w-[70%] flex gap-y-32 2xl:gap-0 mt-10 items-center justify-center">
           <section>

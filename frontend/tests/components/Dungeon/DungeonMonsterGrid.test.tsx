@@ -5,8 +5,8 @@ import { MockedProvider } from '@apollo/client/testing';
 import { expect } from 'vitest';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
 import { DungeonContext } from '../../../src/context/DungeonContext.tsx';
-import { GET_MONSTER_REVIEWS } from '../../../src/graphql/getMonsterQuerie.ts';
-import { GET_USER_DUNGEON_NAME } from '../../../src/graphql/userQueries.ts';
+import { GET_MONSTER_REVIEWS } from '../../../src/graphql/queries/monsterQueries.ts';
+import { GET_USER_DUNGEON_NAME } from '../../../src/graphql/queries/userQueries.ts';
 
 const mockShowToast = vi.fn();
 vi.mock('../../../src/hooks/useToast.ts', () => ({

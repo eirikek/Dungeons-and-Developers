@@ -6,9 +6,9 @@ import { BrowserRouter } from 'react-router-dom';
 import { describe, expect } from 'vitest';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
 import ClassPage from '../../../src/pages/subPages/classPage.tsx';
-import { GET_CLASSES } from '../../../src/graphql/classQueries.ts';
-import { GET_USER_CLASS } from '../../../src/graphql/userQueries.ts';
-import { UPDATE_USER_CLASS } from '../../../src/graphql/updateUserQueries.ts';
+import { GET_CLASSES } from '../../../src/graphql/queries/classQueries.ts';
+import { GET_USER_CLASS } from '../../../src/graphql/queries/userQueries.ts';
+import { UPDATE_USER_CLASS } from '../../../src/graphql/mutations/userMutations.ts';
 
 const mockShowToast = vi.fn();
 

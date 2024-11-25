@@ -1,8 +1,8 @@
 import { makeVar, useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { createContext, ReactNode, useCallback, useEffect, useMemo } from 'react';
 
-import { UPDATE_ABILITY_SCORES, UPDATE_USER_CLASS, UPDATE_USER_RACE } from '../graphql/updateUserQueries.ts';
-import { GET_ARRAY_SCORES, GET_USER_CLASS, GET_USER_RACE } from '../graphql/userQueries.ts';
+import { UPDATE_ABILITY_SCORES, UPDATE_USER_CLASS, UPDATE_USER_RACE } from '../graphql/mutations/userMutations.ts';
+import { GET_ARRAY_SCORES, GET_USER_CLASS, GET_USER_RACE } from '../graphql/queries/userQueries.ts';
 import useAbilityScores from '../hooks/useAbilityScores.ts';
 import useClasses from '../hooks/useClasses.ts';
 import useRaces from '../hooks/useRaces.ts';
@@ -15,7 +15,6 @@ import RaceData from '../interfaces/RaceProps.ts';
 import { abilitiesVar } from '../pages/mainPages/myCharacterPage.tsx';
 import { classVar } from '../pages/subPages/classPage.tsx';
 import { raceVar } from '../pages/subPages/racePage.tsx';
-import { notifyScoreChanges } from '../utils/abilityScoreMapping.ts';
 
 interface CharacterContextType {
   stateAbilities: AbilityScoreCardProps[];
@@ -68,6 +67,7 @@ interface UserRace {
     };
   };
 }
+
 interface UserAbilities {
   user: {
     id: string;
@@ -80,6 +80,7 @@ interface UserAbilities {
     };
   };
 }
+
 interface Ability {
   id: string;
   name: string;
@@ -329,7 +330,6 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
         });
 
         abilitiesVar(updatedScores);
-        notifyScoreChanges(updatedScores, abilitiesVar(), abilitiesVar, showToast);
       } catch (error) {
         console.error(error);
       }

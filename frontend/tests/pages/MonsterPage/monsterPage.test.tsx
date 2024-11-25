@@ -9,7 +9,7 @@ import { AuthContext } from '../../../src/context/AuthContext.tsx';
 import { MonsterCardProps } from '../../../src/interfaces/MonsterCardProps.ts';
 import MonsterPage from '../../../src/pages/mainPages/monsterPage.tsx';
 import DungeonContextMock from '../../mocks/DungeonContextMock';
-import { GET_MONSTER_REVIEWS, GET_MONSTERS } from '../../../src/graphql/getMonsterQuerie.ts';
+import { GET_MONSTER_REVIEWS, GET_MONSTERS } from '../../../src/graphql/monsterQueries.ts';
 import { GET_USER_FAVORITES } from '../../../src/graphql/userQueries.ts';
 import { ADD_FAVORITE_MONSTER, REMOVE_FAVORITE_MONSTER } from '../../../src/graphql/favouriteMonsterQueries.ts'; // Adjust the path as necessary
 

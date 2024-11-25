@@ -4,7 +4,7 @@ import MonsterFilter from '../../../src/components/MonsterFilter/MonsterFilter.t
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { MockedProvider } from '@apollo/client/testing';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
-import { GET_MONSTER_HP_RANGE } from '../../../src/graphql/getMonsterQuerie.ts';
+import { GET_MONSTER_HP_RANGE } from '../../../src/graphql/queries/monsterQueries.ts';
 
 // Mock props for the MonsterFilter component
 const mockSetSelectedFilters = vi.fn();

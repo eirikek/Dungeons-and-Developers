@@ -7,8 +7,8 @@ import { useContext, useState, useRef } from 'react';
 import ReviewSlider from './ReviewSlider.tsx';
 import ReviewTextField from './ReviewTextField.tsx';
 import { useToast } from '../../hooks/useToast';
-import { ADD_REVIEW, DELETE_REVIEW, UPDATE_REVIEW } from '../../graphql/reviewQueries.ts';
-import { GET_MONSTER_REVIEWS } from '../../graphql/getMonsterQuerie.ts';
+import { ADD_REVIEW, DELETE_REVIEW, UPDATE_REVIEW } from '../../graphql/mutations/monsterMutations.ts';
+import { GET_MONSTER_REVIEWS } from '../../graphql/queries/monsterQueries.ts';
 
 type ReviewProps = {
   review: ReviewType;

@@ -5,7 +5,6 @@ import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
 import RaceProps from '../../interfaces/RaceProps.ts';
 
 import raceImageMapping from '../../utils/raceImageMapping.ts';
-import { UPDATE_USER_RACE } from '../../graphql/updateUserQueries.ts';
 
 interface RaceCardProps extends RaceProps {
   selectedRaceId: string;
@@ -37,8 +36,12 @@ const RaceCard: React.FC<RaceCardProps> = ({ id, index, name, alignment, size, s
         <div>
           <h2 className="sub-header bold">{name}</h2>
           <p className="text">{alignment}</p>
-          <p className="text">Size: {size}</p>
-          <p className="text">Speed: {speed}</p>
+          <p className="text">
+            <span className="bold">Size:</span> {size}
+          </p>
+          <p className="text">
+            <span className="bold">Speed:</span> {speed}
+          </p>
         </div>
       </div>
       <div className="w-1/5 flex items-center justify-center xl:justify-end">

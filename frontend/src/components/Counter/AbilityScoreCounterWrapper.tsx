@@ -1,4 +1,4 @@
-import Counter from '../Counter/Counter';
+import Counter from './Counter.tsx';
 
 const AbilityCounterWrapper = ({
   initialValue,
@@ -12,14 +12,7 @@ const AbilityCounterWrapper = ({
     onUpdate(value);
   };
 
-  return (
-    <Counter
-      value={initialValue}
-      onChange={(value) => console.log(`Intermediate value: ${value}`)}
-      onValueFinalized={handleFinalizedChange}
-      scale={1.5}
-    />
-  );
+  return <Counter value={initialValue} onValueFinalized={handleFinalizedChange} scale={1.5} />;
 };
 
 export default AbilityCounterWrapper;

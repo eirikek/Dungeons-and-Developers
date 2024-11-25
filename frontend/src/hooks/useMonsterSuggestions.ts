@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { GET_MONSTER_SUGGESTIONS } from '../graphql/getMonsterQuerie.ts';
+import { GET_MONSTER_SUGGESTIONS } from '../graphql/queries/monsterQueries.ts';
 
 function useMonsterSuggestions(searchTerm: string, selectedFilters: Set<string>, minHp?: number, maxHp?: number) {
   const { data, loading, error } = useQuery(GET_MONSTER_SUGGESTIONS, {

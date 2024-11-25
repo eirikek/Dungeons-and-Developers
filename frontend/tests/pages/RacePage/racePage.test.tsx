@@ -5,9 +5,9 @@ import { GraphQLError } from 'graphql/error';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
 import RacePage from '../../../src/pages/subPages/racePage.tsx';
-import { GET_RACES } from '../../../src/graphql/raceQueries.ts';
-import { GET_USER_RACE } from '../../../src/graphql/userQueries.ts';
-import { UPDATE_USER_RACE } from '../../../src/graphql/updateUserQueries.ts';
+import { GET_RACES } from '../../../src/graphql/queries/raceQueries.ts';
+import { GET_USER_RACE } from '../../../src/graphql/queries/userQueries.ts';
+import { UPDATE_USER_RACE } from '../../../src/graphql/mutations/userMutations.ts';
 
 const mockShowToast = vi.fn();
 vi.mock('../../../src/hooks/useToast.ts', () => ({

@@ -3,7 +3,7 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 interface CounterProps {
   value: number;
-  onChange: (newValue: number) => void;
+  onChange?: (newValue: number) => void;
   scale?: number;
   onPointerUp?: () => void;
   onMouseUp?: () => void;
@@ -40,7 +40,9 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
       }
 
       setLocalValue(newValue);
-      onChange(newValue);
+      if (onChange) {
+        onChange(newValue);
+      }
     }, 100);
   };
 
@@ -57,8 +59,10 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
         newValue = 100 - (Math.abs(newValue) % 101);
       }
 
-      setLocalValue(newValue); // Update local state
-      onChange(newValue); // Propagate changes locally
+      setLocalValue(newValue);
+      if (onChange) {
+        onChange(newValue);
+      }
     }, 100);
   };
 

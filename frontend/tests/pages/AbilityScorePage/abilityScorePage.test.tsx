@@ -6,9 +6,9 @@ import AbilityScorePage from '../../../src/pages/subPages/abilityScorePage.tsx';
 
 import { BrowserRouter } from 'react-router-dom';
 import { afterEach, vi } from 'vitest';
-import { GET_ARRAY_SCORES } from '../../../src/graphql/userQueries.ts';
-import { UPDATE_ABILITY_SCORES } from '../../../src/graphql/updateUserQueries.ts';
-import { GET_ABILITYSCORES } from '../../../src/graphql/abilityScoreQueries.ts';
+import { GET_ARRAY_SCORES } from '../../../src/graphql/queries/userQueries.ts';
+import { UPDATE_ABILITY_SCORES } from '../../../src/graphql/mutations/userMutations.ts';
+import { GET_ABILITYSCORES } from '../../../src/graphql/queries/abilityScoreQueries.ts';
 
 // Mock the useToast hook
 const mockShowToast = vi.fn();

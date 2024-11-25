@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import TutorialModal from '../../../src/components/MyCharacter/TutorialModal.tsx';
+import TutorialModal from '../../../src/components/TutorialModal/TutorialModal.tsx';
 import { BrowserRouter } from 'react-router-dom';
 
 describe('TutorialModal Component', () => {
