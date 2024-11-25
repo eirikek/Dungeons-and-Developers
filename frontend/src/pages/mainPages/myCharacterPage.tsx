@@ -3,7 +3,7 @@ import { useContext, useEffect, useState, useRef } from 'react';
 import { FaChevronLeft, FaChevronRight, FaTrash } from 'react-icons/fa';
 import AbilityCounterWrapper from '../../components/Counter/AbilityScoreCounterWrapper.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout';
-import TutorialModal from '../../components/MyCharacter/TutorialModal';
+import TutorialModal from '../../components/TutorialModal/TutorialModal';
 import { equipmentsVar } from '../../context/CharacterContext.tsx';
 import useCharacterContext from '../../hooks/useCharacter';
 import { AuthContext } from '../../context/AuthContext';

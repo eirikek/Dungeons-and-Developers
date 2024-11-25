@@ -32,7 +32,7 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps & { score: number; onChan
       </div>
 
       <ul className="w-full justify-start xl:w-auto xl:justify-center xl:min-w-[15vw] 2xl:min-w-[10vw] text-center xl:text-left">
-        <li className="bold text">Skills required:</li>
+        <li className="bold text">Skills recommended:</li>
         {skills.map((skill, skillIndex) => (
           <li key={skillIndex} className="text">
             {skill}
