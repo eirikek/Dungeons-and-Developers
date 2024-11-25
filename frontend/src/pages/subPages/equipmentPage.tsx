@@ -222,7 +222,7 @@ const EquipmentPage = () => {
   return (
     <MainPageLayout>
       <main className="main xl:before:bg-equipments">
-        <div className="black-overlay" />
+        <div className="black-overlay opacity-60" />
         <div className="wrapper py-20 min-w-[70%] flex gap-y-32 2xl:gap-0 mt-10 items-center justify-center">
           <section>
             <h1 className=" text-center header mb-10">Equipments</h1>
