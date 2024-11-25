@@ -55,6 +55,17 @@ export default function MonsterPage() {
     setDebouncedSearchTerm(searchTerm);
   }, [searchTerm]);
 
+  useEffect(() => {
+    return () => {
+      sessionStorage.removeItem('searchTerm');
+      sessionStorage.removeItem('selectedFilters');
+      sessionStorage.removeItem('hpFilterMin');
+      sessionStorage.removeItem('hpFilterMax');
+      sessionStorage.removeItem('sortOption');
+      sessionStorage.removeItem('currentPage');
+    };
+  }, []);
+
   hourglass.register();
 
   const { data: hpRangeData, loading: hpRangeLoading } = useQuery(GET_MONSTER_HP_RANGE);
