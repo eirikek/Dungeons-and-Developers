@@ -12,6 +12,8 @@ import MonsterGrid from '../../components/Dungeon/MonsterGrid.tsx';
 import { GET_MONSTER_HP_RANGE } from '../../graphql/queries/monsterQueries.ts';
 import useMonster from '../../hooks/useMonster.ts';
 import useMonsterSuggestions from '../../hooks/useMonsterSuggestions';
+import { IconButton } from '@mui/material';
+import { MdCancel } from 'react-icons/md';
 
 const monstersPerPage = 8;
 
@@ -138,18 +140,41 @@ export default function MonsterPage() {
               onClearFilters={clearFilters}
               monsterCounts={monsterCounts}
               setCurrentPage={setCurrentPage}
+              searchTerm={searchTerm}
             />
             <MonsterSort selectedSort={sortOption} onSortChange={handleSortChange} />
-            <SearchBar
-              searchTerm={searchTerm}
-              handleSearchChange={handleSearchChange}
-              suggestions={suggestions}
-              onSuggestionClick={(suggestion) => {
-                setSearchTerm(suggestion);
-                debouncedSearch(suggestion);
-              }}
-              placeholder="Search for a monster..."
-            />
+            <div className="relative flex items-center">
+              <SearchBar
+                searchTerm={searchTerm}
+                handleSearchChange={handleSearchChange}
+                suggestions={suggestions}
+                onSuggestionClick={(suggestion) => {
+                  setSearchTerm(suggestion);
+                  debouncedSearch(suggestion);
+                }}
+                placeholder="Search for a monster..."
+              />
+              {searchTerm && (
+                <IconButton
+                  onClick={() => {
+                    setSearchTerm('');
+                    setDebouncedSearchTerm('');
+                    setCurrentPage(1);
+                  }}
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    right: '10px',
+                    transform: 'translateY(-50%)',
+                    color: '#DB3232',
+                    borderColor: '#DB3232',
+                  }}
+                  aria-label="Clear search"
+                >
+                  <MdCancel size={24} />
+                </IconButton>
+              )}
+            </div>
           </div>
           {loading ? (
             <div className="flex flex-col items-center justify-center h-[79.5vh]" data-testid="loading-indicator">
