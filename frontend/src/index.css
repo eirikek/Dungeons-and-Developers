@@ -81,7 +81,7 @@ body {
 }
 
 .black-overlay {
-    @apply absolute inset-0 w-full h-full bg-black opacity-60;
+    @apply absolute inset-0 w-full h-full bg-black;
 }
 
 @media (max-width: 1024px) {

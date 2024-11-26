@@ -18,14 +18,53 @@ import { MdCancel } from 'react-icons/md';
 const monstersPerPage = 8;
 
 export default function MonsterPage() {
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>(() => sessionStorage.getItem('searchTerm') || '');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [selectedFilters, setSelectedFilters] = useState<Set<string>>(new Set());
+  const [currentPage, setCurrentPage] = useState<number>(() => Number(sessionStorage.getItem('currentPage')) || 1);
+  const [selectedFilters, setSelectedFilters] = useState<Set<string>>(() => {
+    const savedFilters = sessionStorage.getItem('selectedFilters');
+    return savedFilters ? new Set(JSON.parse(savedFilters)) : new Set();
+  });
   const [suggestions, setSuggestions] = useState([]);
-  const [hpFilterMin, setHpFilterMin] = useState<number>(1);
-  const [hpFilterMax, setHpFilterMax] = useState<number>(1000);
-  const [sortOption, setSortOption] = useState<string>('name-asc');
+  const [hpFilterMin, setHpFilterMin] = useState<number>(() => Number(sessionStorage.getItem('hpFilterMin')) || 1);
+  const [hpFilterMax, setHpFilterMax] = useState<number>(() => Number(sessionStorage.getItem('hpFilterMax')) || 1000);
+  const [sortOption, setSortOption] = useState<string>(() => sessionStorage.getItem('sortOption') || 'name-asc');
+
+  useEffect(() => {
+    sessionStorage.setItem('searchTerm', searchTerm);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    sessionStorage.setItem('currentPage', currentPage.toString());
+  }, [currentPage]);
+
+  useEffect(() => {
+    sessionStorage.setItem('selectedFilters', JSON.stringify(Array.from(selectedFilters)));
+  }, [selectedFilters]);
+
+  useEffect(() => {
+    sessionStorage.setItem('hpFilterMin', hpFilterMin.toString());
+    sessionStorage.setItem('hpFilterMax', hpFilterMax.toString());
+  }, [hpFilterMin, hpFilterMax]);
+
+  useEffect(() => {
+    sessionStorage.setItem('sortOption', sortOption);
+  }, [sortOption]);
+
+  useEffect(() => {
+    setDebouncedSearchTerm(searchTerm);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    return () => {
+      sessionStorage.removeItem('searchTerm');
+      sessionStorage.removeItem('selectedFilters');
+      sessionStorage.removeItem('hpFilterMin');
+      sessionStorage.removeItem('hpFilterMax');
+      sessionStorage.removeItem('sortOption');
+      sessionStorage.removeItem('currentPage');
+    };
+  }, []);
 
   hourglass.register();
 
@@ -124,12 +163,19 @@ export default function MonsterPage() {
     debouncedSearch('');
     setHpFilterMin(minHp);
     setHpFilterMax(maxHp);
+
+    sessionStorage.removeItem('searchTerm');
+    sessionStorage.removeItem('selectedFilters');
+    sessionStorage.removeItem('hpFilterMin');
+    sessionStorage.removeItem('hpFilterMax');
+    sessionStorage.removeItem('sortOption');
+    sessionStorage.removeItem('currentPage');
   };
 
   return (
     <MainPageLayout>
       <main className="main xl:before:bg-monsters xl:h-screen xl:overflow-hidden">
-        <div className="black-overlay" />
+        <div className="black-overlay opacity-40" />
 
         <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start mb-6">
           <div className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row'}>
