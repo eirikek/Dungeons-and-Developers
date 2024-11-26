@@ -106,6 +106,14 @@ export default {
             },
           ]);
 
+          const formattedMonstersByDifficulty = monstersWithCalculations.map((monster) => ({
+            ...monster,
+            id: monster._id.toString(),
+            image: monster.image
+              ? `data:image/webp;base64,${Buffer.from(monster.image.buffer).toString('base64')}`
+              : null,
+          }));
+
           const totalMonsters = await Monster.countDocuments(query);
           const minHpValue = await Monster.findOne(query)
             .sort({ hit_points: 1 })
@@ -115,7 +123,7 @@ export default {
             .then((m) => m?.hit_points ?? 1000);
 
           return {
-            monsters: monstersWithCalculations,
+            monsters: formattedMonstersByDifficulty || [],
             totalMonsters,
             minHp: minHpValue,
             maxHp: maxHpValue,
@@ -148,6 +156,14 @@ export default {
             },
           ]);
 
+          const formattedMonstersByReviews = monstersByReviews.map((monster) => ({
+            ...monster,
+            id: monster._id.toString(),
+            image: monster.image
+              ? `data:image/webp;base64,${Buffer.from(monster.image.buffer).toString('base64')}`
+              : null,
+          }));
+
           const totalMonstersByReviews = await Monster.countDocuments(query);
           const minHpValueByReviews = await Monster.findOne(query)
             .sort({ hit_points: 1 })
@@ -157,7 +173,7 @@ export default {
             .then((m) => m?.hit_points ?? 1000);
 
           return {
-            monsters: monstersByReviews,
+            monsters: formattedMonstersByReviews || [],
             totalMonsters: totalMonstersByReviews,
             minHp: minHpValueByReviews,
             maxHp: maxHpValueByReviews,
@@ -199,6 +215,12 @@ export default {
         totalMonsters = await Monster.countDocuments(query);
       }
 
+      const formattedMonsters = monsters.map((monster) => ({
+        ...monster.toObject(),
+        id: monster._id.toString(),
+        image: monster.image ? `data:image/webp;base64,${Buffer.from(monster.image.buffer).toString('base64')}` : null,
+      }));
+
       const minHpValue = await Monster.findOne(query)
         .sort({ hit_points: 1 })
         .then((m) => m?.hit_points ?? 1);
@@ -206,7 +228,7 @@ export default {
         .sort({ hit_points: -1 })
         .then((m) => m?.hit_points ?? 1000);
 
-      return { monsters, totalMonsters, minHp: minHpValue, maxHp: maxHpValue };
+      return { monsters: formattedMonsters || [], totalMonsters, minHp: minHpValue, maxHp: maxHpValue };
     },
 
     async monster(_: any, { id }: MonsterArgs) {
