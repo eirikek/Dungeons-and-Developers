@@ -120,7 +120,20 @@ export default {
         await user.save();
       }
 
-      return user.populate('favoritedMonsters');
+      const populatedUser = await user.populate('favoritedMonsters');
+      const favoritedMonsters = populatedUser.favoritedMonsters.map((monster: any) => ({
+        ...monster.toObject(),
+        id: monster._id.toString(),
+        image: monster.image
+          ? `data:image/webp;base64,${Buffer.isBuffer(monster.image) ? monster.image.toString('base64') : monster.image}`
+          : null,
+      }));
+
+      return {
+        ...populatedUser.toObject(),
+        favoritedMonsters,
+        id: populatedUser._id.toString(),
+      };
     },
 
     async deleteUser(_: any, { userId }: { userId: string }) {
@@ -140,7 +153,20 @@ export default {
       user.favoritedMonsters.pull(monsterObjectId);
       await user.save();
 
-      return user.populate('favoritedMonsters');
+      const populatedUser = await user.populate('favoritedMonsters');
+      const favoritedMonsters = populatedUser.favoritedMonsters.map((monster: any) => ({
+        ...monster.toObject(),
+        id: monster._id.toString(),
+        image: monster.image
+          ? `data:image/webp;base64,${Buffer.isBuffer(monster.image) ? monster.image.toString('base64') : monster.image}`
+          : null, // Safely handle `image`
+      }));
+
+      return {
+        ...populatedUser.toObject(),
+        favoritedMonsters,
+        id: populatedUser._id.toString(), // Map `_id` to `id`
+      };
     },
 
     async updateDungeonName(_: any, { userId, dungeonName }: { userId: string; dungeonName: string }) {

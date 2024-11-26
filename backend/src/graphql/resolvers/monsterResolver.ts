@@ -232,10 +232,20 @@ export default {
     },
 
     async monster(_: any, { id }: MonsterArgs) {
-      return Monster.findById(id).populate({
+      const monster = await Monster.findById(id).populate({
         path: 'reviews.user',
         select: 'id userName',
       });
+
+      if (!monster) throw new Error('Monster not found');
+
+      return {
+        ...monster.toObject(),
+        id: monster._id.toString(),
+        image: monster.image
+          ? `data:image/webp;base64,${Buffer.isBuffer(monster.image) ? monster.image.toString('base64') : monster.image}`
+          : null,
+      };
     },
 
     async monsterTypeCounts(_: any, { minHp, maxHp }: MonsterTypeCountsArgs) {
