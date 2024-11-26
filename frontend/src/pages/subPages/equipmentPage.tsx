@@ -344,7 +344,7 @@ const EquipmentPage = () => {
             )}
           </section>
 
-          <div className="min-h-[5vh]">
+          <div className="min-h-[10vh]">
             {fetchedTotalEquipments > equipmentsPerPage && (
               <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
             )}
