@@ -52,6 +52,15 @@ export const LOGIN_USER = gql`
         equipments {
           name
         }
+        favoritedMonsters {
+          id
+          name
+          size
+          type
+          alignment
+          hit_points
+          image
+        }
       }
     }
   }

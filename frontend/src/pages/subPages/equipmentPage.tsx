@@ -271,7 +271,7 @@ const EquipmentPage = () => {
               </div>
             )}
           </section>
-          <section className="w-full h-full">
+          <section className="w-full h-full min-h-[60vh]">
             {noResults ? (
               <div className="flex justify-center items-center w-full h-[40vh]">
                 <h2 className="text-center sub-header">No Equipments Found</h2>
@@ -344,7 +344,7 @@ const EquipmentPage = () => {
             )}
           </section>
 
-          <div className="min-h-[5vh]">
+          <div className="min-h-[10vh]">
             {fetchedTotalEquipments > equipmentsPerPage && (
               <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
             )}

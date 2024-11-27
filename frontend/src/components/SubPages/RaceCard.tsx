@@ -25,7 +25,7 @@ const RaceCard: React.FC<RaceCardProps> = ({ id, index, name, alignment, size, s
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.1 }}
-      transition={{ duration: 1, ease: 'circInOut' }}
+      transition={{ duration: 0.5, ease: 'circInOut' }}
       variants={{
         hidden: { opacity: 0, y: 100 },
         visible: { opacity: 1, y: 0 },
