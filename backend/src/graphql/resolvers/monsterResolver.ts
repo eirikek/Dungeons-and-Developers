@@ -123,13 +123,7 @@ export default {
             },
           ]);
 
-          const formattedMonstersByDifficulty = monstersWithCalculations.map((monster) => ({
-            ...monster,
-            id: monster._id.toString(),
-            image: monster.image
-              ? `data:image/webp;base64,${Buffer.from(monster.image.buffer).toString('base64')}`
-              : null,
-          }));
+          const formattedMonstersByDifficulty = monstersWithCalculations.map((monster) => formatDocument(monster));
 
           const totalMonsters = await Monster.countDocuments(query);
           const minHpValue = await Monster.findOne(query)
@@ -173,13 +167,7 @@ export default {
             },
           ]);
 
-          const formattedMonstersByReviews = monstersByReviews.map((monster) => ({
-            ...monster,
-            id: monster._id.toString(),
-            image: monster.image
-              ? `data:image/webp;base64,${Buffer.from(monster.image.buffer).toString('base64')}`
-              : null,
-          }));
+          const formattedMonstersByReviews = monstersByReviews.map((monster) => formatDocument(monster));
 
           const totalMonstersByReviews = await Monster.countDocuments(query);
           const minHpValueByReviews = await Monster.findOne(query)
@@ -232,11 +220,7 @@ export default {
         totalMonsters = await Monster.countDocuments(query);
       }
 
-      const formattedMonsters = monsters.map((monster) => ({
-        ...monster.toObject(),
-        id: monster._id.toString(),
-        image: monster.image ? `data:image/webp;base64,${Buffer.from(monster.image.buffer).toString('base64')}` : null,
-      }));
+      const formattedMonsters = monsters.map((monster) => formatDocument(monster));
 
       const minHpValue = await Monster.findOne(query)
         .sort({ hit_points: 1 })
