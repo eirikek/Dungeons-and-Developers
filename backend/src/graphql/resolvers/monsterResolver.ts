@@ -54,6 +54,10 @@ export default {
         query.hit_points = { $gte: minHp, $lte: maxHp };
       }
 
+      if (searchTerm) {
+        query.name = { $regex: new RegExp(searchTerm, 'i') };
+      }
+
       if (suggestionsOnly) {
         query.name = { $regex: new RegExp(`^${searchTerm}`, 'i') };
         return Monster.find(query, 'id name').limit(limit);
