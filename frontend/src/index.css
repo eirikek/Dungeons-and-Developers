@@ -93,3 +93,6 @@ body {
 .arrow-button {
     @apply text-6xl lg:text-4xl xl:text-3xl text-white hover:text-gray-400;
 }
+*:focus {
+    box-shadow: 0 0 0 2px #FFFFFF;
+}

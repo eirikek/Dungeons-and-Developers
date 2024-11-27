@@ -67,7 +67,7 @@ const SearchBar = ({
         />
       </div>
       {isFocused && suggestions.length > 0 && (
-        <ul className="absolute top-full mt-1 w-full bg-customGray shadow-xl shadow-black rounded z-10">
+        <ul className="absolute top-full mt-1 w-full bg-customGray shadow-xl shadow-black rounded z-10 focus: visible">
           {suggestions.map((suggestion, index) => (
             <li
               key={index}

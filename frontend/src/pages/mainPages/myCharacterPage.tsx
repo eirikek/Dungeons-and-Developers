@@ -227,6 +227,14 @@ const MyCharacterPage = () => {
                         size={30}
                         className="delete-icon text-white cursor-pointer hover:text-customRed transition-colors"
                         onClick={() => handleRemoveEquipment(equipment)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            handleRemoveEquipment(equipment);
+                          }
+                        }}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="Delete equipment"
                       />
                     </li>
                   ))}
