@@ -1,6 +1,8 @@
 import Monster from '../model/Monsters.ts';
 import User from '../model/User.ts';
 import fetchData from '../../scripts/fetchData.js';
+import { formatDocument } from '../../utils/formatDocument.js';
+import { Types } from 'mongoose';
 
 interface MonsterArgs {
   id: string;
@@ -21,6 +23,17 @@ interface ReviewInput {
   user: string;
   difficulty: number;
   description: string;
+}
+
+interface Review {
+  _id: Types.ObjectId;
+  user: {
+    _id: Types.ObjectId;
+    userName: string;
+  };
+  difficulty: number;
+  description: string;
+  createdAt: string;
 }
 
 interface MonsterTypeCountsArgs {
@@ -243,12 +256,22 @@ export default {
 
       if (!monster) throw new Error('Monster not found');
 
+      const formattedMonster = formatDocument(monster);
+
+      const formattedReviews = monster.reviews.map((review: any) => ({
+        id: review._id.toString(),
+        user: {
+          id: review.user._id ? review.user._id.toString() : '',
+          userName: review.user.userName || 'Unknown',
+        },
+        difficulty: review.difficulty,
+        description: review.description,
+        createdAt: review.createdAt,
+      }));
+
       return {
-        ...monster.toObject(),
-        id: monster._id.toString(),
-        image: monster.image
-          ? `data:image/webp;base64,${Buffer.isBuffer(monster.image) ? monster.image.toString('base64') : monster.image}`
-          : null,
+        ...formattedMonster,
+        reviews: formattedReviews,
       };
     },
 
