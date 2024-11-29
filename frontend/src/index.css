@@ -120,9 +120,13 @@ body.accessibility-mode .card {
 }
 
 body.accessibility-mode .monster-card div {
-    gap: 1vh !important;
+    gap: 0 !important;
     flex-direction: column;
     text-align: center;
+}
+
+body.accessibility-mode .monster-card {
+    @apply h-[33vh]
 }
 
 body.accessibility-mode .monster-image {
@@ -130,9 +134,12 @@ body.accessibility-mode .monster-image {
 }
 
 body.accessibility-mode .monster-text-button {
-    @apply text-4xl md:text-3xl lg:text-2xl xl:text-xl 2xl:text-lg text-white bg-customRed border-2 border-white hover:bg-accessibilityBackground mt-4;
+    @apply text-5xl md:text-3xl lg:text-2xl xl:text-xl 2xl:text-lg text-white bg-customRed border-2 p-1 border-white hover:bg-accessibilityBackground mt-4;
 }
 
+body.accessibility-mode .review-button {
+    @apply text-5xl md:text-3xl lg:text-2xl xl:text-xl 2xl:text-lg text-white bg-customRed border-2 rounded-none w-full p-1 border-white hover:bg-accessibilityBackground mt-4;
+}
 
 body.accessibility-mode h1,
 body.accessibility-mode h2,
