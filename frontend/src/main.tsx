@@ -8,6 +8,7 @@ import ToastProvider from './components/Toast/CustomToast.tsx';
 import { AuthProvider } from './context/AuthContext.tsx';
 import { CharacterProvider } from './context/CharacterContext.tsx';
 import { DungeonProvider } from './context/DungeonContext.tsx';
+import { AccessibilityProvider } from './context/AccessibilityContext.tsx';
 import './index.css';
 
 const queryClient = new QueryClient();
@@ -21,7 +22,9 @@ createRoot(document.getElementById('root')!).render(
           <ToastProvider>
             <CharacterProvider userId={userId}>
               <DungeonProvider userId={userId}>
-                <App />
+                <AccessibilityProvider>
+                  <App />
+                </AccessibilityProvider>
               </DungeonProvider>
             </CharacterProvider>
           </ToastProvider>

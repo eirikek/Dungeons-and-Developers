@@ -148,7 +148,7 @@ const Navbar = () => {
 
                 {/* Dropdown menu */}
                 <div
-                  className={`absolute left-1/2 transform -translate-x-1/2 w-[18vw] bg-customRed rounded overflow-hidden duration-300 ease-in-out max-h-0 ${
+                  className={`absolute left-1/2 transform -translate-x-1/2 min-w-60 w-[18vw] bg-customRed rounded overflow-hidden duration-300 ease-in-out max-h-0 ${
                     isDropdownHovered ? 'max-h-96 opacity-100' : 'opacity-0'
                   }`}
                 >
@@ -233,7 +233,7 @@ const Navbar = () => {
 
               <div
                 className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                  isMobileDropdownOpen ? 'max-h-[60vw] opacity-100' : 'max-h-0 opacity-0'
+                  isMobileDropdownOpen ? 'max-h-[80vw] opacity-100' : 'max-h-0 opacity-0'
                 }`}
               >
                 <ul className="space-y-2 pl-4">
