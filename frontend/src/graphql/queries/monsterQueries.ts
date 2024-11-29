@@ -65,6 +65,7 @@ export const GET_MONSTER_SUGGESTIONS = gql`
     }
   }
 `;
+
 export const GET_MONSTER_REVIEWS = gql`
   query GetMonsterReviews($monsterId: ID!) {
     monster(id: $monsterId) {

@@ -7,8 +7,8 @@ import { useContext, useState, useRef } from 'react';
 import ReviewSlider from './ReviewSlider.tsx';
 import ReviewTextField from './ReviewTextField.tsx';
 import { useToast } from '../../hooks/useToast';
-import { ADD_REVIEW, DELETE_REVIEW, UPDATE_REVIEW } from '../../graphql/reviewQueries.ts';
-import { GET_MONSTER_REVIEWS } from '../../graphql/getMonsterQuerie.ts';
+import { ADD_REVIEW, DELETE_REVIEW, UPDATE_REVIEW } from '../../graphql/mutations/monsterMutations.ts';
+import { GET_MONSTER_REVIEWS } from '../../graphql/queries/monsterQueries.ts';
 
 type ReviewProps = {
   review: ReviewType;
@@ -95,9 +95,9 @@ const Review = ({ review, monsterId, monsterName }: ReviewProps) => {
     <Box
       className="relative rounded mb-4 gap-6 flex flex-col w-full"
       sx={{
-        width: '100%', // Sets the width to occupy the full container width.
-        maxWidth: '500px', // Limits the width to prevent overflow.
-        margin: '0 auto', // Centers the Box in its container.
+        width: '100%',
+        maxWidth: '500px',
+        margin: '0 auto',
         padding: 2,
         border: '1px solid white',
         borderRadius: '8px',

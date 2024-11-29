@@ -67,11 +67,13 @@ body {
 }
 
 .text {
-    @apply text-4xl md:text-3xl lg:text-2xl xl:text-xl 2xl:text-lg leading-7 xl:leading-10 text-white;
+    @apply text-4xl md:text-3xl lg:text-2xl xl:text-xl 2xl:text-lg leading-8 xl:leading-10 text-white;
 }
 
 .main {
     @apply relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-cover before:bg-center before:z-0;
+    background-color: #1c1c1c;
+    background-image: url("https://www.transparenttextures.com/patterns/shley-tree-2.png");
 }
 
 .wrapper {
@@ -79,7 +81,13 @@ body {
 }
 
 .black-overlay {
-    @apply absolute inset-0 w-full h-full bg-black opacity-70;
+    @apply absolute inset-0 w-full h-full bg-black;
+}
+
+@media (max-width: 1024px) {
+    .black-overlay {
+        display: none;
+    }
 }
 
 .arrow-button {

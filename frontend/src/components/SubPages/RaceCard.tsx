@@ -25,7 +25,7 @@ const RaceCard: React.FC<RaceCardProps> = ({ id, index, name, alignment, size, s
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.1 }}
-      transition={{ duration: 1, ease: 'circInOut' }}
+      transition={{ duration: 0.5, ease: 'circInOut' }}
       variants={{
         hidden: { opacity: 0, y: 100 },
         visible: { opacity: 1, y: 0 },
@@ -36,8 +36,12 @@ const RaceCard: React.FC<RaceCardProps> = ({ id, index, name, alignment, size, s
         <div>
           <h2 className="sub-header bold">{name}</h2>
           <p className="text">{alignment}</p>
-          <p className="text">Size: {size}</p>
-          <p className="text">Speed: {speed}</p>
+          <p className="text">
+            <span className="bold">Size:</span> {size}
+          </p>
+          <p className="text">
+            <span className="bold">Speed:</span> {speed}
+          </p>
         </div>
       </div>
       <div className="w-1/5 flex items-center justify-center xl:justify-end">

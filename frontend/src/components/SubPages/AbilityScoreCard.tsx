@@ -15,7 +15,7 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps & { score: number; onChan
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 1, ease: 'circInOut' }}
+      transition={{ duration: 0.5, ease: 'circInOut' }}
       variants={{
         hidden: { opacity: 0, y: 100 },
         visible: { opacity: 1, y: 0 },
@@ -32,7 +32,7 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps & { score: number; onChan
       </div>
 
       <ul className="w-full justify-start xl:w-auto xl:justify-center xl:min-w-[15vw] 2xl:min-w-[10vw] text-center xl:text-left">
-        <li className="bold text">Skills required:</li>
+        <li className="bold text">Skills recommended:</li>
         {skills.map((skill, skillIndex) => (
           <li key={skillIndex} className="text">
             {skill}

@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 import { FiX } from 'react-icons/fi';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
-import { GET_MONSTER_HP_RANGE } from '../../graphql/getMonsterQuerie.ts';
+import { GET_MONSTER_HP_RANGE } from '../../graphql/queries/monsterQueries.ts';
+import { useToast } from '../../hooks/useToast.ts';
 
 interface MonsterFilterProps {
   selectedFilters: Set<string>;
@@ -13,6 +14,7 @@ interface MonsterFilterProps {
   setCurrentPage: (page: number) => void;
   onClearFilters: () => void;
   monsterCounts: Record<string, number>;
+  searchTerm: string;
 }
 
 const filterOptions = [
@@ -36,6 +38,7 @@ export default function MonsterFilter({
   setCurrentPage,
   onClearFilters,
   monsterCounts,
+  searchTerm,
 }: MonsterFilterProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { data: hpRangeData, loading: hpRangeLoading } = useQuery(GET_MONSTER_HP_RANGE);
@@ -43,6 +46,7 @@ export default function MonsterFilter({
   const [hpRange, setHpRange] = useState<number[]>(initialHpRange);
   const [outOfRangeFilters, setOutOfRangeFilters] = useState<Set<string>>(new Set());
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (hpRangeData && !hpRangeLoading) {
@@ -90,7 +94,6 @@ export default function MonsterFilter({
       if (newFilters.has(option)) {
         newFilters.delete(option);
         outOfRange.delete(option);
-        setCurrentPage(1);
       } else {
         newFilters.add(option);
         if (monsterCounts[option] === 0) {
@@ -101,10 +104,19 @@ export default function MonsterFilter({
       setOutOfRangeFilters(outOfRange);
       return newFilters;
     });
+    setCurrentPage(1);
   };
 
   const toggleDropdown = () => {
-    setIsDropdownOpen((prev) => !prev);
+    if (searchTerm) {
+      showToast({
+        message: 'Please clear the search bar before using the filters.',
+        type: 'warning',
+        duration: 4000,
+      });
+    } else {
+      setIsDropdownOpen((prev) => !prev);
+    }
   };
 
   const handleSliderChange = (_: Event, newValue: number | number[]) => {
@@ -127,7 +139,12 @@ export default function MonsterFilter({
     <div className="relative text-white" ref={dropdownRef}>
       <button
         onClick={toggleDropdown}
-        className="text px-1 rounded-md bg-customRed hover:bg-transparent border-2 border-customRed hover:border-customRed hover:text-customRed transition-colors duration-200"
+        className={`text px-1 rounded-md border-2 transition-colors duration-200 ${
+          searchTerm
+            ? 'bg-customGray text-gray-500 border-gray-500 cursor-not-allowed' // Disabled styling when searchTerm is active
+            : 'bg-customRed hover:bg-transparent border-customRed hover:border-customRed hover:text-customRed'
+        }`}
+        style={{ pointerEvents: searchTerm ? 'auto' : 'initial' }} // Allows click for toast when disabled
       >
         Filter Monsters
         <FaChevronDown className="inline ml-3" />

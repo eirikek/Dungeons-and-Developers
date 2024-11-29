@@ -40,10 +40,14 @@ const EquipmentPage = () => {
   const { showToast } = useToast();
 
   const undoRemoveRef = useRef<Equipment | Equipment[] | null>(null);
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>(sessionStorage.getItem('equipmentSearchTerm') || '');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>(
+    sessionStorage.getItem('equipmentSearchTerm') || ''
+  );
   const [direction, setDirection] = useState(1);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<number>(
+    parseInt(sessionStorage.getItem('equipmentCurrentPage') || '1', 10)
+  );
   const equipmentsPerPage = 20;
   const maxEquipments = 10;
   const { suggestions: equipmentSuggestions } = useEquipmentSuggestions(searchTerm);
@@ -64,6 +68,34 @@ const EquipmentPage = () => {
       setNoResults(fetchedTotalEquipments === 0);
     }
   }, [fetchedEquipments, fetchedTotalEquipments, debouncedSearchTerm, loading]);
+
+  useEffect(() => {
+    sessionStorage.setItem('equipmentSearchTerm', searchTerm);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    sessionStorage.setItem('equipmentCurrentPage', currentPage.toString());
+  }, [currentPage]);
+
+  useEffect(() => {
+    const savedSearchTerm = sessionStorage.getItem('equipmentSearchTerm');
+    const savedPage = sessionStorage.getItem('equipmentCurrentPage');
+
+    if (savedSearchTerm) {
+      setSearchTerm(savedSearchTerm);
+      setDebouncedSearchTerm(savedSearchTerm);
+    }
+    if (savedPage) {
+      setCurrentPage(parseInt(savedPage, 10));
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      sessionStorage.removeItem('equipmentSearchTerm');
+      sessionStorage.removeItem('equipmentCurrentPage');
+    };
+  }, []);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -189,8 +221,8 @@ const EquipmentPage = () => {
 
   return (
     <MainPageLayout>
-      <main className="main before:bg-equipments">
-        <div className="black-overlay" />
+      <main className="main xl:before:bg-equipments">
+        <div className="black-overlay opacity-60" />
         <div className="wrapper py-20 min-w-[70%] flex gap-y-32 2xl:gap-0 mt-10 items-center justify-center">
           <section>
             <h1 className=" text-center header mb-10">Equipments</h1>
@@ -239,7 +271,7 @@ const EquipmentPage = () => {
               </div>
             )}
           </section>
-          <section className="w-full h-full">
+          <section className="w-full h-full min-h-[60vh]">
             {noResults ? (
               <div className="flex justify-center items-center w-full h-[40vh]">
                 <h2 className="text-center sub-header">No Equipments Found</h2>
@@ -312,7 +344,7 @@ const EquipmentPage = () => {
             )}
           </section>
 
-          <div className="min-h-[5vh]">
+          <div className="min-h-[10vh]">
             {fetchedTotalEquipments > equipmentsPerPage && (
               <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
             )}

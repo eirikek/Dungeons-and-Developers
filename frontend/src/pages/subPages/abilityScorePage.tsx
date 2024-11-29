@@ -1,47 +1,39 @@
 import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 import AbilityScoreCard from '../../components/SubPages/AbilityScoreCard.tsx';
-
+import { useToast } from '../../hooks/useToast.ts';
 import useCharacterContext from '../../hooks/useCharacter.ts';
-
-import abilityScoreMap from '../../utils/abilityScoreMapping.ts';
-import useAbilityScoreManagement from '../../utils/useAbilityScoreManagement.ts';
+import abilityScoreManagement from '../../utils/abilityScoreManagement.ts';
+import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 
 export default function AbilityScorePage() {
-  const { stateAbilities } = useCharacterContext();
-  const { handleCounterChange, currentArrayScores } = useAbilityScoreManagement();
-  const abilityScoresLoading = currentArrayScores.size === 0;
-
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
-  //
-  // if (error) {
-  //   return <div>Error loading abilities.</div>;
-  // }
+  const { stateAbilities, loadingStates } = useCharacterContext();
+  const { showToast } = useToast();
+  const { handleCounterChange, currentArrayScores } = abilityScoreManagement(showToast);
+  const { abilityScoresLoading } = loadingStates;
 
   return (
     <>
-      {!abilityScoresLoading ? (
-        <SubPageLayout>
+      <SubPageLayout>
+        {!abilityScoresLoading ? (
           <section className="flex flex-col items-center w-full gap-10">
             {stateAbilities.map((ability, index) => (
               <AbilityScoreCard
-                key={ability.index}
+                key={`${ability.id}-${index}`}
                 id={ability.id}
                 name={ability.name}
                 index={ability.index}
                 skills={ability.skills}
                 score={currentArrayScores.get(ability.name) ?? 0}
-                onChange={(newValue) => handleCounterChange(index, newValue, abilityScoreMap)}
+                onChange={(newValue) => handleCounterChange(ability.name, newValue)}
               />
             ))}
           </section>
-        </SubPageLayout>
-      ) : (
-        <section className="flex flex-col items-center w-full gap-10">
-          <h2 className="header mb-[8vh]">Loading ability scores...</h2>
-        </section>
-      )}
+        ) : (
+          <section className="flex flex-col items-center w-full">
+            <LoadingHourglass />
+          </section>
+        )}
+      </SubPageLayout>
     </>
   );
 }

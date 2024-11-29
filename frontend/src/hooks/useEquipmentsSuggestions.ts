@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { GET_EQUIPMENT_SUGGESTIONS } from '../graphql/equipmentQueries.ts';
+import { GET_EQUIPMENT_SUGGESTIONS } from '../graphql/queries/equipmentQueries.ts';
 
 function useEquipmentSuggestions(searchTerm: string) {
   const { data, loading, error } = useQuery(GET_EQUIPMENT_SUGGESTIONS, {

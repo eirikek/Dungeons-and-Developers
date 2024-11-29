@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import MonsterDetailsModal from '../../../src/components/MonsterCard/MonsterDetailsModal.tsx';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
 import { Review } from './MonsterReviewModal.test.tsx';
-import { GET_MONSTER_REVIEWS } from '../../../src/graphql/getMonsterQuerie.ts';
+import { GET_MONSTER_REVIEWS } from '../../../src/graphql/monsterQueries.ts';
 
 const mockProps = {
   id: 'monster-123',
