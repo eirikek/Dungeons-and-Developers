@@ -6,7 +6,6 @@ const SubMenu = () => {
   const location = useLocation();
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
 
-  // Helper function to check if the button link matches the current path
   const isActive = (linkTo: string) => location.pathname === linkTo;
 
   return (
@@ -38,7 +37,7 @@ const SubMenu = () => {
       {/* Ability Scores Button */}
       <div
         className={`flex-1 transition-all duration-300 ease-in-out flex items-center justify-center ${
-          isActive('/abilityscore') ? 'bold' : '' // Always keep bold for active
+          isActive('/abilityscore') ? 'bold' : ''
         } ${hoveredButton === '/abilityscore' || (!hoveredButton && isActive('/abilityscore')) ? 'flex-grow-2' : ''}`}
         onMouseEnter={() => setHoveredButton('/abilityscore')}
         onMouseLeave={() => setHoveredButton(null)}

@@ -6,8 +6,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Review from '../../../src/components/MonsterCard/Review.tsx';
 import { AuthContext } from '../../../src/context/AuthContext';
 import { ReviewType } from '../../../src/interfaces/ReviewProps';
-import { GET_MONSTER_REVIEWS } from '../../../src/graphql/getMonsterQuerie.ts';
-import { DELETE_REVIEW, UPDATE_REVIEW } from '../../../src/graphql/reviewQueries.ts';
+import { GET_MONSTER_REVIEWS } from '../../../src/graphql/queries/monsterQueries';
+import { DELETE_REVIEW, UPDATE_REVIEW } from '../../../src/graphql/mutations/monsterMutations';
 
 // Mock the useToast hook
 vi.mock('../../../src/hooks/useToast', () => ({

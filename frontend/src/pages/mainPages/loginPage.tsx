@@ -5,7 +5,8 @@ import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { useMutation, useLazyQuery } from '@apollo/client';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { useToast } from '../../hooks/useToast.ts';
-import { CHECK_USERNAME, CREATE_USER, LOGIN_USER } from '../../graphql/userQueries.ts';
+import { CREATE_USER, LOGIN_USER } from '../../graphql/mutations/userMutations.ts';
+import { CHECK_USERNAME } from '../../graphql/queries/userQueries.ts';
 
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',
@@ -64,12 +65,12 @@ export default function LoginPage() {
   const [createUser] = useMutation(CREATE_USER, {
     onCompleted: (data) => {
       const { token, user } = data.createUser;
-      console.log('User created:', user); // Log user data
+      console.log('User created:', user);
       login({ token, userId: user.id, userName: user.userName });
       window.location.href = '/project2/home';
     },
     onError: (error) => {
-      console.error('Error creating user:', error); // Log error
+      console.error('Error creating user:', error);
       setShakeInput(true);
     },
   });
@@ -81,7 +82,7 @@ export default function LoginPage() {
       window.location.href = '/project2/home';
     },
     onError: (error) => {
-      console.error('Error logging in:', error); // Log error
+      console.error('Error logging in:', error);
       setShakeInput(true);
       showToast({
         message: `No user found with username: ${logInUsername}`,
@@ -93,7 +94,7 @@ export default function LoginPage() {
 
   const [checkUsername] = useLazyQuery(CHECK_USERNAME, {
     onCompleted: (data) => {
-      console.log('Username availability:', data.checkUsername); // Log username availability result
+      console.log('Username availability:', data.checkUsername);
       setIsUsernameAvailable(data.checkUsername);
     },
   });
@@ -111,7 +112,7 @@ export default function LoginPage() {
     const value = e.target.value;
     setRegisterUsername(value);
     setShakeInput(false);
-    console.log('Register username changed:', value); // Log the username value on change
+    console.log('Register username changed:', value);
     if (value) {
       await checkUsername({ variables: { userName: value } });
     }
@@ -120,22 +121,22 @@ export default function LoginPage() {
   // Register user if username is available
   const handleRegister = async () => {
     if (!registerUsername) {
-      console.log('No username entered for registration'); // Log when username is empty
+      console.log('No username entered for registration');
       setShakeInput(true);
       return;
     }
 
-    console.log('Attempting to register with username:', registerUsername); // Log before mutation
+    console.log('Attempting to register with username:', registerUsername);
 
     if (isUsernameAvailable) {
       try {
-        console.log('Username is available. Proceeding with registration...'); // Log username availability
+        console.log('Username is available. Proceeding with registration...');
         await createUser({ variables: { userName: registerUsername } });
       } catch (error) {
-        console.error('Error registering user:', error); // Log registration error
+        console.error('Error registering user:', error);
       }
     } else {
-      console.log('Username not available'); // Log if username is not available
+      console.log('Username not available');
       setShakeInput(true);
       showToast({
         message: `Username ${registerUsername} is already taken`,
@@ -160,7 +161,7 @@ export default function LoginPage() {
   // Log in user
   const handleLogin = async () => {
     if (!logInUsername) {
-      console.log('No username entered for login'); // Log when login username is empty
+      console.log('No username entered for login');
       setShakeInput(true);
       setTimeout(() => setShakeInput(false), 500);
       return;
@@ -170,14 +171,24 @@ export default function LoginPage() {
       console.log('Attempting to log in with username:', logInUsername); // Log before mutation
       await loginUser({ variables: { userName: logInUsername } });
     } catch (error) {
-      console.error('Error logging in:', error); // Log error during login
+      console.error('Error logging in:', error);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      if (isLogin) {
+        handleLogin();
+      } else {
+        handleRegister();
+      }
     }
   };
 
   return (
     <MainPageLayout isLoginTransition={true}>
       <main className="relative flex items-center justify-center h-screen overflow-hidden z-0 before:absolute before:inset-0 before:bg-login before:bg-cover before:bg-center before:animate-background-zoom before:z-0">
-        <section className="black-overlay"></section>
+        <div className="black-overlay opacity-70"></div>
         <section className="w-[90%] h-3/4 relative z-10 flex flex-col items-center justify-center">
           <header className="absolute top-0 w-full">
             <h1
@@ -202,7 +213,7 @@ export default function LoginPage() {
                 {isLogin ? (
                   <>
                     <h2 className="sub-header mb-5">Log in to continue your adventure</h2>
-                    <article className="flex flex-col items-center gap-5">
+                    <div className="flex flex-col items-center gap-5">
                       <input
                         id="log-in-input"
                         className={`text w-60 xs:w-72 p-2 border-2 border-gray-500 rounded bg-transparent text-center focus:outline-none 
@@ -210,12 +221,13 @@ export default function LoginPage() {
                         placeholder="Username"
                         value={logInUsername}
                         onChange={handleLoginChange}
+                        onKeyDown={handleKeyDown}
                         onAnimationEnd={() => setShakeInput(false)}
                         maxLength={40}
                       />
                       <CustomButton text="Log in" onClick={handleLogin} />
-                    </article>
-                    <article className="text">
+                    </div>
+                    <div className="text">
                       Don't have an account?{' '}
                       <button
                         className="underline transition-all hover:text-gray-300 outline-none"
@@ -223,7 +235,7 @@ export default function LoginPage() {
                       >
                         Register
                       </button>
-                    </article>
+                    </div>
                   </>
                 ) : (
                   <>
@@ -233,6 +245,7 @@ export default function LoginPage() {
                       value={registerUsername}
                       onChange={handleRegisterUsernameChange}
                       onFocus={() => setShakeInput(false)}
+                      onKeyDown={handleKeyDown}
                       maxLength={40}
                       className={`text w-60 xs:w-72 p-2 border-2 rounded bg-transparent text-center focus:outline-none ${
                         shakeInput

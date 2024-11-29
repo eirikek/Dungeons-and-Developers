@@ -1,5 +1,5 @@
 // src/tests/mocks/DungeonContextMock.tsx
-
+/*
 import React, { useState } from 'react';
 import { DungeonContext } from '../../src/context/DungeonContext.tsx';
 import { MonsterCardProps } from '../../src/interfaces/MonsterCardProps.ts';
@@ -59,13 +59,15 @@ const DungeonContextMock = ({ children, initialDungeon, allMonsters }: DungeonCo
     }
   };
 
-  const isInDungeon = (id: string) => dungeonMonsters.some((monster) => monster.id === id);
-
+  const isInDungeon = (id: string)'' => dungeonMonsters.some((monster) => monster.id === id);
+  const dungeonName = '';
+  const updateDungeonName = vi.fn();
   return (
-    <DungeonContext.Provider value={{ dungeonMonsters, toggleDungeon, isInDungeon }}>
+    <DungeonContext.Provider value={{ dungeonName, dungeonMonsters, toggleDungeon, isInDungeon, updateDungeonName }}>
       {children}
     </DungeonContext.Provider>
   );
 };
 
 export default DungeonContextMock;
+*/

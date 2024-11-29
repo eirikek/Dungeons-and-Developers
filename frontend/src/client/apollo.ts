@@ -17,16 +17,55 @@ const authLink = setContext((_, { headers }) => {
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
+  devtools: {
+    enabled: true,
+  },
   cache: new InMemoryCache({
     typePolicies: {
       Query: {
         fields: {
           user: {
+            keyArgs: ['id'],
             merge(existing = {}, incoming) {
               return { ...existing, ...incoming };
             },
           },
         },
+      },
+      User: {
+        keyFields: ['id'],
+        fields: {
+          favoritedMonsters: {
+            merge: false,
+          },
+          dungeonName: {
+            merge: false,
+          },
+          class: {
+            merge(_, incoming) {
+              return incoming;
+            },
+          },
+          race: {
+            merge(_, incoming) {
+              return incoming;
+            },
+          },
+          equipments: {
+            merge(existing = [], incoming) {
+              return [...existing, ...incoming];
+            },
+          },
+        },
+      },
+      Class: {
+        keyFields: ['name'],
+      },
+      Race: {
+        keyFields: ['name'],
+      },
+      Monster: {
+        keyFields: ['id'],
       },
     },
   }),

@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 export const GET_USER_FAVORITES = gql`
   query GetUserFavorites($userId: ID!) {
     user(id: $userId) {
+      id
       favoritedMonsters {
         id
         name
@@ -15,70 +16,17 @@ export const GET_USER_FAVORITES = gql`
     }
   }
 `;
+
 export const CHECK_USERNAME = gql`
   query checkUsername($userName: String!) {
     checkUsername(userName: $userName)
   }
 `;
 
-export const CREATE_USER = gql`
-  mutation createUser($userName: String!) {
-    createUser(userName: $userName) {
-      token
-      user {
-        id
-        userName
-        class {
-          name
-        }
-        race {
-          name
-        }
-        abilityScores {
-          ability {
-            id
-            name
-          }
-          score
-        }
-        equipments {
-          name
-        }
-      }
-    }
-  }
-`;
-
-export const LOGIN_USER = gql`
-  mutation loginUser($userName: String!) {
-    loginUser(userName: $userName) {
-      token
-      user {
-        id
-        userName
-        class {
-          name
-        }
-        race {
-          name
-        }
-        abilityScores {
-          ability {
-            id
-            name
-          }
-          score
-        }
-        equipments {
-          name
-        }
-      }
-    }
-  }
-`;
 export const GET_USER_CLASS = gql`
   query GetUserClass($userId: ID!) {
     user(id: $userId) {
+      id
       class {
         id
         name
@@ -126,6 +74,15 @@ export const GET_USER_EQUIPMENT = gql`
         category
         value
       }
+    }
+  }
+`;
+
+export const GET_USER_DUNGEON_NAME = gql`
+  query GetUserDungeon($userId: ID!) {
+    user(id: $userId) {
+      id
+      dungeonName
     }
   }
 `;

@@ -29,7 +29,12 @@ export default function HomePage() {
       setIsScrolling(true);
 
       if (!isBottom && currentSection < sectionsRef.current.length - 1) {
-        sectionsRef.current[currentSection + 1]?.scrollIntoView({ behavior: 'smooth' });
+        const nextSection = sectionsRef.current[currentSection + 1];
+        if (nextSection) {
+          const offset = -100;
+          const yPosition = nextSection.getBoundingClientRect().top + window.scrollY + offset;
+          window.scrollTo({ top: yPosition, behavior: 'smooth' });
+        }
         setCurrentSection(currentSection + 1);
       } else if (isBottom) {
         sectionsRef.current[0]?.scrollIntoView({ behavior: 'smooth' });

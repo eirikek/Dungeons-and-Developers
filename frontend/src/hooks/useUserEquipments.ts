@@ -3,12 +3,12 @@ import { AuthContext } from '../context/AuthContext.tsx';
 import { useMutation, useQuery } from '@apollo/client';
 
 import { Equipment } from '../interfaces/EquipmentProps.ts';
-import { GET_USER_EQUIPMENT } from '../graphql/userQueries.ts';
+import { GET_USER_EQUIPMENT } from '../graphql/queries/userQueries.ts';
 import {
   ADD_EQUIPMENT_TO_CHARACTER,
   REMOVE_ALL_EQUIPMENTS,
   REMOVE_EQUIPMENT_FROM_CHARACTER,
-} from '../graphql/equipmentQueries.ts';
+} from '../graphql/mutations/userMutations.ts';
 
 const useUserEquipments = () => {
   const { userId } = useContext(AuthContext);
@@ -38,15 +38,15 @@ const useUserEquipments = () => {
     onCompleted: () => refetch(),
   });
 
-  const addToEquipments = async (equipId: string) => {
+  const addToEquipmentsMutation = async (equipId: string) => {
     await addEquipment({ variables: { userId, equipmentId: equipId } });
   };
 
-  const removeFromEquipments = async (equipId: string) => {
+  const removeFromEquipmentsMutation = async (equipId: string) => {
     await removeEquipment({ variables: { userId, equipmentId: equipId } });
   };
 
-  const removeAllUserEquipments = async () => {
+  const removeAllUserEquipmentsMutation = async () => {
     if (!userId || userEquipments.length === 0) return;
     await removeAllEquipments({ variables: { userId } });
   };
@@ -54,9 +54,9 @@ const useUserEquipments = () => {
     userEquipments,
     loading,
     refetchEquipments: refetch,
-    addToEquipments,
-    removeFromEquipments,
-    removeAllUserEquipments,
+    addToEquipmentsMutation,
+    removeFromEquipmentsMutation,
+    removeAllUserEquipmentsMutation,
   };
 };
 

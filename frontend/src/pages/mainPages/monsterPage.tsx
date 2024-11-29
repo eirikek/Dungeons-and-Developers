@@ -1,28 +1,72 @@
 import { useQuery } from '@apollo/client';
+import { hourglass } from 'ldrs';
 import debounce from 'lodash/debounce';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import MonsterCard from '../../components/MonsterCard/MonsterCard';
-import useMonster from '../../hooks/useMonster.ts';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
-import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
-import Pagination from '../../components/Pagination/Pagination';
-import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 import MonsterFilter from '../../components/MonsterFilter/MonsterFilter.tsx';
 import MonsterSort from '../../components/MonsterSort/MonsterSort.tsx';
+import Pagination from '../../components/Pagination/Pagination';
+import SearchBar from '../../components/SearchBar/SearchBar.tsx';
+
+import MonsterGrid from '../../components/Dungeon/MonsterGrid.tsx';
+import { GET_MONSTER_HP_RANGE } from '../../graphql/queries/monsterQueries.ts';
+import useMonster from '../../hooks/useMonster.ts';
 import useMonsterSuggestions from '../../hooks/useMonsterSuggestions';
-import { GET_MONSTER_HP_RANGE } from '../../graphql/getMonsterQuerie.ts';
+import { IconButton } from '@mui/material';
+import { MdCancel } from 'react-icons/md';
 
 const monstersPerPage = 8;
 
 export default function MonsterPage() {
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>(() => sessionStorage.getItem('searchTerm') || '');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [selectedFilters, setSelectedFilters] = useState<Set<string>>(new Set());
+  const [currentPage, setCurrentPage] = useState<number>(() => Number(sessionStorage.getItem('currentPage')) || 1);
+  const [selectedFilters, setSelectedFilters] = useState<Set<string>>(() => {
+    const savedFilters = sessionStorage.getItem('selectedFilters');
+    return savedFilters ? new Set(JSON.parse(savedFilters)) : new Set();
+  });
   const [suggestions, setSuggestions] = useState([]);
-  const [hpFilterMin, setHpFilterMin] = useState<number>(1);
-  const [hpFilterMax, setHpFilterMax] = useState<number>(1000);
-  const [sortOption, setSortOption] = useState<string>('name-asc');
+  const [hpFilterMin, setHpFilterMin] = useState<number>(() => Number(sessionStorage.getItem('hpFilterMin')) || 1);
+  const [hpFilterMax, setHpFilterMax] = useState<number>(() => Number(sessionStorage.getItem('hpFilterMax')) || 1000);
+  const [sortOption, setSortOption] = useState<string>(() => sessionStorage.getItem('sortOption') || 'name-asc');
+
+  useEffect(() => {
+    sessionStorage.setItem('searchTerm', searchTerm);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    sessionStorage.setItem('currentPage', currentPage.toString());
+  }, [currentPage]);
+
+  useEffect(() => {
+    sessionStorage.setItem('selectedFilters', JSON.stringify(Array.from(selectedFilters)));
+  }, [selectedFilters]);
+
+  useEffect(() => {
+    sessionStorage.setItem('hpFilterMin', hpFilterMin.toString());
+    sessionStorage.setItem('hpFilterMax', hpFilterMax.toString());
+  }, [hpFilterMin, hpFilterMax]);
+
+  useEffect(() => {
+    sessionStorage.setItem('sortOption', sortOption);
+  }, [sortOption]);
+
+  useEffect(() => {
+    setDebouncedSearchTerm(searchTerm);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    return () => {
+      sessionStorage.removeItem('searchTerm');
+      sessionStorage.removeItem('selectedFilters');
+      sessionStorage.removeItem('hpFilterMin');
+      sessionStorage.removeItem('hpFilterMax');
+      sessionStorage.removeItem('sortOption');
+      sessionStorage.removeItem('currentPage');
+    };
+  }, []);
+
+  hourglass.register();
 
   const { data: hpRangeData, loading: hpRangeLoading } = useQuery(GET_MONSTER_HP_RANGE);
 
@@ -76,6 +120,10 @@ export default function MonsterPage() {
     setSearchTerm(value);
     debouncedSearch(value);
     setCurrentPage(1);
+
+    if (value) {
+      setSelectedFilters(new Set<string>());
+    }
   };
 
   useEffect(() => {
@@ -93,7 +141,7 @@ export default function MonsterPage() {
 
   const debouncedHandleHpChange = useMemo(() => debounce(handleHpChange, 300), [handleHpChange]);
 
-  const totalPages = Math.min(Math.ceil(totalMonsters / monstersPerPage), 10);
+  const totalPages = loading ? 1 : Math.min(Math.ceil(totalMonsters / monstersPerPage), 10);
 
   const handlePageChange = useCallback(
     (direction: number) => {
@@ -115,58 +163,81 @@ export default function MonsterPage() {
     debouncedSearch('');
     setHpFilterMin(minHp);
     setHpFilterMax(maxHp);
+
+    sessionStorage.removeItem('searchTerm');
+    sessionStorage.removeItem('selectedFilters');
+    sessionStorage.removeItem('hpFilterMin');
+    sessionStorage.removeItem('hpFilterMax');
+    sessionStorage.removeItem('sortOption');
+    sessionStorage.removeItem('currentPage');
   };
 
   return (
     <MainPageLayout>
-      <main className="main before:bg-monsters xl:h-screen xl:overflow-hidden">
-        <section className="black-overlay" />
+      <main className="main xl:before:bg-monsters xl:h-screen xl:overflow-hidden">
+        <div className="black-overlay opacity-40" />
 
-        <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start">
-          <article
-            className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row xl:min-h-[6vh]'}
-          >
+        <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start mb-6">
+          <div className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row'}>
             <MonsterFilter
               selectedFilters={selectedFilters}
               setSelectedFilters={setSelectedFilters}
               onHpChange={debouncedHandleHpChange}
-              setCurrentPage={setCurrentPage}
               onClearFilters={clearFilters}
               monsterCounts={monsterCounts}
+              setCurrentPage={setCurrentPage}
+              searchTerm={searchTerm}
             />
             <MonsterSort selectedSort={sortOption} onSortChange={handleSortChange} />
-            <SearchBar
-              searchTerm={searchTerm}
-              handleSearchChange={handleSearchChange}
-              suggestions={suggestions}
-              onSuggestionClick={(suggestion) => {
-                setSearchTerm(suggestion);
-                debouncedSearch(suggestion);
-              }}
-              placeholder="Search for a monster..."
-            />
-          </article>
-
+            <div className="relative flex items-center">
+              <SearchBar
+                searchTerm={searchTerm}
+                handleSearchChange={handleSearchChange}
+                suggestions={suggestions}
+                onSuggestionClick={(suggestion) => {
+                  setSearchTerm(suggestion);
+                  debouncedSearch(suggestion);
+                }}
+                placeholder="Search for a monster..."
+              />
+              {searchTerm && (
+                <IconButton
+                  onClick={() => {
+                    setSearchTerm('');
+                    setDebouncedSearchTerm('');
+                    setCurrentPage(1);
+                  }}
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    right: '10px',
+                    transform: 'translateY(-50%)',
+                    color: '#DB3232',
+                    borderColor: '#DB3232',
+                  }}
+                  aria-label="Clear search"
+                >
+                  <MdCancel size={24} />
+                </IconButton>
+              )}
+            </div>
+          </div>
           {loading ? (
-            <LoadingHourglass />
+            <div className="flex flex-col items-center justify-center h-[79.5vh]" data-testid="loading-indicator">
+              <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
+            </div>
           ) : (
-            <section>
+            <section className="flex flex-col items-center w-full xl:h-screen justify-between">
               {error ? (
                 <p>An error occurred while loading monsters. {error.message}</p>
               ) : monsters.length > 0 ? (
                 <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 place-items-center gap-y-[10vh] lg:gap-y-[1vh] gap-x-[10vw] lg:gap-x-[4vw] min-h-[75vh]">
-                    {monsters.map((monster, idx) => (
-                      <MonsterCard key={idx} {...monster} />
-                    ))}
-                  </div>
-                  <div className="min-h-[5vh]">
-                    {totalMonsters > monstersPerPage ? (
+                  <MonsterGrid monsters={monsters} isDungeonPage={false} />
+                  {totalMonsters > monstersPerPage && (
+                    <div className="relative xl:sticky bottom-0 ">
                       <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
-                    ) : (
-                      <div />
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </>
               ) : (
                 <div className="flex h-[79.5vh] items-center justify-center">

@@ -8,6 +8,7 @@ import AbilityScorePage from '../../pages/subPages/abilityScorePage.tsx';
 import EquipmentPage from '../../pages/subPages/equipmentPage.tsx';
 import MonsterPage from '../../pages/mainPages/monsterPage.tsx';
 import MyCharacterPage from '../../pages/mainPages/myCharacterPage.tsx';
+import NotFoundPage from '../../pages/mainPages/notFoundPage.tsx';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute.tsx';
@@ -91,6 +92,8 @@ export default function AnimatedRoutes() {
             </ProtectedRoute>
           }
         />
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </AnimatePresence>
   );

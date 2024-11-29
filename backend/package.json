@@ -26,7 +26,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.9.0",
     "mongoose": "^8.8.2",
-    "neo4j-driver": "^5.24.1"
+    "neo4j-driver": "^5.24.1",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "@swc/core": "^1.7.39",

@@ -5,6 +5,7 @@ import raceGif from '../../assets/images/race.gif';
 import classGif from '../../assets/images/class.gif';
 import abilityScoreGif from '../../assets/images/abilityscore.gif';
 import { Link } from 'react-router-dom';
+import { FaTrash } from 'react-icons/fa';
 
 const TutorialModal = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -88,11 +89,11 @@ const TutorialModal = () => {
             <h2 className="header">Class</h2>
             <p className="text">
               The class defines your character’s role in the game, determining their skills and HP. Use the left and
-              right arrows to navigate between different classes. Each class specializes in different aspects of
-              gameplay, like animal handling or survival. Some ability scores require specific skills, and if your class
-              does not provide at least one of the required skills, you will not be able to increase that ability score,
-              and it will remain at zero. However, if an ability score does not require any specific skills, you are
-              free to increase it as you like. To learn more about each class’s HP and available skills, click{' '}
+              right arrows to navigate between different classes. Each class specializes in various aspects of gameplay,
+              such as animal handling or survival. Some ability scores have recommended skills associated with them,
+              providing guidance on which skills might complement those scores. However, you are free to increase any
+              ability score as you see fit, regardless of the recommended skills. To learn more about each class’s HP
+              and available skills, click{' '}
               <Link to="/class" className="underline text-customRed">
                 here
               </Link>
@@ -104,10 +105,10 @@ const TutorialModal = () => {
             <h2 className="header">Ability scores</h2>
             <p className="text">
               These scores define your character’s basic attributes, affecting everything from combat effectiveness to
-              interactions with others in the game. You can modify your ability scores using the counters provided. As
-              mentioned, some ability scores require specific skills, and your class must have at least one of these
-              skills in order to increase that ability score. To learn more about the ability scores and their required
-              skills, click{' '}
+              interactions with others in the game. Each ability score has recommended skills, which suggest how certain
+              classes may better utilize that score. However, the recommended skills are only suggestions, and you are
+              free to allocate points to any ability score regardless of the class you select. To learn more about
+              ability scores and their recommended skills, click{' '}
               <Link to="/abilityscore" className="underline text-customRed">
                 here
               </Link>
@@ -118,9 +119,16 @@ const TutorialModal = () => {
           <section className="w-full flex flex-col items-center gap-5">
             <h2 className="header">Equipments</h2>
             <p className="text">
-              Here you can see all the equipment you have equipped. Your choice of equipment can significantly impact
-              your character’s effectiveness in combat and exploration. You can equip up to 10 items. To view all
-              available equipment, see what you’re currently using, and modify your selection, click{' '}
+              Here you can see all the equipment you have equipped. Each piece of equipment has a value, so strategize
+              carefully when selecting your items. Decide with your fellow players how many coins you will have to spend
+              on equipment—this can also be determined by the dungeon master. Your choice of equipment can significantly
+              impact your character’s effectiveness in combat and exploration. You can equip up to 10 items. To remove
+              an item, click the
+              <span className="inline-block">
+                <FaTrash className="shadow-none md:w-8 w-6 mx-1"></FaTrash>
+              </span>
+              next to it on this page or uncheck it on the equipment page. To view all available equipment, see what
+              you’re currently using, and modify your selection, click{' '}
               <Link to="/equipment" className="underline text-customRed">
                 here
               </Link>

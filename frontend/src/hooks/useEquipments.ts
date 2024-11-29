@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { useMemo } from 'react';
 import { Equipment } from '../interfaces/EquipmentProps';
-import { GET_EQUIPMENTS } from '../graphql/equipmentQueries.ts';
+import { GET_EQUIPMENTS } from '../graphql/queries/equipmentQueries.ts';
 
 function useEquipments(searchTerm: string, currentPage: number, equipmentsPerPage: number) {
   const offset = (currentPage - 1) * equipmentsPerPage;

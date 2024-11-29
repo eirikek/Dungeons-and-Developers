@@ -40,6 +40,7 @@ export const userType = gql`
   extend type Mutation {
     createUser(userName: String!): AuthPayload!
     loginUser(userName: String!): AuthPayload!
+    deleteUser(userId: ID!): String!
     addFavoriteMonster(userId: ID!, monsterId: ID!): User!
     removeFavoriteMonster(userId: ID!, monsterId: ID!): User!
     updateDungeonName(userId: ID!, dungeonName: String!): User!
