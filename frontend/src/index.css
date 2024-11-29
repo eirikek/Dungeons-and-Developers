@@ -84,6 +84,7 @@ body {
     @apply absolute inset-0 w-full h-full bg-black;
 }
 
+
 .force-black-overlay {
     display: block !important;
 }
@@ -113,6 +114,7 @@ body.accessibility-mode h2,
 body.accessibility-mode h3,
 body.accessibility-mode p,
 body.accessibility-mode .text,
+body.accessibility-mode .bold,
 body.accessibility-mode .header,
 body.accessibility-mode .sub-header {
     font-size: 1.5rem !important;

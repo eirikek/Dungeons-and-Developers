@@ -87,7 +87,6 @@ export default {
         case 'difficulty-desc':
           const sortDirection = sortOption === 'difficulty-asc' ? 1 : -1;
 
-          console.log('Sorting by difficulty with query:', query);
           const monstersWithCalculations = await Monster.aggregate([
             { $match: query },
             {
