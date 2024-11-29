@@ -84,6 +84,10 @@ body {
     @apply absolute inset-0 w-full h-full bg-black;
 }
 
+.force-black-overlay {
+    display: block !important;
+}
+
 @media (max-width: 1024px) {
     .black-overlay {
         display: none;
@@ -110,9 +114,9 @@ body.accessibility-mode h3,
 body.accessibility-mode p,
 body.accessibility-mode .text,
 body.accessibility-mode .header,
-body.accessibility-mode .sub-header{
+body.accessibility-mode .sub-header {
     font-size: 1.5rem !important;
-    font-family:  Arial, sans-serif !important;
+    font-family: Arial, sans-serif !important;
 }
 
 body.accessibility-mode button,
@@ -125,7 +129,7 @@ body.accessibility-mode a {
 
 body.accessibility-mode a:focus,
 body.accessibility-mode button:focus {
-    outline: 3px solid ;
+    outline: 3px solid;
 }
 
 
