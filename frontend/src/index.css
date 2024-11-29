@@ -109,6 +109,31 @@ body.accessibility-mode .black-overlay {
     @apply opacity-100;
 }
 
+body.accessibility-mode main {
+    background-color: black !important;
+    background-image: none !important;
+}
+
+body.accessibility-mode .card {
+    border-radius: 0 !important;
+    border: 2px solid white !important;
+}
+
+body.accessibility-mode .monster-card div {
+    gap: 1vh !important;
+    flex-direction: column;
+    text-align: center;
+}
+
+body.accessibility-mode .monster-image {
+    display: none !important;
+}
+
+body.accessibility-mode .monster-text-button {
+    @apply text-4xl md:text-3xl lg:text-2xl xl:text-xl 2xl:text-lg text-white bg-customRed border-2 border-white hover:bg-accessibilityBackground mt-4;
+}
+
+
 body.accessibility-mode h1,
 body.accessibility-mode h2,
 body.accessibility-mode h3,
