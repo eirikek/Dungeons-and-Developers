@@ -12,7 +12,6 @@ import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { useToast } from '../../hooks/useToast.ts';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
-import Accesibility from '../../components/Accesibility.tsx';
 
 export default function HomePage() {
   const { scrollYProgress } = useScroll();
@@ -131,7 +130,6 @@ export default function HomePage() {
         </Tilt>
       </header>
       <main className="w-full bg-black flex flex-col items-center py-48 xl:gap-36 gap-16 overflow-hidden">
-        <Accesibility></Accesibility>
         <HomeSection
           ref={(el: HTMLDivElement | null) => (sectionsRef.current[1] = el)}
           title="Create Your Character"

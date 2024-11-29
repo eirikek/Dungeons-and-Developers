@@ -7,6 +7,7 @@ import { AuthContext } from '../../context/AuthContext.tsx';
 import { useToast } from '../../hooks/useToast.ts';
 import { CREATE_USER, LOGIN_USER } from '../../graphql/mutations/userMutations.ts';
 import { CHECK_USERNAME } from '../../graphql/queries/userQueries.ts';
+import Accessibility from '../../components/AccessibilityToggle/AccessibilityToggle.tsx';
 
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',
@@ -288,6 +289,9 @@ export default function LoginPage() {
                 )}
               </motion.div>
             </AnimatePresence>
+          </section>
+          <section className="absolute bottom-5 w-full flex justify-center">
+            <Accessibility />
           </section>
         </section>
       </main>

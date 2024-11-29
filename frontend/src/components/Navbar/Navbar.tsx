@@ -5,6 +5,7 @@ import { FaChevronDown } from 'react-icons/fa';
 import logo from '../../assets/images/logo.svg';
 import CustomButton from '../CustomButton/CustomButton.tsx';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Accessibility from '../AccessibilityToggle/AccessibilityToggle.tsx';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -117,6 +118,9 @@ const Navbar = () => {
             <Link to={'/home'}>
               <img src={logo} alt="Dungeons & Developers logo" className="w-[3vw] xl:block hidden shadow-none" />
             </Link>
+
+            <Accessibility />
+
             <section className="flex justify-between 4xl:w-3/5 w-3/5 ">
               <CustomButton
                 text={'Monsters'}
@@ -284,6 +288,10 @@ const Navbar = () => {
             >
               <IoIosLogOut className="ml-2" />
             </CustomButton>
+          </li>
+
+          <li>
+            <Accessibility />
           </li>
         </ul>
       </div>
