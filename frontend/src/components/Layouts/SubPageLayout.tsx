@@ -24,7 +24,6 @@ const SubPageLayout: React.FC<SubPageLayoutProps> = ({ children }) => {
     <>
       <Navbar />
       <main className="main items-center xl:bg-subPage xl:bg-cover bg-center min-h-screen">
-        {/* Overlay with solid black top, gradient transition, and semi-transparent background */}
         <div className="hidden xl:block absolute inset-0 w-full h-full">
           <div className="absolute top-0 left-0 w-full h-[10%] bg-black"></div>
           <div className="absolute top-[10%] left-0 w-full h-[10%] bg-gradient-to-b from-black to-black/50"></div>
@@ -32,7 +31,6 @@ const SubPageLayout: React.FC<SubPageLayoutProps> = ({ children }) => {
         </div>
 
         <section className="py-40 w-3/4 flex flex-col items-center gap-36">
-          {/* Conditionally render SubMenu or a header based on screen size */}
           {isLargeScreen ? <SubMenu /> : <h1 className="header bold z-10">{getHeaderText()}</h1>}
           {children}
         </section>
