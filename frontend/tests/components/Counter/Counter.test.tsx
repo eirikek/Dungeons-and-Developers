@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import Counter from '../../../src/components/Counter/Counter.tsx';
+import Counter from '../../../src/components/Counter/Counter';
 
 /*
 - used claude.ai since logic for holding down mouse in testing was hard to understand
@@ -22,7 +22,8 @@ describe('Counter', () => {
 
   it('renders initial value correctly', () => {
     render(<Counter value={50} onChange={() => {}} />);
-    expect(screen.getByText('50')).toBeInTheDocument();
+    const valueFifty = screen.getByText('50');
+    expect(valueFifty).toBeTruthy();
   });
 
   it('calls onChange with incremented value when increment button is held down', () => {
