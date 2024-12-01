@@ -1,8 +1,8 @@
 import { MockedResponse } from '@apollo/client/testing';
-import { MonsterCardProps } from '../../src/interfaces/MonsterCardProps.ts';
-import { UPDATE_DUNGEON_NAME } from '../../src/graphql/mutations/userMutations.ts';
-import { GET_MONSTER_REVIEWS } from '../../src/graphql/queries/monsterQueries.ts';
-import { GET_USER_DUNGEON_NAME } from '../../src/graphql/queries/userQueries.ts';
+import { MonsterCardProps } from '../../src/interfaces/MonsterCardProps';
+import { UPDATE_DUNGEON_NAME } from '../../src/graphql/mutations/userMutations';
+import { GET_MONSTER_REVIEWS } from '../../src/graphql/queries/monsterQueries';
+import { GET_USER_DUNGEON_NAME } from '../../src/graphql/queries/userQueries';
 
 interface UserDungeonData {
   dungeonName: string;
