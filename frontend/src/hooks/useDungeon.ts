@@ -12,35 +12,10 @@ import { GET_USER_DUNGEON_NAME, GET_USER_FAVORITES } from '../graphql/queries/us
 import type { MonsterCardProps } from '../interfaces/MonsterCardProps';
 import type MonsterGraphQL from '../interfaces/MonsterDataProps';
 
-interface UserFavorites {
-  user: {
-    id: string;
-    favoritedMonsters: MonsterGraphQL[];
-  };
-}
-
-interface UserFavoritesVars {
-  userId: string;
-}
-
-interface AddFavoriteResponse {
-  addFavoriteMonster: {
-    id: string;
-    favoritedMonsters: MonsterGraphQL[];
-  };
-}
-
-interface RemoveFavoriteResponse {
-  removeFavoriteMonster: {
-    id: string;
-    favoritedMonsters: MonsterGraphQL[];
-  };
-}
-
 export const useDungeon = () => {
   const { userId } = useContext(AuthContext);
 
-  const { data: favoritesData } = useQuery<UserFavorites, UserFavoritesVars>(GET_USER_FAVORITES, {
+  const { data: favoritesData, refetch: refetchFavorites } = useQuery(GET_USER_FAVORITES, {
     variables: { userId },
     skip: !userId,
     fetchPolicy: 'cache-and-network',
@@ -52,60 +27,32 @@ export const useDungeon = () => {
     fetchPolicy: 'cache-and-network',
   });
 
+  const initializeDungeonMonsters = (monsters: MonsterGraphQL[]) => {
+    dungeonMonstersVar(monsters);
+    localStorage.setItem('dungeonMonsters', JSON.stringify(monsters));
+  };
+
   useEffect(() => {
     if (favoritesData?.user?.favoritedMonsters) {
-      dungeonMonstersVar(favoritesData.user.favoritedMonsters);
+      initializeDungeonMonsters(favoritesData.user.favoritedMonsters);
     }
   }, [favoritesData]);
 
+  useEffect(() => {
+    const storedMonsters = localStorage.getItem('dungeonMonsters');
+    if (storedMonsters) {
+      dungeonMonstersVar(JSON.parse(storedMonsters));
+    }
+  }, []);
+
   const dungeonName = dungeonData?.user?.dungeonName || null;
 
-  const [addFavoriteMonster] = useMutation<AddFavoriteResponse>(ADD_FAVORITE_MONSTER, {
-    update(cache, { data }) {
-      if (!data) return;
-
-      const existing = cache.readQuery<UserFavorites>({
-        query: GET_USER_FAVORITES,
-        variables: { userId },
-      });
-
-      if (existing?.user) {
-        cache.writeQuery<UserFavorites>({
-          query: GET_USER_FAVORITES,
-          variables: { userId },
-          data: {
-            user: {
-              ...existing.user,
-              favoritedMonsters: data.addFavoriteMonster.favoritedMonsters,
-            },
-          },
-        });
-      }
-    },
+  const [addFavoriteMonster] = useMutation(ADD_FAVORITE_MONSTER, {
+    onCompleted: () => refetchFavorites(),
   });
 
-  const [removeFavoriteMonster] = useMutation<RemoveFavoriteResponse>(REMOVE_FAVORITE_MONSTER, {
-    update(cache, { data }) {
-      if (!data) return;
-
-      const existing = cache.readQuery<UserFavorites>({
-        query: GET_USER_FAVORITES,
-        variables: { userId },
-      });
-
-      if (existing?.user) {
-        cache.writeQuery<UserFavorites>({
-          query: GET_USER_FAVORITES,
-          variables: { userId },
-          data: {
-            user: {
-              ...existing.user,
-              favoritedMonsters: data.removeFavoriteMonster.favoritedMonsters,
-            },
-          },
-        });
-      }
-    },
+  const [removeFavoriteMonster] = useMutation(REMOVE_FAVORITE_MONSTER, {
+    onCompleted: () => refetchFavorites(),
   });
 
   const [updateDungeonName] = useMutation(UPDATE_DUNGEON_NAME);
@@ -116,19 +63,9 @@ export const useDungeon = () => {
 
     try {
       if (isFavorite) {
-        const response = await removeFavoriteMonster({
-          variables: { userId, monsterId: monster.id },
-        });
-        if (response.data?.removeFavoriteMonster.favoritedMonsters) {
-          dungeonMonstersVar(response.data.removeFavoriteMonster.favoritedMonsters);
-        }
+        await removeFavoriteMonster({ variables: { userId, monsterId: monster.id } });
       } else {
-        const response = await addFavoriteMonster({
-          variables: { userId, monsterId: monster.id },
-        });
-        if (response.data?.addFavoriteMonster.favoritedMonsters) {
-          dungeonMonstersVar(response.data.addFavoriteMonster.favoritedMonsters);
-        }
+        await addFavoriteMonster({ variables: { userId, monsterId: monster.id } });
       }
     } catch (error) {
       console.error('Error toggling favorite:', error);

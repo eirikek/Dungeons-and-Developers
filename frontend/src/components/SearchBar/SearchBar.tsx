@@ -58,6 +58,7 @@ const SearchBar = ({
           ref={inputRef}
           type="text"
           placeholder={placeholder}
+          maxLength={50}
           value={searchTerm}
           onChange={handleSearchChange}
           onFocus={() => setIsFocused(true)}

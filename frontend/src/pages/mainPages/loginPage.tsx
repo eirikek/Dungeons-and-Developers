@@ -7,6 +7,7 @@ import { AuthContext } from '../../context/AuthContext.tsx';
 import { useToast } from '../../hooks/useToast.ts';
 import { CREATE_USER, LOGIN_USER } from '../../graphql/mutations/userMutations.ts';
 import { CHECK_USERNAME } from '../../graphql/queries/userQueries.ts';
+import Accessibility from '../../components/AccessibilityToggle/AccessibilityToggle.tsx';
 
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',
@@ -188,7 +189,7 @@ export default function LoginPage() {
   return (
     <MainPageLayout isLoginTransition={true}>
       <main className="relative flex items-center justify-center h-screen overflow-hidden z-0 before:absolute before:inset-0 before:bg-login before:bg-cover before:bg-center before:animate-background-zoom before:z-0">
-        <div className="black-overlay opacity-70"></div>
+        <div className="black-overlay opacity-70 force-black-overlay"></div>
         <section className="w-[90%] h-3/4 relative z-10 flex flex-col items-center justify-center">
           <header className="absolute top-0 w-full">
             <h1
@@ -288,6 +289,9 @@ export default function LoginPage() {
                 )}
               </motion.div>
             </AnimatePresence>
+          </section>
+          <section className="absolute bottom-5 w-full flex justify-center">
+            <Accessibility />
           </section>
         </section>
       </main>

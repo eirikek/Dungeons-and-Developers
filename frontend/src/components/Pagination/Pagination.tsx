@@ -3,16 +3,16 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 interface PaginationProps {
   currentPage: number;
   onPageChange: (direction: number) => void; // direction can be -1 (prev) or 1 (next)
-  totalPages: number; // Add totalPages prop to know the last page
+  totalPages: number;
 }
 
 const Pagination = ({ currentPage, onPageChange, totalPages }: PaginationProps) => {
   return (
-    <section className="w-full flex justify-center items-center ">
-      <div className="flex justify-between items-center w-[70vw] xl:w-[30vw] w-text-2xl xl:text-lg 2xl:text-md ">
-        {/* Previous button - disabled when on the first page */}
+    <section className="w-full flex justify-center items-center py-4">
+      <div className="flex items-center gap-4">
+        {/* Previous button - invisible when on the first page */}
         <button
-          className="flex items-center hover:text-gray-400 text"
+          className={`flex items-center sub-header xl:text ${currentPage === 1 ? 'invisible' : 'hover:text-gray-400'}`}
           onClick={() => onPageChange(-1)}
           disabled={currentPage === 1}
           aria-label="navigate previous"
@@ -21,13 +21,16 @@ const Pagination = ({ currentPage, onPageChange, totalPages }: PaginationProps) 
           Prev Page
         </button>
 
-        <span className="w-2 text">{currentPage}</span>
+        {/* Current page and total pages */}
+        <span className="sub-header xl:text">
+          {currentPage} / {totalPages}
+        </span>
 
-        {/* Next button - disabled when on the last page */}
+        {/* Next button - invisible when on the last page */}
         <button
-          className="flex items-center hover:text-gray-400 text"
+          className={`flex items-center sub-header xl:text ${currentPage === totalPages ? 'invisible' : 'hover:text-gray-400'}`}
           onClick={() => onPageChange(1)}
-          disabled={currentPage === totalPages} // Disable if on last page
+          disabled={currentPage === totalPages}
           aria-label="navigate next"
         >
           Next Page

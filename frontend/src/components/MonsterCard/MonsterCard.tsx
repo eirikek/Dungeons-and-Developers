@@ -5,7 +5,7 @@ import DungeonButton from './DungeonButton.tsx';
 import MonsterReviewModal from './MonsterReviewModal.tsx';
 import MonsterDetailsModal from './MonsterDetailsModal.tsx';
 import { MonsterCardProps } from '../../interfaces/MonsterCardProps.ts';
-import LoadingHourglass from '../LoadingHourglass/LoadingHourglass.tsx';
+import { Blurhash } from 'react-blurhash';
 
 const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: MonsterCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -29,7 +29,11 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
     setImageLoaded(true);
   };
 
-  const monsterImageURL = image ? image : NoMonsterImageFound;
+  const monsterImageURL = image
+    ? image.startsWith('data:image')
+      ? image
+      : `data:image/webp;base64,${image}`
+    : NoMonsterImageFound;
 
   const handleToggleDungeon = () => {
     toggleDungeon({ id, name, type, hit_points, alignment, size, image });
@@ -50,15 +54,20 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
       <div
         onClick={handleCardClick}
         className="flex flex-col items-center justify-between bg-black pb-5 w-[75vw] md:w-[42vw] xl:w-[22vw] 2xl:w-[18vw] h-[40vh] sm:h-[45vh] md:h-[35vh] rounded-lg overflow-hidden
-           transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-black cursor-pointer"
+           transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-black cursor-pointer card monster-card"
         aria-label={name}
         data-testid={`${name}-monster-card`}
       >
-        <div className="relative w-full h-[30vh] overflow-hidden">
+        <div className="relative w-full h-[30vh] overflow-hidden monster-image">
           {!imageLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center z-20 bg-black bg-opacity-50">
-              <LoadingHourglass />
-            </div>
+            <Blurhash
+              hash="LEHV6nWB2yk8pyo0adR*.7kCMdnj"
+              width="100%"
+              height="100%"
+              resolutionX={32}
+              resolutionY={32}
+              punch={1}
+            />
           )}
           {imageError ? (
             <img
@@ -101,7 +110,7 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
                 e.stopPropagation();
                 handleToggleDungeon();
               }}
-              className="text-4xl md:text-2xl xl:text-lg 2xl:text-sm hover:text-customRed transition-all duration-200"
+              className="text-4xl md:text-2xl xl:text-lg 2xl:text-sm hover:text-customRed transition-all duration-200 monster-text-button"
             >
               {isInDungeon(id) ? 'Remove from dungeon' : 'Add to dungeon'}
             </button>

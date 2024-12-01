@@ -6,4 +6,11 @@ const AbilityScoreSchema = new Schema({
   skills: [{ type: String }],
 });
 
+AbilityScoreSchema.virtual('id').get(function () {
+  return this._id.toString();
+});
+
+AbilityScoreSchema.set('toObject', { virtuals: true });
+AbilityScoreSchema.set('toJSON', { virtuals: true });
+
 export default model('Ability Score', AbilityScoreSchema);

@@ -5,6 +5,7 @@ import { FaChevronDown } from 'react-icons/fa';
 import logo from '../../assets/images/logo.svg';
 import CustomButton from '../CustomButton/CustomButton.tsx';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Accessibility from '../AccessibilityToggle/AccessibilityToggle.tsx';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -118,6 +119,9 @@ const Navbar = () => {
             <Link to={'/home'}>
               <img src={logo} alt="Dungeons & Developers logo" className="w-[3vw] xl:block hidden shadow-none" />
             </Link>
+
+            <Accessibility />
+
             <section className="flex justify-between 4xl:w-3/5 w-3/5 ">
               <CustomButton
                 text={'Monsters'}
@@ -147,8 +151,8 @@ const Navbar = () => {
 
                 {/* Dropdown menu */}
                 <div
-                  className={`absolute left-1/2 transform -translate-x-1/2 w-[18vw] bg-customRed rounded overflow-hidden duration-300 ease-in-out max-h-0 ${
-                    isDropdownHovered || isFocus ? 'max-h-96 opacity-100' : 'opacity-0'
+                  className={`absolute left-1/2 transform -translate-x-1/2 min-w-60 w-[18vw] bg-customRed rounded overflow-hidden duration-300 ease-in-out max-h-0 ${
+                    isDropdownHovered ? 'max-h-96 opacity-100' : 'opacity-0'
                   }`}
                 >
                   <ul className="flex flex-col gap-10 p-10">
@@ -248,7 +252,7 @@ const Navbar = () => {
 
               <div
                 className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                  isMobileDropdownOpen ? 'max-h-[60vw] opacity-100' : 'max-h-0 opacity-0'
+                  isMobileDropdownOpen ? 'max-h-[80vw] opacity-100' : 'max-h-0 opacity-0'
                 }`}
               >
                 <ul className="space-y-2 pl-4">
@@ -303,6 +307,10 @@ const Navbar = () => {
             >
               <IoIosLogOut className="ml-2" />
             </CustomButton>
+          </li>
+
+          <li>
+            <Accessibility />
           </li>
         </ul>
       </div>

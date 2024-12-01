@@ -118,12 +118,12 @@ export default function HomePage() {
         ref={(el) => (sectionsRef.current[0] = el as HTMLDivElement)}
         className="w-full h-screen bg-home bg-cover bg-center bg-black bg-opacity-40 bg-blend-overlay flex items-center justify-center relative"
       >
-        <div
+        <section
           className="absolute inset-0 z-10"
           style={{
             background: 'linear-gradient(to bottom, transparent 70%, black 100%)',
           }}
-        ></div>
+        ></section>
 
         <Tilt tiltMaxAngleX={15} tiltMaxAngleY={15} scale={1.05} className="relative z-20 xl:w-1/2 md:w-3/4">
           <img src={text_logo} alt="text_logo" className="object-contain shadow-none w-full h-full p-8" />

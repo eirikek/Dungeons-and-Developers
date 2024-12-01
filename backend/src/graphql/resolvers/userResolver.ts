@@ -4,6 +4,7 @@ import Class from '../model/Class.js';
 import Race from '../model/Race.js';
 import User from '../model/User.ts';
 import AbilityScore from '../model/AbilityScore.js';
+import { formatDocument } from '../../utils/formatDocument.ts';
 
 const SECRET_KEY = process.env.SECRET_KEY || 'secret_key';
 
@@ -95,18 +96,29 @@ export default {
         .populate('abilityScores.ability')
         .populate('race')
         .populate('class')
-        .populate('favoritedMonsters')
         .populate({
-          path: 'equipments',
-          model: 'Equipment',
-          select: 'id name category value',
-        });
+          path: 'favoritedMonsters',
+          select: '_id name size type alignment hit_points image',
+        })
+        .populate('equipments');
 
       if (!user) throw new Error('User not found');
 
+      console.log('Populated user during login:', user);
+
+      const favoritedMonsters = user.favoritedMonsters.map(formatDocument);
+      console.log('Formatted favoritedMonsters:', favoritedMonsters);
+
       const token = jwt.sign({ id: user._id, userName: user.userName }, SECRET_KEY, { expiresIn: '2h' });
 
-      return { user, token };
+      return {
+        user: {
+          ...user.toObject(),
+          id: user._id.toString(),
+          favoritedMonsters,
+        },
+        token,
+      };
     },
 
     async addFavoriteMonster(_: any, { userId, monsterId }: { userId: string; monsterId: string }) {
@@ -120,7 +132,14 @@ export default {
         await user.save();
       }
 
-      return user.populate('favoritedMonsters');
+      const populatedUser = await user.populate('favoritedMonsters');
+      const favoritedMonsters = populatedUser.favoritedMonsters.map(formatDocument);
+
+      return {
+        ...populatedUser.toObject(),
+        favoritedMonsters,
+        id: populatedUser._id.toString(),
+      };
     },
 
     async deleteUser(_: any, { userId }: { userId: string }) {
@@ -140,7 +159,14 @@ export default {
       user.favoritedMonsters.pull(monsterObjectId);
       await user.save();
 
-      return user.populate('favoritedMonsters');
+      const populatedUser = await user.populate('favoritedMonsters');
+      const favoritedMonsters = populatedUser.favoritedMonsters.map(formatDocument);
+
+      return {
+        ...populatedUser.toObject(),
+        favoritedMonsters,
+        id: populatedUser._id.toString(),
+      };
     },
 
     async updateDungeonName(_: any, { userId, dungeonName }: { userId: string; dungeonName: string }) {

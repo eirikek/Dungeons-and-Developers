@@ -1,6 +1,8 @@
 import Monster from '../model/Monsters.ts';
 import User from '../model/User.ts';
 import fetchData from '../../scripts/fetchData.js';
+import { formatDocument } from '../../utils/formatDocument.js';
+import { Types } from 'mongoose';
 
 interface MonsterArgs {
   id: string;
@@ -21,6 +23,17 @@ interface ReviewInput {
   user: string;
   difficulty: number;
   description: string;
+}
+
+interface Review {
+  _id: Types.ObjectId;
+  user: {
+    _id: Types.ObjectId;
+    userName: string;
+  };
+  difficulty: number;
+  description: string;
+  createdAt: string;
 }
 
 interface MonsterTypeCountsArgs {
@@ -54,6 +67,10 @@ export default {
         query.hit_points = { $gte: minHp, $lte: maxHp };
       }
 
+      if (searchTerm) {
+        query.name = { $regex: new RegExp(searchTerm, 'i') };
+      }
+
       if (suggestionsOnly) {
         query.name = { $regex: new RegExp(`^${searchTerm}`, 'i') };
         return Monster.find(query, 'id name').limit(limit);
@@ -70,7 +87,6 @@ export default {
         case 'difficulty-desc':
           const sortDirection = sortOption === 'difficulty-asc' ? 1 : -1;
 
-          console.log('Sorting by difficulty with query:', query);
           const monstersWithCalculations = await Monster.aggregate([
             { $match: query },
             {
@@ -106,6 +122,8 @@ export default {
             },
           ]);
 
+          const formattedMonstersByDifficulty = monstersWithCalculations.map((monster) => formatDocument(monster));
+
           const totalMonsters = await Monster.countDocuments(query);
           const minHpValue = await Monster.findOne(query)
             .sort({ hit_points: 1 })
@@ -115,7 +133,7 @@ export default {
             .then((m) => m?.hit_points ?? 1000);
 
           return {
-            monsters: monstersWithCalculations,
+            monsters: formattedMonstersByDifficulty || [],
             totalMonsters,
             minHp: minHpValue,
             maxHp: maxHpValue,
@@ -148,6 +166,8 @@ export default {
             },
           ]);
 
+          const formattedMonstersByReviews = monstersByReviews.map((monster) => formatDocument(monster));
+
           const totalMonstersByReviews = await Monster.countDocuments(query);
           const minHpValueByReviews = await Monster.findOne(query)
             .sort({ hit_points: 1 })
@@ -157,7 +177,7 @@ export default {
             .then((m) => m?.hit_points ?? 1000);
 
           return {
-            monsters: monstersByReviews,
+            monsters: formattedMonstersByReviews || [],
             totalMonsters: totalMonstersByReviews,
             minHp: minHpValueByReviews,
             maxHp: maxHpValueByReviews,
@@ -199,6 +219,8 @@ export default {
         totalMonsters = await Monster.countDocuments(query);
       }
 
+      const formattedMonsters = monsters.map((monster) => formatDocument(monster));
+
       const minHpValue = await Monster.findOne(query)
         .sort({ hit_points: 1 })
         .then((m) => m?.hit_points ?? 1);
@@ -206,14 +228,34 @@ export default {
         .sort({ hit_points: -1 })
         .then((m) => m?.hit_points ?? 1000);
 
-      return { monsters, totalMonsters, minHp: minHpValue, maxHp: maxHpValue };
+      return { monsters: formattedMonsters || [], totalMonsters, minHp: minHpValue, maxHp: maxHpValue };
     },
 
     async monster(_: any, { id }: MonsterArgs) {
-      return Monster.findById(id).populate({
+      const monster = await Monster.findById(id).populate({
         path: 'reviews.user',
         select: 'id userName',
       });
+
+      if (!monster) throw new Error('Monster not found');
+
+      const formattedMonster = formatDocument(monster);
+
+      const formattedReviews = monster.reviews.map((review: any) => ({
+        id: review._id.toString(),
+        user: {
+          id: review.user._id ? review.user._id.toString() : '',
+          userName: review.user.userName || 'Unknown',
+        },
+        difficulty: review.difficulty,
+        description: review.description,
+        createdAt: review.createdAt,
+      }));
+
+      return {
+        ...formattedMonster,
+        reviews: formattedReviews,
+      };
     },
 
     async monsterTypeCounts(_: any, { minHp, maxHp }: MonsterTypeCountsArgs) {
