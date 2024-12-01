@@ -47,6 +47,7 @@ const client = new ApolloClient({
               return incoming;
             },
           },
+
           race: {
             merge(_, incoming) {
               return incoming;

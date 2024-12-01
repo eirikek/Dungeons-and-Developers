@@ -18,14 +18,14 @@ const SubMenu = () => {
         onMouseEnter={() => setHoveredButton('/race')}
         onMouseLeave={() => setHoveredButton(null)}
       >
-        <Button text="Race" linkTo="/race" noUnderline={true} className="header" />
+        <Button text="Race" linkTo="/race" noUnderline={true} className="header w-full justify-center" />
       </div>
       <div className="h-14 w-0.5 bg-customRed"></div>
 
       {/* Class Button */}
       <div
         className={`flex-1 transition-all duration-300 ease-in-out flex items-center justify-center ${
-          isActive('/class') ? 'bold' : '' // Always keep bold for active
+          isActive('/class') ? 'bold' : ''
         } ${hoveredButton === '/class' || (!hoveredButton && isActive('/class')) ? 'flex-grow-2' : ''}`}
         onMouseEnter={() => setHoveredButton('/class')}
         onMouseLeave={() => setHoveredButton(null)}

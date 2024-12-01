@@ -234,7 +234,7 @@ export default function MonsterPage() {
                 <>
                   <MonsterGrid monsters={monsters} isDungeonPage={false} />
                   {totalMonsters > monstersPerPage && (
-                    <div className="relative xl:sticky bottom-0 ">
+                    <div className="relative xl:sticky bottom-0">
                       <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
                     </div>
                   )}

@@ -156,6 +156,7 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
     <>
       <Button
         variant="outlined"
+        className="review-button"
         onClick={handleClickOpen}
         sx={{
           color: 'white',
