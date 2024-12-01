@@ -13,7 +13,8 @@ import { useMediaQuery } from 'react-responsive';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 import useCharacterContext from '../../hooks/useCharacter.ts';
 import { useReactiveVar } from '@apollo/client';
-import { equipmentsVar } from '../../context/CharacterContext.tsx';
+import { equipmentsVar } from '../../utils/apolloVars.ts';
+import { useLocation } from 'react-router-dom';
 
 const variants = {
   enter: (direction: number) => ({
@@ -39,7 +40,11 @@ const EquipmentPage = () => {
 
   const { showToast } = useToast();
 
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   const undoRemoveRef = useRef<Equipment | Equipment[] | null>(null);
+
   const [searchTerm, setSearchTerm] = useState<string>(sessionStorage.getItem('equipmentSearchTerm') || '');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>(
     sessionStorage.getItem('equipmentSearchTerm') || ''
@@ -53,11 +58,13 @@ const EquipmentPage = () => {
   const { suggestions: equipmentSuggestions } = useEquipmentSuggestions(searchTerm);
   const [noResults, setNoResults] = useState(false);
 
+  const shouldFetchEquipments = currentPath.includes('/equipment') || currentPath.includes('/mycharacter');
+
   const {
     equipments: fetchedEquipments,
     totalEquipments: fetchedTotalEquipments,
     loading,
-  } = useEquipments(debouncedSearchTerm, currentPage, equipmentsPerPage);
+  } = useEquipments(debouncedSearchTerm, currentPage, equipmentsPerPage, shouldFetchEquipments);
 
   const [equipments, setEquipments] = useState<Equipment[]>(fetchedEquipments);
 

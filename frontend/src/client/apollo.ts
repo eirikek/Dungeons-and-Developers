@@ -1,5 +1,6 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { ReviewType } from '../interfaces/ReviewProps.ts';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000/graphql',
@@ -52,8 +53,8 @@ const client = new ApolloClient({
             },
           },
           equipments: {
-            merge(existing = [], incoming) {
-              return [...existing, ...incoming];
+            merge(_, incoming) {
+              return incoming;
             },
           },
         },
@@ -64,7 +65,29 @@ const client = new ApolloClient({
       Race: {
         keyFields: ['name'],
       },
+      Ability: {
+        keyFields: ['id'],
+      },
+      Equipment: {
+        keyFields: ['name'],
+      },
       Monster: {
+        keyFields: ['id'],
+        fields: {
+          reviews: {
+            merge(existing = [], incoming) {
+              const mergedReviews = [...existing];
+              incoming.forEach((incomingReview: ReviewType) => {
+                if (!mergedReviews.some((review) => review.id === incomingReview.id)) {
+                  mergedReviews.push(incomingReview);
+                }
+              });
+              return mergedReviews;
+            },
+          },
+        },
+      },
+      Review: {
         keyFields: ['id'],
       },
     },

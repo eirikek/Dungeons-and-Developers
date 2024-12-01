@@ -82,3 +82,17 @@ export interface ArrayScores {
 export type ArrayVar = {
   userId: string;
 };
+
+export interface GetUserEquipmentResponse {
+  user: {
+    id: string;
+    equipments: Array<{
+      id: string;
+      index: number;
+      name: string;
+      category: string;
+      value: number;
+      __typename: string;
+    }>;
+  };
+}

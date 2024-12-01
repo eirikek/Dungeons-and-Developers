@@ -1,6 +1,6 @@
-import { makeVar, useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { createContext, ReactNode, useCallback, useEffect, useMemo } from 'react';
-
+import { useLocation } from 'react-router-dom';
 import { UPDATE_ABILITY_SCORES, UPDATE_USER_CLASS, UPDATE_USER_RACE } from '../graphql/mutations/userMutations.ts';
 import { GET_ARRAY_SCORES, GET_USER_CLASS, GET_USER_RACE } from '../graphql/queries/userQueries.ts';
 import useAbilityScores from '../hooks/useAbilityScores.ts';
@@ -12,19 +12,13 @@ import AbilityScoreCardProps from '../interfaces/AbilityScoreProps.ts';
 import ClassData from '../interfaces/ClassProps.ts';
 import { Equipment } from '../interfaces/EquipmentProps';
 import RaceData from '../interfaces/RaceProps.ts';
-import { abilitiesVar } from '../pages/mainPages/myCharacterPage.tsx';
-import { classVar } from '../pages/subPages/classPage.tsx';
-import { raceVar } from '../pages/subPages/racePage.tsx';
-import {
-  AbilityScorePair,
-  ArrayScores,
-  ArrayVar,
-  UserAbilities,
-  UserClass,
-  UserRace,
-} from '../graphql/queryInterface.ts';
+import { abilitiesVar } from '../utils/apolloVars.ts';
+import { classVar } from '../utils/apolloVars.ts';
+import { raceVar } from '../utils/apolloVars.ts';
+import { ArrayScores, ArrayVar, UserClass, UserRace } from '../graphql/queryInterface.ts';
 import { UserNotFound } from '../utils/UserNotFound.ts';
 import { handleError } from '../utils/handleError.ts';
+import { equipmentsVar } from '../utils/apolloVars.ts';
 
 interface CharacterContextType {
   stateAbilities: AbilityScoreCardProps[];
@@ -52,8 +46,6 @@ interface CharacterProviderProps {
   userId: string;
 }
 
-export const equipmentsVar = makeVar<Equipment[]>([]);
-
 export const CharacterContext = createContext<CharacterContextType>({
   stateAbilities: [],
   userAbilityScores: new Map<string, number>(),
@@ -76,31 +68,37 @@ export const CharacterContext = createContext<CharacterContextType>({
 export const CharacterProvider = ({ children, userId }: CharacterProviderProps) => {
   const { showToast } = useToast();
 
-  const currentEquipments = useReactiveVar(equipmentsVar);
+  const location = useLocation();
+  const currentPath = location.pathname;
 
-  const { classes: fetchedClasses } = useClasses(1, 12);
-  const { races: fetchedRaces } = useRaces(1, 12);
-  const { abilities: dataAbilities } = useAbilityScores(1, 6);
+  const shouldFetchAbilityScores = currentPath.includes('/abilityscore') || currentPath.includes('/mycharacter');
+  const shouldFetchUserClass = currentPath.includes('/class') || currentPath.includes('/mycharacter');
+  const shouldFetchUserRace = currentPath.includes('/race') || currentPath.includes('/mycharacter');
+
+  const currentEquipments = useReactiveVar(equipmentsVar);
+  const abilityScores = useReactiveVar(abilitiesVar);
+
+  const { classes: fetchedClasses } = useClasses(1, 12, shouldFetchUserClass);
+  const { races: fetchedRaces } = useRaces(1, 12, shouldFetchUserRace);
+  const { abilities: dataAbilities } = useAbilityScores(1, 6, shouldFetchAbilityScores);
 
   const { data: scoreData, loading: abilityScoresLoading } = useQuery<ArrayScores, ArrayVar>(GET_ARRAY_SCORES, {
     variables: { userId },
-    skip: !userId,
+    skip: !userId || !shouldFetchAbilityScores,
     fetchPolicy: 'cache-and-network',
   });
 
   const { data: userClassData, loading: classLoading } = useQuery(GET_USER_CLASS, {
     variables: { userId },
-    skip: !userId,
-    fetchPolicy: 'cache-and-network',
+    skip: !userId || !shouldFetchUserClass,
+    fetchPolicy: 'cache-first',
   });
 
   const { data: userRaceData, loading: raceLoading } = useQuery(GET_USER_RACE, {
     variables: { userId },
-    skip: !userId,
-    fetchPolicy: 'cache-and-network',
+    skip: !userId || !shouldFetchUserRace,
+    fetchPolicy: 'cache-first',
   });
-
-  const abilityScores = useReactiveVar(abilitiesVar);
 
   const {
     userEquipments,
@@ -127,9 +125,7 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
 
   useEffect(() => {
     if (scoreData?.getArrayScores) {
-      const mappedScores = new Map(
-        scoreData.getArrayScores.map((item: AbilityScorePair) => [item.ability.name, item.score])
-      );
+      const mappedScores = new Map(scoreData.getArrayScores.map((item) => [item.ability.name, item.score]));
       abilitiesVar(mappedScores);
     }
   }, [scoreData]);
@@ -175,44 +171,21 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
       handleError(error, 'Error removing all equipment', 'critical', showToast);
     }
   };
-
   const [updateAbilityScoresMutation] = useMutation(UPDATE_ABILITY_SCORES, {
     update: (cache, { data }) => {
       if (!data) return;
 
-      const existing = cache.readQuery<UserAbilities>({
+      const updatedScores = data.updateAbilityScores.abilityScores;
+
+      cache.writeQuery({
         query: GET_ARRAY_SCORES,
         variables: { userId },
-      });
-
-      if (existing?.user) {
-        cache.writeQuery({
-          query: GET_ARRAY_SCORES,
-          variables: { userId },
-          data: {
-            user: {
-              __typename: 'User',
-              id: userId,
-              abilityScores: {
-                ...existing?.user.abilityScores.ability,
-                score: data.user.score,
-              },
-            },
-          },
-        });
-      }
-    },
-    onError: (error) => {
-      console.error('Failed to update ability scores: ', error);
-
-      showToast({
-        message: `Failed to update ability scores: ${error.message}`,
-        type: 'error',
-        duration: 3000,
+        data: {
+          getArrayScores: updatedScores,
+        },
       });
     },
   });
-
   const [updateUserClassMutation] = useMutation(UPDATE_USER_CLASS, {
     update: (cache, { data }) => {
       if (!data) return;

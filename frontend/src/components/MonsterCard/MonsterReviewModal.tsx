@@ -8,6 +8,7 @@ import { useToast } from '../../hooks/useToast';
 import { ReviewFormType, ReviewType } from '../../interfaces/ReviewProps.ts';
 import ReviewSlider from './ReviewSlider.tsx';
 import ReviewTextField from './ReviewTextField.tsx';
+import { AddReviewData, GetMonsterReviewsData, UpdateReviewData } from '../../interfaces/MonsterCardProps.ts';
 
 const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
   const { userId } = useContext(AuthContext);
@@ -19,15 +20,63 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
   const [originalDescription, setOriginalDescription] = useState('');
   const { showToast } = useToast();
 
-  const { data } = useQuery(GET_MONSTER_REVIEWS, { variables: { monsterId } });
+  const { data } = useQuery<GetMonsterReviewsData>(GET_MONSTER_REVIEWS, {
+    variables: { monsterId },
+    skip: !isOpen,
+    fetchPolicy: 'cache-and-network',
+  });
   const existingReview = data?.monster?.reviews.find((review: ReviewType) => review.user.id === userId);
 
-  const [addReview] = useMutation(ADD_REVIEW, {
-    refetchQueries: [{ query: GET_MONSTER_REVIEWS, variables: { monsterId } }],
+  const [addReview] = useMutation<AddReviewData>(ADD_REVIEW, {
+    update(cache, { data }) {
+      if (!data) return;
+      const existingData = cache.readQuery<GetMonsterReviewsData>({
+        query: GET_MONSTER_REVIEWS,
+        variables: { monsterId },
+      });
+      if (existingData && existingData.monster) {
+        const newReviews = data.addReview.reviews;
+
+        cache.writeQuery<GetMonsterReviewsData>({
+          query: GET_MONSTER_REVIEWS,
+          variables: { monsterId },
+          data: {
+            monster: {
+              ...existingData.monster,
+              reviews: newReviews,
+            },
+          },
+        });
+      }
+    },
   });
 
-  const [updateReview] = useMutation(UPDATE_REVIEW, {
-    refetchQueries: [{ query: GET_MONSTER_REVIEWS, variables: { monsterId } }],
+  const [updateReview] = useMutation<UpdateReviewData>(UPDATE_REVIEW, {
+    update(cache, { data }) {
+      if (!data) return;
+
+      const existingData = cache.readQuery<GetMonsterReviewsData>({
+        query: GET_MONSTER_REVIEWS,
+        variables: { monsterId },
+      });
+
+      if (existingData && existingData.monster) {
+        const updatedReview = data.updateReview;
+
+        cache.writeQuery<GetMonsterReviewsData>({
+          query: GET_MONSTER_REVIEWS,
+          variables: { monsterId },
+          data: {
+            monster: {
+              ...existingData.monster,
+              reviews: existingData.monster.reviews.map((review) =>
+                review.id === updatedReview.id ? updatedReview : review
+              ),
+            },
+          },
+        });
+      }
+    },
   });
 
   useEffect(() => {
@@ -36,10 +85,17 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
       setDifficulty(existingReview.difficulty);
       setOriginalDescription(existingReview.description);
       setOriginalDifficulty(existingReview.difficulty);
+    } else {
+      // reset form if no review
+      setDescription('');
+      setDifficulty(50);
+      setOriginalDescription('');
+      setOriginalDifficulty(50);
     }
   }, [existingReview]);
 
   const handleClickOpen = () => {
+    setIsOpen(true);
     if (existingReview) {
       setEditMode(true);
     } else {
@@ -47,7 +103,6 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
       setDifficulty(50);
       setEditMode(false);
     }
-    setIsOpen(true);
   };
 
   const handleClose = () => {

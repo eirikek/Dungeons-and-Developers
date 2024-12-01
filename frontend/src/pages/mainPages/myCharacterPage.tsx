@@ -1,22 +1,22 @@
-import { makeVar, useReactiveVar } from '@apollo/client';
+import { useReactiveVar } from '@apollo/client';
 import { useContext, useEffect, useState, useRef } from 'react';
 import { FaChevronLeft, FaChevronRight, FaTrash } from 'react-icons/fa';
 import AbilityCounterWrapper from '../../components/Counter/AbilityScoreCounterWrapper.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout';
 import TutorialModal from '../../components/TutorialModal/TutorialModal';
-import { equipmentsVar } from '../../context/CharacterContext.tsx';
+import { equipmentsVar } from '../../utils/apolloVars.ts';
 import useCharacterContext from '../../hooks/useCharacter';
 import { AuthContext } from '../../context/AuthContext';
 import classImageMapping from '../../utils/classImageMapping';
 import raceImageMapping from '../../utils/raceImageMapping';
-import abilityScoreManagement from '../../utils/abilityScoreManagement.ts';
-import { classVar } from '../subPages/classPage';
-import { raceVar } from '../subPages/racePage.tsx';
+import abilityScoreManagement from '../../hooks/useAbilityScoreManagement.ts';
+import { classVar } from '../../utils/apolloVars.ts';
+import { raceVar } from '../../utils/apolloVars.ts';
 import { useToast } from '../../hooks/useToast.ts';
 import { Equipment } from '../../interfaces/EquipmentProps.ts';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 
-export const abilitiesVar = makeVar<Map<string, number>>(new Map());
+//export const abilitiesVar = makeVar<Map<string, number>>(new Map());
 
 const MyCharacterPage = () => {
   const { userName } = useContext(AuthContext);
@@ -202,7 +202,6 @@ const MyCharacterPage = () => {
                     <div key={index} className="flex items-center">
                       <label className="sub-header w-32 mr-[85px]">{ability.name}:</label>
                       <AbilityCounterWrapper
-                        abilityName={ability.name}
                         initialValue={currentArrayScores.get(ability.name) ?? 0}
                         onUpdate={(newValue) => handleCounterChange(ability.name, newValue)}
                       />

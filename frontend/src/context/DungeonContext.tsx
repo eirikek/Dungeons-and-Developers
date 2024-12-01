@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback } from 'react';
+import { createContext, ReactNode, useCallback, useMemo } from 'react';
 
 import { makeVar, useReactiveVar } from '@apollo/client';
 import useDungeon from '../hooks/useDungeon.ts';
@@ -92,15 +92,14 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
     }
   };
 
-  return (
-    <DungeonContext.Provider
-      value={{
-        dungeonMonsters: currentDungeonMonsters,
-        toggleDungeon,
-        isInDungeon,
-      }}
-    >
-      {children}
-    </DungeonContext.Provider>
+  const value = useMemo(
+    () => ({
+      dungeonMonsters: currentDungeonMonsters,
+      toggleDungeon,
+      isInDungeon,
+    }),
+    [currentDungeonMonsters, toggleDungeon, isInDungeon]
   );
+
+  return <DungeonContext.Provider value={value}>{children}</DungeonContext.Provider>;
 };

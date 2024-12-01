@@ -6,7 +6,7 @@ export const monsterValidationSchema = Joi.object({
   type: Joi.string().required(),
   alignment: Joi.string().required(),
   hit_points: Joi.number().required(),
-  image: Joi.string().optional(),
+  image: Joi.string().base64().allow(null).optional(),
 });
 
 export const equipmentValidationSchema = Joi.object({

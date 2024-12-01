@@ -18,7 +18,7 @@ export const useDungeon = () => {
   const { data: favoritesData, error: favoritesError } = useQuery(GET_USER_FAVORITES, {
     variables: { userId },
     skip: !userId,
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
   });
 
   useEffect(() => {
