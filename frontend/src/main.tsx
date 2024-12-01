@@ -6,7 +6,7 @@ import App from './App.tsx';
 import client from './client/apollo.ts';
 import ToastProvider from './components/Toast/CustomToast.tsx';
 import { AuthProvider } from './context/AuthContext.tsx';
-
+import { AccessibilityProvider } from './context/AccessibilityContext.tsx';
 import './index.css';
 
 const queryClient = new QueryClient();
@@ -17,7 +17,9 @@ createRoot(document.getElementById('root')!).render(
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <ToastProvider>
+             <AccessibilityProvider>
             <App />
+             </AccessibilityProvider>
           </ToastProvider>
         </AuthProvider>
       </QueryClientProvider>
