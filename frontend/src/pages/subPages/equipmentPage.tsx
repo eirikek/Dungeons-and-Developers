@@ -1,19 +1,19 @@
+import { useReactiveVar } from '@apollo/client';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useRef, useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
+import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
+import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 import Pagination from '../../components/Pagination/Pagination.tsx';
+import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 import EquipmentCard from '../../components/SubPages/EquipmentCard.tsx';
+import { equipmentsVar } from '../../context/CharacterContext.tsx';
+import useCharacterContext from '../../hooks/useCharacter.ts';
 import useEquipments from '../../hooks/useEquipments.ts';
+import useEquipmentSuggestions from '../../hooks/useEquipmentsSuggestions.ts';
 import { useToast } from '../../hooks/useToast.ts';
 import { Equipment } from '../../interfaces/EquipmentProps.ts';
-import SearchBar from '../../components/SearchBar/SearchBar.tsx';
-import useEquipmentSuggestions from '../../hooks/useEquipmentsSuggestions.ts';
-import CustomButton from '../../components/CustomButton/CustomButton.tsx';
-import { useMediaQuery } from 'react-responsive';
-import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
-import useCharacterContext from '../../hooks/useCharacter.ts';
-import { useReactiveVar } from '@apollo/client';
-import { equipmentsVar } from '../../context/CharacterContext.tsx';
 
 const variants = {
   enter: (direction: number) => ({
@@ -29,6 +29,47 @@ const variants = {
     opacity: 0,
   }),
 };
+
+/**
+ * EquipmentPage Component
+ *
+ * A comprehensive equipment management page for D&D character creation.
+ *
+ * Features:
+ * - Equipment search with auto-suggestions
+ * - Paginated equipment grid display
+ * - Add/remove equipment functionality with undo support
+ * - Inventory limit management (max 10 items)
+ * - Responsive layout with mobile/desktop variants
+ * - Animated transitions between pages
+ *
+ * State Management:
+ * - Search term persistence using sessionStorage
+ * - Equipment state through Apollo reactive variables
+ * - Pagination state with session persistence
+ * - Loading states for async operations
+ *
+ * Component Structure:
+ * - MainPageLayout wrapper
+ * - SearchBar with suggestions
+ * - Animated equipment grid
+ * - Pagination controls
+ * - Toast notifications for user feedback
+ *
+ * User Interactions:
+ * - Search equipment with debounced input
+ * - Add/remove individual items
+ * - Remove all equipment with undo option
+ * - Navigate paginated results
+ * - Mobile-responsive view switching
+ *
+ * Loading States:
+ * - Loading indicator during data fetch
+ * - No results message for empty searches
+ * - Disabled states for inventory limits
+ *
+ * @returns Rendered EquipmentPage component
+ */
 
 const EquipmentPage = () => {
   const isMobileOrTablet = useMediaQuery({ maxWidth: 1024 });
