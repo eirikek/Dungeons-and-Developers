@@ -6,11 +6,6 @@ import typeDefs from './graphql/typeDefs/index.ts';
 import resolvers from './graphql/resolvers/index.ts';
 import fetchData from './scripts/fetchData.ts';
 import { expressMiddleware } from '@apollo/server/express4';
-import fetchAbilityScores from './scripts/fetchAbilityScores.js';
-import fetchClasses from './scripts/fetchClasses.js';
-import fetchEquipments from './scripts/fetchEquipments.js';
-import fetchRaces from './scripts/fetchRaces.js';
-import fetchMonsters from './scripts/fetchMonsters.js';
 
 const app = express();
 app.use(express.json());
