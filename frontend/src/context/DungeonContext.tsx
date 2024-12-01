@@ -4,13 +4,13 @@ import { makeVar, useReactiveVar } from '@apollo/client';
 import useDungeon from '../hooks/useDungeon.ts';
 import { useToast } from '../hooks/useToast.ts';
 import { MonsterCardProps } from '../interfaces/MonsterCardProps.ts';
+import { handleError } from '../utils/handleError.ts';
+import { UserNotFound } from '../utils/UserNotFound.ts';
 
 interface DungeonContextType {
   dungeonMonsters: MonsterCardProps[];
-  dungeonName: string;
   toggleDungeon: (monster: MonsterCardProps) => void;
   isInDungeon: (monsterIndex: string) => boolean;
-  updateDungeonName: (newName: string) => void;
 }
 
 interface DungeonProviderProps {
@@ -22,17 +22,18 @@ export const dungeonMonstersVar = makeVar<MonsterCardProps[]>([]);
 
 export const DungeonContext = createContext<DungeonContextType>({
   dungeonMonsters: [],
-  dungeonName: '',
   toggleDungeon: () => {},
   isInDungeon: () => false,
-  updateDungeonName: () => {},
 });
 
 export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
   const maxFavorites = 6;
   const { showToast } = useToast();
 
-  const { dungeonMonsters, dungeonName, toggleFavorite, toggleDungeonName } = useDungeon();
+  const { dungeonMonsters, toggleFavorite, favoritesError } = useDungeon();
+  if (favoritesError) {
+    handleError(favoritesError, 'Failed to load favorite monsters. Please try again later.', 'critical', showToast);
+  }
 
   const currentDungeonMonsters = useReactiveVar(dungeonMonstersVar);
 
@@ -44,7 +45,8 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
   );
   const toggleDungeon = async (monster: MonsterCardProps) => {
     if (!userId) {
-      showToast({ message: 'You must be logged in to add monsters to dungeon', type: 'error', duration: 3000 });
+      const error = new UserNotFound('User not logged in. Please log in to access this feature');
+      handleError(error, 'You must be logged in to add monsters to your dungeon.', 'warning', showToast);
       return;
     }
 
@@ -72,25 +74,7 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
         });
       }
     } catch (error) {
-      console.error('Error in toggleDungeon:', error);
-    }
-  };
-
-  const updateDungeonName = async (newName: string) => {
-    try {
-      await toggleDungeonName(newName);
-      showToast({
-        message: `Dungeon name updated to "${newName}"`,
-        type: 'success',
-        duration: 3000,
-      });
-    } catch (error) {
-      console.error('Error updating dungeon name:', error);
-      showToast({
-        message: 'Failed to update dungeon name. Please try again.',
-        type: 'error',
-        duration: 3000,
-      });
+      handleError(error, 'Failed to toggle dungeon monster. Please try again later.', 'critical', showToast);
     }
   };
 
@@ -104,12 +88,7 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
       });
       console.log('After undo: ', dungeonMonstersVar());
     } catch (error) {
-      console.error('Error restoring monster to dungeon:', error);
-      showToast({
-        message: 'Failed to restore monster. Please try again.',
-        type: 'error',
-        duration: 3000,
-      });
+      handleError(error, 'Failed to restore monster. Please try again.', 'critical', showToast);
     }
   };
 
@@ -117,10 +96,8 @@ export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
     <DungeonContext.Provider
       value={{
         dungeonMonsters: currentDungeonMonsters,
-        dungeonName,
         toggleDungeon,
         isInDungeon,
-        updateDungeonName,
       }}
     >
       {children}

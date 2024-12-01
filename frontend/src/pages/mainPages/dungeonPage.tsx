@@ -1,16 +1,34 @@
-import { useContext } from 'react';
 import CustomInput from '../../components/CustomInput/CustomInput.tsx';
 import MonsterGrid from '../../components/Dungeon/MonsterGrid.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 
 import DungeonStats from '../../components/Dungeon/DungeonStats.tsx';
-import { DungeonContext } from '../../context/DungeonContext.tsx';
+import useDungeon from '../../hooks/useDungeon.ts';
+import { useQuery } from '@apollo/client';
+import { GET_USER_DUNGEON_NAME } from '../../graphql/queries/userQueries.ts';
+import { handleError } from '../../utils/handleError.ts';
 
 export default function DungeonPage() {
-  const { dungeonName, updateDungeonName } = useContext(DungeonContext);
+  const { toggleDungeonName, userId } = useDungeon();
 
-  const handleSaveDungeonName = (newName: string) => {
-    updateDungeonName(newName);
+  const { data: dungeonData, error: nameError } = useQuery(GET_USER_DUNGEON_NAME, {
+    variables: { userId },
+    skip: !userId,
+    fetchPolicy: 'cache-and-network',
+  });
+
+  if (nameError) {
+    handleError(nameError, 'An error occured while fetching name', 'critical');
+  }
+
+  const dungeonName = dungeonData?.user?.dungeonName || null;
+
+  const handleSaveDungeonName = async (newName: string) => {
+    try {
+      await toggleDungeonName(newName);
+    } catch (error) {
+      console.error('Failed to update dungeon name:', error);
+    }
   };
 
   return (

@@ -13,7 +13,7 @@ const monsterSchema = new Schema({
   type: { type: String, required: true },
   alignment: { type: String, required: true },
   hit_points: { type: Number, required: true },
-  image: { type: Buffer, required: false },
+  image: { type: String, required: false },
   reviews: [reviewSchema],
 });
 

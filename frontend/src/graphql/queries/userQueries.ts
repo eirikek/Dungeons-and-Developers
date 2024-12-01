@@ -46,7 +46,6 @@ export const GET_USER_RACE = gql`
         speed
         alignment
         size
-        img
       }
     }
   }

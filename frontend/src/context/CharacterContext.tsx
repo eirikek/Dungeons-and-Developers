@@ -15,6 +15,16 @@ import RaceData from '../interfaces/RaceProps.ts';
 import { abilitiesVar } from '../pages/mainPages/myCharacterPage.tsx';
 import { classVar } from '../pages/subPages/classPage.tsx';
 import { raceVar } from '../pages/subPages/racePage.tsx';
+import {
+  AbilityScorePair,
+  ArrayScores,
+  ArrayVar,
+  UserAbilities,
+  UserClass,
+  UserRace,
+} from '../graphql/queryInterface.ts';
+import { UserNotFound } from '../utils/UserNotFound.ts';
+import { handleError } from '../utils/handleError.ts';
 
 interface CharacterContextType {
   stateAbilities: AbilityScoreCardProps[];
@@ -41,64 +51,6 @@ interface CharacterProviderProps {
   children: ReactNode;
   userId: string;
 }
-
-interface UserClass {
-  user: {
-    id: string;
-    class: {
-      id: string;
-      name: string;
-      index: string;
-      hit_die: number;
-    };
-  };
-}
-
-interface UserRace {
-  user: {
-    id: string;
-    race: {
-      id: string;
-      name: string;
-      speed: number;
-      alignment: string;
-      size: string;
-      img: string;
-    };
-  };
-}
-
-interface UserAbilities {
-  user: {
-    id: string;
-    abilityScores: {
-      ability: {
-        id: string;
-        name: string;
-      };
-      score: number;
-    };
-  };
-}
-
-interface Ability {
-  id: string;
-  name: string;
-}
-
-interface AbilityScorePair {
-  __typename: string;
-  ability: Ability;
-  score: number;
-}
-
-interface ArrayScores {
-  getArrayScores: AbilityScorePair[];
-}
-
-type ArrayVar = {
-  userId: string;
-};
 
 export const equipmentsVar = makeVar<Equipment[]>([]);
 
@@ -188,11 +140,8 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
   const checkUser = useCallback(
     (message: string) => {
       if (!userId) {
-        showToast({
-          message: `You must be logged in to change ${message}`,
-          type: 'error',
-          duration: 5000,
-        });
+        const error = new UserNotFound(`User not logged in. Please log in to update ${message}.`);
+        handleError(error, `You must be logged in to update ${message}`, 'warning', showToast);
         return false;
       }
       return true;
@@ -205,17 +154,16 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
       await addToEquipmentsMutation(equipment.id);
       equipmentsVar([...equipmentsVar(), equipment]);
     } catch (error) {
-      console.error('Error adding equipment:', error);
+      handleError(error, 'Error adding equipment', 'critical', showToast);
     }
   };
 
   const removeFromEquipments = async (equipment: Equipment) => {
     try {
       await removeFromEquipmentsMutation(equipment.id);
-
       equipmentsVar(equipmentsVar().filter((equip) => equip.id !== equipment.id));
     } catch (error) {
-      console.error('Error removing equipment:', error);
+      handleError(error, 'Error removing equipment', 'critical', showToast);
     }
   };
 
@@ -224,7 +172,7 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
       await removeAllUserEquipmentsMutation();
       equipmentsVar([]);
     } catch (error) {
-      console.error('Error removing all equipment:', error);
+      handleError(error, 'Error removing all equipment', 'critical', showToast);
     }
   };
 
@@ -317,67 +265,53 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
 
   const updateAbilityScores = useCallback(
     async (newValue: number, name: string) => {
-      if (!checkUser('Abilities')) return;
-
-      const updatedScores = new Map(abilitiesVar());
-      updatedScores.set(name, newValue);
+      if (!checkUser('abilities')) return;
 
       try {
-        const scoresArray = Array.from(updatedScores.values());
+        const updatedScores = new Map(abilitiesVar());
+        updatedScores.set(name, newValue);
 
         await updateAbilityScoresMutation({
-          variables: { userId, scores: scoresArray },
+          variables: { userId, scores: Array.from(updatedScores.values()) },
         });
 
         abilitiesVar(updatedScores);
       } catch (error) {
-        console.error(error);
+        handleError(error, 'Failed to update ability scores', 'critical', showToast);
       }
     },
-    [checkUser, showToast, updateAbilityScoresMutation, userId]
+    [checkUser, updateAbilityScoresMutation]
   );
 
   const updateClass = async (classId: string) => {
-    if (!checkUser('Class')) return;
+    if (!checkUser('class')) return;
 
     try {
       const response = await updateUserClassMutation({ variables: { userId, classId } });
       classVar(classId);
-      const updatedClass = response.data.updateUserClass.class;
       showToast({
-        message: `Class changed to ${updatedClass.name}`,
+        message: `Class changed to ${response.data.updateUserClass.class.name}`,
         type: 'success',
         duration: 3000,
       });
     } catch (error) {
-      showToast({
-        message: `Failed to update class: ${error}`,
-        type: 'error',
-        duration: 3000,
-      });
+      handleError(error, 'Failed to update class', 'critical', showToast);
     }
   };
 
   const updateRace = async (raceId: string) => {
-    if (!checkUser('Race')) return;
+    if (!checkUser('race')) return;
 
     try {
       const response = await updateUserRaceMutation({ variables: { userId, raceId } });
       raceVar(raceId);
-      const updatedRace = response.data.updateUserRace.race;
-
       showToast({
-        message: `Race changed to ${updatedRace.name}`,
+        message: `Race changed to ${response.data.updateUserRace.race.name}`,
         type: 'success',
         duration: 3000,
       });
     } catch (error) {
-      console.error('Error updating race:', error);
-      showToast({
-        message: 'Failed to update race. Please try again.',
-        type: 'error',
-        duration: 3000,
-      });
+      handleError(error, 'Failed to update race', 'critical', showToast);
     }
   };
 
