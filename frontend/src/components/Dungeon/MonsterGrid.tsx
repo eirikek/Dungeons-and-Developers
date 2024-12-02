@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { dungeonMonstersVar } from '../../context/DungeonContext';
 import MonsterCard from '../MonsterCard/MonsterCard';
 import type { MonsterCardProps } from '../../interfaces/MonsterCardProps';
@@ -21,15 +21,17 @@ const MonsterGrid = ({ monsters = [], isDungeonPage = false }: MonsterGridProps)
         }));
   }, [monsters, dungeonMonsters, isDungeonPage]);
 
+  const loading = monstersWithDungeonStatus.length < 1;
+
   return (
     <section
       className={`grid grid-cols-1 md:grid-cols-2 ${
         isDungeonPage ? 'xl:grid-cols-3 gap-x-10 xl:gap-x-28' : 'xl:grid-cols-4 gap-x-[10vw] lg:gap-x-[4vw]'
       } gap-y-5 place-items-center transition-opacity duration-500 p-5`}
     >
-      {monstersWithDungeonStatus.length === 0 ? (
-        <div className="flex items-center justify-center h-full w-full col-span-full text-center">
-          <p className="sub-header">{isDungeonPage ? 'No monsters in dungeon' : 'No monsters found'}</p>
+      {loading ? (
+        <div className="flex flex-col items-center justify-center h-[79.5vh]" data-testid="loading-indicator">
+          <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
         </div>
       ) : (
         monstersWithDungeonStatus.map((monster) => (

@@ -15,8 +15,8 @@ export default function DungeonPage() {
     variables: { userId },
     skip: !userId,
     fetchPolicy: 'cache-first',
-    nextFetchPolicy: 'cache-only', // Add this
-    notifyOnNetworkStatusChange: false, // Add this
+    nextFetchPolicy: 'cache-only',
+    notifyOnNetworkStatusChange: false,
   });
 
   if (nameError) {
