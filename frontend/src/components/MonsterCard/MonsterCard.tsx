@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { Blurhash } from 'react-blurhash';
 import NoMonsterImageFound from '../../assets/images/no_monster_image_found.jpg';
 import { DungeonContext } from '../../context/DungeonContext.tsx';
-import DungeonButton from './DungeonButton.tsx';
-import MonsterReviewModal from './MonsterReviewModal.tsx';
-import MonsterDetailsModal from './MonsterDetailsModal.tsx';
 import { MonsterCardProps } from '../../interfaces/MonsterCardProps.ts';
-import { Blurhash } from 'react-blurhash';
+import DungeonButton from './DungeonButton.tsx';
+import MonsterDetailsModal from './MonsterDetailsModal.tsx';
+import MonsterReviewModal from './MonsterReviewModal.tsx';
 
 const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: MonsterCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -40,7 +40,10 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
   };
 
   // Function to open the modal when the card is clicked
-  const handleCardClick = () => {
+  const handleCardClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
     setIsModalOpen(true);
   };
 
@@ -132,4 +135,6 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
   );
 };
 
-export default MonsterCard;
+export default React.memo(MonsterCard, (prevProps, nextProps) => {
+  return prevProps.id === nextProps.id;
+});
