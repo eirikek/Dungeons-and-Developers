@@ -1,12 +1,10 @@
 import RaceCard from '../../components/SubPages/RaceCard.tsx';
 import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
-import { makeVar, useReactiveVar } from '@apollo/client';
+import { useReactiveVar } from '@apollo/client';
 
 import useCharacterContext from '../../hooks/useCharacter.ts';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
-
-export const raceVar = makeVar<string>('');
-
+import { raceVar } from '../../utils/apolloVars.ts';
 export default function RacePage() {
   const currentRace = useReactiveVar(raceVar);
 

@@ -1,12 +1,13 @@
 import { render, screen } from '@testing-library/react';
-import MonsterGrid from '../../../src/components/Dungeon/MonsterGrid.tsx';
-
+import MonsterGrid from '../../../src/components/Dungeon/MonsterGrid';
+import { vi } from 'vitest';
+import '@testing-library/jest-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { expect } from 'vitest';
-import { AuthContext } from '../../../src/context/AuthContext.tsx';
-import { DungeonContext } from '../../../src/context/DungeonContext.tsx';
-import { GET_MONSTER_REVIEWS } from '../../../src/graphql/queries/monsterQueries.ts';
-import { GET_USER_DUNGEON_NAME } from '../../../src/graphql/queries/userQueries.ts';
+import { AuthContext } from '../../../src/context/AuthContext';
+import { DungeonContext } from '../../../src/context/DungeonContext';
+import { GET_MONSTER_REVIEWS } from '../../../src/graphql/queries/monsterQueries';
+import { GET_USER_DUNGEON_NAME } from '../../../src/graphql/queries/userQueries';
 
 const mockShowToast = vi.fn();
 vi.mock('../../../src/hooks/useToast.ts', () => ({
@@ -15,12 +16,33 @@ vi.mock('../../../src/hooks/useToast.ts', () => ({
   }),
 }));
 const mockMonsters = [
-  { id: '1', name: 'Goblin', hit_points: 30, type: 'Beast', size: 'Small', image: '', alignment: 'neutral evil' },
-  { id: '2', name: 'Orc', hit_points: 50, type: 'Humanoid', size: 'Medium', image: '', alignment: 'chaotic evil' },
-  { id: '3', name: 'Dragon', hit_points: 200, type: 'Dragon', size: 'Huge', image: '', alignment: 'chaotic neutral' },
-  { id: '4', name: 'Troll', hit_points: 120, type: 'Giant', size: 'Large', image: '', alignment: 'chaotic evil' },
-  { id: '5', name: 'Vampire', hit_points: 150, type: 'Undead', size: 'Medium', image: '', alignment: 'lawful evil' },
-  { id: '6', name: 'Giant Spider', hit_points: 75, type: 'Beast', size: 'Medium', image: '', alignment: 'neutral' },
+  {
+    alignment: 'neutral evil',
+    hit_points: 30,
+    id: '1',
+    image: '',
+    name: 'Goblin',
+    size: 'Small',
+    type: 'Beast',
+  },
+  {
+    alignment: 'chaotic evil',
+    hit_points: 50,
+    id: '2',
+    image: '',
+    name: 'Orc',
+    size: 'Medium',
+    type: 'Humanoid',
+  },
+  {
+    alignment: 'chaotic neutral',
+    id: '3',
+    hit_points: 200,
+    image: '',
+    name: 'Dragon',
+    size: 'Huge',
+    type: 'Dragon',
+  },
 ];
 
 const mocks = [
@@ -33,7 +55,6 @@ const mocks = [
       data: {
         user: {
           dungeonName: 'Example dungeon',
-          favoritedMonsters: mockMonsters,
         },
       },
     },
@@ -46,6 +67,7 @@ const mocks = [
     result: {
       data: {
         monster: {
+          id: monster.id,
           reviews: [
             {
               id: `review-${monster.id}`,
@@ -66,8 +88,9 @@ const mocks = [
 
 describe('DungeonMonsterGrid', () => {
   const userId = '1';
-  const token = 'mock-token'; // Mock token
-  const userName = 'Mock User'; // Mock user name
+  const token = 'mock-token';
+  const userName = 'Mock User';
+
   beforeEach(() => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
@@ -78,7 +101,7 @@ describe('DungeonMonsterGrid', () => {
               dungeonName: '',
               updateDungeonName: vi.fn(),
               toggleDungeon: vi.fn(),
-              isInDungeon: (monsterId) => monsterId !== '1',
+              isInDungeon: (monsterId) => monsterId !== '123',
             }}
           >
             <MonsterGrid />
@@ -87,25 +110,29 @@ describe('DungeonMonsterGrid', () => {
       </MockedProvider>
     );
   });
-  it.skip('Renders 6 monstercards', async () => {
-    const monsterNames = ['Goblin', 'Orc', 'Dragon', 'Troll', 'Vampire', 'Giant Spider'];
+
+  it('Renders 3 monster cards', async () => {
+    const monsterNames = ['Goblin', 'Orc', 'Dragon'];
+
     for (const name of monsterNames) {
-      const monsterElement = await screen.findByText(name); // Wait for each monster name
-      expect(monsterElement).toBeInTheDocument();
+      await screen.findByText(name);
+      expect(screen.getByText(name)).toBeInTheDocument();
     }
   });
-  it.skip('displays "No monsters in dungeon" when empty', () => {
-    mockMonsters.length = 0;
+
+  it('displays "No monsters in dungeon" when empty', () => {
+    const emptyMonsters = [];
+
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <AuthContext.Provider value={{ userId, token, userName, login: vi.fn(), logout: vi.fn() }}>
           <DungeonContext.Provider
             value={{
-              dungeonMonsters: mockMonsters,
+              dungeonMonsters: emptyMonsters,
               dungeonName: '',
               updateDungeonName: vi.fn(),
               toggleDungeon: vi.fn(),
-              isInDungeon: (monsterId) => monsterId !== '1',
+              isInDungeon: (monsterId) => monsterId !== '123',
             }}
           >
             <MonsterGrid />
@@ -113,6 +140,7 @@ describe('DungeonMonsterGrid', () => {
         </AuthContext.Provider>
       </MockedProvider>
     );
-    expect(screen.getByText('No monsters in dungeon')).toBeInTheDocument();
+
+    expect(screen.getByText('No monsters found')).toBeInTheDocument();
   });
 });

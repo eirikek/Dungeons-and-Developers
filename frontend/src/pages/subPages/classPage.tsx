@@ -1,12 +1,10 @@
 import ClassCard from '../../components/SubPages/ClassCard.tsx';
 import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
-import { makeVar, useReactiveVar } from '@apollo/client';
+import { useReactiveVar } from '@apollo/client';
 
 import useCharacterContext from '../../hooks/useCharacter.ts';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
-
-export const classVar = makeVar<string>('');
-
+import { classVar } from '../../utils/apolloVars.ts';
 export default function ClassPage() {
   const currentClass = useReactiveVar(classVar);
 

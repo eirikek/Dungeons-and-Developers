@@ -92,7 +92,7 @@ const mocks = [
     result: {
       data: {
         updateReview: {
-          id: mockReview.id,
+          id: 'review-123',
           user: { id: mockUserId, userName: 'Test User' },
           difficulty: 70,
           description: 'This is an updated review',
@@ -181,14 +181,14 @@ describe('Review Component', () => {
     const newDifficulty = 70;
     const newDescription = 'This is an updated review';
 
-    const slider = screen.getByTestId('review-slider');
+    const slider = screen.getByTestId('review-slider') as HTMLInputElement;
     fireEvent.change(slider, { target: { value: newDifficulty } });
 
     await waitFor(() => {
       expect(slider.value).toBe(String(newDifficulty));
     });
 
-    const textField = screen.getByRole('textbox');
+    const textField = screen.getByRole('textbox') as HTMLInputElement;
     await user.clear(textField);
     await user.type(textField, newDescription);
 

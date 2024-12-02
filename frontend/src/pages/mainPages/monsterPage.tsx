@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { hourglass } from 'ldrs';
 import debounce from 'lodash/debounce';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import MonsterFilter from '../../components/MonsterFilter/MonsterFilter.tsx';
 import MonsterSort from '../../components/MonsterSort/MonsterSort.tsx';
