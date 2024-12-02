@@ -18,7 +18,7 @@ import { raceVar } from '../utils/apolloVars.ts';
 import { ArrayScores, ArrayVar, UserClass, UserRace } from '../graphql/queryInterface.ts';
 import { UserNotFound } from '../utils/UserNotFound.ts';
 import { handleError } from '../utils/handleError.ts';
-import { equipmentsVar } from '../utils/apolloVars.ts';
+//import { equipmentsVar } from '../utils/apolloVars.ts';
 
 interface CharacterContextType {
   stateAbilities: AbilityScoreCardProps[];
@@ -75,7 +75,6 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
   const shouldFetchUserClass = currentPath.includes('/class') || currentPath.includes('/mycharacter');
   const shouldFetchUserRace = currentPath.includes('/race') || currentPath.includes('/mycharacter');
 
-  const currentEquipments = useReactiveVar(equipmentsVar);
   const abilityScores = useReactiveVar(abilitiesVar);
 
   const { classes: fetchedClasses } = useClasses(1, 12, shouldFetchUserClass);
@@ -101,7 +100,6 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
   });
 
   const {
-    userEquipments,
     removeFromEquipmentsMutation,
     addToEquipmentsMutation,
     removeAllUserEquipmentsMutation,
@@ -110,10 +108,6 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
 
   const selectedClassId = userClassData?.user?.class?.id || '';
   const selectedRaceId = userRaceData?.user?.race?.id || '';
-
-  useEffect(() => {
-    equipmentsVar(userEquipments);
-  }, [currentEquipments, userEquipments]);
 
   useEffect(() => {
     classVar(selectedClassId);
@@ -148,7 +142,6 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
   const addToEquipments = async (equipment: Equipment) => {
     try {
       await addToEquipmentsMutation(equipment.id);
-      equipmentsVar([...equipmentsVar(), equipment]);
     } catch (error) {
       handleError(error, 'Error adding equipment', 'critical', showToast);
     }
@@ -157,7 +150,6 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
   const removeFromEquipments = async (equipment: Equipment) => {
     try {
       await removeFromEquipmentsMutation(equipment.id);
-      equipmentsVar(equipmentsVar().filter((equip) => equip.id !== equipment.id));
     } catch (error) {
       handleError(error, 'Error removing equipment', 'critical', showToast);
     }
@@ -166,7 +158,6 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
   const removeAllEquipments = async () => {
     try {
       await removeAllUserEquipmentsMutation();
-      equipmentsVar([]);
     } catch (error) {
       handleError(error, 'Error removing all equipment', 'critical', showToast);
     }

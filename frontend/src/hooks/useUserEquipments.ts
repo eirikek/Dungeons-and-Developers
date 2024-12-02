@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/AuthContext.tsx';
 import { useMutation, useQuery } from '@apollo/client';
 
-import { Equipment } from '../interfaces/EquipmentProps.ts';
 import { GET_USER_EQUIPMENT } from '../graphql/queries/userQueries.ts';
 import {
   ADD_EQUIPMENT_TO_CHARACTER,
@@ -12,6 +11,7 @@ import {
 import { useLocation } from 'react-router-dom';
 import { handleError } from '../utils/handleError.ts';
 import { GetUserEquipmentResponse } from '../graphql/queryInterface.ts';
+import { equipmentsVar } from '../utils/apolloVars.ts';
 
 const useUserEquipments = () => {
   const { userId } = useContext(AuthContext);
@@ -19,8 +19,6 @@ const useUserEquipments = () => {
   const currentPath = location.pathname;
 
   const shouldFetchUserEquipments = currentPath.includes('/equipment') || currentPath.includes('/mycharacter');
-
-  const [userEquipments, setUserEquipments] = useState<Equipment[]>([]);
 
   const [loading, setLoading] = useState(true);
 
@@ -32,7 +30,8 @@ const useUserEquipments = () => {
 
   useEffect(() => {
     if (data?.user) {
-      setUserEquipments(data.user.equipments || []);
+      console.log(data.user.equipments);
+      equipmentsVar(data.user.equipments || []);
       setLoading(false);
     }
   }, [data]);
@@ -44,31 +43,12 @@ const useUserEquipments = () => {
         return;
       }
 
-      const newEquipment = data.addEquipmentToCharacter.equipments.slice(-1)[0]; // Get the last element
-      if (!newEquipment) {
-        handleError(null, 'New equipment is undefined.', 'warning');
-        return;
-      }
-
-      const existingData = cache.readQuery<GetUserEquipmentResponse>({
-        query: GET_USER_EQUIPMENT,
-        variables: { userId },
-      });
-
-      if (!existingData) {
-        handleError(null, 'No existing cache data found for equipments.', 'warning');
-        return;
-      }
-
-      const updatedEquipments = [...(existingData.user.equipments || []), newEquipment];
-
       cache.writeQuery<GetUserEquipmentResponse>({
         query: GET_USER_EQUIPMENT,
         variables: { userId },
         data: {
           user: {
-            ...existingData.user,
-            equipments: updatedEquipments,
+            ...data.addEquipmentToCharacter,
           },
         },
       });
@@ -78,30 +58,17 @@ const useUserEquipments = () => {
 
   const [removeEquipment] = useMutation(REMOVE_EQUIPMENT_FROM_CHARACTER, {
     update(cache, { data }) {
-      if (!data) {
+      if (!data || !data.removeEquipmentFromCharacter || !data.removeEquipmentFromCharacter.equipments) {
         handleError(null, 'Invalid mutation response for removing equipment.', 'warning');
         return;
       }
-
-      const existingData = cache.readQuery<GetUserEquipmentResponse>({
-        query: GET_USER_EQUIPMENT,
-        variables: { userId },
-      });
-      if (!existingData) {
-        handleError(null, 'No existing cache data found for equipments.', 'warning');
-        return;
-      }
-
-      const removedEquipmentId = data.removeEquipmentFromCharacter.equipmentId;
-      const updatedEquipments = existingData.user.equipments.filter((equip) => equip.id !== removedEquipmentId);
 
       cache.writeQuery<GetUserEquipmentResponse>({
         query: GET_USER_EQUIPMENT,
         variables: { userId },
         data: {
           user: {
-            ...existingData.user,
-            equipments: updatedEquipments,
+            ...data.removeEquipmentFromCharacter,
           },
         },
       });
@@ -110,13 +77,9 @@ const useUserEquipments = () => {
   });
 
   const [removeAllEquipments] = useMutation(REMOVE_ALL_EQUIPMENTS, {
-    update(cache) {
-      const existingData = cache.readQuery<GetUserEquipmentResponse>({
-        query: GET_USER_EQUIPMENT,
-        variables: { userId },
-      });
-      if (!existingData) {
-        handleError(null, 'No existing cache data found for equipments.', 'warning');
+    update(cache, { data }) {
+      if (!data || !data.removeAllEquipments || !data.removeAllEquipments.equipments) {
+        handleError(data, 'Invalid mutation response for removing all equipments.', 'warning');
         return;
       }
 
@@ -125,8 +88,7 @@ const useUserEquipments = () => {
         variables: { userId },
         data: {
           user: {
-            ...existingData.user,
-            equipments: [],
+            ...data.removeAllEquipments,
           },
         },
       });
@@ -152,14 +114,13 @@ const useUserEquipments = () => {
 
   const removeAllUserEquipmentsMutation = async () => {
     try {
-      if (!userId || userEquipments.length === 0) return;
+      if (!userId || equipmentsVar().length === 0) return;
       await removeAllEquipments({ variables: { userId } });
     } catch (error) {
       handleError(error, 'Failed to execute remove all equipments mutation.', 'critical');
     }
   };
   return {
-    userEquipments,
     loading,
     addToEquipmentsMutation,
     removeFromEquipmentsMutation,

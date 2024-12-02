@@ -16,8 +16,6 @@ import { useToast } from '../../hooks/useToast.ts';
 import { Equipment } from '../../interfaces/EquipmentProps.ts';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 
-//export const abilitiesVar = makeVar<Map<string, number>>(new Map());
-
 const MyCharacterPage = () => {
   const { userName } = useContext(AuthContext);
   const { showToast } = useToast();
