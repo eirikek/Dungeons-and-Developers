@@ -10,6 +10,7 @@ interface MonsterGridProps {
 
 const MonsterGrid = ({ monsters = [], isDungeonPage = false }: MonsterGridProps) => {
   const { dungeonMonsters } = useContext(DungeonContext);
+  console.log({ dungeonMonsters });
 
   const monstersWithDungeonStatus = isDungeonPage
     ? dungeonMonsters
