@@ -91,6 +91,7 @@ const mocks = [
     },
     result: {
       data: {
+        id: 'review-123',
         updateReview: {
           id: 'review-123',
           user: { id: mockUserId, userName: 'Test User' },

@@ -22,6 +22,7 @@ const mocks = [
     result: {
       data: {
         user: {
+          id: '123',
           favoritedMonsters: [],
         },
       },

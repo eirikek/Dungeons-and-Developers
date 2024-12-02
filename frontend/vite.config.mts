@@ -11,10 +11,7 @@ export default defineConfig({
     setupFiles: 'src/test/setup.ts',
     include: ['tests/**/*.test.tsx'],
     exclude: [
-      './tests/components/MonsterCard/MonsterDetailsModal.test.tsx',
-      './tests/components/MonsterCard/MonsterReviewModal.test.tsx',
-      './tests/pages/DungeonPage/*',
-      './tests/pages/MonsterPage/*',
+      './cypress',
       '**/node_modules/**',
       '**/dist/**',
       './src/constants.ts',
@@ -30,10 +27,7 @@ export default defineConfig({
       reportsDirectory: './tests/coverage',
       enabled: true,
       exclude: [
-        './tests/components/MonsterCard/MonsterDetailsModal.test.tsx',
-        './tests/components/MonsterCard/MonsterReviewModal.test.tsx',
-        './tests/pages/DungeonPage/*',
-        './tests/pages/MonsterPage/*',
+        './cypress',
         './src/constants.ts',
         './src/main.tsx',
         './src/utils/**',
