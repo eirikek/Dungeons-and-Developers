@@ -4,7 +4,7 @@ const AbilityCounterWrapper = ({
   initialValue,
   onUpdate,
 }: {
-  abilityName: string;
+  abilityName?: string;
   initialValue: number;
   onUpdate: (value: number) => void;
 }) => {

@@ -28,96 +28,53 @@ export default function AnimatedRoutes() {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         {/* Public Route */}
-        <Route path="" element={<LoginPage />} />
+        <Route path="/" element={<LoginPage />} />
 
         {/* Protected Routes */}
         <Route
-          path="/home"
+          path="/*"
           element={
             <ProtectedRoute>
-              <HomePage />
+              <AppRoutes userId={userId} />
             </ProtectedRoute>
           }
         />
-
-        <Route
-          element={
-            <CharacterProvider userId={userId}>
-              <ProtectedRoute>
-                <Outlet />
-              </ProtectedRoute>
-            </CharacterProvider>
-          }
-        >
-          <Route
-            path="/class"
-            element={
-              <ProtectedRoute>
-                <ClassPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/race"
-            element={
-              <ProtectedRoute>
-                <RacePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/abilityscore"
-            element={
-              <ProtectedRoute>
-                <AbilityScorePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/equipment"
-            element={
-              <ProtectedRoute>
-                <EquipmentPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/mycharacter"
-            element={
-              <ProtectedRoute>
-                <MyCharacterPage />
-              </ProtectedRoute>
-            }
-          />
-        </Route>
-
-        <Route
-          element={
-            <DungeonProvider userId={userId}>
-              <ProtectedRoute>
-                <Outlet />
-              </ProtectedRoute>
-            </DungeonProvider>
-          }
-        >
-          <Route
-            path="/monsters"
-            element={
-              <ProtectedRoute>
-                <MonsterPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dungeon"
-            element={
-              <ProtectedRoute>
-                <DungeonPage />
-              </ProtectedRoute>
-            }
-          />
-        </Route>
       </Routes>
     </AnimatePresence>
   );
+
+  function AppRoutes({ userId }: { userId: string }) {
+    return (
+      <Routes>
+        <Route path="/home" element={<HomePage />} />
+
+        {/* Character-related Routes */}
+        <Route
+          element={
+            <CharacterProvider userId={userId}>
+              <Outlet />
+            </CharacterProvider>
+          }
+        >
+          <Route path="/class" element={<ClassPage />} />
+          <Route path="/race" element={<RacePage />} />
+          <Route path="/abilityscore" element={<AbilityScorePage />} />
+          <Route path="/equipment" element={<EquipmentPage />} />
+          <Route path="/mycharacter" element={<MyCharacterPage />} />
+        </Route>
+
+        {/* Dungeon-related Routes */}
+        <Route
+          element={
+            <DungeonProvider userId={userId}>
+              <Outlet />
+            </DungeonProvider>
+          }
+        >
+          <Route path="/monsters" element={<MonsterPage />} />
+          <Route path="/dungeon" element={<DungeonPage />} />
+        </Route>
+      </Routes>
+    );
+  }
 }

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 interface CounterProps {
@@ -14,6 +14,8 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
   const changeTimer = useRef<NodeJS.Timeout | null>(null);
   const rate = 100;
   const [localValue, setLocalValue] = useState(value);
+  const [isFocused, setIsFocused] = useState(false); // Track focus state
+  const [isKeyDown, setIsKeyDown] = useState(false); // Track if a key is being held down
 
   const clearTimer = () => {
     if (changeTimer.current) {
@@ -27,6 +29,8 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
   };
 
   const startIncrement = () => {
+    if (!isFocused || isKeyDown) return; // Only start if focused and not already incrementing
+
     clearTimer();
     const startTime = Date.now();
 
@@ -47,6 +51,8 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
   };
 
   const startDecrement = () => {
+    if (!isFocused || isKeyDown) return; // Only start if focused and not already decrementing
+
     clearTimer();
     const startTime = Date.now();
 
@@ -66,12 +72,45 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
     }, 100);
   };
 
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    clearTimer();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isFocused) return;
+
+    if (!isKeyDown) {
+      setIsKeyDown(true);
+      if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
+        startIncrement();
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
+        startDecrement();
+      }
+    }
+  };
+
+  const handleKeyUp = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      setIsKeyDown(false);
+      clearTimer();
+    }
+  };
+
   return (
     <div className="flex flex-col items-center" style={{ transform: `scale(${scale})` }}>
       <button
         className="text-white hover:text-gray-400"
         onMouseDown={startIncrement}
         onMouseUp={clearTimer}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyUp}
         onMouseLeave={clearTimer}
         onTouchStart={startIncrement}
         onTouchEnd={clearTimer}
@@ -92,6 +131,10 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
         onMouseDown={startDecrement}
         onMouseUp={clearTimer}
         onMouseLeave={clearTimer}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyUp}
         onTouchStart={startDecrement}
         onTouchEnd={clearTimer}
         aria-label="Decrement"

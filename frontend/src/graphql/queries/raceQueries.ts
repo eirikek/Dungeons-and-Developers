@@ -10,7 +10,6 @@ export const GET_RACES = gql`
         speed
         alignment
         size
-        img
       }
       totalRaces
     }
