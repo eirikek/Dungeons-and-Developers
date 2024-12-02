@@ -5,6 +5,7 @@ import { useReactiveVar } from '@apollo/client';
 import useCharacterContext from '../../hooks/useCharacter.ts';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 import { classVar } from '../../utils/apolloVars.ts';
+
 export default function ClassPage() {
   const currentClass = useReactiveVar(classVar);
 
@@ -34,7 +35,7 @@ export default function ClassPage() {
           ))}
         </section>
       ) : (
-        <section className="flex flex-col items-center w-full">
+        <section className="flex flex-col items-center min-h-[380vh] w-full">
           <LoadingHourglass />
         </section>
       )}

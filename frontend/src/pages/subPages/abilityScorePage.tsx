@@ -34,7 +34,7 @@ export default function AbilityScorePage() {
             ))}
           </section>
         ) : (
-          <section className="flex flex-col items-center w-full">
+          <section className="flex flex-col items-center w-full min-h-[265vh]">
             <LoadingHourglass />
           </section>
         )}
