@@ -77,7 +77,7 @@ export default function MonsterPage() {
     }
   }, [hpRangeData, hpRangeLoading]);
 
-  const { monsters, totalMonsters, minHp, maxHp, monsterCounts, loading, error } = useMonster(
+  const { monsters, totalMonsters, minHp, maxHp, monsterCounts, monsterTypes, loading, error } = useMonster(
     debouncedSearchTerm,
     currentPage,
     monstersPerPage,
@@ -184,6 +184,7 @@ export default function MonsterPage() {
               setSelectedFilters={setSelectedFilters}
               onHpChange={debouncedHandleHpChange}
               onClearFilters={clearFilters}
+              monsterTypes={monsterTypes}
               monsterCounts={monsterCounts}
               setCurrentPage={setCurrentPage}
               searchTerm={searchTerm}
