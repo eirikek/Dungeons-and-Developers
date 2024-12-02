@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { dungeonMonstersVar } from '../../context/DungeonContext';
 import MonsterCard from '../MonsterCard/MonsterCard';
 import type { MonsterCardProps } from '../../interfaces/MonsterCardProps';
