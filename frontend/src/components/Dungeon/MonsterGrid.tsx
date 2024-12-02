@@ -1,7 +1,8 @@
-import { useContext } from 'react';
-import { DungeonContext } from '../../context/DungeonContext';
+import { useMemo } from 'react';
+import { dungeonMonstersVar } from '../../context/DungeonContext';
 import MonsterCard from '../MonsterCard/MonsterCard';
 import type { MonsterCardProps } from '../../interfaces/MonsterCardProps';
+import { useReactiveVar } from '@apollo/client';
 
 interface MonsterGridProps {
   monsters?: MonsterCardProps[];
@@ -9,14 +10,16 @@ interface MonsterGridProps {
 }
 
 const MonsterGrid = ({ monsters = [], isDungeonPage = false }: MonsterGridProps) => {
-  const { dungeonMonsters } = useContext(DungeonContext);
+  const dungeonMonsters = useReactiveVar(dungeonMonstersVar);
 
-  const monstersWithDungeonStatus = isDungeonPage
-    ? dungeonMonsters
-    : (monsters || []).map((monster) => ({
-        ...monster,
-        isInDungeon: dungeonMonsters.some((dm) => dm.id === monster.id),
-      }));
+  const monstersWithDungeonStatus = useMemo(() => {
+    return isDungeonPage
+      ? dungeonMonsters
+      : monsters.map((monster) => ({
+          ...monster,
+          isInDungeon: dungeonMonsters.some((dm) => dm.id === monster.id),
+        }));
+  }, [monsters, dungeonMonsters, isDungeonPage]);
 
   return (
     <section

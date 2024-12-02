@@ -2,10 +2,10 @@ import CustomInput from '../../components/CustomInput/CustomInput.tsx';
 import MonsterGrid from '../../components/Dungeon/MonsterGrid.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 
-import DungeonStats from '../../components/Dungeon/DungeonStats.tsx';
-import useDungeon from '../../hooks/useDungeon.ts';
 import { useQuery } from '@apollo/client';
+import DungeonStats from '../../components/Dungeon/DungeonStats.tsx';
 import { GET_USER_DUNGEON_NAME } from '../../graphql/queries/userQueries.ts';
+import useDungeon from '../../hooks/useDungeon.ts';
 import { handleError } from '../../utils/handleError.ts';
 
 export default function DungeonPage() {
@@ -14,7 +14,9 @@ export default function DungeonPage() {
   const { data: dungeonData, error: nameError } = useQuery(GET_USER_DUNGEON_NAME, {
     variables: { userId },
     skip: !userId,
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
+    nextFetchPolicy: 'cache-only', // Add this
+    notifyOnNetworkStatusChange: false, // Add this
   });
 
   if (nameError) {

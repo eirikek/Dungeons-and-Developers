@@ -2,13 +2,13 @@ import { useMutation, useQuery } from '@apollo/client';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
-import { GET_MONSTER_REVIEWS } from '../../graphql/queries/monsterQueries.ts';
 import { ADD_REVIEW, UPDATE_REVIEW } from '../../graphql/mutations/monsterMutations.ts';
+import { GET_MONSTER_REVIEWS } from '../../graphql/queries/monsterQueries.ts';
 import { useToast } from '../../hooks/useToast';
+import { AddReviewData, GetMonsterReviewsData, UpdateReviewData } from '../../interfaces/MonsterCardProps.ts';
 import { ReviewFormType, ReviewType } from '../../interfaces/ReviewProps.ts';
 import ReviewSlider from './ReviewSlider.tsx';
 import ReviewTextField from './ReviewTextField.tsx';
-import { AddReviewData, GetMonsterReviewsData, UpdateReviewData } from '../../interfaces/MonsterCardProps.ts';
 
 const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
   const { userId } = useContext(AuthContext);
@@ -23,9 +23,10 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
   const { data } = useQuery<GetMonsterReviewsData>(GET_MONSTER_REVIEWS, {
     variables: { monsterId },
     skip: !isOpen,
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'network-only',
   });
   const existingReview = data?.monster?.reviews.find((review: ReviewType) => review.user.id === userId);
+  console.log('Existing review', existingReview);
 
   const [addReview] = useMutation<AddReviewData>(ADD_REVIEW, {
     update(cache, { data }) {
@@ -63,15 +64,16 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
       if (existingData && existingData.monster) {
         const updatedReview = data.updateReview;
 
+        const updatedReviews = existingData.monster.reviews.filter((review) => review.id !== updatedReview.id);
+        updatedReviews.push(updatedReview);
+
         cache.writeQuery<GetMonsterReviewsData>({
           query: GET_MONSTER_REVIEWS,
           variables: { monsterId },
           data: {
             monster: {
               ...existingData.monster,
-              reviews: existingData.monster.reviews.map((review) =>
-                review.id === updatedReview.id ? updatedReview : review
-              ),
+              reviews: updatedReviews,
             },
           },
         });
@@ -85,6 +87,7 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
       setDifficulty(existingReview.difficulty);
       setOriginalDescription(existingReview.description);
       setOriginalDifficulty(existingReview.difficulty);
+      setEditMode(true);
     } else {
       // reset form if no review
       setDescription('');
@@ -125,7 +128,8 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
     }
 
     try {
-      if (editMode && existingReview) {
+      if (editMode && existingReview && existingReview.id) {
+        console.log('Updating existing review:', existingReview.id);
         // Update existing review
         await updateReview({
           variables: {
@@ -137,6 +141,7 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
         showToast({ message: `Review on ${name} updated`, type: 'success', duration: 3000 });
       } else {
         // Add new review
+        console.log('Creating new review');
         await addReview({
           variables: {
             monsterId,

@@ -9,8 +9,8 @@ import {
   UPDATE_DUNGEON_NAME,
 } from '../graphql/mutations/userMutations.ts';
 import { GET_USER_DUNGEON_NAME, GET_USER_FAVORITES } from '../graphql/queries/userQueries.ts';
-import type { MonsterCardProps } from '../interfaces/MonsterCardProps';
 import { AddFavoriteResponse, RemoveFavoriteResponse, UserFavorites } from '../graphql/queryInterface.ts';
+import type { MonsterCardProps } from '../interfaces/MonsterCardProps';
 
 export const useDungeon = () => {
   const { userId } = useContext(AuthContext);
@@ -19,6 +19,8 @@ export const useDungeon = () => {
     variables: { userId },
     skip: !userId,
     fetchPolicy: 'cache-first',
+    nextFetchPolicy: 'cache-only', // Add this
+    notifyOnNetworkStatusChange: false, // Add this
   });
 
   useEffect(() => {

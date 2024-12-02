@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { GET_MONSTER_REVIEWS } from '../../graphql/queries/monsterQueries.ts';
 import { ReviewType } from '../../interfaces/ReviewProps.ts';
@@ -17,12 +17,18 @@ type MonsterDetailsModalProps = {
 
 const MonsterDetailsModal = ({ id, name, hit_points, type, image, onClose }: MonsterDetailsModalProps) => {
   const { userId } = useContext(AuthContext);
-  const { data, loading, error } = useQuery(GET_MONSTER_REVIEWS, { variables: { monsterId: id } });
+
+  const { data, error } = useQuery(GET_MONSTER_REVIEWS, {
+    variables: { monsterId: id },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: false,
+  });
+
   const reviews: ReviewType[] = data?.monster?.reviews || [];
 
   const sortedReviews = [...reviews].sort((a, b) => (a.user.id === userId ? -1 : b.user.id === userId ? 1 : 0));
 
-  if (loading) return <p>Loading...</p>;
   if (error) return <p>Error loading reviews.</p>;
 
   const calculateAverageDifficulty = () => {
@@ -100,4 +106,4 @@ const MonsterDetailsModal = ({ id, name, hit_points, type, image, onClose }: Mon
   );
 };
 
-export default MonsterDetailsModal;
+export default React.memo(MonsterDetailsModal);
