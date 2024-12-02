@@ -9,6 +9,7 @@ import Accessibility from '../AccessibilityToggle/AccessibilityToggle.tsx';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isFocus, setIsFocus] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
@@ -140,6 +141,8 @@ const Navbar = () => {
                   linkTo={'/mycharacter'}
                   className={`flex items-center space-x-3 sub-header`}
                   isActive={location.pathname.startsWith('/mycharacter')}
+                  onFocus={() => setIsFocus(true)}
+                  onBlur={() => setIsFocus(false)}
                 >
                   <FaChevronDown
                     className={`transition-transform duration-300 ${isDropdownHovered ? 'rotate-180' : ''}`}
@@ -154,16 +157,30 @@ const Navbar = () => {
                 >
                   <ul className="flex flex-col gap-10 p-10">
                     <li className="w-fit">
-                      <CustomButton text={'Races'} linkTo={'/race'} isActive={location.pathname === '/race'} />
+                      <CustomButton
+                        text={'Races'}
+                        linkTo={'/race'}
+                        isActive={location.pathname === '/race'}
+                        onFocus={() => setIsFocus(true)}
+                        onBlur={() => setIsFocus(false)}
+                      />
                     </li>
                     <li className="w-fit">
-                      <CustomButton text={'Classes'} linkTo={'/class'} isActive={location.pathname === '/class'} />
+                      <CustomButton
+                        text={'Classes'}
+                        linkTo={'/class'}
+                        isActive={location.pathname === '/class'}
+                        onFocus={() => setIsFocus(true)}
+                        onBlur={() => setIsFocus(false)}
+                      />
                     </li>
                     <li className="w-fit">
                       <CustomButton
                         text={'Ability Scores'}
                         linkTo={'/abilityscore'}
                         isActive={location.pathname === '/abilityscore'}
+                        onFocus={() => setIsFocus(true)}
+                        onBlur={() => setIsFocus(false)}
                       />
                     </li>
                     <li className="w-fit">
@@ -171,6 +188,8 @@ const Navbar = () => {
                         text={'Equipments'}
                         linkTo={'/equipment'}
                         isActive={location.pathname === '/equipment'}
+                        onFocus={() => setIsFocus(true)}
+                        onBlur={() => setIsFocus(false)}
                       />
                     </li>
                   </ul>
