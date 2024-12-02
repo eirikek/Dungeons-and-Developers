@@ -19,6 +19,7 @@ import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass
 const MyCharacterPage = () => {
   const { userName } = useContext(AuthContext);
   const { showToast } = useToast();
+
   const {
     stateAbilities,
     classes,
@@ -48,6 +49,7 @@ const MyCharacterPage = () => {
   const currentRaceImage = currentRaceData ? raceImageMapping[currentRaceData.index] : '';
 
   const currentEquipments = useReactiveVar(equipmentsVar);
+
   const undoRemoveRef = useRef<Equipment | null>(null);
 
   const handleRemoveEquipment = (equipment: Equipment) => {
@@ -99,6 +101,10 @@ const MyCharacterPage = () => {
       setRaceIndex(selectedIndex >= 0 ? selectedIndex : 0);
     }
   }, [currentRace, races]);
+
+  useEffect(() => {
+    console.log('Updated equipmentsVar:', currentEquipments);
+  }, [currentEquipments]);
 
   const handleChange = async (type: 'race' | 'class', direction: 'next' | 'prev') => {
     const isRace = type === 'race';

@@ -31,7 +31,12 @@ const useUserEquipments = () => {
   useEffect(() => {
     if (data?.user) {
       console.log(data.user.equipments);
-      equipmentsVar(data.user.equipments || []);
+      const backendEquipments = data.user.equipments || [];
+      const currentEquipments = equipmentsVar();
+
+      if (JSON.stringify(currentEquipments) !== JSON.stringify(backendEquipments)) {
+        equipmentsVar(backendEquipments);
+      }
       setLoading(false);
     }
   }, [data]);
@@ -42,13 +47,19 @@ const useUserEquipments = () => {
         handleError(null, 'Invalid mutation response for adding equipment.', 'warning');
         return;
       }
+      const addedEquipments = data.addEquipmentToCharacter.equipments || [];
+      const currentEquipments = equipmentsVar();
+
+      const updatedEquipments = [...currentEquipments, ...addedEquipments];
+      equipmentsVar(updatedEquipments);
 
       cache.writeQuery<GetUserEquipmentResponse>({
         query: GET_USER_EQUIPMENT,
         variables: { userId },
         data: {
           user: {
-            ...data.addEquipmentToCharacter,
+            id: userId,
+            equipments: updatedEquipments,
           },
         },
       });
@@ -63,12 +74,19 @@ const useUserEquipments = () => {
         return;
       }
 
+      const removedEquipments = data.removeEquipmentFromCharacter.equipments || [];
+      const currentEquipments = equipmentsVar();
+
+      const updatedEquipments = [...currentEquipments, ...removedEquipments];
+      equipmentsVar(updatedEquipments);
+
       cache.writeQuery<GetUserEquipmentResponse>({
         query: GET_USER_EQUIPMENT,
         variables: { userId },
         data: {
           user: {
-            ...data.removeEquipmentFromCharacter,
+            id: userId,
+            equipments: updatedEquipments,
           },
         },
       });
@@ -82,13 +100,19 @@ const useUserEquipments = () => {
         handleError(data, 'Invalid mutation response for removing all equipments.', 'warning');
         return;
       }
+      const equipmentsRemove = data.removeAllEquipments.equipments || [];
+
+      const updatedEquipments = [...equipmentsRemove];
+
+      equipmentsVar(updatedEquipments);
 
       cache.writeQuery<GetUserEquipmentResponse>({
         query: GET_USER_EQUIPMENT,
         variables: { userId },
         data: {
           user: {
-            ...data.removeAllEquipments,
+            id: userId,
+            equipments: updatedEquipments,
           },
         },
       });
