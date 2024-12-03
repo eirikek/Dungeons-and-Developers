@@ -6,24 +6,25 @@ import logo from '../../assets/images/logo.svg';
 import CustomButton from '../CustomButton/CustomButton.tsx';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Accessibility from '../AccessibilityToggle/AccessibilityToggle.tsx';
+import { useAccessibility } from '../../context/AccessibilityContext.tsx';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isFocus, setIsFocus] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
   const [isDropdownHovered, setIsDropdownHovered] = useState(false);
+  const { isAccessibilityMode } = useAccessibility();
 
   const navigate = useNavigate();
   const location = useLocation();
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prevState) => !prevState);
   };
 
   const toggleMobileDropdown = () => {
-    setIsMobileDropdownOpen(!isMobileDropdownOpen);
+    setIsMobileDropdownOpen((prevState) => !prevState);
   };
 
   const handleLogout = () => {
@@ -120,7 +121,7 @@ const Navbar = () => {
               <img src={logo} alt="Dungeons & Developers logo" className="w-[3vw] xl:block hidden shadow-none" />
             </Link>
 
-            <Accessibility />
+            <Accessibility checked={isAccessibilityMode} />
 
             <section className="flex justify-between 4xl:w-3/5 w-3/5 ">
               <CustomButton
@@ -135,14 +136,14 @@ const Navbar = () => {
                 className="relative"
                 onMouseEnter={() => setIsDropdownHovered(true)}
                 onMouseLeave={() => setIsDropdownHovered(false)}
+                onFocus={() => setIsDropdownHovered(true)}
+                onBlur={() => setIsDropdownHovered(false)}
               >
                 <CustomButton
                   text={'My character'}
                   linkTo={'/mycharacter'}
                   className={`flex items-center space-x-3 sub-header`}
                   isActive={location.pathname.startsWith('/mycharacter')}
-                  onFocus={() => setIsFocus(true)}
-                  onBlur={() => setIsFocus(false)}
                 >
                   <FaChevronDown
                     className={`transition-transform duration-300 ${isDropdownHovered ? 'rotate-180' : ''}`}
@@ -157,30 +158,16 @@ const Navbar = () => {
                 >
                   <ul className="flex flex-col gap-10 p-10">
                     <li className="w-fit">
-                      <CustomButton
-                        text={'Races'}
-                        linkTo={'/race'}
-                        isActive={location.pathname === '/race'}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
-                      />
+                      <CustomButton text={'Races'} linkTo={'/race'} isActive={location.pathname === '/race'} />
                     </li>
                     <li className="w-fit">
-                      <CustomButton
-                        text={'Classes'}
-                        linkTo={'/class'}
-                        isActive={location.pathname === '/class'}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
-                      />
+                      <CustomButton text={'Classes'} linkTo={'/class'} isActive={location.pathname === '/class'} />
                     </li>
                     <li className="w-fit">
                       <CustomButton
                         text={'Ability Scores'}
                         linkTo={'/abilityscore'}
                         isActive={location.pathname === '/abilityscore'}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
                       />
                     </li>
                     <li className="w-fit">
@@ -188,8 +175,6 @@ const Navbar = () => {
                         text={'Equipments'}
                         linkTo={'/equipment'}
                         isActive={location.pathname === '/equipment'}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
                       />
                     </li>
                   </ul>
@@ -206,13 +191,15 @@ const Navbar = () => {
 
       {/* Slide-in Menu for small screens */}
       <div
-        className={`fixed top-0 right-0 h-full max-w-full w-64 sm:w-72 bg-customRed text-white transition-transform transform ${
+        className={`fixed top-0 right-0 h-full w-64 sm:w-72 bg-customRed text-white transition-transform transform ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         } xl:hidden pl-4 pt-10 z-50`}
       >
-        <button onClick={toggleMenu} className="absolute top-4 right-10 text-[2rem]">
+        {/* Close button for the slide-in menu */}
+        <button onClick={toggleMenu} className="absolute top-4 right-10 text-[2rem]" aria-label="Close menu">
           <FiX />
         </button>
+
         <ul className="mt-16 space-y-10">
           <li>
             <CustomButton
@@ -232,6 +219,7 @@ const Navbar = () => {
               isActive={location.pathname === '/dungeon'}
             />
           </li>
+
           <li>
             <div className="space-y-2">
               <div className="flex">
@@ -241,12 +229,12 @@ const Navbar = () => {
                   className="sub-header"
                   noUnderline={true}
                   isActive={location.pathname.startsWith('/mycharacter')}
+                  onFocus={() => setIsMobileDropdownOpen(true)}
+                  onBlur={() => setIsMobileDropdownOpen(false)}
                 />
                 <FaChevronDown
                   onClick={toggleMobileDropdown}
-                  className={`transition-transform duration-300 ml-11 size-6 ${
-                    isMobileDropdownOpen ? 'rotate-180' : 'rotate-0'
-                  }`}
+                  className={`transition-transform duration-300 ml-11 size-6 ${isMobileDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
                 />
               </div>
 
@@ -263,6 +251,7 @@ const Navbar = () => {
                       className="px-4 py-2 sub-header"
                       noUnderline={true}
                       isActive={location.pathname === '/race'}
+                      onFocus={() => setIsMobileDropdownOpen(true)}
                     />
                   </li>
                   <li>
@@ -272,6 +261,7 @@ const Navbar = () => {
                       className="px-4 py-2 sub-header"
                       noUnderline={true}
                       isActive={location.pathname === '/class'}
+                      onFocus={() => setIsMobileDropdownOpen(true)}
                     />
                   </li>
                   <li>
@@ -281,6 +271,7 @@ const Navbar = () => {
                       className="px-4 py-2 sub-header"
                       noUnderline={true}
                       isActive={location.pathname === '/abilityscore'}
+                      onFocus={() => setIsMobileDropdownOpen(true)}
                     />
                   </li>
                   <li>
@@ -290,6 +281,8 @@ const Navbar = () => {
                       className="px-4 py-2 sub-header"
                       noUnderline={true}
                       isActive={location.pathname === '/equipment'}
+                      onFocus={() => setIsMobileDropdownOpen(true)}
+                      onBlur={() => setIsMobileDropdownOpen(false)}
                     />
                   </li>
                 </ul>
@@ -297,6 +290,7 @@ const Navbar = () => {
             </div>
           </li>
 
+          {/* Log out button */}
           <li>
             <CustomButton
               text={'Log out'}
@@ -309,8 +303,9 @@ const Navbar = () => {
             </CustomButton>
           </li>
 
+          {/* Accessibility toggle */}
           <li>
-            <Accessibility />
+            <Accessibility checked={isAccessibilityMode} />
           </li>
         </ul>
       </div>
