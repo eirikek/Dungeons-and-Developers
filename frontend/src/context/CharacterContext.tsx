@@ -1,6 +1,6 @@
-import { makeVar, useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { createContext, ReactNode, useCallback, useEffect, useMemo } from 'react';
-
+import { useLocation } from 'react-router-dom';
 import { UPDATE_ABILITY_SCORES, UPDATE_USER_CLASS, UPDATE_USER_RACE } from '../graphql/mutations/userMutations.ts';
 import { GET_ARRAY_SCORES, GET_USER_CLASS, GET_USER_RACE } from '../graphql/queries/userQueries.ts';
 import useAbilityScores from '../hooks/useAbilityScores.ts';
@@ -12,9 +12,13 @@ import AbilityScoreCardProps from '../interfaces/AbilityScoreProps.ts';
 import ClassData from '../interfaces/ClassProps.ts';
 import { Equipment } from '../interfaces/EquipmentProps';
 import RaceData from '../interfaces/RaceProps.ts';
-import { abilitiesVar } from '../pages/mainPages/myCharacterPage.tsx';
-import { classVar } from '../pages/subPages/classPage.tsx';
-import { raceVar } from '../pages/subPages/racePage.tsx';
+import { abilitiesVar } from '../utils/apolloVars.ts';
+import { classVar } from '../utils/apolloVars.ts';
+import { raceVar } from '../utils/apolloVars.ts';
+import { ArrayScores, ArrayVar, UserClass, UserRace } from '../graphql/queryInterface.ts';
+import { UserNotFound } from '../utils/UserNotFound.ts';
+import { handleError } from '../utils/handleError.ts';
+//import { equipmentsVar } from '../utils/apolloVars.ts';
 
 interface CharacterContextType {
   stateAbilities: AbilityScoreCardProps[];
@@ -42,66 +46,6 @@ interface CharacterProviderProps {
   userId: string;
 }
 
-interface UserClass {
-  user: {
-    id: string;
-    class: {
-      id: string;
-      name: string;
-      index: string;
-      hit_die: number;
-    };
-  };
-}
-
-interface UserRace {
-  user: {
-    id: string;
-    race: {
-      id: string;
-      name: string;
-      speed: number;
-      alignment: string;
-      size: string;
-      img: string;
-    };
-  };
-}
-
-interface UserAbilities {
-  user: {
-    id: string;
-    abilityScores: {
-      ability: {
-        id: string;
-        name: string;
-      };
-      score: number;
-    };
-  };
-}
-
-interface Ability {
-  id: string;
-  name: string;
-}
-
-interface AbilityScorePair {
-  __typename: string;
-  ability: Ability;
-  score: number;
-}
-
-interface ArrayScores {
-  getArrayScores: AbilityScorePair[];
-}
-
-type ArrayVar = {
-  userId: string;
-};
-
-export const equipmentsVar = makeVar<Equipment[]>([]);
-
 export const CharacterContext = createContext<CharacterContextType>({
   stateAbilities: [],
   userAbilityScores: new Map<string, number>(),
@@ -124,34 +68,38 @@ export const CharacterContext = createContext<CharacterContextType>({
 export const CharacterProvider = ({ children, userId }: CharacterProviderProps) => {
   const { showToast } = useToast();
 
-  const currentEquipments = useReactiveVar(equipmentsVar);
+  const location = useLocation();
+  const currentPath = location.pathname;
 
-  const { classes: fetchedClasses } = useClasses(1, 12);
-  const { races: fetchedRaces } = useRaces(1, 12);
-  const { abilities: dataAbilities } = useAbilityScores(1, 6);
+  const shouldFetchAbilityScores = currentPath.includes('/abilityscore') || currentPath.includes('/mycharacter');
+  const shouldFetchUserClass = currentPath.includes('/class') || currentPath.includes('/mycharacter');
+  const shouldFetchUserRace = currentPath.includes('/race') || currentPath.includes('/mycharacter');
+
+  const abilityScores = useReactiveVar(abilitiesVar);
+
+  const { classes: fetchedClasses } = useClasses(1, 12, shouldFetchUserClass);
+  const { races: fetchedRaces } = useRaces(1, 12, shouldFetchUserRace);
+  const { abilities: dataAbilities } = useAbilityScores(1, 6, shouldFetchAbilityScores);
 
   const { data: scoreData, loading: abilityScoresLoading } = useQuery<ArrayScores, ArrayVar>(GET_ARRAY_SCORES, {
     variables: { userId },
-    skip: !userId,
+    skip: !userId || !shouldFetchAbilityScores,
     fetchPolicy: 'cache-and-network',
   });
 
   const { data: userClassData, loading: classLoading } = useQuery(GET_USER_CLASS, {
     variables: { userId },
-    skip: !userId,
-    fetchPolicy: 'cache-and-network',
+    skip: !userId || !shouldFetchUserClass,
+    fetchPolicy: 'cache-first',
   });
 
   const { data: userRaceData, loading: raceLoading } = useQuery(GET_USER_RACE, {
     variables: { userId },
-    skip: !userId,
-    fetchPolicy: 'cache-and-network',
+    skip: !userId || !shouldFetchUserRace,
+    fetchPolicy: 'cache-first',
   });
 
-  const abilityScores = useReactiveVar(abilitiesVar);
-
   const {
-    userEquipments,
     removeFromEquipmentsMutation,
     addToEquipmentsMutation,
     removeAllUserEquipmentsMutation,
@@ -160,10 +108,6 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
 
   const selectedClassId = userClassData?.user?.class?.id || '';
   const selectedRaceId = userRaceData?.user?.race?.id || '';
-
-  useEffect(() => {
-    equipmentsVar(userEquipments);
-  }, [currentEquipments, userEquipments]);
 
   useEffect(() => {
     classVar(selectedClassId);
@@ -175,9 +119,7 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
 
   useEffect(() => {
     if (scoreData?.getArrayScores) {
-      const mappedScores = new Map(
-        scoreData.getArrayScores.map((item: AbilityScorePair) => [item.ability.name, item.score])
-      );
+      const mappedScores = new Map(scoreData.getArrayScores.map((item) => [item.ability.name, item.score]));
       abilitiesVar(mappedScores);
     }
   }, [scoreData]);
@@ -188,11 +130,8 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
   const checkUser = useCallback(
     (message: string) => {
       if (!userId) {
-        showToast({
-          message: `You must be logged in to change ${message}`,
-          type: 'error',
-          duration: 5000,
-        });
+        const error = new UserNotFound(`User not logged in. Please log in to update ${message}.`);
+        handleError(error, `You must be logged in to update ${message}`, 'warning', showToast);
         return false;
       }
       return true;
@@ -203,68 +142,41 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
   const addToEquipments = async (equipment: Equipment) => {
     try {
       await addToEquipmentsMutation(equipment.id);
-      equipmentsVar([...equipmentsVar(), equipment]);
     } catch (error) {
-      console.error('Error adding equipment:', error);
+      handleError(error, 'Error adding equipment', 'critical', showToast);
     }
   };
 
   const removeFromEquipments = async (equipment: Equipment) => {
     try {
       await removeFromEquipmentsMutation(equipment.id);
-
-      equipmentsVar(equipmentsVar().filter((equip) => equip.id !== equipment.id));
     } catch (error) {
-      console.error('Error removing equipment:', error);
+      handleError(error, 'Error removing equipment', 'critical', showToast);
     }
   };
 
   const removeAllEquipments = async () => {
     try {
       await removeAllUserEquipmentsMutation();
-      equipmentsVar([]);
     } catch (error) {
-      console.error('Error removing all equipment:', error);
+      handleError(error, 'Error removing all equipment', 'critical', showToast);
     }
   };
-
   const [updateAbilityScoresMutation] = useMutation(UPDATE_ABILITY_SCORES, {
     update: (cache, { data }) => {
       if (!data) return;
 
-      const existing = cache.readQuery<UserAbilities>({
+      const updatedScores = data.updateAbilityScores.abilityScores;
+
+      cache.writeQuery({
         query: GET_ARRAY_SCORES,
         variables: { userId },
-      });
-
-      if (existing?.user) {
-        cache.writeQuery({
-          query: GET_ARRAY_SCORES,
-          variables: { userId },
-          data: {
-            user: {
-              __typename: 'User',
-              id: userId,
-              abilityScores: {
-                ...existing?.user.abilityScores.ability,
-                score: data.user.score,
-              },
-            },
-          },
-        });
-      }
-    },
-    onError: (error) => {
-      console.error('Failed to update ability scores: ', error);
-
-      showToast({
-        message: `Failed to update ability scores: ${error.message}`,
-        type: 'error',
-        duration: 3000,
+        data: {
+          getArrayScores: updatedScores,
+        },
       });
     },
   });
-
   const [updateUserClassMutation] = useMutation(UPDATE_USER_CLASS, {
     update: (cache, { data }) => {
       if (!data) return;
@@ -317,67 +229,53 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
 
   const updateAbilityScores = useCallback(
     async (newValue: number, name: string) => {
-      if (!checkUser('Abilities')) return;
-
-      const updatedScores = new Map(abilitiesVar());
-      updatedScores.set(name, newValue);
+      if (!checkUser('abilities')) return;
 
       try {
-        const scoresArray = Array.from(updatedScores.values());
+        const updatedScores = new Map(abilitiesVar());
+        updatedScores.set(name, newValue);
 
         await updateAbilityScoresMutation({
-          variables: { userId, scores: scoresArray },
+          variables: { userId, scores: Array.from(updatedScores.values()) },
         });
 
         abilitiesVar(updatedScores);
       } catch (error) {
-        console.error(error);
+        handleError(error, 'Failed to update ability scores', 'critical', showToast);
       }
     },
-    [checkUser, showToast, updateAbilityScoresMutation, userId]
+    [checkUser, updateAbilityScoresMutation]
   );
 
   const updateClass = async (classId: string) => {
-    if (!checkUser('Class')) return;
+    if (!checkUser('class')) return;
 
     try {
       const response = await updateUserClassMutation({ variables: { userId, classId } });
       classVar(classId);
-      const updatedClass = response.data.updateUserClass.class;
       showToast({
-        message: `Class changed to ${updatedClass.name}`,
+        message: `Class changed to ${response.data.updateUserClass.class.name}`,
         type: 'success',
         duration: 3000,
       });
     } catch (error) {
-      showToast({
-        message: `Failed to update class: ${error}`,
-        type: 'error',
-        duration: 3000,
-      });
+      handleError(error, 'Failed to update class', 'critical', showToast);
     }
   };
 
   const updateRace = async (raceId: string) => {
-    if (!checkUser('Race')) return;
+    if (!checkUser('race')) return;
 
     try {
       const response = await updateUserRaceMutation({ variables: { userId, raceId } });
       raceVar(raceId);
-      const updatedRace = response.data.updateUserRace.race;
-
       showToast({
-        message: `Race changed to ${updatedRace.name}`,
+        message: `Race changed to ${response.data.updateUserRace.race.name}`,
         type: 'success',
         duration: 3000,
       });
     } catch (error) {
-      console.error('Error updating race:', error);
-      showToast({
-        message: 'Failed to update race. Please try again.',
-        type: 'error',
-        duration: 3000,
-      });
+      handleError(error, 'Failed to update race', 'critical', showToast);
     }
   };
 

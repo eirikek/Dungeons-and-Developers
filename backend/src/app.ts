@@ -35,7 +35,6 @@ mongoose
 
       app.listen(4000, () => {
         console.log('Server is running at http://localhost:4000/graphql');
-
         fetchData()
           .then(() => console.log('Data fetching complete'))
           .catch((error) => console.error('Error fetching data:', error));

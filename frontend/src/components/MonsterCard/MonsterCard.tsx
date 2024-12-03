@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { Blurhash } from 'react-blurhash';
 import NoMonsterImageFound from '../../assets/images/no_monster_image_found.jpg';
 import { DungeonContext } from '../../context/DungeonContext.tsx';
-import DungeonButton from './DungeonButton.tsx';
-import MonsterReviewModal from './MonsterReviewModal.tsx';
-import MonsterDetailsModal from './MonsterDetailsModal.tsx';
 import { MonsterCardProps } from '../../interfaces/MonsterCardProps.ts';
-import { Blurhash } from 'react-blurhash';
+import DungeonButton from './DungeonButton.tsx';
+import MonsterDetailsModal from './MonsterDetailsModal.tsx';
+import MonsterReviewModal from './MonsterReviewModal.tsx';
 
 const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: MonsterCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -39,12 +39,21 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
     toggleDungeon({ id, name, type, hit_points, alignment, size, image });
   };
 
-  // Function to open the modal when the card is clicked
-  const handleCardClick = () => {
+  const handleCardClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
     setIsModalOpen(true);
   };
 
-  // Function to close the modal
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsModalOpen(true);
+    }
+  };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
@@ -54,9 +63,11 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
       <div
         onClick={handleCardClick}
         className="flex flex-col items-center justify-between bg-black pb-5 w-[75vw] md:w-[42vw] xl:w-[22vw] 2xl:w-[18vw] h-[40vh] sm:h-[45vh] md:h-[35vh] rounded-lg overflow-hidden
-           transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:shadow-black cursor-pointer card monster-card"
+           transition-transform duration-300 ease-in-out transform focus:hover:shadow-lg focus:shadow-black focus:scale-105 hover:scale-105 hover:shadow-lg hover:shadow-black cursor-pointer card monster-card"
         aria-label={name}
         data-testid={`${name}-monster-card`}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
       >
         <div className="relative w-full h-[30vh] overflow-hidden monster-image">
           {!imageLoaded && (
@@ -132,4 +143,6 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
   );
 };
 
-export default MonsterCard;
+export default React.memo(MonsterCard, (prevProps, nextProps) => {
+  return prevProps.id === nextProps.id;
+});

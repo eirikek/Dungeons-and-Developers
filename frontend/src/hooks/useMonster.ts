@@ -43,6 +43,10 @@ function useMonster(
     return counts;
   }, [typeCountsData]);
 
+  const monsterTypes = useMemo(() => {
+    return Object.keys(monsterCounts);
+  }, [monsterCounts]);
+
   const transformedMonsters = useMemo(() => {
     if (!data || !data.monsters) return [];
     const filteredMonsters = data.monsters.monsters.filter(
@@ -66,6 +70,7 @@ function useMonster(
     minHp: data?.monsters.minHp || 1,
     maxHp: data?.monsters.maxHp || 1000,
     monsterCounts,
+    monsterTypes,
     loading,
     error,
   };

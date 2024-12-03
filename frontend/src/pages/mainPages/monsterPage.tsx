@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { hourglass } from 'ldrs';
 import debounce from 'lodash/debounce';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import MonsterFilter from '../../components/MonsterFilter/MonsterFilter.tsx';
 import MonsterSort from '../../components/MonsterSort/MonsterSort.tsx';
@@ -117,7 +117,7 @@ export default function MonsterPage() {
     }
   }, [hpRangeData, hpRangeLoading]);
 
-  const { monsters, totalMonsters, minHp, maxHp, monsterCounts, loading, error } = useMonster(
+  const { monsters, totalMonsters, minHp, maxHp, monsterCounts, monsterTypes, loading, error } = useMonster(
     debouncedSearchTerm,
     currentPage,
     monstersPerPage,
@@ -224,6 +224,7 @@ export default function MonsterPage() {
               setSelectedFilters={setSelectedFilters}
               onHpChange={debouncedHandleHpChange}
               onClearFilters={clearFilters}
+              monsterTypes={monsterTypes}
               monsterCounts={monsterCounts}
               setCurrentPage={setCurrentPage}
               searchTerm={searchTerm}

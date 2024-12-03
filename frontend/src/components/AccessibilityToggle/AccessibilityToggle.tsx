@@ -1,14 +1,32 @@
 import { useAccessibility } from '../../context/AccessibilityContext';
 import accessabilityIcon from '../../assets/images/accessibility-icon.png';
 import { useLocation } from 'react-router-dom';
+import React from 'react';
 
-const AccessibilityToggle = () => {
+interface AccesibilityProps {
+  checked: boolean;
+  onChange?: (checked: boolean) => void;
+}
+const AccessibilityToggle = ({ checked = false, onChange }: AccesibilityProps) => {
   const { isAccessibilityMode, toggleAccessibilityMode } = useAccessibility();
   const location = useLocation();
   const isLoginPage = location.pathname === '/';
 
+  const handleCheckboxChange = () => {
+    const newChecked = !isAccessibilityMode;
+    toggleAccessibilityMode();
+    if (!checked) {
+      onChange?.(newChecked);
+    }
+  };
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      handleCheckboxChange();
+    }
+  };
+
   return (
-    <label className="flex items-center cursor-pointer z-50">
+    <label className="flex items-center cursor-pointer z-50" onKeyDown={handleKeyDown} tabIndex={0}>
       <div className="mr-3">
         <img
           src={accessabilityIcon}
@@ -16,7 +34,13 @@ const AccessibilityToggle = () => {
           className={`w-10 ${isLoginPage ? 'filter invert' : ''}`}
         />
       </div>
-      <input type="checkbox" checked={isAccessibilityMode} onChange={toggleAccessibilityMode} className="hidden" />
+      <input
+        type="checkbox"
+        checked={isAccessibilityMode}
+        onChange={toggleAccessibilityMode}
+        className="sr-only"
+        onKeyDown={handleKeyDown}
+      />
       <span
         className={`relative inline-block w-14 h-8 rounded-full transition-colors ${
           isAccessibilityMode ? 'bg-[#E4BF36]' : 'bg-gray-400'

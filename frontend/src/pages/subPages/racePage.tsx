@@ -1,11 +1,12 @@
-import { makeVar, useReactiveVar } from '@apollo/client';
-import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 import RaceCard from '../../components/SubPages/RaceCard.tsx';
+import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
+import { useReactiveVar } from '@apollo/client';
 
-import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 import useCharacterContext from '../../hooks/useCharacter.ts';
+import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
+import { raceVar } from '../../utils/apolloVars.ts';
 
-export const raceVar = makeVar<string>('');
+
 /**
  * RacePage Component
  *
@@ -72,7 +73,7 @@ export default function RacePage() {
           ))}
         </section>
       ) : (
-        <section className="flex flex-col items-center w-full">
+        <section className="flex flex-col items-center min-h-[400vh] w-full">
           <LoadingHourglass />
         </section>
       )}

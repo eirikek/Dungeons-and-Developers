@@ -1,11 +1,11 @@
-import { makeVar, useReactiveVar } from '@apollo/client';
-import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 import ClassCard from '../../components/SubPages/ClassCard.tsx';
+import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
+import { useReactiveVar } from '@apollo/client';
 
-import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 import useCharacterContext from '../../hooks/useCharacter.ts';
+import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
+import { classVar } from '../../utils/apolloVars.ts';
 
-export const classVar = makeVar<string>('');
 /**
  * ClassPage Component
  *
@@ -70,7 +70,7 @@ export default function ClassPage() {
           ))}
         </section>
       ) : (
-        <section className="flex flex-col items-center w-full">
+        <section className="flex flex-col items-center min-h-[380vh] w-full">
           <LoadingHourglass />
         </section>
       )}

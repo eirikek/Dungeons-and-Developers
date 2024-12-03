@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 interface CounterProps {
@@ -12,8 +12,22 @@ interface CounterProps {
 
 export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp, onValueFinalized }: CounterProps) {
   const changeTimer = useRef<NodeJS.Timeout | null>(null);
-  const rate = 100;
   const [localValue, setLocalValue] = useState(value);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isKeyDown, setIsKeyDown] = useState(false);
+
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    clearTimer();
+  };
 
   const clearTimer = () => {
     if (changeTimer.current) {
@@ -21,60 +35,59 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
       changeTimer.current = null;
       onPointerUp?.();
       onMouseUp?.();
-
       onValueFinalized?.(localValue);
     }
   };
 
-  const startIncrement = () => {
+  const startChange = (delta: number) => {
+    if (!isFocused || isKeyDown) return;
+    setIsKeyDown(true);
     clearTimer();
-    const startTime = Date.now();
-
     changeTimer.current = setInterval(() => {
-      const elapsedTime = Date.now() - startTime;
-      const incrementValue = Math.floor(elapsedTime / rate);
-      let newValue = localValue + incrementValue;
-
-      if (newValue > 100) {
-        newValue = newValue % 101;
-      }
-
-      setLocalValue(newValue);
-      if (onChange) {
-        onChange(newValue);
-      }
+      setLocalValue((prevValue) => {
+        const newValue = (prevValue + delta + 101) % 101;
+        if (onChange) {
+          onChange(newValue);
+        }
+        return newValue;
+      });
     }, 100);
   };
 
-  const startDecrement = () => {
+  const handleIncrement = () => startChange(1);
+  const handleDecrement = () => startChange(-1);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, delta: number) => {
+    if (!isFocused) return;
+
+    setIsKeyDown(true);
+    if (event.key === 'Space' || event.key === ' ') {
+      event.preventDefault();
+      if (!isKeyDown) {
+        setIsKeyDown(true);
+        startChange(delta);
+      }
+    }
+  };
+
+  const handleKeyUp = () => {
+    setIsKeyDown(false);
     clearTimer();
-    const startTime = Date.now();
-
-    changeTimer.current = setInterval(() => {
-      const elapsedTime = Date.now() - startTime;
-      const decrementValue = Math.floor(elapsedTime / rate);
-      let newValue = localValue - decrementValue;
-
-      if (newValue < 0) {
-        newValue = 100 - (Math.abs(newValue) % 101);
-      }
-
-      setLocalValue(newValue);
-      if (onChange) {
-        onChange(newValue);
-      }
-    }, 100);
   };
 
   return (
     <div className="flex flex-col items-center" style={{ transform: `scale(${scale})` }}>
       <button
         className="text-white hover:text-gray-400"
-        onMouseDown={startIncrement}
+        onMouseDown={handleIncrement}
         onMouseUp={clearTimer}
         onMouseLeave={clearTimer}
-        onTouchStart={startIncrement}
+        onTouchStart={handleIncrement}
         onTouchEnd={clearTimer}
+        onKeyDown={(e) => handleKeyDown(e, 1)}
+        onKeyUp={handleKeyUp}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         aria-label="Increment"
       >
         <FaChevronUp size={22} />
@@ -89,11 +102,15 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
 
       <button
         className="text-white hover:text-gray-400"
-        onMouseDown={startDecrement}
+        onMouseDown={handleDecrement}
         onMouseUp={clearTimer}
         onMouseLeave={clearTimer}
-        onTouchStart={startDecrement}
+        onTouchStart={handleDecrement}
         onTouchEnd={clearTimer}
+        onKeyDown={(e) => handleKeyDown(e, -1)}
+        onKeyUp={handleKeyUp}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         aria-label="Decrement"
       >
         <FaChevronDown size={22} />
