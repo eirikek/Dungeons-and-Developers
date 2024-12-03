@@ -9,28 +9,26 @@ interface ButtonProps {
   noUnderline?: boolean;
   isActive?: boolean;
   children?: React.ReactNode;
-  onFocus?: () => void;
-  onBlur?: () => void;
 }
 
 export default function CustomButton({
-  text,
-  onClick,
-  className = 'sub-header',
-  linkTo,
-  noUnderline = false,
-  isActive = false,
-  onFocus,
-  onBlur,
-  children,
-}: ButtonProps) {
+                                       text,
+                                       onClick,
+                                       className = 'sub-header',
+                                       linkTo,
+                                       noUnderline = false,
+                                       isActive = false,
+                                       children,
+                                     }: ButtonProps) {
   const underlineClass = noUnderline
     ? ''
     : `absolute bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0 ${
-        isActive ? 'w-full left-0' : 'left-1/2' // Underline for active page on desktop
-      }`;
+      isActive ? 'w-full left-0' : 'left-1/2' // Underline for active page on desktop
+    }`;
 
-  const activeClass = isActive ? 'bold xl:font-[MedievalSharp]' : '';
+  const activeClass = isActive
+    ? 'bold xl:font-[MedievalSharp]' // Bold text for active page on mobile
+    : '';
 
   const buttonContent = (
     <>
@@ -40,14 +38,10 @@ export default function CustomButton({
     </>
   );
 
+  // If linkTo is provided, use Link component for navigation
   if (linkTo) {
     return (
-      <Link
-        to={linkTo}
-        className={`w-fit relative group flex ${activeClass} ${className}`}
-        onFocus={onFocus}
-        onBlur={onBlur}
-      >
+      <Link to={linkTo} className={`w-fit relative group flex ${activeClass} ${className}`}>
         {buttonContent}
       </Link>
     );
@@ -55,12 +49,7 @@ export default function CustomButton({
 
   // Otherwise, render a regular button
   return (
-    <button
-      className={`relative group flex ${activeClass} ${className}`}
-      onClick={onClick}
-      onFocus={onFocus}
-      onBlur={onBlur}
-    >
+    <button className={`relative group flex ${activeClass} ${className}`} onClick={onClick}>
       {buttonContent}
     </button>
   );

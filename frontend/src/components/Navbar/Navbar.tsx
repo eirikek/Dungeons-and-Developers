@@ -10,7 +10,6 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [isFocus, setIsFocus] = useState(false);
   const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
   const [isDropdownHovered, setIsDropdownHovered] = useState(false);
 
@@ -137,8 +136,6 @@ const Navbar = () => {
                   linkTo={'/mycharacter'}
                   className={`flex items-center space-x-3 sub-header`}
                   isActive={location.pathname.startsWith('/mycharacter')}
-                  onFocus={() => setIsFocus(true)}
-                  onBlur={() => setIsFocus(false)}
                 >
                   <FaChevronDown
                     className={`transition-transform duration-300 ${isDropdownHovered ? 'rotate-180' : ''}`}
@@ -148,35 +145,21 @@ const Navbar = () => {
                 {/* Dropdown menu */}
                 <div
                   className={`absolute left-1/2 transform -translate-x-1/2 w-[18vw] bg-customRed rounded overflow-hidden duration-300 ease-in-out max-h-0 ${
-                    isDropdownHovered || isFocus ? 'max-h-96 opacity-100' : 'opacity-0'
+                    isDropdownHovered ? 'max-h-96 opacity-100' : 'opacity-0'
                   }`}
                 >
                   <ul className="flex flex-col gap-10 p-10">
                     <li className="w-fit">
-                      <CustomButton
-                        text={'Races'}
-                        linkTo={'/race'}
-                        isActive={location.pathname === '/race'}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
-                      />
+                      <CustomButton text={'Races'} linkTo={'/race'} isActive={location.pathname === '/race'} />
                     </li>
                     <li className="w-fit">
-                      <CustomButton
-                        text={'Classes'}
-                        linkTo={'/class'}
-                        isActive={location.pathname === '/class'}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
-                      />
+                      <CustomButton text={'Classes'} linkTo={'/class'} isActive={location.pathname === '/class'} />
                     </li>
                     <li className="w-fit">
                       <CustomButton
                         text={'Ability Scores'}
                         linkTo={'/abilityscore'}
                         isActive={location.pathname === '/abilityscore'}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
                       />
                     </li>
                     <li className="w-fit">
@@ -184,8 +167,6 @@ const Navbar = () => {
                         text={'Equipments'}
                         linkTo={'/equipment'}
                         isActive={location.pathname === '/equipment'}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
                       />
                     </li>
                   </ul>
