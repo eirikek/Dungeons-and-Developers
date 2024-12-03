@@ -18,6 +18,7 @@ const DungeonButton = ({ onAddToDungeonClick, isInDungeon }: DungeonButtonprops)
       aria-label={isInDungeon ? 'Remove from dungeon' : 'Add to dungeon'}
     >
       <GiDungeonGate
+        aria-label="gate-icon"
         size="45"
         className={`transition-all duration-300 group-hover:scale-110 ${
           isInDungeon ? 'text-black' : 'text-white group-hover:text-black'

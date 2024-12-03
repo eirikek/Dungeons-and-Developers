@@ -3,6 +3,7 @@ import { MonsterCardProps } from '../../src/interfaces/MonsterCardProps';
 import { UPDATE_DUNGEON_NAME } from '../../src/graphql/mutations/userMutations';
 import { GET_MONSTER_REVIEWS } from '../../src/graphql/queries/monsterQueries';
 import { GET_USER_DUNGEON_NAME } from '../../src/graphql/queries/userQueries';
+import { GET_USER_FAVORITES } from '../../src/graphql/queries/userQueries';
 
 interface UserDungeonData {
   dungeonName: string;
@@ -24,6 +25,24 @@ interface MonsterReviewsData {
   };
 }
 
+export const generateGetUserFavoritesMock = (
+  userId: string,
+  favoritedMonsters: MonsterCardProps[]
+): MockedResponse => ({
+  request: {
+    query: GET_USER_FAVORITES,
+    variables: { userId },
+  },
+  result: {
+    data: {
+      user: {
+        id: userId,
+        favoritedMonsters,
+      },
+    },
+  },
+});
+
 export const generateGetUserDungeonMock = (userId: string, data: UserDungeonData): MockedResponse => ({
   request: {
     query: GET_USER_DUNGEON_NAME,
@@ -32,14 +51,18 @@ export const generateGetUserDungeonMock = (userId: string, data: UserDungeonData
   result: {
     data: {
       user: {
+        id: userId,
         dungeonName: data.dungeonName,
-        favoritedMonsters: data.favoritedMonsters,
       },
     },
   },
 });
 
-export const generateUpdateDungeonNameMock = (userId: string, newName: string): MockedResponse => ({
+export const generateUpdateDungeonNameMock = (
+  userId: string,
+  newName: string,
+  monsters: MonsterCardProps[]
+): MockedResponse => ({
   request: {
     query: UPDATE_DUNGEON_NAME,
     variables: { userId, dungeonName: newName },
@@ -47,7 +70,9 @@ export const generateUpdateDungeonNameMock = (userId: string, newName: string): 
   result: {
     data: {
       updateDungeonName: {
+        id: userId,
         dungeonName: newName,
+        favoritedMonsters: monsters,
       },
     },
   },
@@ -64,6 +89,7 @@ export const generateGetMonsterReviewsMock = (
   result: {
     data: {
       monster: {
+        id: monsterId,
         reviews,
       },
     },

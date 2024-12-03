@@ -14,22 +14,9 @@ interface MonsterFilterProps {
   setCurrentPage: (page: number) => void;
   onClearFilters: () => void;
   monsterCounts: Record<string, number>;
+  monsterTypes: string[];
   searchTerm: string;
 }
-
-const filterOptions = [
-  'dragon',
-  'aberration',
-  'humanoid',
-  'monstrosity',
-  'beast',
-  'plant',
-  'construct',
-  'fiend',
-  'fey',
-  'undead',
-  'elemental',
-];
 
 export default function MonsterFilter({
   selectedFilters,
@@ -38,6 +25,7 @@ export default function MonsterFilter({
   setCurrentPage,
   onClearFilters,
   monsterCounts,
+  monsterTypes,
   searchTerm,
 }: MonsterFilterProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -166,7 +154,7 @@ export default function MonsterFilter({
           </div>
           <h2 className="text bold mb-2 ">Type:</h2>
           <div className="grid grid-cols-2 gap-y-4 gap-x-8 mb-4">
-            {filterOptions.map((option) => {
+            {monsterTypes.map((option) => {
               const count = monsterCounts[option] || 0;
               const isDisabled = count === 0 && !selectedFilters.has(option);
 

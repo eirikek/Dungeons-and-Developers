@@ -1,0 +1,24 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CustomButton > renders correctly as a Link and matches snapshot 1`] = `
+<a
+  class="w-fit relative group flex  sub-header"
+  href="/home"
+>
+  Go Home
+  <span
+    class="absolute bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0 left-1/2"
+  />
+</a>
+`;
+
+exports[`CustomButton > renders correctly as a button and matches snapshot 1`] = `
+<button
+  class="relative group flex  sub-header"
+>
+  Click me
+  <span
+    class="absolute bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0 left-1/2"
+  />
+</button>
+`;

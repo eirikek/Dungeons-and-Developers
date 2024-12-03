@@ -1,0 +1,28 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AccessibilityToggle > renders correctly and matches snapshot 1`] = `
+<label
+  class="flex items-center cursor-pointer z-50"
+>
+  <div
+    class="mr-3"
+  >
+    <img
+      alt="accessability icon"
+      class="w-10 "
+      src="/project2/src/assets/images/accessibility-icon.png"
+    />
+  </div>
+  <input
+    class="hidden"
+    type="checkbox"
+  />
+  <span
+    class="relative inline-block w-14 h-8 rounded-full transition-colors bg-gray-400"
+  >
+    <span
+      class="absolute top-1 left-1 w-6 h-6 bg-white rounded-full shadow-md transform transition-transform "
+    />
+  </span>
+</label>
+`;

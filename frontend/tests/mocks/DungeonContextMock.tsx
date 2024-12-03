@@ -1,6 +1,6 @@
 // src/tests/mocks/DungeonContextMock.tsx
-/*
-import React, { useState } from 'react';
+
+import React, { useCallback, useMemo, useState } from 'react';
 import { DungeonContext } from '../../src/context/DungeonContext.tsx';
 import { MonsterCardProps } from '../../src/interfaces/MonsterCardProps.ts';
 import { useToast } from '../../src/hooks/useToast.ts';
@@ -15,59 +15,63 @@ const DungeonContextMock = ({ children, initialDungeon, allMonsters }: DungeonCo
   const [dungeonMonsters, setDungeonMonsters] = useState<MonsterCardProps[]>(
     allMonsters.filter((monster) => initialDungeon.includes(monster.id))
   );
-
   const { showToast } = useToast();
+  const maxFavorites = 6;
 
-  const maxFavorites = 6; // Define the maximum dungeon capacity
+  const isInDungeon = useCallback(
+    (id: string) => dungeonMonsters.some((monster) => monster.id === id),
+    [dungeonMonsters]
+  );
 
-  const toggleDungeon = (monster: MonsterCardProps) => {
-    console.log('Toggling dungeon for monster:', monster);
-    const isAlreadyIn = dungeonMonsters.some((m) => m.id === monster.id);
+  const toggleDungeon = useCallback(
+    (monster: MonsterCardProps) => {
+      const isAlreadyIn = isInDungeon(monster.id);
 
-    if (isAlreadyIn) {
-      setDungeonMonsters((prev) => prev.filter((m) => m.id !== monster.id));
-      showToast({
-        message: `${monster.name} removed from dungeon`,
-        type: 'info',
-        undoAction: () => {
-          // Restore monster to dungeon
-          setDungeonMonsters((prev) => [...prev, monster]);
+      if (isAlreadyIn) {
+        setDungeonMonsters((prev) => prev.filter((m) => m.id !== monster.id));
+        showToast({
+          message: `${monster.name} removed from dungeon`,
+          type: 'info',
+          duration: 5000,
+          undoAction: () => {
+            setDungeonMonsters((prev) => [...prev, monster]);
+            showToast({
+              message: `${monster.name} restored to dungeon`,
+              type: 'success',
+              duration: 3000,
+            });
+          },
+        });
+      } else {
+        if (dungeonMonsters.length >= maxFavorites) {
           showToast({
-            message: `${monster.name} restored to dungeon`,
-            type: 'success',
+            message: 'You can only add 6 monsters to your dungeon',
+            type: 'warning',
             duration: 3000,
           });
-        },
-        duration: 5000,
-      });
-    } else {
-      if (dungeonMonsters.length >= maxFavorites) {
+          return;
+        }
+        setDungeonMonsters((prev) => [...prev, monster]);
         showToast({
-          message: 'You can only add 6 monsters to your dungeon',
-          type: 'warning',
+          message: `${monster.name} added to dungeon`,
+          type: 'success',
           duration: 3000,
         });
-        return; // Exit early without adding the monster
       }
-      // Add monster to dungeon
-      setDungeonMonsters((prev) => [...prev, monster]);
-      showToast({
-        message: `${monster.name} added to dungeon`,
-        type: 'success',
-        duration: 3000,
-      });
-    }
-  };
-
-  const isInDungeon = (id: string)'' => dungeonMonsters.some((monster) => monster.id === id);
-  const dungeonName = '';
-  const updateDungeonName = vi.fn();
-  return (
-    <DungeonContext.Provider value={{ dungeonName, dungeonMonsters, toggleDungeon, isInDungeon, updateDungeonName }}>
-      {children}
-    </DungeonContext.Provider>
+    },
+    [dungeonMonsters, isInDungeon, maxFavorites, showToast]
   );
+
+  const contextValue = useMemo(
+    () => ({
+      dungeonMonsters,
+      toggleDungeon,
+      isInDungeon,
+    }),
+    [dungeonMonsters, toggleDungeon, isInDungeon]
+  );
+
+  return <DungeonContext.Provider value={contextValue}>{children}</DungeonContext.Provider>;
 };
 
 export default DungeonContextMock;
-*/

@@ -5,6 +5,7 @@ import { useReactiveVar } from '@apollo/client';
 import useCharacterContext from '../../hooks/useCharacter.ts';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 import { raceVar } from '../../utils/apolloVars.ts';
+
 export default function RacePage() {
   const currentRace = useReactiveVar(raceVar);
 
@@ -35,7 +36,7 @@ export default function RacePage() {
           ))}
         </section>
       ) : (
-        <section className="flex flex-col items-center w-full">
+        <section className="flex flex-col items-center min-h-[400vh] w-full">
           <LoadingHourglass />
         </section>
       )}
