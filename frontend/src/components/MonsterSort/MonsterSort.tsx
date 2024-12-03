@@ -61,7 +61,7 @@ export default function SortDropdown({ selectedSort, onSortChange }: SortDropdow
         <button
           onClick={() => setIsDropdownOpen((prev) => !prev)}
           className="px-1 rounded-lg border-2 bg-customRed text hover:bg-transparent border-customRed hover:text-customRed transition-colors duration-200 flex items-center justify-between min-w-48 lg:min-w-60"
-          onKeyDown={handleKeyDown} // Add keyboard event listener here
+          onKeyDown={handleKeyDown}
         >
           {sortOptions.find((option) => option.value === selectedSort)?.label || 'Select'}
           <FaChevronDown className="ml-3" />
@@ -76,6 +76,7 @@ export default function SortDropdown({ selectedSort, onSortChange }: SortDropdow
               <FiX
                 className="h-8 w-8 text-white hover:text-customRed cursor-pointer"
                 onClick={() => setIsDropdownOpen(false)}
+                onBlur={() => setIsDropdownOpen(false)}
               />
             </div>
             <ul>

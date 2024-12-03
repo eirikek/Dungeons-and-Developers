@@ -13,10 +13,21 @@ interface CounterProps {
 export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp, onValueFinalized }: CounterProps) {
   const changeTimer = useRef<NodeJS.Timeout | null>(null);
   const [localValue, setLocalValue] = useState(value);
-  
+  const [isFocused, setIsFocused] = useState(false);
+  const [isKeyDown, setIsKeyDown] = useState(false);
+
   useEffect(() => {
     setLocalValue(value);
   }, [value]);
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    clearTimer();
+  };
 
   const clearTimer = () => {
     if (changeTimer.current) {
@@ -29,6 +40,8 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
   };
 
   const startChange = (delta: number) => {
+    if (!isFocused || isKeyDown) return;
+    setIsKeyDown(true);
     clearTimer();
     changeTimer.current = setInterval(() => {
       setLocalValue((prevValue) => {
@@ -45,13 +58,20 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
   const handleDecrement = () => startChange(-1);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, delta: number) => {
-    if (event.key === 'Enter' || event.key === ' ') {
+    if (!isFocused) return;
+
+    setIsKeyDown(true);
+    if (event.key === 'Space' || event.key === ' ') {
       event.preventDefault();
-      startChange(delta);
+      if (!isKeyDown) {
+        setIsKeyDown(true);
+        startChange(delta);
+      }
     }
   };
 
   const handleKeyUp = () => {
+    setIsKeyDown(false);
     clearTimer();
   };
 
@@ -66,6 +86,8 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
         onTouchEnd={clearTimer}
         onKeyDown={(e) => handleKeyDown(e, 1)}
         onKeyUp={handleKeyUp}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         aria-label="Increment"
       >
         <FaChevronUp size={22} />
@@ -87,6 +109,8 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
         onTouchEnd={clearTimer}
         onKeyDown={(e) => handleKeyDown(e, -1)}
         onKeyUp={handleKeyUp}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         aria-label="Decrement"
       >
         <FaChevronDown size={22} />
