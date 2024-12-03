@@ -6,6 +6,43 @@ import useCharacterContext from '../../hooks/useCharacter.ts';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 import { raceVar } from '../../utils/apolloVars.ts';
 
+
+/**
+ * RacePage Component
+ *
+ * A character race selection page that displays available D&D races.
+ *
+ * Features:
+ * - Interactive race selection cards
+ * - Persistent race selection using Apollo reactive variables
+ * - Loading state management
+ * - Integration with character context
+ *
+ * State Management:
+ * - raceVar: Apollo reactive variable for selected race
+ * - Uses CharacterContext for race data and updates
+ *
+ * Component Structure:
+ * - Wrapped in SubPageLayout
+ * - Renders RaceCard components for each available race
+ * - Conditional loading state with LoadingHourglass
+ *
+ * Props (RaceCard):
+ * - index: Reference index for race
+ * - id: Unique race identifier
+ * - name: Race name
+ * - alignment: Race alignment description
+ * - size: Race size category
+ * - speed: Race movement speed
+ * - selectedRaceId: Currently selected race
+ * - onSelect: Race selection handler
+ *
+ * Loading States:
+ * - Shows LoadingHourglass during race data fetch
+ * - Conditional rendering based on raceLoading flag
+ *
+ * @returns  Rendered RacePage component
+ */
 export default function RacePage() {
   const currentRace = useReactiveVar(raceVar);
 

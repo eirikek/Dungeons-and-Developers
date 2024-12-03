@@ -16,6 +16,53 @@ import { useToast } from '../../hooks/useToast.ts';
 import { Equipment } from '../../interfaces/EquipmentProps.ts';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 
+
+/**
+ * MyCharacterPage Component
+ *
+ * A character customization interface that allows users to create and manage their D&D character.
+ *
+ * Features:
+ * - Race selection with image previews and carousel navigation
+ * - Class selection with image previews and carousel navigation
+ * - Ability scores management with counter controls
+ * - Equipment management with remove functionality and undo support
+ *
+ * State Management:
+ * - classIndex/raceIndex: Current position in selection carousel
+ * - imageLoaded states: Handling image loading states
+ * - Reactive variables (Apollo):
+ *   - abilitiesVar: Ability scores map
+ *   - classVar: Selected class
+ *   - raceVar: Selected race
+ *   - equipmentsVar: Character equipment list
+ *
+ * Context Usage:
+ * - AuthContext: User authentication state
+ * - CharacterContext: Character management functions
+ *
+ * Loading States:
+ * - Ability scores loading
+ * - Equipment loading
+ * - Race/Class data loading
+ *
+ * Error Handling:
+ * - Toast notifications for actions
+ * - Error catching for race/class updates
+ * - Loading fallbacks with hourglass animation
+ *
+ * Persistence:
+ * Character data is stored and managed through Apollo Client's reactive variables
+ * and GraphQL mutations (handled in context)
+ *
+ * Layout:
+ * - Responsive grid layout
+ * - Mobile-friendly design with appropriate breakpoints
+ * - Image lazy loading implementation
+ *
+ * @returns  Rendered MyCharacterPage component
+ */
+
 const MyCharacterPage = () => {
   const { userName } = useContext(AuthContext);
   const { showToast } = useToast();
@@ -206,6 +253,7 @@ const MyCharacterPage = () => {
                     <div key={index} className="flex items-center">
                       <label className="sub-header w-32 mr-[85px]">{ability.name}:</label>
                       <AbilityCounterWrapper
+                        abilityName={ability.name}
                         initialValue={currentArrayScores.get(ability.name) ?? 0}
                         onUpdate={(newValue) => handleCounterChange(ability.name, newValue)}
                       />
