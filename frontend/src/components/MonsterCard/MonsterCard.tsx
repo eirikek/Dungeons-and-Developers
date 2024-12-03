@@ -97,6 +97,7 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
               />
               <div className="absolute left-[75%] top-5">
                 <DungeonButton
+                  data-testid={`${name}-dungeon-button`}
                   onAddToDungeonClick={handleToggleDungeon}
                   isInDungeon={isInDungeon(id)}
                   aria-label={isInDungeon(id) ? 'Remove from dungeon' : 'Add to dungeon'}

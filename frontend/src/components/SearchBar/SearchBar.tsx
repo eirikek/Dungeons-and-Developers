@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CiSearch } from 'react-icons/ci';
 
 interface SearchBarProps {
@@ -56,6 +56,7 @@ const SearchBar = ({
         <CiSearch size="25" className="absolute left-3 top-1/2 transform -translate-y-[60%] text-gray-400" />
         <input
           ref={inputRef}
+          id="search-input"
           type="text"
           placeholder={placeholder}
           maxLength={50}
