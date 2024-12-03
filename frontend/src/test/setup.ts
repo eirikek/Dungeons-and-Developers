@@ -5,6 +5,7 @@ import { afterEach } from 'vitest';
 afterEach(() => {
   cleanup();
 });
+vi.mock('react-blurhash');
 
 /**
  * Test environment setup for Vitest and React Testing Library.

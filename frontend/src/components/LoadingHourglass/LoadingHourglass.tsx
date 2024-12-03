@@ -8,7 +8,7 @@ export default function LoadingHourglass({ height = 'h-[79.5vh]' }: LoadingHourg
   hourglass.register();
 
   return (
-    <div className={`flex flex-col items-center justify-center ${height}`}>
+    <div className={`flex flex-col items-center justify-center ${height}`} data-testid={'hourglass-container'}>
       <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
     </div>
   );

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { AuthContext, AuthProvider } from '../../src/context/AuthContext.tsx';
+import { AuthContext, AuthProvider } from '../../src/context/AuthContext';
 import { MockedProvider } from '@apollo/client/testing';
 
 describe('AuthContext', () => {

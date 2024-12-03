@@ -143,6 +143,4 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
   );
 };
 
-export default React.memo(MonsterCard, (prevProps, nextProps) => {
-  return prevProps.id === nextProps.id;
-});
+export default MonsterCard;

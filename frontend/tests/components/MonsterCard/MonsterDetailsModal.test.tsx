@@ -1,11 +1,11 @@
-/*import { MockedProvider } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import MonsterDetailsModal from '../../../src/components/MonsterCard/MonsterDetailsModal.tsx';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
 import { Review } from './MonsterReviewModal.test.tsx';
-import { GET_MONSTER_REVIEWS } from '../../../src/graphql/monsterQueries.ts';
+import { GET_MONSTER_REVIEWS } from '../../../src/graphql/queries/monsterQueries.ts';
 
 const mockProps = {
   id: 'monster-123',
@@ -162,4 +162,3 @@ describe('MonsterDetailsModal', () => {
     });
   });
 });
-*/

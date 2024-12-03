@@ -26,7 +26,6 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
     fetchPolicy: 'network-only',
   });
   const existingReview = data?.monster?.reviews.find((review: ReviewType) => review.user.id === userId);
-  console.log('Existing review', existingReview);
 
   const [addReview] = useMutation<AddReviewData>(ADD_REVIEW, {
     update(cache, { data }) {
@@ -129,7 +128,6 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
 
     try {
       if (editMode && existingReview && existingReview.id) {
-        console.log('Updating existing review:', existingReview.id);
         // Update existing review
         await updateReview({
           variables: {
@@ -140,8 +138,6 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
         });
         showToast({ message: `Review on ${name} updated`, type: 'success', duration: 3000 });
       } else {
-        // Add new review
-        console.log('Creating new review');
         await addReview({
           variables: {
             monsterId,

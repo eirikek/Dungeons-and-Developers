@@ -106,6 +106,7 @@ const CustomInput = ({ placeholder, inputName, value, onSave }: InputProps) => {
               type="text"
               value={inputValue}
               aria-label="Edit name"
+              data-testid="dungeon-input"
               onChange={handleChange}
               onBlur={handleBlur}
               autoFocus
