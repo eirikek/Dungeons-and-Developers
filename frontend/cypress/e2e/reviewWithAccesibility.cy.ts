@@ -1,9 +1,9 @@
-describe('Creates a review, then deletes it', () => {
+describe('Creates a review, then deletes it. Now with Accesibility mode on', () => {
   beforeEach(() => {
     cy.viewport(1280, 720);
   });
 
-  it('Logs in', () => {
+  it('Logs in and reviews, edit the reviews from two different ways and then deletes it.', () => {
     cy.visit('http://localhost:5173/');
 
     cy.get('img[alt="accessability icon"]').should('exist');

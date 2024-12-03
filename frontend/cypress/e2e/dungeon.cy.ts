@@ -3,7 +3,7 @@ describe('Logs in, searches for a monster and adds black dragon to dungeon, filt
     cy.viewport(1280, 720);
   });
 
-  it('Logs in', () => {
+  it('Logs in and performs user story for adding and removing monsters from dungeon', () => {
     cy.visit('http://localhost:5173/');
 
     cy.get('input#log-in-input').type('Cypress test user');

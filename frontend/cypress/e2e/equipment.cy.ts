@@ -3,7 +3,7 @@ describe('Chooses some equipment using the searchbar, after collecting the items
     cy.viewport(1280, 720);
   });
 
-  it('Logs in', () => {
+  it('Logs in and performs equipment user story', () => {
     cy.visit('http://localhost:5173/');
 
     cy.get('input#log-in-input').type('Cypress test user');

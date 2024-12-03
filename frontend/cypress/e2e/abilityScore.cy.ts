@@ -3,7 +3,7 @@ describe('Updates ability score, increments and decrements', () => {
     cy.viewport(1280, 720);
   });
 
-  it('Logs in', () => {
+  it('Logs in and performs user story for changing and adjusting ability score', () => {
     cy.visit('http://localhost:5173/');
 
     cy.get('input#log-in-input').type('Cypress test user');
