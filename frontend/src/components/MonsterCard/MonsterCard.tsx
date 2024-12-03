@@ -47,8 +47,7 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
+    if (e.key === 'Enter' && e.shiftKey) {
       e.stopPropagation();
       setIsModalOpen(true);
     }
@@ -98,6 +97,7 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
               />
               <div className="absolute left-[75%] top-5">
                 <DungeonButton
+                  data-testid={`${name}-dungeon-button`}
                   onAddToDungeonClick={handleToggleDungeon}
                   isInDungeon={isInDungeon(id)}
                   aria-label={isInDungeon(id) ? 'Remove from dungeon' : 'Add to dungeon'}

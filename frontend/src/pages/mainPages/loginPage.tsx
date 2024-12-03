@@ -7,7 +7,10 @@ import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { CREATE_USER, LOGIN_USER } from '../../graphql/mutations/userMutations.ts';
 import { CHECK_USERNAME } from '../../graphql/queries/userQueries.ts';
+import Accessibility from '../../components/AccessibilityToggle/AccessibilityToggle.tsx';
+import { useAccessibility } from '../../context/AccessibilityContext.tsx';
 import { useToast } from '../../hooks/useToast.ts';
+
 
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',
@@ -65,6 +68,7 @@ export default function LoginPage() {
   const [isUsernameAvailable, setIsUsernameAvailable] = useState<boolean | null>(null);
   const [shakeInput, setShakeInput] = useState(false);
   const { showToast } = useToast();
+  const { isAccessibilityMode } = useAccessibility();
 
   // Change quote every 5 seconds
   useEffect(() => {
@@ -308,7 +312,7 @@ export default function LoginPage() {
             </AnimatePresence>
           </section>
           <section className="absolute bottom-5 w-full flex justify-center">
-            <Accessibility />
+            <Accessibility checked={isAccessibilityMode} />
           </section>
         </section>
       </main>
