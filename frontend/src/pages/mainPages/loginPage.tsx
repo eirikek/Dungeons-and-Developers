@@ -230,7 +230,7 @@ export default function LoginPage() {
                     <div className="text">
                       Don't have an account?{' '}
                       <button
-                        className="underline transition-all hover:text-gray-300 outline-none"
+                        className="underline transition-all hover:text-gray-300 focus:border-white"
                         onClick={toggleForm}
                       >
                         Register
@@ -278,7 +278,7 @@ export default function LoginPage() {
                     <div className="text">
                       Already have an account?{' '}
                       <button
-                        className="underline transition-all hover:text-gray-300 outline-none"
+                        className="underline transition-all hover:text-gray-300 focus:border-white"
                         onClick={toggleForm}
                       >
                         Log in
