@@ -71,6 +71,7 @@ const mocks = [
     result: {
       data: {
         monster: {
+          id: mockMonsterId,
           reviews: [mockReview],
         },
       },
@@ -91,9 +92,8 @@ const mocks = [
     },
     result: {
       data: {
-        id: 'review-123',
         updateReview: {
-          id: 'review-123',
+          id: mockReview.id,
           user: { id: mockUserId, userName: 'Test User' },
           difficulty: 70,
           description: 'This is an updated review',
@@ -131,6 +131,7 @@ const mocks = [
     result: {
       data: {
         deleteReview: {
+          id: mockMonsterId,
           reviews: [],
         },
       },

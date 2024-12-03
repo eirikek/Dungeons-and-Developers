@@ -24,6 +24,7 @@
   },
   "include": [
     "cypress",
-    "src"
+    "src",
+    "tests"
   ]
 }

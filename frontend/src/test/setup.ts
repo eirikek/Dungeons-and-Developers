@@ -5,6 +5,7 @@ import { afterEach } from 'vitest';
 afterEach(() => {
   cleanup();
 });
+vi.mock('react-blurhash');
 
 class IntersectionObserver {
   observe = vi.fn();

@@ -76,6 +76,7 @@ export default function SortDropdown({ selectedSort, onSortChange }: SortDropdow
               <FiX
                 className="h-8 w-8 text-white hover:text-customRed cursor-pointer"
                 onClick={() => setIsDropdownOpen(false)}
+                aria-label="close"
               />
             </div>
             <ul>
