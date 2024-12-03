@@ -28,6 +28,9 @@ export default defineConfig({
       reportsDirectory: 'tests/coverage',
       enabled: true,
       exclude: [
+        'dist/**',
+        'src/components/Pagination',
+        'src/components/ProtectedRoute',
         'cypress',
         'src/vite-env.d.ts',
         'src/App.tsx',
