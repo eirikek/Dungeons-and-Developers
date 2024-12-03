@@ -47,8 +47,7 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
+    if (e.key === 'Enter' && e.shiftKey) {
       e.stopPropagation();
       setIsModalOpen(true);
     }

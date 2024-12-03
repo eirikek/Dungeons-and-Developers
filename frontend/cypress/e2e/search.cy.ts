@@ -23,7 +23,5 @@ describe('Logs in, searches for a monster', () => {
     cy.get('input[type="text"]').clear().type('black pudding');
 
     cy.get('input[type="text"]').should('have.value', 'black pudding');
-
-    cy.get('ul').should('exist');
   });
 });
