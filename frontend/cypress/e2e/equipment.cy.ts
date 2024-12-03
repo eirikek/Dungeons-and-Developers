@@ -1,4 +1,4 @@
-describe('Logs in, searches for a monster and adds black dragon to dungeon, filters on undead and adds Whight to dungeon', () => {
+describe('Chooses some equipment using the searchbar, after collecting the items removes them from inventory', () => {
   beforeEach(() => {
     cy.viewport(1280, 720);
   });

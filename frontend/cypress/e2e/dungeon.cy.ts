@@ -1,9 +1,9 @@
-describe('Logs in, searches for a monster, checks sorting works', () => {
+describe('Logs in, searches for a monster and adds black dragon to dungeon, filters on undead and adds Whight to dungeon', () => {
   beforeEach(() => {
     cy.viewport(1280, 720);
   });
 
-  it('Logs in and searches for "young red dragon", then "black pudding"', () => {
+  it('Logs in', () => {
     cy.visit('http://localhost:5173/');
 
     cy.get('input#log-in-input').type('Cypress test user');
@@ -29,10 +29,8 @@ describe('Logs in, searches for a monster, checks sorting works', () => {
 
     cy.wait(1000);
 
-    // Select the "construct" filter checkbox
     cy.contains('label', 'undead').find('input[type="checkbox"]').check({ force: true });
 
-    // Return from filtermenu
     cy.get('[aria-label="close"]').click();
 
     cy.wait(1000);

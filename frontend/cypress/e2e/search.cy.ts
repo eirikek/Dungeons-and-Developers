@@ -1,4 +1,4 @@
-describe('Logs in, searches for a monster, checks sorting works', () => {
+describe('Logs in, searches for a monster', () => {
   beforeEach(() => {
     cy.viewport(1280, 720);
   });

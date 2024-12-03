@@ -3,7 +3,7 @@ describe('Logs in, filters a monster, checks sorting works', () => {
     cy.viewport(1280, 720);
   });
 
-  it('Logs in and applies "construct" filter', () => {
+  it('Logs in and sorts on all different categories', () => {
     cy.visit('http://localhost:5173/');
     cy.get('input#log-in-input').type('Cypress test user');
     cy.get('button').first().should('exist').should('have.text', 'Log in').click();

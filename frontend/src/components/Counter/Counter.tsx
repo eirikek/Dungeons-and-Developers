@@ -33,6 +33,7 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
     if (changeTimer.current) {
       clearInterval(changeTimer.current);
       changeTimer.current = null;
+      setIsKeyDown(false);
       onPointerUp?.();
       onMouseUp?.();
       onValueFinalized?.(localValue);
