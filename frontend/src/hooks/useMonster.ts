@@ -32,7 +32,7 @@ function useMonster(
 
   const { data: typeCountsData } = useQuery(GET_MONSTER_TYPE_COUNTS, {
     variables: { minHp, maxHp },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
   });
 
   const monsterCounts = useMemo(() => {
