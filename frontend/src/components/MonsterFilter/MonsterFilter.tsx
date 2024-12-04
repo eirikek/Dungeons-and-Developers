@@ -148,14 +148,20 @@ export default function MonsterFilter({
           <div className="flex gap-3 items-center justify-between">
             <button
               onClick={handleClearFilters}
-              className=" transition-all hover:text-customRed sub-header outline-none"
+              className="transition-colors hover:text-customRed sub-header focus:outline-none focus-visible:ring-2 focus-visible:ring-customRed"
             >
               Clear Filters
             </button>
             <FiX
-              className="h-8 w-8 text-white hover:text-customRed cursor-pointer"
+              className="h-8 w-8 text-white hover:text-customRed cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-customRed"
               onClick={toggleDropdown}
+              tabIndex={0}
               aria-label="Close"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  toggleDropdown();
+                }
+              }}
             />
           </div>
           <Box>

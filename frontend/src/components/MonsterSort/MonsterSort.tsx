@@ -76,9 +76,15 @@ export default function SortDropdown({ selectedSort, onSortChange }: SortDropdow
             <div className="flex justify-end p-2">
               <FiX
                 aria-label="close-button"
-                className="h-8 w-8 text-white hover:text-customRed cursor-pointer"
+                className="h-8 w-8 text-white hover:text-customRed cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-customRed"
                 onClick={() => setIsDropdownOpen(false)}
                 onBlur={() => setIsDropdownOpen(false)}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setIsDropdownOpen(false);
+                  }
+                }}
               />
             </div>
             <ul>
