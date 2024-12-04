@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
-import { dungeonMonstersVar } from '../../context/DungeonContext';
 import MonsterCard from '../MonsterCard/MonsterCard';
 import type { MonsterCardProps } from '../../interfaces/MonsterCardProps';
 import { useReactiveVar } from '@apollo/client';
+import { dungeonMonstersVar } from '../../utils/dungeonMostersVar.ts';
 
 interface MonsterGridProps {
   monsters?: MonsterCardProps[];
