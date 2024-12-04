@@ -162,7 +162,7 @@ export default function MonsterFilter({
           </div>
           <h2 className="text bold mb-2 xs:text-xs sm:text-sm md:text-md lg:text-lg xl:text-xl">Type:</h2>
           <div className="grid grid-cols-2 gap-x-8 sm:gap-8 sm:grid-cols-2 xl:grid-cols-3">
-            {monsterTypes.map((option) => {
+            {[...new Set([...monsterTypes, ...Array.from(selectedFilters)])].map((option) => {
               const count = monsterCounts[option] || 0;
               const isDisabled = count === 0 && !selectedFilters.has(option);
 
@@ -181,7 +181,7 @@ export default function MonsterFilter({
                     disabled={isDisabled}
                   />
                   <span className="xs:text-xs sm:text-sm md:text-md lg:text-lg xl:text-xl">
-                    {option} {count > 0 && `(${count})`}
+                    {option} ({count})
                   </span>
                 </label>
               );
