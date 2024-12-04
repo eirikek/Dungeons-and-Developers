@@ -140,10 +140,9 @@ export default function MonsterFilter({
       </button>
       {isDropdownOpen && (
         <div
-          className="absolute bg-customGray shadow-xl shadow-black p-8 rounded mt-2 min-w-[30vw] w-max z-50 min-h-fit
-        xl:top-1/2 xl:left-2 xl:transform xl:-translate-x-2 xl:-translate-y-2
-        left-1/2 transform -translate-x-1/2 space-y-6"
-          style={{ maxHeight: '80vh', overflowY: 'auto' }}
+          className="absolute bg-customGray shadow-xl shadow-black p-8 rounded min-w-[30vw] w-max z-50 min-h-fit
+        xl:top-1/2 xl:left-2 xl:transform xl:-translate-x-2 xl:-translate-y-[-22px]
+        left-1/2 transform -translate-x-1/2 "
         >
           <div className="flex gap-3 items-center justify-between">
             <button
@@ -165,7 +164,7 @@ export default function MonsterFilter({
             />
           </div>
           <Box>
-            <h2 className="text bold">Hit Points:</h2>
+            <h2 className="text bold mt-2">Hit Points:</h2>
             <Slider
               value={hpRange}
               onChange={handleSliderChange}
@@ -183,8 +182,8 @@ export default function MonsterFilter({
               <span className="xs:text-xs sm:text-sm md:text-md lg:text-lg xl:text-xl">max: {hpRange[1]}</span>
             </Box>
           </Box>
-          <h2 className="text bold mb-2">Type:</h2>
-          <div className="grid grid-cols-1 gap-x-8 gap-8 md:grid-cols-2 xl:grid-cols-3">
+          <h2 className="text bold mt-4">Type:</h2>
+          <div className="grid grid-cols-1 gap-x-8 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {[...new Set([...monsterTypes, ...Array.from(selectedFilters)])].map((option) => {
               const count = monsterCounts[option] || 0;
               const isDisabled = count === 0 && !selectedFilters.has(option);

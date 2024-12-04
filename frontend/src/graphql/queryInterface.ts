@@ -7,10 +7,6 @@ export interface UserFavorites {
   };
 }
 
-export interface UserFavoritesVars {
-  userId: string;
-}
-
 export interface AddFavoriteResponse {
   addFavoriteMonster: {
     id: string;
@@ -47,19 +43,6 @@ export interface UserRace {
       alignment: string;
       size: string;
       img: string;
-    };
-  };
-}
-
-export interface UserAbilities {
-  user: {
-    id: string;
-    abilityScores: {
-      ability: {
-        id: string;
-        name: string;
-      };
-      score: number;
     };
   };
 }

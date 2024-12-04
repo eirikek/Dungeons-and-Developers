@@ -19,6 +19,31 @@ interface DungeonProviderProps {
   userId: string;
 }
 
+/**
+ * DungeonContext and DungeonProvider
+ *
+ * Provides context and functionality for managing a user's dungeon monsters.
+ *
+ * Features:
+ * - Adds and removes monsters from the user's dungeon.
+ * - Ensures a maximum of 6 monsters can be added to the dungeon.
+ * - Tracks whether a monster is currently in the dungeon.
+ * - Supports undo functionality for monster removal.
+ * - Handles errors and provides user feedback via toast notifications.
+ *
+ * Dependencies:
+ * - `useToast` for showing toast notifications.
+ * - `useDungeon` for managing favorite monsters.
+ * - `useReactiveVar` for tracking dungeon state in Apollo Client.
+ * - `handleError` for handling and logging errors.
+ *
+ * Context:
+ * - `DungeonContext`: Provides the dungeon's state and actions to child components.
+ *
+ * Props:
+ * - `DungeonProviderProps`: Includes child components and the current user's ID.
+ */
+
 export const DungeonContext = createContext<DungeonContextType>({
   dungeonMonsters: [],
   toggleDungeon: () => {},
