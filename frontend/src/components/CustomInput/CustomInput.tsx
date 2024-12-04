@@ -110,7 +110,7 @@ const CustomInput = ({ placeholder, inputName, value, onSave }: InputProps) => {
               onChange={handleChange}
               onBlur={handleBlur}
               autoFocus
-              className="border-none rounded-lg outline-none focus:outline-none focus:ring-2 focus:ring-red-500 bg-transparent w-[65vw] lg:w-fit lg:p-y-5 text-xl sm:text-2xl md:text-2xl lg:text-4xl text-center"
+              className="border-none rounded-lg outline-none focus:outline-none focus:ring-2 focus:ring-red-500 bg-transparent w-[65vw] lg:w-fit lg:p-y-5 header text-center"
             />
           </>
         ) : (

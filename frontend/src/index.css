@@ -3,26 +3,26 @@
 
 /* Local Bold font */
 @font-face {
-  font-family: 'MedievalSharpLocal';
-  src: url('./assets/fonts/MedievalSharp-Bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
+    font-family: 'MedievalSharpLocal';
+    src: url('./assets/fonts/MedievalSharp-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
 }
 
 /* Local Italic font */
 @font-face {
-  font-family: 'MedievalSharpLocal';
-  src: url('./assets/fonts/MedievalSharp-BookOblique.ttf') format('truetype');
-  font-weight: normal;
-  font-style: italic;
+    font-family: 'MedievalSharpLocal';
+    src: url('./assets/fonts/MedievalSharp-BookOblique.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
 }
 
 /* Local Bold Italic font */
 @font-face {
-  font-family: 'MedievalSharpLocal';
-  src: url('./assets/fonts/MedievalSharp-BoldOblique.ttf') format('truetype');
-  font-weight: bold;
-  font-style: italic;
+    font-family: 'MedievalSharpLocal';
+    src: url('./assets/fonts/MedievalSharp-BoldOblique.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
 }
 
 @tailwind base;
@@ -30,114 +30,118 @@
 @tailwind utilities;
 
 html {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
 }
 
 body {
-  font-family: 'MedievalSharp', 'sans-serif';
-  color: white;
-  background-color: #000000;
+    font-family: 'MedievalSharp', 'sans-serif';
+    color: white;
+    background-color: #000000;
 }
 
 .bold {
-  font-family: 'MedievalSharpLocal', 'sans-serif';
-  font-weight: bold;
+    font-family: 'MedievalSharpLocal', 'sans-serif';
+    font-weight: bold;
 }
 
 .italic {
-  font-family: 'MedievalSharpLocal', 'sans-serif';
-  font-style: italic;
+    font-family: 'MedievalSharpLocal', 'sans-serif';
+    font-style: italic;
 }
 
 .bold-italic {
-  font-family: 'MedievalSharpLocal', 'sans-serif';
-  font-weight: bold;
-  font-style: italic;
+    font-family: 'MedievalSharpLocal', 'sans-serif';
+    font-weight: bold;
+    font-style: italic;
 }
 
 .header {
-  @apply text-2xl sm:text-3xl md:text-5xl lg:text-5xl leading-10 xl:leading-10 text-white;
+    @apply text-3xl md:text-4xl xl:text-5xl leading-10  text-white;
 }
 
 .sub-header {
-  @apply text-xl sm:text-lg md:text-xl lg:text-2xl xl:text-2xl leading-8 xl:leading-10 text-white;
+    @apply text-xl sm:text-lg md:text-xl xl:text-2xl leading-8 xl:leading-10 text-white;
 }
 
 .text {
-  @apply text-xs sm:text-base md:text-lg lg:text-xl leading-8 xl:leading-10 text-white;
+    @apply sm:text-base md:text-lg lg:text-xl leading-10 xl:leading-10 text-white;
+}
+
+.pagination {
+    @apply text-lg xs:text-xl sm:text-2xl text-white;
 }
 
 .main {
-  @apply relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-cover before:bg-center before:z-0;
-  background-color: #1c1c1c;
-  background-image: url('https://www.transparenttextures.com/patterns/shley-tree-2.png');
+    @apply relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-cover before:bg-center before:z-0;
+    background-color: #1c1c1c;
+    background-image: url('https://www.transparenttextures.com/patterns/shley-tree-2.png');
 }
 
 .wrapper {
-  @apply flex flex-col text-white min-h-[calc(100vh-100px)] z-10 justify-between items-center;
+    @apply flex flex-col text-white min-h-[calc(100vh-100px)] z-10 justify-between items-center;
 }
 
 .black-overlay {
-  @apply absolute inset-0 w-full h-full bg-black;
+    @apply absolute inset-0 w-full h-full bg-black;
 }
 
 .force-black-overlay {
-  display: block !important;
+    display: block !important;
 }
 
 @media (max-width: 1024px) {
-  .black-overlay {
-    display: none;
-  }
+    .black-overlay {
+        display: none;
+    }
 }
 
 .arrow-button {
-  @apply text-4xl lg:text-3xl xl:text-4xl text-white hover:text-gray-400;
+    @apply text-4xl lg:text-3xl xl:text-4xl text-white hover:text-gray-400;
 }
 
 body.accessibility-mode {
-  background-color: #000000 !important;
-  color: #ffffff !important;
-  font-family: 'Helvetica Neue', Arial, sans-serif !important;
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    font-family: 'Helvetica Neue', Arial, sans-serif !important;
 }
 
 body.accessibility-mode .black-overlay {
-  @apply opacity-100;
+    @apply opacity-100;
 }
 
 body.accessibility-mode main {
-  background-color: black !important;
-  background-image: none !important;
+    background-color: black !important;
+    background-image: none !important;
 }
 
 body.accessibility-mode .card {
-  border-radius: 0 !important;
-  border: 2px solid white !important;
+    border-radius: 0 !important;
+    border: 2px solid white !important;
 }
 
 body.accessibility-mode .monster-card div {
-  gap: 0 !important;
-  flex-direction: column;
-  text-align: center;
+    gap: 0 !important;
+    flex-direction: column;
+    text-align: center;
 }
 
 body.accessibility-mode .monster-card {
-  @apply h-[33vh];
+    @apply h-[33vh];
 }
 
 body.accessibility-mode .monster-image {
-  display: none !important;
+    display: none !important;
 }
 
 body.accessibility-mode .monster-text-button {
-  @apply text-xs sm:text-base md:text-lg lg:text-xl text-white bg-customRed border-2 p-1 border-white hover:bg-accessibilityBackground mt-4;
+    @apply text-xs sm:text-base md:text-lg lg:text-xl text-white bg-customRed border-2 p-1 border-white hover:bg-accessibilityBackground mt-4;
 }
 
 body.accessibility-mode .review-button {
-  @apply text-xs sm:text-base md:text-lg lg:text-xl text-white bg-customRed border-2 rounded-none w-full p-1 border-white hover:bg-accessibilityBackground mt-4;
+    @apply text-xs sm:text-base md:text-lg lg:text-xl text-white bg-customRed border-2 rounded-none w-full p-1 border-white hover:bg-accessibilityBackground mt-4;
 }
 
 body.accessibility-mode h1,
@@ -148,28 +152,28 @@ body.accessibility-mode .text,
 body.accessibility-mode .bold,
 body.accessibility-mode .header,
 body.accessibility-mode .sub-header {
-  /* font-size: 1.5rem !important; */
-  font-family: Arial, sans-serif !important;
+    /* font-size: 1.5rem !important; */
+    font-family: Arial, sans-serif !important;
 }
 
 body.accessibility-mode button,
 body.accessibility-mode a {
-  font-weight: bold;
-  color: #ffffff !important;
-  font-family: Arial, sans-serif !important;
+    font-weight: bold;
+    color: #ffffff !important;
+    font-family: Arial, sans-serif !important;
 }
 
 body.accessibility-mode a:focus,
 body.accessibility-mode button:focus {
-  outline: 3px solid;
+    outline: 3px solid;
 }
 
 body.accessibility-mode .arrow-button,
 body.accessibility-mode a {
-  color: #ffcc00;
+    color: #ffcc00;
 }
 
 body.accessibility-mode .arrow-button:hover,
 body.accessibility-mode a:hover {
-  text-decoration: none;
+    text-decoration: none;
 }

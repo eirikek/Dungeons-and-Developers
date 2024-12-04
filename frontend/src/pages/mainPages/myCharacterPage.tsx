@@ -174,8 +174,10 @@ const MyCharacterPage = () => {
       <main className="main xl:before:bg-myCharacter">
         <div className="black-overlay opacity-80" />
         <div className="wrapper w-full py-[15vh] gap-32">
-          <h1 className="header">{userName ? `${userName}'s Character` : 'My Character'}</h1>
-          <TutorialModal />
+          <div className="flex justify-center items-center gap-6 flex-col">
+            <h1 className="header">{userName ? `${userName}'s Character` : 'My Character'}</h1>
+            <TutorialModal />
+          </div>
           {raceLoading || classLoading || abilityScoresLoading || equipmentsLoading ? (
             <div className="flex justify-center items-center h-[70vh]">
               <LoadingHourglass />
@@ -185,7 +187,7 @@ const MyCharacterPage = () => {
               {/* Race Section */}
               <section className="w-full flex flex-col lg:flex-row justify-between">
                 <article className="w-full xl:w-1/2 flex flex-col items-center">
-                  <h2 className="header">Race:</h2>
+                  <h2 className="header mb-4">Race:</h2>
                   <div className="flex items-center">
                     <button className="arrow-button" onClick={() => handleChange('race', 'prev')}>
                       <FaChevronLeft />
@@ -213,7 +215,7 @@ const MyCharacterPage = () => {
 
                 {/* Class Section */}
                 <article className="w-full xl:w-1/2 flex flex-col items-center mt-[10vh] lg:mt-0">
-                  <h2 className="header">Class:</h2>
+                  <h2 className="header mb-4">Class:</h2>
                   <div className="flex items-center gap-4">
                     <button className="arrow-button" onClick={() => handleChange('class', 'prev')}>
                       <FaChevronLeft />
@@ -270,7 +272,7 @@ const MyCharacterPage = () => {
                   )}
                   {currentEquipments.map((equipment, index) => (
                     <li key={index} className="flex items-center gap-2 ">
-                      <p className="text">{equipment.name}</p>
+                      <p className="sub-header">{equipment.name}</p>
                       <FaTrash
                         size={30}
                         className="delete-icon text-white cursor-pointer hover:text-customRed transition-colors"

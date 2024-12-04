@@ -57,11 +57,11 @@ export default function SortDropdown({ selectedSort, onSortChange }: SortDropdow
 
   return (
     <div className="relative flex items-center" ref={dropdownRef}>
-      <label className="mr-4 whitespace-nowrap text ">Sort By:</label>
+      <label className="mr-4 whitespace-nowrap sub-header">Sort By:</label>
       <div className="relative">
         <button
           onClick={() => setIsDropdownOpen((prev) => !prev)}
-          className="px-1 rounded-lg border-2 bg-customRed text hover:bg-transparent border-customRed hover:text-customRed transition-colors duration-200 flex items-center justify-between min-w-48 lg:min-w-60 "
+          className="px-1 rounded-lg border-2 bg-customRed sub-header text-nowrap hover:bg-transparent border-customRed hover:text-customRed transition-colors duration-200 flex items-center justify-between min-w-48 lg:min-w-60 "
           onKeyDown={handleKeyDown}
         >
           {sortOptions.find((option) => option.value === selectedSort)?.label || 'Select'}

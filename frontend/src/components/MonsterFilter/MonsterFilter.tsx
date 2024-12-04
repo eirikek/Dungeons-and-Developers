@@ -128,29 +128,27 @@ export default function MonsterFilter({
     <div className="relative text-white" ref={dropdownRef}>
       <button
         onClick={toggleDropdown}
-        className={`text px-1 rounded-md border-2 transition-colors duration-200  ${
+        className={`sub-header px-1 rounded-md border-2 transition-colors duration-200 text-nowrap ${
           searchTerm
-            ? 'bg-customGray text-gray-500 border-gray-500 cursor-not-allowed' // Disabled styling when searchTerm is active
+            ? 'bg-customGray text-gray-500 border-gray-500 cursor-not-allowed'
             : 'bg-customRed hover:bg-transparent border-customRed hover:border-customRed hover:text-customRed'
         }`}
-        style={{ pointerEvents: searchTerm ? 'auto' : 'initial' }} // Allows click for toast when disabled
+        style={{ pointerEvents: searchTerm ? 'auto' : 'initial' }}
       >
         Filter Monsters
         <FaChevronDown className="inline ml-3" />
       </button>
       {isDropdownOpen && (
         <div
-          className="absolute bg-customGray shadow-xl shadow-black p-8 rounded mt-2 min-w-[30vw] w-max z-50
-        max-xs:min-w-[90vw] max-xs:p-4
-        xs:min-w-[80vw] sm:min-w-[60vw] md:min-w-[50vw] lg:min-w-[40vw] xl:min-w-[30vw]
+          className="absolute bg-customGray shadow-xl shadow-black p-8 rounded mt-2 min-w-[30vw] w-max z-50 min-h-fit
         xl:top-1/2 xl:left-2 xl:transform xl:-translate-x-2 xl:-translate-y-2
         left-1/2 transform -translate-x-1/2 space-y-6"
           style={{ maxHeight: '80vh', overflowY: 'auto' }}
         >
-          <div className="flex gap-3 items-center">
+          <div className="flex gap-3 items-center justify-between">
             <button
               onClick={handleClearFilters}
-              className="underline transition-all hover:text-customRed text outline-none"
+              className=" transition-all hover:text-customRed sub-header outline-none"
             >
               Clear Filters
             </button>
@@ -160,35 +158,8 @@ export default function MonsterFilter({
               aria-label="Close"
             />
           </div>
-          <h2 className="text bold mb-2 xs:text-xs sm:text-sm md:text-md lg:text-lg xl:text-xl">Type:</h2>
-          <div className="grid grid-cols-2 gap-x-8 sm:gap-8 sm:grid-cols-2 xl:grid-cols-3">
-            {[...new Set([...monsterTypes, ...Array.from(selectedFilters)])].map((option) => {
-              const count = monsterCounts[option] || 0;
-              const isDisabled = count === 0 && !selectedFilters.has(option);
-
-              return (
-                <label
-                  key={option}
-                  className={`flex items-center gap-x-6 ${isDisabled ? 'text-gray-500' : ''}
-  xs:text-lg sm:text-lg md:text-xl lg:text-2xl`}
-                  style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
-                >
-                  <CustomCheckbox
-                    key={`${option}-${selectedFilters.has(option)}`}
-                    checked={selectedFilters.has(option)}
-                    onChange={() => handleCheckboxChange(option)}
-                    scale={0.8}
-                    disabled={isDisabled}
-                  />
-                  <span className="xs:text-xs sm:text-sm md:text-md lg:text-lg xl:text-xl">
-                    {option} ({count})
-                  </span>
-                </label>
-              );
-            })}
-          </div>
           <Box>
-            <h2 className="text bold xs:text-xs sm:text-sm md:text-md lg:text-lg xl:text-xl">Hit Points:</h2>
+            <h2 className="text bold">Hit Points:</h2>
             <Slider
               value={hpRange}
               onChange={handleSliderChange}
@@ -206,6 +177,32 @@ export default function MonsterFilter({
               <span className="xs:text-xs sm:text-sm md:text-md lg:text-lg xl:text-xl">max: {hpRange[1]}</span>
             </Box>
           </Box>
+          <h2 className="text bold mb-2">Type:</h2>
+          <div className="grid grid-cols-1 gap-x-8 gap-8 md:grid-cols-2 xl:grid-cols-3">
+            {[...new Set([...monsterTypes, ...Array.from(selectedFilters)])].map((option) => {
+              const count = monsterCounts[option] || 0;
+              const isDisabled = count === 0 && !selectedFilters.has(option);
+
+              return (
+                <label
+                  key={option}
+                  className={`flex items-center gap-x-6 text ${isDisabled ? 'text-gray-500' : ''}`}
+                  style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
+                >
+                  <CustomCheckbox
+                    key={`${option}-${selectedFilters.has(option)}`}
+                    checked={selectedFilters.has(option)}
+                    onChange={() => handleCheckboxChange(option)}
+                    scale={0.8}
+                    disabled={isDisabled}
+                  />
+                  <span className="text">
+                    {option} ({count})
+                  </span>
+                </label>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>

@@ -9,10 +9,10 @@ interface PaginationProps {
 const Pagination = ({ currentPage, onPageChange, totalPages }: PaginationProps) => {
   return (
     <section className="w-full flex justify-center items-center py-4">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 md:gap-4">
         {/* Previous button - invisible when on the first page */}
         <button
-          className={`flex items-center text ${currentPage === 1 ? 'invisible' : 'hover:text-gray-400'}`}
+          className={`flex items-center pagination ${currentPage === 1 ? 'invisible' : 'hover:text-gray-400'}`}
           onClick={() => onPageChange(-1)}
           disabled={currentPage === 1}
           aria-label="navigate previous"
@@ -22,13 +22,13 @@ const Pagination = ({ currentPage, onPageChange, totalPages }: PaginationProps) 
         </button>
 
         {/* Current page and total pages */}
-        <span className="text">
+        <span className="pagination">
           {currentPage} / {totalPages}
         </span>
 
         {/* Next button - invisible when on the last page */}
         <button
-          className={`flex items-center text ${currentPage === totalPages ? 'invisible' : 'hover:text-gray-400'}`}
+          className={`flex items-center pagination ${currentPage === totalPages ? 'invisible' : 'hover:text-gray-400'}`}
           onClick={() => onPageChange(1)}
           disabled={currentPage === totalPages}
           aria-label="navigate next"

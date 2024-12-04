@@ -217,7 +217,7 @@ export default function MonsterPage() {
       <main className="main xl:before:bg-monsters xl:h-screen xl:overflow-hidden">
         <div className="black-overlay opacity-40" />
 
-        <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start mb-6">
+        <section className="wrapper py-10 w-[90%] mt-[5vh] !justify-start">
           <div className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row'}>
             <MonsterFilter
               selectedFilters={selectedFilters}

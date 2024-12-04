@@ -24,9 +24,6 @@ const TutorialModal = () => {
       <IconButton
         onClick={handleClickOpen}
         sx={{
-          position: 'absolute',
-          top: { xs: '3.5%', sm: '3.5%', md: '3.5%', lg: '5%', xl: '5%' },
-          right: '5%',
           color: 'white',
           backgroundColor: '#DB3232',
           '&:hover': {
