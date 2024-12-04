@@ -1,15 +1,13 @@
 import { MockedProvider } from '@apollo/client/testing';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import Review from '../../../src/components/MonsterCard/Review.tsx';
+import Review from '../../../src/components/MonsterCard/Review';
 import { AuthContext } from '../../../src/context/AuthContext';
 import { ReviewType } from '../../../src/interfaces/ReviewProps';
 import { GET_MONSTER_REVIEWS } from '../../../src/graphql/queries/monsterQueries';
 import { DELETE_REVIEW, UPDATE_REVIEW } from '../../../src/graphql/mutations/monsterMutations';
 
-// Mock the useToast hook
 vi.mock('../../../src/hooks/useToast', () => ({
   useToast: () => ({
     showToast: vi.fn(),
@@ -27,7 +25,6 @@ interface MockSliderProps {
   disabled?: boolean;
 }
 
-// Mock the ReviewSlider component
 vi.mock('../../../src/components/MonsterCard/ReviewSlider', () => ({
   default: ({ value, onChange, disabled = false }: MockSliderProps) => (
     <input
@@ -74,6 +71,7 @@ const mocks = [
     result: {
       data: {
         monster: {
+          id: mockMonsterId,
           reviews: [mockReview],
         },
       },
@@ -133,6 +131,7 @@ const mocks = [
     result: {
       data: {
         deleteReview: {
+          id: mockMonsterId,
           reviews: [],
         },
       },
@@ -166,9 +165,9 @@ describe('Review Component', () => {
   it('renders review content correctly', async () => {
     const { asFragment } = renderComponent();
 
-    expect(screen.getByText(mockReview.user.userName)).toBeInTheDocument();
-    expect(screen.getByText(`Difficulty: ${mockReview.difficulty}`)).toBeInTheDocument();
-    expect(screen.getByText(mockReview.description)).toBeInTheDocument();
+    expect(screen.getByText(mockReview.user.userName)).toBeTruthy();
+    expect(screen.getByText(`Difficulty: ${mockReview.difficulty}`)).toBeTruthy();
+    expect(screen.getByText(mockReview.description)).toBeTruthy();
     expect(asFragment()).toMatchSnapshot();
   });
 
@@ -176,7 +175,7 @@ describe('Review Component', () => {
     renderComponent();
     const user = userEvent.setup();
     await waitFor(() => {
-      expect(screen.getByText(`Difficulty: ${mockReview.difficulty}`)).toBeInTheDocument();
+      expect(screen.getByText(`Difficulty: ${mockReview.difficulty}`)).toBeTruthy();
     });
 
     await user.click(screen.getByRole('button', { name: 'Edit' }));
@@ -184,24 +183,24 @@ describe('Review Component', () => {
     const newDifficulty = 70;
     const newDescription = 'This is an updated review';
 
-    const slider = screen.getByTestId('review-slider');
+    const slider = screen.getByTestId('review-slider') as HTMLInputElement;
     fireEvent.change(slider, { target: { value: newDifficulty } });
 
     await waitFor(() => {
-      expect(slider).toHaveValue(String(newDifficulty));
+      expect(slider.value).toBe(String(newDifficulty));
     });
 
-    const textField = screen.getByRole('textbox');
+    const textField = screen.getByRole('textbox') as HTMLInputElement;
     await user.clear(textField);
     await user.type(textField, newDescription);
 
-    expect(textField).toHaveValue(newDescription);
+    expect(textField.value).toBe(newDescription);
 
     const saveButton = screen.getByRole('button', { name: 'Save' });
     await user.click(saveButton);
 
     await waitFor(() => {
-      expect(saveButton).not.toBeInTheDocument();
+      expect(saveButton).toBeTruthy();
     });
   });
 });

@@ -1,21 +1,61 @@
 import { useQuery } from '@apollo/client';
 import { hourglass } from 'ldrs';
 import debounce from 'lodash/debounce';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import MonsterFilter from '../../components/MonsterFilter/MonsterFilter.tsx';
 import MonsterSort from '../../components/MonsterSort/MonsterSort.tsx';
 import Pagination from '../../components/Pagination/Pagination';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 
+import { IconButton } from '@mui/material';
+import { MdCancel } from 'react-icons/md';
 import MonsterGrid from '../../components/Dungeon/MonsterGrid.tsx';
 import { GET_MONSTER_HP_RANGE } from '../../graphql/queries/monsterQueries.ts';
 import useMonster from '../../hooks/useMonster.ts';
 import useMonsterSuggestions from '../../hooks/useMonsterSuggestions';
-import { IconButton } from '@mui/material';
-import { MdCancel } from 'react-icons/md';
 
 const monstersPerPage = 8;
+
+/**
+ * MonsterPage Component
+ *
+ * A comprehensive monster browsing interface that provides advanced filtering,
+ * searching, and sorting capabilities.
+ *
+ * Features:
+ * - Monster filtering by HP range and custom selections
+ * - Debounced search with auto-suggestions
+ * - Customizable sorting (name, HP, etc.)
+ * - Paginated results (8 monsters per page)
+ * - Persistent state using sessionStorage
+ *
+ * State Management:
+ * - searchTerm: Current search input
+ * - selectedFilters: Set of active filter options
+ * - hpFilterMin/Max: HP range filter values
+ * - sortOption: Current sort preference
+ * - currentPage: Active page number
+ *
+ * Performance Optimizations:
+ * - Debounced search (300ms delay)
+ * - Memoized handlers
+ * - Lazy loading with loading states
+ *
+ * Error Handling:
+ * - Displays error messages for failed data fetches
+ * - Graceful fallback for no results
+ *
+ * Persistence:
+ * All filter states and search preferences are preserved in sessionStorage:
+ * - searchTerm
+ * - selectedFilters
+ * - hpFilterMin/Max
+ * - sortOption
+ * - currentPage
+ *
+ * @returns Rendered monsterpage
+ */
 
 export default function MonsterPage() {
   const [searchTerm, setSearchTerm] = useState<string>(() => sessionStorage.getItem('searchTerm') || '');
@@ -77,7 +117,7 @@ export default function MonsterPage() {
     }
   }, [hpRangeData, hpRangeLoading]);
 
-  const { monsters, totalMonsters, minHp, maxHp, monsterCounts, loading, error } = useMonster(
+  const { monsters, totalMonsters, minHp, maxHp, monsterCounts, monsterTypes, loading, error } = useMonster(
     debouncedSearchTerm,
     currentPage,
     monstersPerPage,
@@ -184,6 +224,7 @@ export default function MonsterPage() {
               setSelectedFilters={setSelectedFilters}
               onHpChange={debouncedHandleHpChange}
               onClearFilters={clearFilters}
+              monsterTypes={monsterTypes}
               monsterCounts={monsterCounts}
               setCurrentPage={setCurrentPage}
               searchTerm={searchTerm}
@@ -234,7 +275,7 @@ export default function MonsterPage() {
                 <>
                   <MonsterGrid monsters={monsters} isDungeonPage={false} />
                   {totalMonsters > monstersPerPage && (
-                    <div className="relative xl:sticky bottom-0 ">
+                    <div className="relative xl:sticky bottom-0">
                       <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
                     </div>
                   )}

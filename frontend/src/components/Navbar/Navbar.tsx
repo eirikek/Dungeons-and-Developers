@@ -5,6 +5,8 @@ import { FaChevronDown } from 'react-icons/fa';
 import logo from '../../assets/images/logo.svg';
 import CustomButton from '../CustomButton/CustomButton.tsx';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Accessibility from '../AccessibilityToggle/AccessibilityToggle.tsx';
+import { useAccessibility } from '../../context/AccessibilityContext.tsx';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,16 +14,17 @@ const Navbar = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
   const [isDropdownHovered, setIsDropdownHovered] = useState(false);
+  const { isAccessibilityMode } = useAccessibility();
 
   const navigate = useNavigate();
   const location = useLocation();
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prevState) => !prevState);
   };
 
   const toggleMobileDropdown = () => {
-    setIsMobileDropdownOpen(!isMobileDropdownOpen);
+    setIsMobileDropdownOpen((prevState) => !prevState);
   };
 
   const handleLogout = () => {
@@ -117,6 +120,9 @@ const Navbar = () => {
             <Link to={'/home'}>
               <img src={logo} alt="Dungeons & Developers logo" className="w-[3vw] xl:block hidden shadow-none" />
             </Link>
+
+            <Accessibility checked={isAccessibilityMode} />
+
             <section className="flex justify-between 4xl:w-3/5 w-3/5 ">
               <CustomButton
                 text={'Monsters'}
@@ -130,6 +136,8 @@ const Navbar = () => {
                 className="relative"
                 onMouseEnter={() => setIsDropdownHovered(true)}
                 onMouseLeave={() => setIsDropdownHovered(false)}
+                onFocus={() => setIsDropdownHovered(true)}
+                onBlur={() => setIsDropdownHovered(false)}
               >
                 <CustomButton
                   text={'My character'}
@@ -144,7 +152,7 @@ const Navbar = () => {
 
                 {/* Dropdown menu */}
                 <div
-                  className={`absolute left-1/2 transform -translate-x-1/2 w-[18vw] bg-customRed rounded overflow-hidden duration-300 ease-in-out max-h-0 ${
+                  className={`absolute left-1/2 transform -translate-x-1/2 min-w-60 w-[18vw] bg-customRed rounded overflow-hidden duration-300 ease-in-out max-h-0 ${
                     isDropdownHovered ? 'max-h-96 opacity-100' : 'opacity-0'
                   }`}
                 >
@@ -183,13 +191,15 @@ const Navbar = () => {
 
       {/* Slide-in Menu for small screens */}
       <div
-        className={`fixed top-0 right-0 h-full max-w-full w-64 sm:w-72 bg-customRed text-white transition-transform transform ${
+        className={`fixed top-0 right-0 h-full w-64 sm:w-72 bg-customRed text-white transition-transform transform ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         } xl:hidden pl-4 pt-10 z-50`}
       >
-        <button onClick={toggleMenu} className="absolute top-4 right-10 text-[2rem]">
+        {/* Close button for the slide-in menu */}
+        <button onClick={toggleMenu} className="absolute top-4 right-10 text-[2rem]" aria-label="Close menu">
           <FiX />
         </button>
+
         <ul className="mt-16 space-y-10">
           <li>
             <CustomButton
@@ -209,6 +219,7 @@ const Navbar = () => {
               isActive={location.pathname === '/dungeon'}
             />
           </li>
+
           <li>
             <div className="space-y-2">
               <div className="flex">
@@ -218,18 +229,18 @@ const Navbar = () => {
                   className="sub-header"
                   noUnderline={true}
                   isActive={location.pathname.startsWith('/mycharacter')}
+                  onFocus={() => setIsMobileDropdownOpen(true)}
+                  onBlur={() => setIsMobileDropdownOpen(false)}
                 />
                 <FaChevronDown
                   onClick={toggleMobileDropdown}
-                  className={`transition-transform duration-300 ml-11 size-6 ${
-                    isMobileDropdownOpen ? 'rotate-180' : 'rotate-0'
-                  }`}
+                  className={`transition-transform duration-300 ml-11 size-6 ${isMobileDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
                 />
               </div>
 
               <div
                 className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                  isMobileDropdownOpen ? 'max-h-[60vw] opacity-100' : 'max-h-0 opacity-0'
+                  isMobileDropdownOpen ? 'max-h-[80vw] opacity-100' : 'max-h-0 opacity-0'
                 }`}
               >
                 <ul className="space-y-2 pl-4">
@@ -240,6 +251,7 @@ const Navbar = () => {
                       className="px-4 py-2 sub-header"
                       noUnderline={true}
                       isActive={location.pathname === '/race'}
+                      onFocus={() => setIsMobileDropdownOpen(true)}
                     />
                   </li>
                   <li>
@@ -249,6 +261,7 @@ const Navbar = () => {
                       className="px-4 py-2 sub-header"
                       noUnderline={true}
                       isActive={location.pathname === '/class'}
+                      onFocus={() => setIsMobileDropdownOpen(true)}
                     />
                   </li>
                   <li>
@@ -258,6 +271,7 @@ const Navbar = () => {
                       className="px-4 py-2 sub-header"
                       noUnderline={true}
                       isActive={location.pathname === '/abilityscore'}
+                      onFocus={() => setIsMobileDropdownOpen(true)}
                     />
                   </li>
                   <li>
@@ -267,6 +281,8 @@ const Navbar = () => {
                       className="px-4 py-2 sub-header"
                       noUnderline={true}
                       isActive={location.pathname === '/equipment'}
+                      onFocus={() => setIsMobileDropdownOpen(true)}
+                      onBlur={() => setIsMobileDropdownOpen(false)}
                     />
                   </li>
                 </ul>
@@ -274,6 +290,7 @@ const Navbar = () => {
             </div>
           </li>
 
+          {/* Log out button */}
           <li>
             <CustomButton
               text={'Log out'}
@@ -284,6 +301,11 @@ const Navbar = () => {
             >
               <IoIosLogOut className="ml-2" />
             </CustomButton>
+          </li>
+
+          {/* Accessibility toggle */}
+          <li>
+            <Accessibility checked={isAccessibilityMode} />
           </li>
         </ul>
       </div>

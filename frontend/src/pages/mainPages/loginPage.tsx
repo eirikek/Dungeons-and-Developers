@@ -1,12 +1,16 @@
-import { useState, useEffect, useContext } from 'react';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useContext, useEffect, useState } from 'react';
+import Accessibility from '../../components/AccessibilityToggle/AccessibilityToggle.tsx';
 import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
-import { useMutation, useLazyQuery } from '@apollo/client';
 import { AuthContext } from '../../context/AuthContext.tsx';
-import { useToast } from '../../hooks/useToast.ts';
 import { CREATE_USER, LOGIN_USER } from '../../graphql/mutations/userMutations.ts';
 import { CHECK_USERNAME } from '../../graphql/queries/userQueries.ts';
+import Accessibility from '../../components/AccessibilityToggle/AccessibilityToggle.tsx';
+import { useAccessibility } from '../../context/AccessibilityContext.tsx';
+import { useToast } from '../../hooks/useToast.ts';
+
 
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',
@@ -36,6 +40,23 @@ const formVariants = {
   }),
 };
 
+/**
+ * LoginPage Component
+ *
+ * Handles user authentication with login and registration forms.
+ * - Uses GraphQL mutations to create and log in users.
+ * - Checks username availability with a query.
+ * - Displays motivational quotes that change every 5 seconds.
+ *
+ * Features:
+ * - Animated transitions between forms using framer-motion.
+ * - Toast notifications for errors or success.
+ * - Username availability indicator.
+ *
+ * No props are required as this is rendered directly on the welcome page.
+ *
+ *
+ */
 export default function LoginPage() {
   const { login } = useContext(AuthContext);
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
@@ -47,6 +68,7 @@ export default function LoginPage() {
   const [isUsernameAvailable, setIsUsernameAvailable] = useState<boolean | null>(null);
   const [shakeInput, setShakeInput] = useState(false);
   const { showToast } = useToast();
+  const { isAccessibilityMode } = useAccessibility();
 
   // Change quote every 5 seconds
   useEffect(() => {
@@ -188,7 +210,7 @@ export default function LoginPage() {
   return (
     <MainPageLayout isLoginTransition={true}>
       <main className="relative flex items-center justify-center h-screen overflow-hidden z-0 before:absolute before:inset-0 before:bg-login before:bg-cover before:bg-center before:animate-background-zoom before:z-0">
-        <div className="black-overlay opacity-70"></div>
+        <div className="black-overlay opacity-70 force-black-overlay"></div>
         <section className="w-[90%] h-3/4 relative z-10 flex flex-col items-center justify-center">
           <header className="absolute top-0 w-full">
             <h1
@@ -288,6 +310,9 @@ export default function LoginPage() {
                 )}
               </motion.div>
             </AnimatePresence>
+          </section>
+          <section className="absolute bottom-5 w-full flex justify-center">
+            <Accessibility checked={isAccessibilityMode} />
           </section>
         </section>
       </main>

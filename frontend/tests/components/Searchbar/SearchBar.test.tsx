@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import SearchBar from '../../../src/components/SearchBar/SearchBar.tsx';
-import { expect } from 'vitest';
+import SearchBar from '../../../src/components/SearchBar/SearchBar';
+import { expect, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 describe('Searchbar component', () => {
   const defaultPlaceholder = 'Search for a monster...';
@@ -20,9 +20,9 @@ describe('Searchbar component', () => {
         suggestions={mockSuggestions}
       />
     );
-    const inputElement = screen.getByPlaceholderText(defaultPlaceholder);
-    expect(inputElement).toBeInTheDocument();
-    expect(inputElement).toHaveValue(initialSearchTerm);
+    const inputElement = screen.getByPlaceholderText(defaultPlaceholder) as HTMLInputElement;
+    expect(inputElement).toBeTruthy();
+    expect(inputElement.value).toBe(initialSearchTerm);
   });
 
   it('calls handleSearchChange on input change', async () => {
@@ -57,10 +57,10 @@ describe('Searchbar component', () => {
       );
     };
     render(<WrapperComponent />);
-    const inputElement = screen.getByPlaceholderText(defaultPlaceholder);
+    const inputElement = screen.getByPlaceholderText(defaultPlaceholder) as HTMLInputElement;
 
     await user.type(inputElement, 'Orc');
-    expect(inputElement).toHaveValue('Orc');
+    expect(inputElement.value).toBe('Orc');
   });
   it('renders the search icon', () => {
     const { container } = render(
@@ -72,7 +72,7 @@ describe('Searchbar component', () => {
       />
     );
     const svgElement = container.querySelector('svg');
-    expect(svgElement).toBeInTheDocument();
+    expect(svgElement).toBeTruthy();
   });
   it('matches snapshot', () => {
     const { container } = render(

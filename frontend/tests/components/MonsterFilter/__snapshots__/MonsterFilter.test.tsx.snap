@@ -6,7 +6,8 @@ exports[`MonsterFilter Component > renders correctly and matches snapshot 1`] = 
     class="relative text-white"
   >
     <button
-      class="text px-1 rounded-md bg-customRed hover:bg-transparent border-2 border-customRed hover:border-customRed hover:text-customRed transition-colors duration-200"
+      class="text px-1 rounded-md border-2 transition-colors duration-200 bg-customRed hover:bg-transparent border-customRed hover:border-customRed hover:text-customRed"
+      style="pointer-events: initial;"
     >
       Filter Monsters
       <svg

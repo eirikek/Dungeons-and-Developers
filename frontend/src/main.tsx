@@ -5,25 +5,23 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import client from './client/apollo.ts';
 import ToastProvider from './components/Toast/CustomToast.tsx';
+import { AccessibilityProvider } from './context/AccessibilityContext.tsx';
 import { AuthProvider } from './context/AuthContext.tsx';
-import { CharacterProvider } from './context/CharacterContext.tsx';
-import { DungeonProvider } from './context/DungeonContext.tsx';
 import './index.css';
 
+// initialize React query client
 const queryClient = new QueryClient();
-const userId = localStorage.getItem('userId') || '';
 
 createRoot(document.getElementById('root')!).render(
+  // Provide Apollo Client for GraphQL queries and mutations
   <ApolloProvider client={client}>
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <ToastProvider>
-            <CharacterProvider userId={userId}>
-              <DungeonProvider userId={userId}>
-                <App />
-              </DungeonProvider>
-            </CharacterProvider>
+            <AccessibilityProvider>
+              <App />
+            </AccessibilityProvider>
           </ToastProvider>
         </AuthProvider>
       </QueryClientProvider>

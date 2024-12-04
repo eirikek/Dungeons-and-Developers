@@ -1,26 +1,72 @@
-import { makeVar, useReactiveVar } from '@apollo/client';
+import { useReactiveVar } from '@apollo/client';
 import { useContext, useEffect, useState, useRef } from 'react';
 import { FaChevronLeft, FaChevronRight, FaTrash } from 'react-icons/fa';
 import AbilityCounterWrapper from '../../components/Counter/AbilityScoreCounterWrapper.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout';
 import TutorialModal from '../../components/TutorialModal/TutorialModal';
-import { equipmentsVar } from '../../context/CharacterContext.tsx';
+import { equipmentsVar } from '../../utils/apolloVars.ts';
 import useCharacterContext from '../../hooks/useCharacter';
 import { AuthContext } from '../../context/AuthContext';
 import classImageMapping from '../../utils/classImageMapping';
 import raceImageMapping from '../../utils/raceImageMapping';
-import abilityScoreManagement from '../../utils/abilityScoreManagement.ts';
-import { classVar } from '../subPages/classPage';
-import { raceVar } from '../subPages/racePage.tsx';
+import abilityScoreManagement from '../../hooks/useAbilityScoreManagement.ts';
+import { classVar } from '../../utils/apolloVars.ts';
+import { raceVar } from '../../utils/apolloVars.ts';
 import { useToast } from '../../hooks/useToast.ts';
 import { Equipment } from '../../interfaces/EquipmentProps.ts';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 
-export const abilitiesVar = makeVar<Map<string, number>>(new Map());
+
+/**
+ * MyCharacterPage Component
+ *
+ * A character customization interface that allows users to create and manage their D&D character.
+ *
+ * Features:
+ * - Race selection with image previews and carousel navigation
+ * - Class selection with image previews and carousel navigation
+ * - Ability scores management with counter controls
+ * - Equipment management with remove functionality and undo support
+ *
+ * State Management:
+ * - classIndex/raceIndex: Current position in selection carousel
+ * - imageLoaded states: Handling image loading states
+ * - Reactive variables (Apollo):
+ *   - abilitiesVar: Ability scores map
+ *   - classVar: Selected class
+ *   - raceVar: Selected race
+ *   - equipmentsVar: Character equipment list
+ *
+ * Context Usage:
+ * - AuthContext: User authentication state
+ * - CharacterContext: Character management functions
+ *
+ * Loading States:
+ * - Ability scores loading
+ * - Equipment loading
+ * - Race/Class data loading
+ *
+ * Error Handling:
+ * - Toast notifications for actions
+ * - Error catching for race/class updates
+ * - Loading fallbacks with hourglass animation
+ *
+ * Persistence:
+ * Character data is stored and managed through Apollo Client's reactive variables
+ * and GraphQL mutations (handled in context)
+ *
+ * Layout:
+ * - Responsive grid layout
+ * - Mobile-friendly design with appropriate breakpoints
+ * - Image lazy loading implementation
+ *
+ * @returns  Rendered MyCharacterPage component
+ */
 
 const MyCharacterPage = () => {
   const { userName } = useContext(AuthContext);
   const { showToast } = useToast();
+
   const {
     stateAbilities,
     classes,
@@ -50,6 +96,7 @@ const MyCharacterPage = () => {
   const currentRaceImage = currentRaceData ? raceImageMapping[currentRaceData.index] : '';
 
   const currentEquipments = useReactiveVar(equipmentsVar);
+
   const undoRemoveRef = useRef<Equipment | null>(null);
 
   const handleRemoveEquipment = (equipment: Equipment) => {
@@ -101,6 +148,10 @@ const MyCharacterPage = () => {
       setRaceIndex(selectedIndex >= 0 ? selectedIndex : 0);
     }
   }, [currentRace, races]);
+
+  useEffect(() => {
+    console.log('Updated equipmentsVar:', currentEquipments);
+  }, [currentEquipments]);
 
   const handleChange = async (type: 'race' | 'class', direction: 'next' | 'prev') => {
     const isRace = type === 'race';
@@ -227,6 +278,14 @@ const MyCharacterPage = () => {
                         size={30}
                         className="delete-icon text-white cursor-pointer hover:text-customRed transition-colors"
                         onClick={() => handleRemoveEquipment(equipment)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            handleRemoveEquipment(equipment);
+                          }
+                        }}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="Delete equipment"
                       />
                     </li>
                   ))}

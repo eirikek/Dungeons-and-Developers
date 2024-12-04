@@ -9,7 +9,6 @@ export const raceType = gql`
     alignment: String!
     size: String!
     size_description: String!
-    img: String
   }
 
   type RaceResult {

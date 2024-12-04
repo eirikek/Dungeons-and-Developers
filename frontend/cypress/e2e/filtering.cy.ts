@@ -7,7 +7,7 @@ describe('Logs in, filters a monster, checks filtering works', () => {
   it('Logs in and applies "construct" filter', () => {
     // Log in
     cy.visit('http://localhost:5173/');
-    cy.get('input').type('Cypress test user');
+    cy.get('input#log-in-input').type('Cypress test user');
     cy.get('button').first().should('exist').should('have.text', 'Log in').click();
 
     // Navigate to the monster page

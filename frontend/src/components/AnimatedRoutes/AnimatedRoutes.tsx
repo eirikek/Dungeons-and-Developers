@@ -1,20 +1,23 @@
-import { Route, Routes, useLocation } from 'react-router-dom';
-import LoginPage from '../../pages/mainPages/loginPage.tsx';
-import HomePage from '../../pages/mainPages/homePage.tsx';
-import DungeonPage from '../../pages/mainPages/dungeonPage.tsx';
-import ClassPage from '../../pages/subPages/classPage.tsx';
-import RacePage from '../../pages/subPages/racePage.tsx';
-import AbilityScorePage from '../../pages/subPages/abilityScorePage.tsx';
-import EquipmentPage from '../../pages/subPages/equipmentPage.tsx';
-import MonsterPage from '../../pages/mainPages/monsterPage.tsx';
-import MyCharacterPage from '../../pages/mainPages/myCharacterPage.tsx';
-import NotFoundPage from '../../pages/mainPages/notFoundPage.tsx';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
+import { Outlet, Route, Routes, useLocation } from 'react-router-dom';
+import DungeonPage from '../../pages/mainPages/dungeonPage.tsx';
+import HomePage from '../../pages/mainPages/homePage.tsx';
+import LoginPage from '../../pages/mainPages/loginPage.tsx';
+import MonsterPage from '../../pages/mainPages/monsterPage.tsx';
+import MyCharacterPage from '../../pages/mainPages/myCharacterPage.tsx';
+import AbilityScorePage from '../../pages/subPages/abilityScorePage.tsx';
+import ClassPage from '../../pages/subPages/classPage.tsx';
+import EquipmentPage from '../../pages/subPages/equipmentPage.tsx';
+import RacePage from '../../pages/subPages/racePage.tsx';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute.tsx';
+import { CharacterProvider } from '../../context/CharacterContext.tsx';
+import { DungeonProvider } from '../../context/DungeonContext.tsx';
 
 export default function AnimatedRoutes() {
   const location = useLocation();
+
+  const userId = localStorage.getItem('userId') || '';
 
   // Scroll to the top on route change
   useEffect(() => {
@@ -25,76 +28,53 @@ export default function AnimatedRoutes() {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         {/* Public Route */}
-        <Route path="" element={<LoginPage />} />
+        <Route path="/" element={<LoginPage />} />
 
         {/* Protected Routes */}
         <Route
-          path="/home"
+          path="/*"
           element={
             <ProtectedRoute>
-              <HomePage />
+              <AppRoutes userId={userId} />
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/dungeon"
-          element={
-            <ProtectedRoute>
-              <DungeonPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/class"
-          element={
-            <ProtectedRoute>
-              <ClassPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/race"
-          element={
-            <ProtectedRoute>
-              <RacePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/abilityscore"
-          element={
-            <ProtectedRoute>
-              <AbilityScorePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/equipment"
-          element={
-            <ProtectedRoute>
-              <EquipmentPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/monsters"
-          element={
-            <ProtectedRoute>
-              <MonsterPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/mycharacter"
-          element={
-            <ProtectedRoute>
-              <MyCharacterPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </AnimatePresence>
   );
+
+  function AppRoutes({ userId }: { userId: string }) {
+    return (
+      <Routes>
+        <Route path="/home" element={<HomePage />} />
+
+        {/* Character-related Routes */}
+        <Route
+          element={
+            <CharacterProvider userId={userId}>
+              <Outlet />
+            </CharacterProvider>
+          }
+        >
+          <Route path="/class" element={<ClassPage />} />
+          <Route path="/race" element={<RacePage />} />
+          <Route path="/abilityscore" element={<AbilityScorePage />} />
+          <Route path="/equipment" element={<EquipmentPage />} />
+          <Route path="/mycharacter" element={<MyCharacterPage />} />
+        </Route>
+
+        {/* Dungeon-related Routes */}
+        <Route
+          element={
+            <DungeonProvider userId={userId}>
+              <Outlet />
+            </DungeonProvider>
+          }
+        >
+          <Route path="/monsters" element={<MonsterPage />} />
+          <Route path="/dungeon" element={<DungeonPage />} />
+        </Route>
+      </Routes>
+    );
+  }
 }

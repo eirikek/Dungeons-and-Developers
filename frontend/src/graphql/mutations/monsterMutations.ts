@@ -5,6 +5,7 @@ export const ADD_REVIEW = gql`
     addReview(monsterId: $monsterId, review: $review) {
       id
       reviews {
+        id
         user {
           id
           userName

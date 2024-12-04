@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CiSearch } from 'react-icons/ci';
 
 interface SearchBarProps {
@@ -56,8 +56,10 @@ const SearchBar = ({
         <CiSearch size="25" className="absolute left-3 top-1/2 transform -translate-y-[60%] text-gray-400" />
         <input
           ref={inputRef}
+          id="search-input"
           type="text"
           placeholder={placeholder}
+          maxLength={50}
           value={searchTerm}
           onChange={handleSearchChange}
           onFocus={() => setIsFocused(true)}
@@ -67,7 +69,7 @@ const SearchBar = ({
         />
       </div>
       {isFocused && suggestions.length > 0 && (
-        <ul className="absolute top-full mt-1 w-full bg-customGray shadow-xl shadow-black rounded z-10">
+        <ul className="absolute top-full mt-1 w-full bg-customGray shadow-xl shadow-black rounded z-10 focus: visible">
           {suggestions.map((suggestion, index) => (
             <li
               key={index}

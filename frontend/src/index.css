@@ -84,6 +84,11 @@ body {
     @apply absolute inset-0 w-full h-full bg-black;
 }
 
+
+.force-black-overlay {
+    display: block !important;
+}
+
 @media (max-width: 1024px) {
     .black-overlay {
         display: none;
@@ -92,4 +97,82 @@ body {
 
 .arrow-button {
     @apply text-6xl lg:text-4xl xl:text-3xl text-white hover:text-gray-400;
+}
+
+body.accessibility-mode {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    font-family: 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+body.accessibility-mode .black-overlay {
+    @apply opacity-100;
+}
+
+body.accessibility-mode main {
+    background-color: black !important;
+    background-image: none !important;
+}
+
+body.accessibility-mode .card {
+    border-radius: 0 !important;
+    border: 2px solid white !important;
+}
+
+body.accessibility-mode .monster-card div {
+    gap: 0 !important;
+    flex-direction: column;
+    text-align: center;
+}
+
+body.accessibility-mode .monster-card {
+    @apply h-[33vh]
+}
+
+body.accessibility-mode .monster-image {
+    display: none !important;
+}
+
+body.accessibility-mode .monster-text-button {
+    @apply text-5xl md:text-3xl lg:text-2xl xl:text-xl 2xl:text-lg text-white bg-customRed border-2 p-1 border-white hover:bg-accessibilityBackground mt-4;
+}
+
+body.accessibility-mode .review-button {
+    @apply text-5xl md:text-3xl lg:text-2xl xl:text-xl 2xl:text-lg text-white bg-customRed border-2 rounded-none w-full p-1 border-white hover:bg-accessibilityBackground mt-4;
+}
+
+body.accessibility-mode h1,
+body.accessibility-mode h2,
+body.accessibility-mode h3,
+body.accessibility-mode p,
+body.accessibility-mode .text,
+body.accessibility-mode .bold,
+body.accessibility-mode .header,
+body.accessibility-mode .sub-header {
+    font-size: 1.5rem !important;
+    font-family: Arial, sans-serif !important;
+}
+
+body.accessibility-mode button,
+body.accessibility-mode a {
+    font-weight: bold;
+    color: #ffffff !important;
+    font-family: Arial, sans-serif !important;
+}
+
+
+body.accessibility-mode a:focus,
+body.accessibility-mode button:focus {
+    outline: 3px solid;
+}
+
+
+body.accessibility-mode .arrow-button,
+body.accessibility-mode a {
+    color: #ffcc00;
+}
+
+body.accessibility-mode .arrow-button:hover,
+body.accessibility-mode a:hover {
+    text-decoration: none;
 }

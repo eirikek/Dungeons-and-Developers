@@ -12,7 +12,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173', 'http://localhost:4173'],
     credentials: true,
   })
 );
@@ -35,7 +35,6 @@ mongoose
 
       app.listen(4000, () => {
         console.log('Server is running at http://localhost:4000/graphql');
-
         fetchData()
           .then(() => console.log('Data fetching complete'))
           .catch((error) => console.error('Error fetching data:', error));

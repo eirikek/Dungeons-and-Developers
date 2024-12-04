@@ -1,10 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { expect, vi } from 'vitest';
-import AnimatedRoutes from '../../../src/components/AnimatedRoutes/AnimatedRoutes.tsx';
-import React from 'react';
+import AnimatedRoutes from '../../../src/components/AnimatedRoutes/AnimatedRoutes';
 
-// Mock components
 vi.mock('../../../src/pages/mainPages/loginPage.tsx', () => ({
   default: () => <div>Login Page</div>,
 }));
@@ -55,7 +53,6 @@ vi.mock('../../../src/components/ProtectedRoute/ProtectedRoute.tsx', () => ({
 }));
 describe('AnimatedRoutes', () => {
   beforeAll(() => {
-    // Mock window.scrollTo to prevent jsdom errors
     window.scrollTo = vi.fn();
   });
   it('renders the correct component based on the route', () => {
@@ -75,7 +72,8 @@ describe('AnimatedRoutes', () => {
       </MemoryRouter>
     );
     waitFor(() => {
-      expect(screen.getByText('Log in')).toBeInTheDocument();
+      const loginText = screen.getByText('Log in');
+      expect(loginText).toBeTruthy();
     });
   });
 
@@ -85,7 +83,8 @@ describe('AnimatedRoutes', () => {
         <AnimatedRoutes />
       </MemoryRouter>
     );
-    expect(screen.getByText('Home Page')).toBeInTheDocument();
+    const homeText = screen.getByText('Home Page');
+    expect(homeText).toBeTruthy();
   });
 
   it('renders DungeonPage when the route is /dungeon', () => {
@@ -95,7 +94,8 @@ describe('AnimatedRoutes', () => {
       </MemoryRouter>
     );
     waitFor(() => {
-      expect(screen.getByText('My dungeon')).toBeInTheDocument();
+      const myDungeon = screen.getByText('My dungeon');
+      expect(myDungeon).toBeTruthy();
     });
   });
 
@@ -106,7 +106,8 @@ describe('AnimatedRoutes', () => {
       </MemoryRouter>
     );
     waitFor(() => {
-      expect(screen.getByText('My character')).toBeInTheDocument();
+      const myDungeon = screen.getByText('My character');
+      expect(myDungeon).toBeTruthy();
     });
   });
 
@@ -184,6 +185,7 @@ describe('AnimatedRoutes', () => {
         <AnimatedRoutes />
       </MemoryRouter>
     );
-    expect(screen.getByText('Home Page')).toBeInTheDocument();
+    const homeText = screen.getByText('Home Page');
+    expect(homeText).toBeTruthy();
   });
 });

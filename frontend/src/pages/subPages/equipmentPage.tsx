@@ -13,7 +13,9 @@ import { useMediaQuery } from 'react-responsive';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 import useCharacterContext from '../../hooks/useCharacter.ts';
 import { useReactiveVar } from '@apollo/client';
-import { equipmentsVar } from '../../context/CharacterContext.tsx';
+import { equipmentsVar } from '../../utils/apolloVars.ts';
+import { useLocation } from 'react-router-dom';
+import { handleError } from '../../utils/handleError.ts';
 
 const variants = {
   enter: (direction: number) => ({
@@ -30,34 +32,84 @@ const variants = {
   }),
 };
 
+/**
+ * EquipmentPage Component
+ *
+ * A comprehensive equipment management page for D&D character creation.
+ *
+ * Features:
+ * - Equipment search with auto-suggestions
+ * - Paginated equipment grid display
+ * - Add/remove equipment functionality with undo support
+ * - Inventory limit management (max 10 items)
+ * - Responsive layout with mobile/desktop variants
+ * - Animated transitions between pages
+ *
+ * State Management:
+ * - Search term persistence using sessionStorage
+ * - Equipment state through Apollo reactive variables
+ * - Pagination state with session persistence
+ * - Loading states for async operations
+ *
+ * Component Structure:
+ * - MainPageLayout wrapper
+ * - SearchBar with suggestions
+ * - Animated equipment grid
+ * - Pagination controls
+ * - Toast notifications for user feedback
+ *
+ * User Interactions:
+ * - Search equipment with debounced input
+ * - Add/remove individual items
+ * - Remove all equipment with undo option
+ * - Navigate paginated results
+ * - Mobile-responsive view switching
+ *
+ * Loading States:
+ * - Loading indicator during data fetch
+ * - No results message for empty searches
+ * - Disabled states for inventory limits
+ *
+ * @returns Rendered EquipmentPage component
+ */
+
 const EquipmentPage = () => {
   const isMobileOrTablet = useMediaQuery({ maxWidth: 1024 });
 
-  const currentEquipments = useReactiveVar(equipmentsVar);
+  const currentUserEquipments = useReactiveVar(equipmentsVar);
 
   const { addToEquipments, removeFromEquipments, removeAllEquipments } = useCharacterContext();
 
   const { showToast } = useToast();
 
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   const undoRemoveRef = useRef<Equipment | Equipment[] | null>(null);
+
   const [searchTerm, setSearchTerm] = useState<string>(sessionStorage.getItem('equipmentSearchTerm') || '');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>(
     sessionStorage.getItem('equipmentSearchTerm') || ''
   );
+
   const [direction, setDirection] = useState(1);
   const [currentPage, setCurrentPage] = useState<number>(
     parseInt(sessionStorage.getItem('equipmentCurrentPage') || '1', 10)
   );
+
   const equipmentsPerPage = 20;
   const maxEquipments = 10;
+
   const { suggestions: equipmentSuggestions } = useEquipmentSuggestions(searchTerm);
   const [noResults, setNoResults] = useState(false);
+
+  const shouldFetchEquipments = currentPath.includes('/equipment') || currentPath.includes('/mycharacter');
 
   const {
     equipments: fetchedEquipments,
     totalEquipments: fetchedTotalEquipments,
     loading,
-  } = useEquipments(debouncedSearchTerm, currentPage, equipmentsPerPage);
+  } = useEquipments(debouncedSearchTerm, currentPage, equipmentsPerPage, shouldFetchEquipments);
 
   const [equipments, setEquipments] = useState<Equipment[]>(fetchedEquipments);
 
@@ -120,7 +172,7 @@ const EquipmentPage = () => {
     if (undoRemoveRef.current && !Array.isArray(undoRemoveRef.current)) {
       const equipment = undoRemoveRef.current;
       undoRemoveRef.current = null;
-      equipmentsVar([...equipmentsVar(), equipment]);
+      //equipmentsVar([...equipmentsVar(), equipment]);
 
       addToEquipments(equipment);
       showToast({
@@ -135,23 +187,27 @@ const EquipmentPage = () => {
     if (undoRemoveRef.current && Array.isArray(undoRemoveRef.current)) {
       const equipmentsToRestore = undoRemoveRef.current;
       undoRemoveRef.current = null;
+      try {
+        await Promise.all(equipmentsToRestore.map((equipment) => addToEquipments(equipment)));
 
-      equipmentsVar([...equipmentsVar(), ...equipmentsToRestore]);
+        const updatedEquipments = [...equipmentsVar(), ...equipmentsToRestore];
+        equipmentsVar(updatedEquipments);
 
-      await Promise.all(equipmentsToRestore.map((equipment) => addToEquipments(equipment)));
-
-      showToast({
-        message: 'All equipments restored',
-        type: 'success',
-        duration: 3000,
-      });
+        showToast({
+          message: 'All equipments restored',
+          type: 'success',
+          duration: 3000,
+        });
+      } catch (error) {
+        handleError(error, 'Error adding back equipment', 'critical', showToast);
+      }
     }
   };
 
   const handleEquipmentChange = async (checked: boolean, equipment: Equipment) => {
     try {
       if (checked) {
-        if (currentEquipments.length >= maxEquipments) {
+        if (currentUserEquipments.length >= maxEquipments) {
           showToast({
             message: 'Cannot add any more items, inventory is full',
             type: 'warning',
@@ -182,8 +238,8 @@ const EquipmentPage = () => {
   };
 
   const handleRemoveAllEquipments = async () => {
-    if (currentEquipments.length === 0) return;
-    undoRemoveRef.current = [...currentEquipments];
+    if (currentUserEquipments.length === 0) return;
+    undoRemoveRef.current = [...currentUserEquipments];
 
     try {
       removeAllEquipments();
@@ -284,8 +340,8 @@ const EquipmentPage = () => {
               ) : (
                 <div className="grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 gap-10 p-10 w-full h-full min-h-[40vh] auto-rows-fr">
                   {equipments.map((equipment, index) => {
-                    const isChecked = currentEquipments.some((userEquip) => userEquip.id === equipment.id);
-                    const isDisabled = currentEquipments.length >= maxEquipments && !isChecked;
+                    const isChecked = currentUserEquipments.some((userEquip) => userEquip.id === equipment.id);
+                    const isDisabled = currentUserEquipments.length >= maxEquipments && !isChecked;
 
                     return (
                       <EquipmentCard
@@ -319,8 +375,8 @@ const EquipmentPage = () => {
                   transition={{ duration: 0.3 }}
                 >
                   {equipments.map((equipment, index) => {
-                    const isChecked = currentEquipments.some((userEquip) => userEquip.id === equipment.id);
-                    const isDisabled = currentEquipments.length >= maxEquipments && !isChecked;
+                    const isChecked = currentUserEquipments.some((userEquip) => userEquip.id === equipment.id);
+                    const isDisabled = currentUserEquipments.length >= maxEquipments && !isChecked;
 
                     return (
                       <EquipmentCard
