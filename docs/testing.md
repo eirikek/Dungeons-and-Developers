@@ -1,8 +1,43 @@
-## Testing Strategy & Coverage Report
+# Testing
+
+## How to run tests
+
+### E2E testing
+
+For E2E testing we have used Cypress to simulate different user stories. We have made;
+
+- **Login.cy**: Tests login, searching, and user interaction with data
+- **Filtering.cy**: tests login and filtering.
+
+To run the E2E tests you need a running frontend and backend, be in the frontend folder and run:
+
+```bash
+  npx cypress open
+```
+
+This should open a Cypress desktop where you need to navigate to E2E testing.
+From here you can select the tests and watch as they are ran in a virtual desktop!
+
+### Component testing
+
+We have also made several component testing in the _tests_ folder in our frontend folder. These are to make sure the component
+renders correctly, and behaves as expected during interactions.
+
+We have used _AuthContext_ and _AuthProvider_.
+
+We have made sure to use _MockedProvider_ to mock requests, and the components are tested for correct data handling from GraphQL-requests
+
+#### Running the tests
+
+Be in the frontend folder, and you can run:
+
+```bash
+  npm test
+```
 
 This document outlines the testing strategy employed for our project, detailing the rationale behind our choices, the tools used, and the achieved test coverage.
 
-### Why We Test
+## Why We Test
 
 Thorough testing is crucial to ensure the reliability, maintainability, and correctness of our application. It helps us catch bugs early in the development cycle, catch edge-cases, and provides confidence in the codebase's stability.
 
