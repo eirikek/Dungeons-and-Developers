@@ -268,14 +268,14 @@ export default function MonsterPage() {
               <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
             </div>
           ) : (
-            <section className="flex flex-col items-center w-full xl:h-screen justify-between">
+            <section className="flex flex-col items-center w-full xl:h-screen justify-between pb-20">
               {error ? (
                 <p>An error occurred while loading monsters. {error.message}</p>
               ) : monsters.length > 0 ? (
                 <>
                   <MonsterGrid monsters={monsters} isDungeonPage={false} />
                   {totalMonsters > monstersPerPage && (
-                    <div className="relative xl:sticky bottom-0">
+                    <div className="mt-6 w-full flex justify-center relative xl:sticky bottom-0">
                       <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
                     </div>
                   )}
