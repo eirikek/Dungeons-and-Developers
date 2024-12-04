@@ -18,7 +18,7 @@ const SubMenu = () => {
         onMouseEnter={() => setHoveredButton('/race')}
         onMouseLeave={() => setHoveredButton(null)}
       >
-        <Button text="Race" linkTo="/race" noUnderline={true} className="header w-full justify-center" />
+        <Button text="Race" linkTo="/race" noUnderline={true} className="sub-menu w-full justify-center" />
       </div>
       <div className="h-14 w-0.5 bg-customRed"></div>
 
@@ -30,7 +30,7 @@ const SubMenu = () => {
         onMouseEnter={() => setHoveredButton('/class')}
         onMouseLeave={() => setHoveredButton(null)}
       >
-        <Button text="Class" linkTo="/class" noUnderline={true} className="header w-full justify-center" />
+        <Button text="Class" linkTo="/class" noUnderline={true} className="sub-menu w-full justify-center" />
       </div>
       <div className="h-14 w-0.5 bg-customRed"></div>
 
@@ -46,7 +46,7 @@ const SubMenu = () => {
           text="Ability scores"
           linkTo="/abilityscore"
           noUnderline={true}
-          className="header w-full justify-center"
+          className="sub-menu w-full justify-center"
         />
       </div>
     </section>

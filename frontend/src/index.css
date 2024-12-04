@@ -74,6 +74,10 @@ body {
     @apply text-lg xs:text-xl sm:text-2xl text-white;
 }
 
+.sub-menu {
+    @apply text-3xl xl:text-2xl 2xl:text-3xl 3xl:text-4xl text-white;
+}
+
 .main {
     @apply relative flex flex-col items-center justify-center min-h-screen w-full z-0 before:absolute before:inset-0 before:bg-cover before:bg-center before:z-0;
     background-color: #1c1c1c;
