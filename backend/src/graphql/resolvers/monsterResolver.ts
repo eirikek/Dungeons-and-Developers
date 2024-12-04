@@ -43,6 +43,14 @@ interface MonsterTypeCountsArgs {
 
 export default {
   Query: {
+    /**
+     * Fetches a list of monsters with optional filters and sorting.
+     *
+     * @param _
+     * @param args - Query arguments to filter, paginate, and sort monsters.
+     * @returns A list of monsters, the total count, and hit point range.
+     * @throws Error if database queries fail.
+     */
     async monsters(
       _: any,
       {
@@ -231,6 +239,14 @@ export default {
       return { monsters: formattedMonsters || [], totalMonsters, minHp: minHpValue, maxHp: maxHpValue };
     },
 
+    /**
+     * Fetches a single monster by its ID, including populated reviews.
+     *
+     * @param _ -
+     * @param args - Arguments containing the monster ID.
+     * @returns A monster object with formatted reviews.
+     * @throws Error if the monster is not found.
+     */
     async monster(_: any, { id }: MonsterArgs) {
       const monster = await Monster.findById(id).populate({
         path: 'reviews.user',
@@ -288,6 +304,15 @@ export default {
       return 'Data fetched and stored successfully!';
     },
 
+    /**
+     * Adds a review to a specific monster.
+     *
+     * @param _
+     * @param args - Arguments containing the monster ID and the review to add.
+     * @returns The updated monster with the new review populated.
+     * @throws Error if the monster or user is not found.
+     */
+
     async addReview(_: any, { monsterId, review }: { monsterId: string; review: ReviewInput }) {
       const monster = await Monster.findById(monsterId);
       if (!monster) throw new Error('Monster not found');
@@ -311,6 +336,15 @@ export default {
       });
     },
 
+    /**
+     * Deletes a review from a specific monster.
+     *
+     * @param _
+     * @param args - Arguments containing the monster ID and review ID.
+     * @returns The updated monster without the deleted review.
+     * @throws Error if the monster or review is not found.
+     */
+
     async deleteReview(_: any, { monsterId, reviewId }: { monsterId: string; reviewId: string }) {
       const monster = await Monster.findById(monsterId);
       if (!monster) throw new Error('Monster not found');
@@ -326,6 +360,15 @@ export default {
         select: 'id userName',
       });
     },
+
+    /**
+     * Updates an existing review for a specific monster.
+     *
+     * @param _
+     * @param args - Arguments containing the monster ID, review ID, and new review data.
+     * @returns The updated review object.
+     * @throws Error if the monster or review is not found.
+     */
 
     async updateReview(
       _: any,
