@@ -6,7 +6,6 @@ import useCharacterContext from '../../hooks/useCharacter.ts';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 import { raceVar } from '../../utils/apolloVars.ts';
 
-
 /**
  * RacePage Component
  *

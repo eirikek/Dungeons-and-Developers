@@ -11,7 +11,6 @@ import Accessibility from '../../components/AccessibilityToggle/AccessibilityTog
 import { useAccessibility } from '../../context/AccessibilityContext.tsx';
 import { useToast } from '../../hooks/useToast.ts';
 
-
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',
   'Roll the dice and forge your destiny.',

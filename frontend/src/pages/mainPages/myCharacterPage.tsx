@@ -16,7 +16,6 @@ import { useToast } from '../../hooks/useToast.ts';
 import { Equipment } from '../../interfaces/EquipmentProps.ts';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 
-
 /**
  * MyCharacterPage Component
  *
