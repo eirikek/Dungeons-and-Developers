@@ -18,7 +18,6 @@ import { raceVar } from '../utils/apolloVars.ts';
 import { ArrayScores, ArrayVar, UserClass, UserRace } from '../graphql/queryInterface.ts';
 import { UserNotFound } from '../utils/UserNotFound.ts';
 import { handleError } from '../utils/handleError.ts';
-//import { equipmentsVar } from '../utils/apolloVars.ts';
 
 interface CharacterContextType {
   stateAbilities: AbilityScoreCardProps[];
@@ -45,6 +44,45 @@ interface CharacterProviderProps {
   children: ReactNode;
   userId: string;
 }
+
+/**
+ * CharacterContext
+ *
+ * Provides a context for managing character-related data and state in the application, including:
+ * - Ability scores, classes, races, and equipment.
+ * - Operations to update and manage the user's character details.
+ * - Loading states for asynchronous operations such as fetching or updating data.
+ *
+ * Features:
+ * - Integrates GraphQL queries and mutations for fetching and updating character data.
+ * - Uses Apollo Client's reactive variables for caching and state management.
+ * - Exposes utility functions for modifying character-related data (e.g., ability scores, class, race, and equipment).
+ * - Handles error reporting using a custom `handleError` utility.
+ *
+ * Components:
+ * - `CharacterContext`: Context object for accessing and updating character-related data.
+ * - `CharacterProvider`: Provider component that supplies the context to its children.
+ *
+ * Context Value:
+ * - `stateAbilities`: List of ability scores with names and values.
+ * - `userAbilityScores`: A `Map` of the user's ability scores.
+ * - `updateAbilityScores(newValue: number, updatedAbilityName: string)`: Updates a specific ability score.
+ * - `classes`: List of available character classes.
+ * - `updateClass(classId: string)`: Updates the user's selected class.
+ * - `races`: List of available character races.
+ * - `updateRace(raceId: string)`: Updates the user's selected race.
+ * - `addToEquipments(equipment: Equipment)`: Adds an equipment item to the user's inventory.
+ * - `removeFromEquipments(equipment: Equipment)`: Removes an equipment item from the user's inventory.
+ * - `removeAllEquipments()`: Clears all equipment items from the user's inventory.
+ * - `loadingStates`: Object containing boolean flags for loading states of various operations.
+ *
+ * Props:
+ * - `CharacterProviderProps`: Requires `children` to wrap in the provider and `userId` for fetching data.
+ *
+ * Usage:
+ * - Application root wrapped with `<CharacterProvider>` to provide context.
+ * - Access the context using `useContext(CharacterContext)` in child components.
+ */
 
 export const CharacterContext = createContext<CharacterContextType>({
   stateAbilities: [],
