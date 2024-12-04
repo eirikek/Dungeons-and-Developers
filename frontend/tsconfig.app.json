@@ -22,9 +22,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": [
-    "cypress",
-    "src",
-    "tests"
-  ]
+  "include": ["cypress", "src", "tests"]
 }

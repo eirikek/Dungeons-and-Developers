@@ -9,11 +9,7 @@ interface AppProvidersProps {
 const AppProviders = ({ children }: AppProvidersProps) => {
   const { userId } = useContext(AuthContext);
 
-  return (
-    <DungeonProvider userId={userId || ''}>
-      {children}
-    </DungeonProvider>
-  );
+  return <DungeonProvider userId={userId || ''}>{children}</DungeonProvider>;
 };
 
 export default AppProviders;
