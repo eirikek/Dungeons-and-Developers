@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
+import { formatDocument } from '../../utils/formatDocument.ts';
+import AbilityScore from '../model/AbilityScore.js';
 import Class from '../model/Class.js';
 import Race from '../model/Race.js';
 import User from '../model/User.ts';
-import AbilityScore from '../model/AbilityScore.js';
-import { formatDocument } from '../../utils/formatDocument.ts';
 
 const SECRET_KEY = process.env.SECRET_KEY || 'secret_key';
 

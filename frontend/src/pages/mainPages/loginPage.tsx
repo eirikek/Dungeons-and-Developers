@@ -1,7 +1,7 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useContext, useEffect, useState } from 'react';
-import Accessibility from '../../components/AccessibilityToggle/AccessibilityToggle.tsx';
+import { default as Accessibility } from '../../components/AccessibilityToggle/AccessibilityToggle.tsx';
 import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { AuthContext } from '../../context/AuthContext.tsx';

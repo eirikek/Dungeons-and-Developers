@@ -37,8 +37,8 @@ async function fetchMonsters() {
           const imageUrl = `${githubImageUrl}/${monsterDetails.data.index.toLowerCase().replace(/ /g, '_')}.webp`;
 
           const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-          const webpImage = await sharp(imageResponse.data).webp({ quality: 80 }).toBuffer();
-          base64Image = webpImage.toString('base64');
+          const avifImage = await sharp(imageResponse.data).avif({ quality: 80, effort: 6 }).toBuffer();
+          base64Image = avifImage.toString('base64');
         } catch (error) {
           console.error(`Failed to process image for ${monsterDetails.data.name}:`, error);
           base64Image = null;

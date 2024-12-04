@@ -32,7 +32,7 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
   const monsterImageURL = image
     ? image.startsWith('data:image')
       ? image
-      : `data:image/webp;base64,${image}`
+      : `data:image/avif;base64,${image}`
     : NoMonsterImageFound;
 
   const handleToggleDungeon = () => {
