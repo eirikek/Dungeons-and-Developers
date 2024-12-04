@@ -244,7 +244,7 @@ export const CharacterProvider = ({ children, userId }: CharacterProviderProps) 
         handleError(error, 'Failed to update ability scores', 'critical', showToast);
       }
     },
-    [checkUser, updateAbilityScoresMutation]
+    [checkUser, updateAbilityScoresMutation, showToast, userId]
   );
 
   const updateClass = async (classId: string) => {
