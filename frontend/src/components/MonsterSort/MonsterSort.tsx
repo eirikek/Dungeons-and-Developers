@@ -45,12 +45,13 @@ export default function SortDropdown({ selectedSort, onSortChange }: SortDropdow
       setFocusedIndex((prev) => (prev === null ? 0 : Math.max(prev - 1, 0)));
     } else if (event.key === 'Enter' && focusedIndex !== null) {
       handleSortChange(sortOptions[focusedIndex].value);
+      setIsDropdownOpen(false);
     }
   };
 
   useEffect(() => {
     if (isDropdownOpen) {
-      setFocusedIndex(0);
+      setFocusedIndex(null);
     }
   }, [isDropdownOpen]);
 
