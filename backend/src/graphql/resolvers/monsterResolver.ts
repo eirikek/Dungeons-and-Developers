@@ -75,6 +75,7 @@ export default {
         query.name = { $regex: new RegExp(`^${searchTerm}`, 'i') };
         return Monster.find(query, 'id name').limit(limit);
       }
+      const hasReviewsForCount = await Monster.exists({ ...query, 'reviews.0': { $exists: true } });
 
       switch (sortOption) {
         case 'name-asc':
@@ -86,6 +87,11 @@ export default {
         case 'difficulty-asc':
         case 'difficulty-desc':
           const sortDirection = sortOption === 'difficulty-asc' ? 1 : -1;
+
+          if (!hasReviewsForCount) {
+            sort = { name: 1 };
+            break;
+          }
 
           const monstersWithCalculations = await Monster.aggregate([
             { $match: query },
@@ -141,7 +147,10 @@ export default {
           };
 
         case 'reviews-desc':
-          console.log('Sorting by reviews with query:', query);
+          if (!hasReviewsForCount) {
+            sort = { name: 1 };
+            break;
+          }
           const monstersByReviews = await Monster.aggregate([
             { $match: query },
             {
