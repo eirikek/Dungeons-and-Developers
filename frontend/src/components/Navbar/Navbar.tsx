@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { IoIosLogOut } from 'react-icons/io';
-import { FiMenu, FiX } from 'react-icons/fi';
+import { useEffect, useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
-import logo from '../../assets/images/logo.svg';
-import CustomButton from '../CustomButton/CustomButton.tsx';
+import { FiMenu, FiX } from 'react-icons/fi';
+import { IoIosLogOut } from 'react-icons/io';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAccessibility } from '../../../src/hooks/useAccessibility.ts';
+import logo from '../../assets/images/logo.svg';
 import Accessibility from '../AccessibilityToggle/AccessibilityToggle.tsx';
-import { useAccessibility } from '../../context/AccessibilityContext.tsx';
+import CustomButton from '../CustomButton/CustomButton.tsx';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -118,12 +118,12 @@ const Navbar = () => {
           {/* Menu for large screens */}
           <div className="hidden xl:flex justify-between items-center w-11/12">
             <Link to={'/home'}>
-              <img src={logo} alt="Dungeons & Developers logo" className="w-[3vw] xl:block hidden shadow-none" />
+              <img src={logo} alt="Dungeons & Developers logo" className="w-12 xl:block hidden shadow-none" />
             </Link>
 
             <Accessibility checked={isAccessibilityMode} />
 
-            <section className="flex justify-between 4xl:w-3/5 w-3/5 ">
+            <section className="flex justify-between 4xl:w-3/5 w-[65%] ">
               <CustomButton
                 text={'Monsters'}
                 linkTo={'/monsters'}

@@ -181,7 +181,7 @@ export default function MonsterPage() {
 
   const debouncedHandleHpChange = useMemo(() => debounce(handleHpChange, 300), [handleHpChange]);
 
-  const totalPages = loading ? 1 : Math.min(Math.ceil(totalMonsters / monstersPerPage), 10);
+  const totalPages = loading ? 1 : Math.min(Math.ceil(totalMonsters / monstersPerPage), 42);
 
   const handlePageChange = useCallback(
     (direction: number) => {
@@ -217,7 +217,7 @@ export default function MonsterPage() {
       <main className="main xl:before:bg-monsters xl:h-screen xl:overflow-hidden">
         <div className="black-overlay opacity-40" />
 
-        <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start mb-6">
+        <section className="wrapper py-10 w-[90%] mt-[5vh] !justify-start">
           <div className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row'}>
             <MonsterFilter
               selectedFilters={selectedFilters}
@@ -268,14 +268,14 @@ export default function MonsterPage() {
               <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
             </div>
           ) : (
-            <section className="flex flex-col items-center w-full xl:h-screen justify-between">
+            <section className="flex flex-col items-center w-full xl:h-screen justify-between pb-20">
               {error ? (
                 <p>An error occurred while loading monsters. {error.message}</p>
               ) : monsters.length > 0 ? (
                 <>
                   <MonsterGrid monsters={monsters} isDungeonPage={false} />
                   {totalMonsters > monstersPerPage && (
-                    <div className="relative xl:sticky bottom-0">
+                    <div className="mt-6 w-full flex justify-center relative xl:sticky bottom-0">
                       <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
                     </div>
                   )}

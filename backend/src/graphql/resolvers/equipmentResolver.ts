@@ -21,7 +21,7 @@ export default {
         const suggestions = await Equipment.find({ name: { $regex: startsWithRegex } }, 'name')
           .limit(limit)
           .lean();
-        
+
         return {
           equipments: suggestions.map((equipment) => ({
             id: equipment._id,

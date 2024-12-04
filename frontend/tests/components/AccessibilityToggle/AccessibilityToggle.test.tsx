@@ -1,12 +1,12 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi, MockedFunction } from 'vitest';
 import { useLocation } from 'react-router-dom';
-import { useAccessibility } from '../../../src/context/AccessibilityContext.tsx';
+import { describe, expect, it, MockedFunction, vi } from 'vitest';
 import AccessibilityToggle from '../../../src/components/AccessibilityToggle/AccessibilityToggle.tsx';
+import { useAccessibility } from '../../../src/hooks/useAccessibility.ts';
 
 // Mock the AccessibilityContext hook
-vi.mock('../../../src/context/AccessibilityContext.tsx', () => ({
+vi.mock('../../../src/hooks/useAccessibility.ts', () => ({
   useAccessibility: vi.fn(),
 }));
 
@@ -16,10 +16,10 @@ vi.mock('react-router-dom', () => ({
 
 describe('AccessibilityToggle', () => {
   const mockToggleAccessibilityMode = vi.fn();
+  const mockOnChange = vi.fn();
 
   beforeEach(() => {
     vi.resetAllMocks();
-    // Typecast useAccessibility to a mocked function
     (useAccessibility as MockedFunction<typeof useAccessibility>).mockReturnValue({
       isAccessibilityMode: false,
       toggleAccessibilityMode: mockToggleAccessibilityMode,
@@ -34,7 +34,7 @@ describe('AccessibilityToggle', () => {
   });
 
   it('renders correctly and matches snapshot', () => {
-    const { container } = render(<AccessibilityToggle />);
+    const { container } = render(<AccessibilityToggle checked={false} onChange={mockOnChange} />);
     expect(container.firstChild).toMatchSnapshot();
   });
 
@@ -47,21 +47,21 @@ describe('AccessibilityToggle', () => {
       pathname: '/',
     });
 
-    render(<AccessibilityToggle />);
+    render(<AccessibilityToggle checked={false} onChange={mockOnChange} />);
 
     const icon = screen.getByAltText(/accessability icon/i);
     expect(icon).toHaveClass('filter invert');
   });
 
   it('displays the icon without inverted filter on other pages', () => {
-    render(<AccessibilityToggle />);
+    render(<AccessibilityToggle checked={false} onChange={mockOnChange} />);
 
     const icon = screen.getByAltText(/accessability icon/i);
     expect(icon).not.toHaveClass('filter invert');
   });
 
   it('displays the toggle with the correct background color when accessibility mode is off', () => {
-    render(<AccessibilityToggle />);
+    render(<AccessibilityToggle checked={false} onChange={mockOnChange} />);
     const toggle = screen.getByRole('checkbox', { hidden: true }); // `hidden: true` allows us to query hidden inputs
     expect(toggle.nextSibling).toHaveClass('bg-gray-400'); // The span element with the background color
   });
@@ -72,21 +72,23 @@ describe('AccessibilityToggle', () => {
       toggleAccessibilityMode: mockToggleAccessibilityMode,
     });
 
-    render(<AccessibilityToggle />);
+    render(<AccessibilityToggle checked={true} onChange={mockOnChange} />);
     const toggle = screen.getByRole('checkbox', { hidden: true });
     expect(toggle.nextSibling).toHaveClass('bg-[#E4BF36]');
   });
 
-  it('handles toggle switch change', async () => {
-    render(<AccessibilityToggle />);
-    const toggle = screen.getByRole('checkbox', { hidden: true });
+  it('calls the toggleAccessibilityMode and onChange props when the toggle is clicked', async () => {
+    render(<AccessibilityToggle checked={false} onChange={mockOnChange} />);
+    const toggleLabel = screen.getByRole('checkbox', { hidden: true }).parentElement;
 
-    await userEvent.click(toggle);
-    expect(mockToggleAccessibilityMode).toHaveBeenCalledTimes(1);
+    await userEvent.click(toggleLabel!);
+    await waitFor(() => {
+      expect(mockToggleAccessibilityMode).toHaveBeenCalledTimes(1);
+    });
   });
 
   it('displays the toggle knob at the correct position when accessibility mode is off', () => {
-    render(<AccessibilityToggle />);
+    render(<AccessibilityToggle checked={false} onChange={mockOnChange} />);
     const knob = screen.getByRole('checkbox', { hidden: true }).nextSibling?.firstChild;
     expect(knob).not.toHaveClass('translate-x-6');
   });
@@ -97,7 +99,7 @@ describe('AccessibilityToggle', () => {
       toggleAccessibilityMode: mockToggleAccessibilityMode,
     });
 
-    render(<AccessibilityToggle />);
+    render(<AccessibilityToggle checked={true} onChange={mockOnChange} />);
     const knob = screen.getByRole('checkbox', { hidden: true }).nextSibling?.firstChild;
     expect(knob).toHaveClass('translate-x-6');
   });

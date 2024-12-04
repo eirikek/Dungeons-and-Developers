@@ -6,7 +6,7 @@ exports[`SortDropdown Component > renders correctly and matches snapshot 1`] = `
     class="relative flex items-center"
   >
     <label
-      class="mr-4 whitespace-nowrap text"
+      class="mr-4 whitespace-nowrap text "
     >
       Sort By:
     </label>
@@ -14,7 +14,7 @@ exports[`SortDropdown Component > renders correctly and matches snapshot 1`] = `
       class="relative"
     >
       <button
-        class="px-1 rounded-lg border-2 bg-customRed text hover:bg-transparent border-customRed hover:text-customRed transition-colors duration-200 flex items-center justify-between min-w-48 lg:min-w-60"
+        class="px-1 rounded-lg border-2 bg-customRed text hover:bg-transparent border-customRed hover:text-customRed transition-colors duration-200 flex items-center justify-between min-w-48 lg:min-w-60 "
       >
         A-Z
         <svg

@@ -1,9 +1,9 @@
-import ClassCard from '../../components/SubPages/ClassCard.tsx';
-import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 import { useReactiveVar } from '@apollo/client';
+import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
+import ClassCard from '../../components/SubPages/ClassCard.tsx';
 
-import useCharacterContext from '../../hooks/useCharacter.ts';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
+import useCharacterContext from '../../hooks/useCharacter.ts';
 import { classVar } from '../../utils/apolloVars.ts';
 
 /**

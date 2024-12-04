@@ -1,21 +1,18 @@
 import { useReactiveVar } from '@apollo/client';
-import { useContext, useEffect, useState, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { FaChevronLeft, FaChevronRight, FaTrash } from 'react-icons/fa';
 import AbilityCounterWrapper from '../../components/Counter/AbilityScoreCounterWrapper.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout';
+import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 import TutorialModal from '../../components/TutorialModal/TutorialModal';
-import { equipmentsVar } from '../../utils/apolloVars.ts';
-import useCharacterContext from '../../hooks/useCharacter';
 import { AuthContext } from '../../context/AuthContext';
-import classImageMapping from '../../utils/classImageMapping';
-import raceImageMapping from '../../utils/raceImageMapping';
 import abilityScoreManagement from '../../hooks/useAbilityScoreManagement.ts';
-import { classVar } from '../../utils/apolloVars.ts';
-import { raceVar } from '../../utils/apolloVars.ts';
+import useCharacterContext from '../../hooks/useCharacter';
 import { useToast } from '../../hooks/useToast.ts';
 import { Equipment } from '../../interfaces/EquipmentProps.ts';
-import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
-
+import { classVar, equipmentsVar, raceVar } from '../../utils/apolloVars.ts';
+import classImageMapping from '../../utils/classImageMapping';
+import raceImageMapping from '../../utils/raceImageMapping';
 
 /**
  * MyCharacterPage Component
@@ -177,8 +174,10 @@ const MyCharacterPage = () => {
       <main className="main xl:before:bg-myCharacter">
         <div className="black-overlay opacity-80" />
         <div className="wrapper w-full py-[15vh] gap-32">
-          <h1 className="header">{userName ? `${userName}'s Character` : 'My Character'}</h1>
-          <TutorialModal />
+          <div className="flex justify-center items-center gap-6 flex-col">
+            <h1 className="header">{userName ? `${userName}'s Character` : 'My Character'}</h1>
+            <TutorialModal />
+          </div>
           {raceLoading || classLoading || abilityScoresLoading || equipmentsLoading ? (
             <div className="flex justify-center items-center h-[70vh]">
               <LoadingHourglass />
@@ -188,7 +187,7 @@ const MyCharacterPage = () => {
               {/* Race Section */}
               <section className="w-full flex flex-col lg:flex-row justify-between">
                 <article className="w-full xl:w-1/2 flex flex-col items-center">
-                  <h2 className="header">Race:</h2>
+                  <h2 className="header mb-4">Race:</h2>
                   <div className="flex items-center">
                     <button className="arrow-button" onClick={() => handleChange('race', 'prev')}>
                       <FaChevronLeft />
@@ -216,7 +215,7 @@ const MyCharacterPage = () => {
 
                 {/* Class Section */}
                 <article className="w-full xl:w-1/2 flex flex-col items-center mt-[10vh] lg:mt-0">
-                  <h2 className="header">Class:</h2>
+                  <h2 className="header mb-4">Class:</h2>
                   <div className="flex items-center gap-4">
                     <button className="arrow-button" onClick={() => handleChange('class', 'prev')}>
                       <FaChevronLeft />
@@ -272,7 +271,7 @@ const MyCharacterPage = () => {
                     </div>
                   )}
                   {currentEquipments.map((equipment, index) => (
-                    <li key={index} className="flex items-center gap-4">
+                    <li key={index} className="flex items-center gap-2 ">
                       <p className="sub-header">{equipment.name}</p>
                       <FaTrash
                         size={30}

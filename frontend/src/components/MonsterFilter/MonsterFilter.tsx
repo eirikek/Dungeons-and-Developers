@@ -3,9 +3,9 @@ import { Box, Slider } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 import { FiX } from 'react-icons/fi';
-import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
 import { GET_MONSTER_HP_RANGE } from '../../graphql/queries/monsterQueries.ts';
 import { useToast } from '../../hooks/useToast.ts';
+import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
 
 interface MonsterFilterProps {
   selectedFilters: Set<string>;
@@ -34,7 +34,8 @@ export default function MonsterFilter({
   const [hpRange, setHpRange] = useState<number[]>(initialHpRange);
   const [outOfRangeFilters, setOutOfRangeFilters] = useState<Set<string>>(new Set());
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { showToast } = useToast();
+  const toastContext = useToast();
+  const showToast = toastContext ? toastContext.showToast : () => {};
 
   useEffect(() => {
     if (hpRangeData && !hpRangeLoading) {
@@ -127,56 +128,41 @@ export default function MonsterFilter({
     <div className="relative text-white" ref={dropdownRef}>
       <button
         onClick={toggleDropdown}
-        className={`text px-1 rounded-md border-2 transition-colors duration-200 ${
+        className={`sub-header px-1 rounded-md border-2 transition-colors duration-200 text-nowrap ${
           searchTerm
-            ? 'bg-customGray text-gray-500 border-gray-500 cursor-not-allowed' // Disabled styling when searchTerm is active
+            ? 'bg-customGray text-gray-500 border-gray-500 cursor-not-allowed'
             : 'bg-customRed hover:bg-transparent border-customRed hover:border-customRed hover:text-customRed'
         }`}
-        style={{ pointerEvents: searchTerm ? 'auto' : 'initial' }} // Allows click for toast when disabled
+        style={{ pointerEvents: searchTerm ? 'auto' : 'initial' }}
       >
         Filter Monsters
         <FaChevronDown className="inline ml-3" />
       </button>
       {isDropdownOpen && (
-        <div className="absolute left-1/2 transform -translate-x-1/2 bg-customGray shadow-xl shadow-black p-8 rounded mt-2 min-w-[30vw] w-max">
-          <div className="flex justify-between items-center mb-4">
+        <div
+          className="absolute bg-customGray shadow-xl shadow-black p-8 rounded mt-2 min-w-[30vw] w-max z-50 min-h-fit
+        xl:top-1/2 xl:left-2 xl:transform xl:-translate-x-2 xl:-translate-y-2
+        left-1/2 transform -translate-x-1/2 space-y-6"
+          style={{ maxHeight: '80vh', overflowY: 'auto' }}
+        >
+          <div className="flex gap-3 items-center justify-between">
             <button
               onClick={handleClearFilters}
-              className="underline transition-all hover:text-customRed text outline-none"
+              className="transition-colors hover:text-customRed sub-header focus:outline-none focus-visible:ring-2 focus-visible:ring-customRed"
             >
               Clear Filters
             </button>
             <FiX
-              className="h-8 w-8 text-white hover:text-customRed cursor-pointer"
+              className="h-8 w-8 text-white hover:text-customRed cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-customRed"
               onClick={toggleDropdown}
+              tabIndex={0}
               aria-label="Close"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  toggleDropdown();
+                }
+              }}
             />
-          </div>
-          <h2 className="text bold mb-2 ">Type:</h2>
-          <div className="grid grid-cols-2 gap-y-4 gap-x-8 mb-4">
-            {monsterTypes.map((option) => {
-              const count = monsterCounts[option] || 0;
-              const isDisabled = count === 0 && !selectedFilters.has(option);
-
-              return (
-                <label
-                  key={option}
-                  className={`flex items-center gap-5 mb-2 ${isDisabled ? 'text-gray-500' : ''} ${window.innerWidth < 1280 ? 'text' : ''}`}
-                  style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
-                >
-                  <CustomCheckbox
-                    key={`${option}-${selectedFilters.has(option)}`}
-                    checked={selectedFilters.has(option)}
-                    onChange={() => handleCheckboxChange(option)}
-                    scale={0.8}
-                    disabled={isDisabled}
-                  />
-                  <span>
-                    {option} {count > 0 && `(${count})`}
-                  </span>
-                </label>
-              );
-            })}
           </div>
           <Box>
             <h2 className="text bold">Hit Points:</h2>
@@ -193,10 +179,36 @@ export default function MonsterFilter({
               }}
             />
             <Box display="flex" justifyContent="space-between" mt={1}>
-              <span>min: {hpRange[0]}</span>
-              <span>max: {hpRange[1]}</span>
+              <span className="xs:text-xs sm:text-sm md:text-md lg:text-lg xl:text-xl">min: {hpRange[0]}</span>
+              <span className="xs:text-xs sm:text-sm md:text-md lg:text-lg xl:text-xl">max: {hpRange[1]}</span>
             </Box>
           </Box>
+          <h2 className="text bold mb-2">Type:</h2>
+          <div className="grid grid-cols-1 gap-x-8 gap-8 md:grid-cols-2 xl:grid-cols-3">
+            {[...new Set([...monsterTypes, ...Array.from(selectedFilters)])].map((option) => {
+              const count = monsterCounts[option] || 0;
+              const isDisabled = count === 0 && !selectedFilters.has(option);
+
+              return (
+                <label
+                  key={option}
+                  className={`flex items-center gap-x-6 text ${isDisabled ? 'text-gray-500' : ''}`}
+                  style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
+                >
+                  <CustomCheckbox
+                    key={`${option}-${selectedFilters.has(option)}`}
+                    checked={selectedFilters.has(option)}
+                    onChange={() => handleCheckboxChange(option)}
+                    scale={0.8}
+                    disabled={isDisabled}
+                  />
+                  <span className="text">
+                    {option} ({count})
+                  </span>
+                </label>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>

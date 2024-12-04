@@ -1,8 +1,8 @@
-import Monster from '../model/Monsters.ts';
-import User from '../model/User.ts';
+import { Types } from 'mongoose';
 import fetchData from '../../scripts/fetchData.js';
 import { formatDocument } from '../../utils/formatDocument.js';
-import { Types } from 'mongoose';
+import Monster from '../model/Monsters.ts';
+import User from '../model/User.ts';
 
 interface MonsterArgs {
   id: string;
@@ -75,6 +75,7 @@ export default {
         query.name = { $regex: new RegExp(`^${searchTerm}`, 'i') };
         return Monster.find(query, 'id name').limit(limit);
       }
+      const hasReviewsForCount = await Monster.exists({ ...query, 'reviews.0': { $exists: true } });
 
       switch (sortOption) {
         case 'name-asc':
@@ -86,6 +87,11 @@ export default {
         case 'difficulty-asc':
         case 'difficulty-desc':
           const sortDirection = sortOption === 'difficulty-asc' ? 1 : -1;
+
+          if (!hasReviewsForCount) {
+            sort = { name: 1 };
+            break;
+          }
 
           const monstersWithCalculations = await Monster.aggregate([
             { $match: query },
@@ -125,6 +131,7 @@ export default {
           const formattedMonstersByDifficulty = monstersWithCalculations.map((monster) => formatDocument(monster));
 
           const totalMonsters = await Monster.countDocuments(query);
+          console.log(totalMonsters);
           const minHpValue = await Monster.findOne(query)
             .sort({ hit_points: 1 })
             .then((m) => m?.hit_points ?? 1);
@@ -140,7 +147,10 @@ export default {
           };
 
         case 'reviews-desc':
-          console.log('Sorting by reviews with query:', query);
+          if (!hasReviewsForCount) {
+            sort = { name: 1 };
+            break;
+          }
           const monstersByReviews = await Monster.aggregate([
             { $match: query },
             {

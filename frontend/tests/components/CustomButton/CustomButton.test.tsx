@@ -52,7 +52,6 @@ describe('CustomButton', () => {
 
     render(<CustomButton text="Focus Test" onFocus={handleFocus} onBlur={handleBlur} />);
 
-    const button = screen.getByText(/Focus Test/i);
     await userEvent.tab(); // Simulate focus
     expect(handleFocus).toHaveBeenCalledTimes(1);
 
