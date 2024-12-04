@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 import { FiX } from 'react-icons/fi';
 
@@ -56,11 +56,11 @@ export default function SortDropdown({ selectedSort, onSortChange }: SortDropdow
 
   return (
     <div className="relative flex items-center" ref={dropdownRef}>
-      <label className="mr-4 whitespace-nowrap text">Sort By:</label>
+      <label className="mr-4 whitespace-nowrap text ">Sort By:</label>
       <div className="relative">
         <button
           onClick={() => setIsDropdownOpen((prev) => !prev)}
-          className="px-1 rounded-lg border-2 bg-customRed text hover:bg-transparent border-customRed hover:text-customRed transition-colors duration-200 flex items-center justify-between min-w-48 lg:min-w-60"
+          className="px-1 rounded-lg border-2 bg-customRed text hover:bg-transparent border-customRed hover:text-customRed transition-colors duration-200 flex items-center justify-between min-w-48 lg:min-w-60 "
           onKeyDown={handleKeyDown}
         >
           {sortOptions.find((option) => option.value === selectedSort)?.label || 'Select'}
@@ -74,6 +74,7 @@ export default function SortDropdown({ selectedSort, onSortChange }: SortDropdow
           >
             <div className="flex justify-end p-2">
               <FiX
+                aria-label="close-button"
                 className="h-8 w-8 text-white hover:text-customRed cursor-pointer"
                 onClick={() => setIsDropdownOpen(false)}
                 onBlur={() => setIsDropdownOpen(false)}

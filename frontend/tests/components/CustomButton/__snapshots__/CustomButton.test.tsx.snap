@@ -2,7 +2,7 @@
 
 exports[`CustomButton > renders correctly as a Link and matches snapshot 1`] = `
 <a
-  class="w-fit relative group flex  sub-header"
+  class="w-fit relative group flex sub-header  sub-header"
   href="/home"
 >
   Go Home
@@ -14,7 +14,7 @@ exports[`CustomButton > renders correctly as a Link and matches snapshot 1`] = `
 
 exports[`CustomButton > renders correctly as a button and matches snapshot 1`] = `
 <button
-  class="relative group flex  sub-header"
+  class="relative group flex sub-header  sub-header"
 >
   Click me
   <span

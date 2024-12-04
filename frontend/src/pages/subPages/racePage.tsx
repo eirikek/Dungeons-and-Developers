@@ -1,11 +1,10 @@
-import RaceCard from '../../components/SubPages/RaceCard.tsx';
-import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 import { useReactiveVar } from '@apollo/client';
+import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
+import RaceCard from '../../components/SubPages/RaceCard.tsx';
 
-import useCharacterContext from '../../hooks/useCharacter.ts';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
+import useCharacterContext from '../../hooks/useCharacter.ts';
 import { raceVar } from '../../utils/apolloVars.ts';
-
 
 /**
  * RacePage Component

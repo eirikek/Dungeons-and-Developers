@@ -1,21 +1,18 @@
 import { useReactiveVar } from '@apollo/client';
-import { useContext, useEffect, useState, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { FaChevronLeft, FaChevronRight, FaTrash } from 'react-icons/fa';
 import AbilityCounterWrapper from '../../components/Counter/AbilityScoreCounterWrapper.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout';
+import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 import TutorialModal from '../../components/TutorialModal/TutorialModal';
-import { equipmentsVar } from '../../utils/apolloVars.ts';
-import useCharacterContext from '../../hooks/useCharacter';
 import { AuthContext } from '../../context/AuthContext';
-import classImageMapping from '../../utils/classImageMapping';
-import raceImageMapping from '../../utils/raceImageMapping';
 import abilityScoreManagement from '../../hooks/useAbilityScoreManagement.ts';
-import { classVar } from '../../utils/apolloVars.ts';
-import { raceVar } from '../../utils/apolloVars.ts';
+import useCharacterContext from '../../hooks/useCharacter';
 import { useToast } from '../../hooks/useToast.ts';
 import { Equipment } from '../../interfaces/EquipmentProps.ts';
-import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
-
+import { classVar, equipmentsVar, raceVar } from '../../utils/apolloVars.ts';
+import classImageMapping from '../../utils/classImageMapping';
+import raceImageMapping from '../../utils/raceImageMapping';
 
 /**
  * MyCharacterPage Component
@@ -272,8 +269,8 @@ const MyCharacterPage = () => {
                     </div>
                   )}
                   {currentEquipments.map((equipment, index) => (
-                    <li key={index} className="flex items-center gap-4">
-                      <p className="sub-header">{equipment.name}</p>
+                    <li key={index} className="flex items-center gap-2 ">
+                      <p className="text">{equipment.name}</p>
                       <FaTrash
                         size={30}
                         className="delete-icon text-white cursor-pointer hover:text-customRed transition-colors"

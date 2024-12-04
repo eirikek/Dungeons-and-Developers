@@ -181,7 +181,7 @@ export default function MonsterPage() {
 
   const debouncedHandleHpChange = useMemo(() => debounce(handleHpChange, 300), [handleHpChange]);
 
-  const totalPages = loading ? 1 : Math.min(Math.ceil(totalMonsters / monstersPerPage), 10);
+  const totalPages = loading ? 1 : Math.min(Math.ceil(totalMonsters / monstersPerPage), 42);
 
   const handlePageChange = useCallback(
     (direction: number) => {

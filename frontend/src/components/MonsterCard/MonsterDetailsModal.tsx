@@ -56,7 +56,7 @@ const MonsterDetailsModal = ({ id, name, hit_points, type, image, onClose }: Mon
       <DialogContent className="flex flex-col xl:flex-row bg-black gap-6 h-full overflow-x-hidden">
         {/* Monster Info Section */}
         <Box className="w-full xl:w-1/2 flex flex-col xl:items-center justify-center gap-2 flex-shrink-0">
-          <img src={image} alt={name} className="w-full sm:w-3/4 xl:w-1/2 rounded" />
+          <img src={image} alt={name} className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-[70%] rounded" />
           <h2 className="header">{name}</h2>
 
           <div className="flex flex-col gap-2">

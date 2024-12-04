@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { IoIosLogOut } from 'react-icons/io';
-import { FiMenu, FiX } from 'react-icons/fi';
+import { useEffect, useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
-import logo from '../../assets/images/logo.svg';
-import CustomButton from '../CustomButton/CustomButton.tsx';
+import { FiMenu, FiX } from 'react-icons/fi';
+import { IoIosLogOut } from 'react-icons/io';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAccessibility } from '../../../src/hooks/useAccessibility.ts';
+import logo from '../../assets/images/logo.svg';
 import Accessibility from '../AccessibilityToggle/AccessibilityToggle.tsx';
-import { useAccessibility } from '../../context/AccessibilityContext.tsx';
+import CustomButton from '../CustomButton/CustomButton.tsx';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
