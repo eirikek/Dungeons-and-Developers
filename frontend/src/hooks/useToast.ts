@@ -1,10 +1,11 @@
 import { useContext } from 'react';
+import { handleError } from '../../src/utils/handleError.ts';
 import { ToastContext } from '../context/ToastContext.tsx';
 
 export const useToast = () => {
   const context = useContext(ToastContext);
   if (!context) {
-    throw new Error('useToast must be used within a ToastProvider');
+    handleError(null, 'useToast must be used within a ToastProvider', 'critical');
   }
   return context;
 };

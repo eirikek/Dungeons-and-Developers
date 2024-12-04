@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 
-const AccessibilityContext = createContext({
+export const AccessibilityContext = createContext({
   isAccessibilityMode: false,
   toggleAccessibilityMode: () => {},
 });
@@ -37,5 +37,3 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     </AccessibilityContext.Provider>
   );
 };
-
-export const useAccessibility = () => useContext(AccessibilityContext);

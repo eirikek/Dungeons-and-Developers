@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { useMemo } from 'react';
-import MonsterDataProps from '../interfaces/MonsterDataProps.ts';
 import { GET_MONSTER_TYPE_COUNTS, GET_MONSTERS } from '../graphql/queries/monsterQueries.ts';
+import MonsterDataProps from '../interfaces/MonsterDataProps.ts';
 
 function useMonster(
   searchTerm: string,
@@ -32,7 +32,7 @@ function useMonster(
 
   const { data: typeCountsData } = useQuery(GET_MONSTER_TYPE_COUNTS, {
     variables: { minHp, maxHp },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
   });
 
   const monsterCounts = useMemo(() => {

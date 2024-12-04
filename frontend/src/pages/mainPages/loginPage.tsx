@@ -6,8 +6,7 @@ import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { CREATE_USER, LOGIN_USER } from '../../graphql/mutations/userMutations.ts';
 import { CHECK_USERNAME } from '../../graphql/queries/userQueries.ts';
-import Accessibility from '../../components/AccessibilityToggle/AccessibilityToggle.tsx';
-import { useAccessibility } from '../../context/AccessibilityContext.tsx';
+import { useAccessibility } from '../../hooks/useAccessibility.ts';
 import { useToast } from '../../hooks/useToast.ts';
 
 const quotes = [

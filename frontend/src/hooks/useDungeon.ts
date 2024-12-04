@@ -10,7 +10,7 @@ import {
 import { GET_USER_DUNGEON_NAME, GET_USER_FAVORITES } from '../graphql/queries/userQueries.ts';
 import { AddFavoriteResponse, RemoveFavoriteResponse, UserFavorites } from '../graphql/queryInterface.ts';
 import type { MonsterCardProps } from '../interfaces/MonsterCardProps';
-import { dungeonMonstersVar } from '../utils/dungeonMostersVar.ts';
+import { dungeonMonstersVar } from '../utils/apolloVars.ts';
 
 export const useDungeon = () => {
   const { userId } = useContext(AuthContext);

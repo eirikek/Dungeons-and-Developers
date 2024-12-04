@@ -206,7 +206,7 @@ const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
         <DialogContent className="flex flex-col xl:flex-row xl:items-center bg-black gap-6">
           <Box className="w-full xl:w-1/2 flex flex-col gap-[50px] xl:items-center">
             <img src={image} alt="Image of selected monster" className="w-full sm:w-3/4 xl:w-1/2 rounded" />
-            <h2 className="sub-header text-white">Review of {name}</h2>
+            <h2 className="sub-header font-bold">Review of {name}</h2>
           </Box>
           <article className="flex flex-col gap-4 w-full xl:w-1/2">
             <DialogContentText sx={{ color: 'white', fontSize: '1.5rem', fontFamily: 'MedievalSharp' }}>
