@@ -196,6 +196,7 @@ Read about testing here: [Testing](docs/testing.md)
 #### Specifications
 
 We use the [D&D 5e API](https://www.dnd5eapi.co/) to fetch the different objects used for the page. Such at the different classes, monsters, equipment etc. Which helps us keep the page true to how D&D works and what is possible in the game.
+We use [5e-encouter](https://github.com/seball/5e-encounter/tree/master/src/assets/monsters) to retrieve or pixel art images
 
 ## Accesability
 

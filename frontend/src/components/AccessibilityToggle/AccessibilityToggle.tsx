@@ -1,7 +1,7 @@
-import { useAccessibility } from '../../context/AccessibilityContext';
-import accessabilityIcon from '../../assets/images/accessibility-icon.png';
-import { useLocation } from 'react-router-dom';
 import React from 'react';
+import { useLocation } from 'react-router-dom';
+import accessabilityIcon from '../../assets/images/accessibility-icon.png';
+import { useAccessibility } from '../../context/AccessibilityContext';
 
 interface AccesibilityProps {
   checked: boolean;
