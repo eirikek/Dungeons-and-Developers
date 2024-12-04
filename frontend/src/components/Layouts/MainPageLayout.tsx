@@ -1,14 +1,14 @@
 import { motion } from 'framer-motion';
-import React, { useState, useEffect } from 'react';
-import Navbar from '../Navbar/Navbar.tsx';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import Navbar from '../Navbar/Navbar.tsx';
 
 interface MainPageLayoutProps {
   children: React.ReactNode;
   isLoginTransition?: boolean;
 }
 
-const MainPageLayout: React.FC<MainPageLayoutProps> = ({ children, isLoginTransition = false }) => {
+const MainPageLayout = ({ children, isLoginTransition = false }: MainPageLayoutProps) => {
   const location = useLocation();
   const [isMobile, setIsMobile] = useState(false);
 

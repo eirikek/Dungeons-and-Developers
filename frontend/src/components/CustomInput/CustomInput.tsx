@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
-import SaveIcon from '@mui/icons-material/Save';
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
+import SaveIcon from '@mui/icons-material/Save';
+import React, { useEffect, useRef, useState } from 'react';
 
 type InputProps = {
   placeholder: string;
@@ -110,15 +110,11 @@ const CustomInput = ({ placeholder, inputName, value, onSave }: InputProps) => {
               onChange={handleChange}
               onBlur={handleBlur}
               autoFocus
-              className="border-none rounded-lg outline-none focus:outline-none focus:ring-2 focus:ring-red-500 bg-transparent w-[65vw] lg:w-fit lg:p-y-5 text-6xl md:text-5xl lg:text-4xl xl:text-3xl 2xl:text-2xl text-center"
+              className="border-none rounded-lg outline-none focus:outline-none focus:ring-2 focus:ring-red-500 bg-transparent w-[65vw] lg:w-fit lg:p-y-5 header text-center"
             />
           </>
         ) : (
-          <h2
-            className=" text-6xl md:text-5xl lg:text-4xl xl:text-3xl 2xl:text-2xl"
-            aria-label="Name of your dungeon"
-            data-testid="dungeon-name"
-          >
+          <h2 className="header" aria-label="Name of your dungeon" data-testid="dungeon-name">
             {inputValue}
           </h2>
         )}

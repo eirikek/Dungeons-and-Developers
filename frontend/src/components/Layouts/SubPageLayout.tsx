@@ -1,8 +1,8 @@
 import React from 'react';
+import { useMediaQuery } from 'react-responsive';
+import { useLocation } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar.tsx';
 import SubMenu from '../SubPages/SubMenu.tsx';
-import { useLocation } from 'react-router-dom';
-import { useMediaQuery } from 'react-responsive';
 
 interface SubPageLayoutProps {
   children: React.ReactNode;

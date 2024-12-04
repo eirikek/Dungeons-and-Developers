@@ -1,11 +1,11 @@
 import { Dialog, DialogContent, IconButton } from '@mui/material';
 import { useState } from 'react';
-import { FiHelpCircle, FiX } from 'react-icons/fi';
-import raceGif from '../../assets/images/race.gif';
-import classGif from '../../assets/images/class.gif';
-import abilityScoreGif from '../../assets/images/abilityscore.gif';
-import { Link } from 'react-router-dom';
 import { FaTrash } from 'react-icons/fa';
+import { FiHelpCircle, FiX } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
+import abilityScoreGif from '../../assets/images/abilityscore.gif';
+import classGif from '../../assets/images/class.gif';
+import raceGif from '../../assets/images/race.gif';
 
 const TutorialModal = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,9 +24,6 @@ const TutorialModal = () => {
       <IconButton
         onClick={handleClickOpen}
         sx={{
-          position: 'absolute',
-          top: { xs: '3.5%', sm: '3.5%', md: '3.5%', lg: '5%', xl: '5%' },
-          right: '5%',
           color: 'white',
           backgroundColor: '#DB3232',
           '&:hover': {

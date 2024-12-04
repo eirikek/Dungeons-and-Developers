@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import SortDropdown from '../../../src/components/MonsterSort/MonsterSort.tsx';
 
 describe('SortDropdown Component', () => {
@@ -26,7 +26,7 @@ describe('SortDropdown Component', () => {
       expect(screen.getByText('Z-A')).toBeInTheDocument();
     });
 
-    const button = screen.getByLabelText('close');
+    const button = screen.getByLabelText('close-button');
     await userEvent.click(button);
 
     await waitFor(() => {

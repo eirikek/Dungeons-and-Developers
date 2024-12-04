@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 interface CounterProps {
@@ -81,16 +81,20 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
         onKeyDown={(e) => handleKeyDown(e, 1)}
         onKeyUp={handleKeyUp}
         aria-label="Increment"
+        aria-controls="ability-score-value"
       >
         <FaChevronUp size={22} />
       </button>
 
-      <div
-        className="text-5xl md:text-4xl lg:text-3xl xl:text-2xl 2xl:text-lg text-white w-12 text-center"
-        aria-label="ability score value"
+      <output
+        id="ability-score-value"
+        className="text text-white w-12 text-center"
+        aria-live="polite"
+        role="status"
+        aria-label="ability-score-value"
       >
         {localValue}
-      </div>
+      </output>
 
       <button
         className="text-white hover:text-gray-400"
@@ -102,6 +106,7 @@ export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp
         onKeyDown={(e) => handleKeyDown(e, -1)}
         onKeyUp={handleKeyUp}
         aria-label="Decrement"
+        aria-controls="ability-score-value"
       >
         <FaChevronDown size={22} />
       </button>
