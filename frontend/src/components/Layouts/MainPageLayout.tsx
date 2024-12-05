@@ -4,6 +4,14 @@ import { useLocation } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar.tsx';
 import MainPageLayoutProps from '../../interfaces/MainPageLayoutProps.ts';
 
+/**
+ * MainPageLayout component manages the layout for the main pages
+ *
+ *
+ * @param {React.ReactNode} children - The child elements to be rendered within the layout.
+ * @param {boolean} isLoginTransition - Boolean value that checks if it is register or login page.
+ */
+
 const MainPageLayout = ({ children, isLoginTransition = false }: MainPageLayoutProps) => {
   const location = useLocation();
   const [isMobile, setIsMobile] = useState(false);
