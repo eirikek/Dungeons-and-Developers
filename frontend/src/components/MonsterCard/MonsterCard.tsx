@@ -7,6 +7,18 @@ import DungeonButton from './DungeonButton.tsx';
 import MonsterDetailsModal from './MonsterDetailsModal.tsx';
 import MonsterReviewModal from './MonsterReviewModal.tsx';
 
+/**
+ * A card component that displays monster details
+ *
+ * @param {string} id - Identification of the monster
+ * @param {string} name - Name of the monster.
+ * @param {string} type - Type of Monster
+ * @param {number} hit_points - The health points of the monster.
+ * @param {string} alignment - The alignment of the monster
+ * @param {string} size - The size of the monster
+ * @param {string | undefined} image - The base64-encoded image or URL of the monster.
+ *
+ */
 const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: MonsterCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
