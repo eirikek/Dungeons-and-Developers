@@ -1,8 +1,12 @@
 import { hourglass } from 'ldrs';
+import LoadingHourglassProps from '../../interfaces/LoadingHourglassProps.ts';
 
-interface LoadingHourglassProps {
-  height?: string;
-}
+/**
+ * Renders a loading component displayed as an hourglass.
+ *
+ * @param {string} height - The height of the container for the loading hourglass. Value is `79.5vh`.
+ *
+ **/
 
 export default function LoadingHourglass({ height = 'h-[79.5vh]' }: LoadingHourglassProps) {
   hourglass.register();
