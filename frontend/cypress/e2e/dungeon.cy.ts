@@ -1,4 +1,4 @@
-describe('Logs in, searches for a monster and adds black dragon to dungeon, filters on undead and adds Whight to dungeon', () => {
+describe('Logs in, searches for a monster and adds black dragon to dungeon, filters on undead and adds to dungeon', () => {
   beforeEach(() => {
     cy.viewport(1280, 720);
   });
