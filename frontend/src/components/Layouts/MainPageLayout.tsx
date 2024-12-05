@@ -1,12 +1,8 @@
 import { motion } from 'framer-motion';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar.tsx';
-
-interface MainPageLayoutProps {
-  children: React.ReactNode;
-  isLoginTransition?: boolean;
-}
+import MainPageLayoutProps from '../../interfaces/MainPageLayoutProps.ts';
 
 const MainPageLayout = ({ children, isLoginTransition = false }: MainPageLayoutProps) => {
   const location = useLocation();
