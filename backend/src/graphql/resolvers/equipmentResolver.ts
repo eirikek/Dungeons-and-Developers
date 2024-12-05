@@ -14,6 +14,16 @@ interface EquipmentQueryArgs {
 
 export default {
   Query: {
+    /**
+     *
+     * @param _
+     * @param searchTerm - term for which to be searched for
+     * @param offset - number of how many equipments to skip, which is used for pagination
+     * @param limit - limit of how many equipments to fetch, default value 20
+     * @param suggestionsOnly - Whether to return only name suggestions (optional).
+     *
+     * @returns an object containing the `equipments` and `totalcount`, a count of equipments returned.
+     */
     async equipments(_: any, { searchTerm = '', offset = 0, limit = 20, suggestionsOnly = false }: EquipmentQueryArgs) {
       if (suggestionsOnly) {
         const escapedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -74,6 +84,15 @@ export default {
       };
     },
 
+    /**
+     * Fetches single equipment by id
+     * @param _
+     * @param id - id of equipment to be fetched
+     *
+     * @returns specified equipment object
+     * @throws Error if equipment with given ID not found
+     */
+
     async equipment(_: any, { id }: EquipmentArgs) {
       const equipment = await Equipment.findOne({ index: id }).lean();
       if (equipment) {
@@ -84,6 +103,12 @@ export default {
   },
 
   Mutation: {
+    /**
+     * Fetches all data and stores it in database
+     *
+     * @returns A success message confirming the data was fetched and stored.
+     * @throws Error if the `fetchData` script encounters any issues.
+     */
     async fetchAllData() {
       await fetchData();
       return 'Data fetched and stored successfully!';

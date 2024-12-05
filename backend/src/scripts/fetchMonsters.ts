@@ -7,6 +7,10 @@ import { monsterValidationSchema } from '../utils/validationSchemas.ts';
 const url = { monsters: 'https://www.dnd5eapi.co/api/monsters' };
 const githubImageUrl = 'https://raw.githubusercontent.com/seball/5e-encounter/master/src/assets/monsters';
 
+/**
+ * Fetches monsters with name, size, hp, type and alignment information
+ * Makes monster images to base64 using Sharp to reduce file size and loading time
+ */
 async function fetchMonsters() {
   let monsters;
   try {
