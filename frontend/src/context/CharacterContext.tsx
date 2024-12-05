@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
-import { createContext, ReactNode, useCallback, useEffect, useMemo } from 'react';
+import { createContext, useCallback, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { UPDATE_ABILITY_SCORES, UPDATE_USER_CLASS, UPDATE_USER_RACE } from '../graphql/mutations/userMutations.ts';
 import { GET_ARRAY_SCORES, GET_USER_CLASS, GET_USER_RACE } from '../graphql/queries/userQueries.ts';
@@ -8,42 +8,14 @@ import useClasses from '../hooks/useClasses.ts';
 import useRaces from '../hooks/useRaces.ts';
 import { useToast } from '../hooks/useToast.ts';
 import useUserEquipments from '../hooks/useUserEquipments';
-import AbilityScoreCardProps from '../interfaces/AbilityScoreProps.ts';
-import ClassData from '../interfaces/ClassProps.ts';
 import { Equipment } from '../interfaces/EquipmentProps';
-import RaceData from '../interfaces/RaceProps.ts';
 import { abilitiesVar } from '../utils/apolloVars.ts';
 import { classVar } from '../utils/apolloVars.ts';
 import { raceVar } from '../utils/apolloVars.ts';
 import { ArrayScores, ArrayVar, UserClass, UserRace } from '../graphql/queryInterface.ts';
 import { UserNotFound } from '../utils/UserNotFound.ts';
 import { handleError } from '../utils/handleError.ts';
-
-interface CharacterContextType {
-  stateAbilities: AbilityScoreCardProps[];
-  userAbilityScores: Map<string, number>;
-  updateAbilityScores: (newValue: number, updatedAbilityName: string) => Promise<void>;
-  classes: ClassData[];
-  updateClass: (classId: string) => Promise<void>;
-  races: RaceData[];
-  updateRace: (raceId: string) => Promise<void>;
-  addToEquipments: (equipment: Equipment) => void;
-  removeFromEquipments: (equipment: Equipment) => void;
-  removeAllEquipments: () => void;
-  loadingStates: LoadingStates;
-}
-
-interface LoadingStates {
-  abilityScoresLoading: boolean;
-  classLoading: boolean;
-  raceLoading: boolean;
-  equipmentsLoading: boolean;
-}
-
-interface CharacterProviderProps {
-  children: ReactNode;
-  userId: string;
-}
+import { CharacterContextType, CharacterProviderProps } from '../interfaces/CharacterContextProps.ts';
 
 /**
  * CharacterContext

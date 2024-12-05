@@ -1,5 +1,4 @@
-import { createContext, ReactNode, useCallback, useMemo } from 'react';
-
+import { createContext, useCallback, useMemo } from 'react';
 import { useReactiveVar } from '@apollo/client';
 import useDungeon from '../hooks/useDungeon.ts';
 import { useToast } from '../hooks/useToast.ts';
@@ -7,17 +6,7 @@ import { MonsterCardProps } from '../interfaces/MonsterCardProps.ts';
 import { dungeonMonstersVar } from '../utils/apolloVars.ts';
 import { handleError } from '../utils/handleError.ts';
 import { UserNotFound } from '../utils/UserNotFound.ts';
-
-interface DungeonContextType {
-  dungeonMonsters: MonsterCardProps[];
-  toggleDungeon: (monster: MonsterCardProps) => void;
-  isInDungeon: (monsterIndex: string) => boolean;
-}
-
-interface DungeonProviderProps {
-  children: ReactNode;
-  userId: string;
-}
+import { DungeonContextType, DungeonProviderProps } from '../interfaces/DungeonContextProps.ts';
 
 /**
  * DungeonContext and DungeonProvider

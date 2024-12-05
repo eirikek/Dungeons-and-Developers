@@ -13,6 +13,33 @@ import { useToast } from '../../hooks/useToast.ts';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
+/**
+ * HomePage Component
+ *
+ * Represents the homepage of the application, providing an immersive and interactive user experience.
+ *
+ * Features:
+ * - Parallax animations for dynamic visuals using `react-parallax-tilt` and `framer-motion`.
+ * - A multi-section layout highlighting different functionalities of the app.
+ * - Toast notifications for login events using `useToast`.
+ * - Interactive scrolling navigation:
+ *    - Chevron-based navigation to scroll between sections.
+ *
+ *
+ * Key Components:
+ * - `MainPageLayout`: Provides the structural layout for the page.
+ * - `HomeSection`: Displays the content and image for each feature section.
+ * - `CustomInput`: Allows users to modify and save their dungeon name.
+ * - `motion` animations: Adds visual appeal with animated elements like dragons and the chevron.
+ *
+ * Hooks:
+ * - `useScroll` and `useTransform`: For scroll-based animations of dragon images.
+ * - `useContext`: Retrieves user context to show personalized login messages.
+ * - `useEffect`: Handles scroll detection, responsive resizing, and login toasts.
+ * - `useRef`: Tracks sections for scroll-based navigation.
+ *
+ */
+
 export default function HomePage() {
   const { scrollYProgress } = useScroll();
   const [isMobile, setIsMobile] = useState(false);

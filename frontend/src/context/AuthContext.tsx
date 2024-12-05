@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useReducer } from 'react';
+import { LoginState, LoginAction, LogoutAction } from '../interfaces/AuthContextProps.ts';
 
 /**
  * AuthContext
@@ -28,25 +29,6 @@ const initialState: LoginState = {
   userId: localStorage.getItem('userId') || '',
   userName: localStorage.getItem('userName') || '',
 };
-
-interface LoginState {
-  token: string;
-  userId: string;
-  userName: string;
-}
-
-interface LoginAction {
-  type: 'LOGIN';
-  payload: {
-    token: string;
-    userId: string;
-    userName: string;
-  };
-}
-
-interface LogoutAction {
-  type: 'LOGOUT';
-}
 
 type AuthAction = LoginAction | LogoutAction;
 

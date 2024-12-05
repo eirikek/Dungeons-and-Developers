@@ -1,4 +1,5 @@
-import React, { createContext } from 'react';
+import { createContext } from 'react';
+import { ToastContextType } from '../interfaces/ToastContextProps.ts';
 
 /**
  * ToastContext
@@ -14,18 +15,5 @@ import React, { createContext } from 'react';
  * - `ToastProps`: Defines the properties of a toast notification.
  * - `ToastContextType`: Describes the methods and state exposed by the ToastContext.
  */
-
-export interface ToastProps {
-  message: string;
-  type: 'success' | 'error' | 'info' | 'warning';
-  duration?: number;
-  undoAction?: () => void;
-  closeToast?: () => void;
-}
-
-export interface ToastContextType {
-  showToast: (props: ToastProps) => void;
-  toastId: React.MutableRefObject<string | null>;
-}
 
 export const ToastContext = createContext<ToastContextType | undefined>(undefined);
