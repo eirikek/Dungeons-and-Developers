@@ -1,11 +1,17 @@
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import PaginationProps from '../../interfaces/PaginationProps.ts';
 
-interface PaginationProps {
-  currentPage: number;
-  onPageChange: (direction: number) => void; // direction can be -1 (prev) or 1 (next)
-  totalPages: number;
-}
+/**
+ * Pagination component provides navigation between pages for a paginated list of monsters or equipment.
 
+ * @param {number} currentPage - The current page number being displayed.
+ * @param {function} onPageChange - A function to handle page change
+ * @param {number} totalPages - The total number of pages available.
+ *
+ * Features:
+ * - Renders the "Previous" and "Next" buttons
+ * - Shows the current page and total pages like `currentPage / totalPages` .
+ */
 const Pagination = ({ currentPage, onPageChange, totalPages }: PaginationProps) => {
   return (
     <section className="w-full flex justify-center items-center py-4">
