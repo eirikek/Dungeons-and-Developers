@@ -4,6 +4,9 @@ import Joi from 'joi';
 import { equipmentValidationSchema } from '../utils/validationSchemas.js';
 const url = { equipments: 'https://www.dnd5eapi.co/api/equipment' };
 
+/**
+ * Fetches equipments from api page, with name, category and value information.
+ */
 async function fetchEquipments() {
   let equipments;
   try {

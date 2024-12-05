@@ -5,6 +5,9 @@ import { classesValidationSchema } from '../utils/validationSchemas.js';
 
 const url = { classes: 'https://www.dnd5eapi.co/api/classes' };
 
+/**
+ * Fetches all classes and info from api, creates classes with hit_die, skills and name info
+ */
 async function fetchClasses() {
   let classes;
   try {
