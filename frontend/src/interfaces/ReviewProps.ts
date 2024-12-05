@@ -14,3 +14,9 @@ export type ReviewFormType = {
   name: string;
   image: string;
 };
+
+export type ReviewProps = {
+  review: ReviewType;
+  monsterId: string;
+  monsterName: string;
+};

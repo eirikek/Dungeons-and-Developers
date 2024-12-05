@@ -1,7 +1,7 @@
 import { Box, IconButton, Button } from '@mui/material';
 import { MdDelete, MdEdit, MdSave, MdCancel } from 'react-icons/md';
 import { useMutation } from '@apollo/client';
-import { ReviewType } from '../../interfaces/ReviewProps.ts';
+import { ReviewProps, ReviewType } from '../../interfaces/ReviewProps.ts';
 import { AuthContext } from '../../context/AuthContext';
 import { useContext, useState, useRef } from 'react';
 import ReviewSlider from './ReviewSlider.tsx';
@@ -9,13 +9,19 @@ import ReviewTextField from './ReviewTextField.tsx';
 import { useToast } from '../../hooks/useToast';
 import { ADD_REVIEW, DELETE_REVIEW, UPDATE_REVIEW } from '../../graphql/mutations/monsterMutations.ts';
 import { GET_MONSTER_REVIEWS } from '../../graphql/queries/monsterQueries.ts';
-
-type ReviewProps = {
-  review: ReviewType;
-  monsterId: string;
-  monsterName: string;
-};
-
+/**
+ * Renders review component to edit, submit and review.
+ *
+ * @param {string} monsterId - The ID of the monster being reviewed.
+ * @param {string} monsterName - The name of the monster being reviewed.
+ *
+ *
+ * Functionality:
+ * - Display the review details
+ * - Editing the review
+ * - Deleting the review
+ * - Undo button
+ */
 const Review = ({ review, monsterId, monsterName }: ReviewProps) => {
   const { userId } = useContext(AuthContext);
   const { user, difficulty, description, id: reviewId } = review;
