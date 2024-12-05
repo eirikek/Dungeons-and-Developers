@@ -3,11 +3,15 @@ import { useMediaQuery } from 'react-responsive';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar.tsx';
 import SubMenu from '../SubPages/SubMenu.tsx';
+import SubPageLayoutProps from '../../interfaces/SubPageLayoutProps.ts';
 
-interface SubPageLayoutProps {
-  children: React.ReactNode;
-}
+/**
+ * SubPageLayout component is used to structure the layout of subpages.
 
+ *
+ * @param {React.ReactNode} children - The child elements to be rendered within the layout.
+ *
+ */
 const SubPageLayout: React.FC<SubPageLayoutProps> = ({ children }) => {
   const isLargeScreen = useMediaQuery({ query: '(min-width: 1024px)' });
   const location = useLocation();
