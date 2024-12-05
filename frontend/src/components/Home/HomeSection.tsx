@@ -1,13 +1,17 @@
 import { motion } from 'framer-motion';
-import React, { forwardRef } from 'react';
+import { forwardRef } from 'react';
+import SectionProps from '../../interfaces/SectionProps.ts';
 
-interface SectionProps {
-  title: string;
-  text: React.ReactNode;
-  image: string;
-  reversed?: boolean;
-}
-
+/**
+ * Renders a home section. Home section has different values and changes based on:
+ *
+ * @param {string} title - The section title.
+ * @param {string} text - The text content of the section.
+ * @param {string} image - The image URL.
+ * @param {boolean} reversed - Boolean value to reverse the section.
+ * @param {React.Ref} ref - Reference passed to the element.
+ *
+ */
 const HomeSection = forwardRef<HTMLDivElement, SectionProps>(
   ({ title, text, image, reversed = false }: SectionProps, ref) => {
     // Animation variants for text and header coming from the bottom
