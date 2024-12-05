@@ -4,6 +4,49 @@ import { Equipment } from '../interfaces/EquipmentProps';
 import { GET_EQUIPMENTS } from '../graphql/queries/equipmentQueries.ts';
 import { handleError } from '../utils/handleError.ts';
 
+/**
+ * Custom Hook: `useEquipments`
+ *
+ * Fetches and manages equipment data, supporting pagination and search functionality.
+ *
+ * Features:
+ * - Fetches equipment data from the backend using Apollo Client's `useQuery`.
+ * - Supports search functionality with the `searchTerm` parameter.
+ * - Handles paginated data with `currentPage` and `equipmentsPerPage`.
+ * - Includes error handling and data transformation for use in the UI.
+ *
+ * Dependencies:
+ * - `GET_EQUIPMENTS`: GraphQL query for fetching equipment data.
+ * - `handleError`: Utility function for logging and managing errors.
+ *
+ * @param searchTerm The search term to filter equipments.
+ * @param currentPage The current page number for paginated data.
+ * @param equipmentsPerPage The number of equipments per page.
+ * @param shouldFetch A boolean indicating whether to fetch data or not.
+ *
+ * @returns An object containing:
+ * - `equipments`: A transformed list of equipment objects.
+ * - `totalEquipments`: The total number of equipments available.
+ * - `loading`: A boolean indicating if the data is currently being loaded.
+ * - `error`: Any error encountered during data fetching.
+ *
+ * @example
+ * ```tsx
+ * const { equipments, totalEquipments, loading, error } = useEquipments('sword', 1, 10, true);
+ *
+ * if (loading) return <p>Loading...</p>;
+ * if (error) return <p>Error loading equipments.</p>;
+ *
+ * return (
+ *   <ul>
+ *     {equipments.map((equipment) => (
+ *       <li key={equipment.id}>{equipment.name}</li>
+ *     ))}
+ *   </ul>
+ * );
+ * ```
+ */
+
 function useEquipments(searchTerm: string, currentPage: number, equipmentsPerPage: number, shouldFetch: boolean) {
   const offset = (currentPage - 1) * equipmentsPerPage;
 

@@ -1,5 +1,4 @@
-import { createContext, ReactNode, useCallback, useMemo } from 'react';
-
+import { createContext, useCallback, useMemo } from 'react';
 import { useReactiveVar } from '@apollo/client';
 import useDungeon from '../hooks/useDungeon.ts';
 import { useToast } from '../hooks/useToast.ts';
@@ -7,17 +6,32 @@ import { MonsterCardProps } from '../interfaces/MonsterCardProps.ts';
 import { dungeonMonstersVar } from '../utils/apolloVars.ts';
 import { handleError } from '../utils/handleError.ts';
 import { UserNotFound } from '../utils/UserNotFound.ts';
+import { DungeonContextType, DungeonProviderProps } from '../interfaces/DungeonContextProps.ts';
 
-interface DungeonContextType {
-  dungeonMonsters: MonsterCardProps[];
-  toggleDungeon: (monster: MonsterCardProps) => void;
-  isInDungeon: (monsterIndex: string) => boolean;
-}
-
-interface DungeonProviderProps {
-  children: ReactNode;
-  userId: string;
-}
+/**
+ * DungeonContext and DungeonProvider
+ *
+ * Provides context and functionality for managing a user's dungeon monsters.
+ *
+ * Features:
+ * - Adds and removes monsters from the user's dungeon.
+ * - Ensures a maximum of 6 monsters can be added to the dungeon.
+ * - Tracks whether a monster is currently in the dungeon.
+ * - Supports undo functionality for monster removal.
+ * - Handles errors and provides user feedback via toast notifications.
+ *
+ * Dependencies:
+ * - `useToast` for showing toast notifications.
+ * - `useDungeon` for managing favorite monsters.
+ * - `useReactiveVar` for tracking dungeon state in Apollo Client.
+ * - `handleError` for handling and logging errors.
+ *
+ * Context:
+ * - `DungeonContext`: Provides the dungeon's state and actions to child components.
+ *
+ * Props:
+ * - `DungeonProviderProps`: Includes child components and the current user's ID.
+ */
 
 export const DungeonContext = createContext<DungeonContextType>({
   dungeonMonsters: [],
