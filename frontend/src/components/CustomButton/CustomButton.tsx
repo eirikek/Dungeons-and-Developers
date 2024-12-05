@@ -1,18 +1,19 @@
 import { Link } from 'react-router-dom';
-
-interface ButtonProps {
-  text: string;
-  onClick?: () => void;
-  className?: string;
-  textSize?: string;
-  linkTo?: string;
-  noUnderline?: boolean;
-  isActive?: boolean;
-  children?: React.ReactNode;
-  onFocus?: () => void;
-  onBlur?: () => void;
-}
-
+import ButtonProps from '../../interfaces/ButtonProps.ts';
+/**
+ * Renders a button component that can either be HTML button or a link.
+ *
+ * @param {string} text - The text of the button.
+ * @param {() => void} onClick - Function to handle click events.
+ * @param {string} className - Used for styling, in this case it is passed 'sub-header'.
+ * @param {string} linkTo - If it is a link, it renders the button as the link to the destination.
+ * @param {boolean} noUnderline - Boolean value that decides if it is underlined or not.
+ * @param {boolean} isActive - Boolean value that decides if the button is in an active state.
+ * @param {React.ReactNode} children - Child elements that is displayed in the button.
+ * @param {() => void} onFocus - Function that handles the case when button is in focus.
+ * @param {() => void} onBlur - Function that handles the case when button loses focus.
+ *
+ * **/
 export default function CustomButton({
   text,
   onClick,
