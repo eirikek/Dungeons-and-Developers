@@ -1,29 +1,34 @@
 import { createContext, ReactNode, useReducer } from 'react';
+import { LoginState, LoginAction, LogoutAction } from '../interfaces/AuthContextProps.ts';
+
+/**
+ * AuthContext
+ *
+ * Provides authentication context to manage user login, logout, and related state.
+ * - Stores user information such as `token`, `userId`, and `userName`.
+ * - Persists authentication data in `localStorage`.
+ * - Allows components to access and update authentication state via context.
+ *
+ * Features:
+ * - Implements a `useReducer` for managing authentication state transitions.
+ * - Includes `LOGIN` and `LOGOUT` actions to update state and storage.
+ * - Provides helper functions for login and logout logic.
+ *
+ * Components:
+ * - `AuthProvider`: Wraps application components to provide authentication context.
+ * - `authReducer`: Reducer function for managing state transitions.
+ * - `AuthContext`: Context object for accessing authentication data and methods.
+ *
+ * Usage:
+ * - Wrap the application root with `<AuthProvider>` to enable authentication management.
+ * - Access context using `useContext(AuthContext)` in child components.
+ */
 
 const initialState: LoginState = {
   token: localStorage.getItem('token') || '',
   userId: localStorage.getItem('userId') || '',
   userName: localStorage.getItem('userName') || '',
 };
-
-interface LoginState {
-  token: string;
-  userId: string;
-  userName: string;
-}
-
-interface LoginAction {
-  type: 'LOGIN';
-  payload: {
-    token: string;
-    userId: string;
-    userName: string;
-  };
-}
-
-interface LogoutAction {
-  type: 'LOGOUT';
-}
 
 type AuthAction = LoginAction | LogoutAction;
 

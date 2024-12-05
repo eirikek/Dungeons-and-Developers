@@ -12,6 +12,41 @@ import { AddFavoriteResponse, RemoveFavoriteResponse, UserFavorites } from '../g
 import type { MonsterCardProps } from '../interfaces/MonsterCardProps';
 import { dungeonMonstersVar } from '../utils/apolloVars.ts';
 
+/**
+ * Custom Hook: `useDungeon`
+ *
+ * Manages the state and interactions related to the dungeon and user's favorited monsters.
+ *
+ * Features:
+ * - Fetches and manages the user's favorited monsters and dungeon name.
+ * - Allows adding/removing monsters to/from the dungeon.
+ * - Updates the dungeon's name with optimistic UI updates.
+ * - Uses Apollo Client for GraphQL queries and mutations.
+ *
+ * Dependencies:
+ * - Requires `AuthContext` to provide the `userId`.
+ * - Utilizes `dungeonMonstersVar` for local state management.
+ *
+ * @returns An object containing:
+ * - `dungeonMonsters`: The current list of favorited monsters.
+ * - `toggleFavorite`: A function to add or remove a monster from favorites.
+ * - `toggleDungeonName`: A function to update the dungeon name.
+ * - `favoritesError`: Any error that occurred while fetching the user's favorites.
+ * - `userId`: The ID of the logged-in user.
+ *
+ * @example
+ * ```tsx
+ * const { dungeonMonsters, toggleFavorite, toggleDungeonName, favoritesError } = useDungeon();
+ *
+ * if (favoritesError) {
+ *   console.error('Error fetching favorites:', favoritesError);
+ * }
+ *
+ * toggleFavorite(monster);
+ * toggleDungeonName('My New Dungeon Name');
+ * ```
+ */
+
 export const useDungeon = () => {
   const { userId } = useContext(AuthContext);
 

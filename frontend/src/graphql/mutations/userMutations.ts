@@ -1,5 +1,31 @@
 import { gql } from '@apollo/client';
 
+/**
+ * UserMutations
+ *
+ * Provides GraphQL mutations for managing user-related data in the application.
+ *
+ * Features:
+ * - User creation and login.
+ * - Equipment management (add, remove, remove all).
+ * - Monster management (favorite, unfavorite).
+ * - Dungeon management (update dungeon name).
+ * - Ability scores and character class/race updates.
+ *
+ * Mutations:
+ * - `CREATE_USER`: Creates a new user and initializes their data.
+ * - `LOGIN_USER`: Logs in an existing user and fetches their associated data.
+ * - `ADD_EQUIPMENT_TO_CHARACTER`: Adds equipment to the user's character.
+ * - `REMOVE_EQUIPMENT_FROM_CHARACTER`: Removes specific equipment from the user's character.
+ * - `REMOVE_ALL_EQUIPMENTS`: Removes all equipment from the user's character.
+ * - `ADD_FAVORITE_MONSTER`: Adds a monster to the user's favorites.
+ * - `REMOVE_FAVORITE_MONSTER`: Removes a monster from the user's favorites.
+ * - `UPDATE_DUNGEON_NAME`: Updates the name of the user's dungeon.
+ * - `UPDATE_ABILITY_SCORES`: Updates the user's ability scores.
+ * - `UPDATE_USER_CLASS`: Updates the user's class.
+ * - `UPDATE_USER_RACE`: Updates the user's race.
+ */
+
 // Create or login a user
 export const CREATE_USER = gql`
   mutation createUser($userName: String!) {

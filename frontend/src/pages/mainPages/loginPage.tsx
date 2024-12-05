@@ -44,7 +44,7 @@ const formVariants = {
  * Handles user authentication with login and registration forms.
  * - Uses GraphQL mutations to create and log in users.
  * - Checks username availability with a query.
- * - Displays motivational quotes that change every 5 seconds.
+ * - Displays quotes that change every 5 seconds.
  *
  * Features:
  * - Animated transitions between forms using framer-motion.
