@@ -9,7 +9,7 @@ import MainPageLayoutProps from '../../interfaces/MainPageLayoutProps.ts';
  *
  *
  * @param {React.ReactNode} children - The child elements to be rendered within the layout.
- * @param {boolean} isLoginTransition - Boolean value that checks if it is register or login page.
+ * @param {boolean} isLoginTransition - Boolean value that checks if it will be a curtain drop or not.
  */
 
 const MainPageLayout = ({ children, isLoginTransition = false }: MainPageLayoutProps) => {
