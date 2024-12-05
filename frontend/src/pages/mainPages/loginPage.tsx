@@ -1,12 +1,13 @@
-import { useState, useEffect, useContext } from 'react';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useContext, useEffect, useState } from 'react';
 import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
-import { useMutation, useLazyQuery } from '@apollo/client';
 import { AuthContext } from '../../context/AuthContext.tsx';
-import { useToast } from '../../hooks/useToast.ts';
 import { CREATE_USER, LOGIN_USER } from '../../graphql/mutations/userMutations.ts';
 import { CHECK_USERNAME } from '../../graphql/queries/userQueries.ts';
+import { useAccessibility } from '../../hooks/useAccessibility.ts';
+import { useToast } from '../../hooks/useToast.ts';
 import Accessibility from '../../components/AccessibilityToggle/AccessibilityToggle.tsx';
 
 const quotes = [
@@ -37,6 +38,23 @@ const formVariants = {
   }),
 };
 
+/**
+ * LoginPage Component
+ *
+ * Handles user authentication with login and registration forms.
+ * - Uses GraphQL mutations to create and log in users.
+ * - Checks username availability with a query.
+ * - Displays motivational quotes that change every 5 seconds.
+ *
+ * Features:
+ * - Animated transitions between forms using framer-motion.
+ * - Toast notifications for errors or success.
+ * - Username availability indicator.
+ *
+ * No props are required as this is rendered directly on the welcome page.
+ *
+ *
+ */
 export default function LoginPage() {
   const { login } = useContext(AuthContext);
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
@@ -48,6 +66,7 @@ export default function LoginPage() {
   const [isUsernameAvailable, setIsUsernameAvailable] = useState<boolean | null>(null);
   const [shakeInput, setShakeInput] = useState(false);
   const { showToast } = useToast();
+  const { isAccessibilityMode } = useAccessibility();
 
   // Change quote every 5 seconds
   useEffect(() => {
@@ -291,7 +310,7 @@ export default function LoginPage() {
             </AnimatePresence>
           </section>
           <section className="absolute bottom-5 w-full flex justify-center">
-            <Accessibility />
+            <Accessibility checked={isAccessibilityMode} />
           </section>
         </section>
       </main>

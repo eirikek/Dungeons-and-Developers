@@ -2,7 +2,6 @@ import { useMutation, useQuery } from '@apollo/client';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 
-import { dungeonMonstersVar } from '../context/DungeonContext';
 import {
   ADD_FAVORITE_MONSTER,
   REMOVE_FAVORITE_MONSTER,
@@ -11,6 +10,7 @@ import {
 import { GET_USER_DUNGEON_NAME, GET_USER_FAVORITES } from '../graphql/queries/userQueries.ts';
 import { AddFavoriteResponse, RemoveFavoriteResponse, UserFavorites } from '../graphql/queryInterface.ts';
 import type { MonsterCardProps } from '../interfaces/MonsterCardProps';
+import { dungeonMonstersVar } from '../utils/apolloVars.ts';
 
 export const useDungeon = () => {
   const { userId } = useContext(AuthContext);

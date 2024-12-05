@@ -8,14 +8,54 @@ import MonsterSort from '../../components/MonsterSort/MonsterSort.tsx';
 import Pagination from '../../components/Pagination/Pagination';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 
+import { IconButton } from '@mui/material';
+import { MdCancel } from 'react-icons/md';
 import MonsterGrid from '../../components/Dungeon/MonsterGrid.tsx';
 import { GET_MONSTER_HP_RANGE } from '../../graphql/queries/monsterQueries.ts';
 import useMonster from '../../hooks/useMonster.ts';
 import useMonsterSuggestions from '../../hooks/useMonsterSuggestions';
-import { IconButton } from '@mui/material';
-import { MdCancel } from 'react-icons/md';
 
 const monstersPerPage = 8;
+
+/**
+ * MonsterPage Component
+ *
+ * A comprehensive monster browsing interface that provides advanced filtering,
+ * searching, and sorting capabilities.
+ *
+ * Features:
+ * - Monster filtering by HP range and custom selections
+ * - Debounced search with auto-suggestions
+ * - Customizable sorting (name, HP, etc.)
+ * - Paginated results (8 monsters per page)
+ * - Persistent state using sessionStorage
+ *
+ * State Management:
+ * - searchTerm: Current search input
+ * - selectedFilters: Set of active filter options
+ * - hpFilterMin/Max: HP range filter values
+ * - sortOption: Current sort preference
+ * - currentPage: Active page number
+ *
+ * Performance Optimizations:
+ * - Debounced search (300ms delay)
+ * - Memoized handlers
+ * - Lazy loading with loading states
+ *
+ * Error Handling:
+ * - Displays error messages for failed data fetches
+ * - Graceful fallback for no results
+ *
+ * Persistence:
+ * All filter states and search preferences are preserved in sessionStorage:
+ * - searchTerm
+ * - selectedFilters
+ * - hpFilterMin/Max
+ * - sortOption
+ * - currentPage
+ *
+ * @returns Rendered monsterpage
+ */
 
 export default function MonsterPage() {
   const [searchTerm, setSearchTerm] = useState<string>(() => sessionStorage.getItem('searchTerm') || '');
@@ -141,7 +181,7 @@ export default function MonsterPage() {
 
   const debouncedHandleHpChange = useMemo(() => debounce(handleHpChange, 300), [handleHpChange]);
 
-  const totalPages = loading ? 1 : Math.min(Math.ceil(totalMonsters / monstersPerPage), 10);
+  const totalPages = loading ? 1 : Math.min(Math.ceil(totalMonsters / monstersPerPage), 42);
 
   const handlePageChange = useCallback(
     (direction: number) => {
@@ -177,7 +217,7 @@ export default function MonsterPage() {
       <main className="main xl:before:bg-monsters xl:h-screen xl:overflow-hidden">
         <div className="black-overlay opacity-40" />
 
-        <section className="wrapper py-10 w-[90%] mt-[5vh] gap-[3vh] !justify-start mb-6">
+        <section className="wrapper py-10 w-[90%] mt-[5vh] !justify-start">
           <div className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row'}>
             <MonsterFilter
               selectedFilters={selectedFilters}
@@ -228,14 +268,14 @@ export default function MonsterPage() {
               <l-hourglass size="70" bg-opacity="0.1" speed="1.75" color="white"></l-hourglass>
             </div>
           ) : (
-            <section className="flex flex-col items-center w-full xl:h-screen justify-between">
+            <section className="flex flex-col items-center w-full xl:h-screen justify-between pb-20">
               {error ? (
                 <p>An error occurred while loading monsters. {error.message}</p>
               ) : monsters.length > 0 ? (
                 <>
                   <MonsterGrid monsters={monsters} isDungeonPage={false} />
                   {totalMonsters > monstersPerPage && (
-                    <div className="relative xl:sticky bottom-0">
+                    <div className="mt-6 w-full flex justify-center relative xl:sticky bottom-0">
                       <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
                     </div>
                   )}

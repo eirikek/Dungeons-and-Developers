@@ -1,12 +1,12 @@
-/*
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import MonsterReviewModal from '../../../src/components/MonsterCard/MonsterReviewModal.tsx';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
-import { GET_MONSTER_REVIEWS } from '../../../src/graphql/monsterQueries.ts';
-import { ADD_REVIEW, UPDATE_REVIEW } from '../../../src/graphql/reviewQueries.ts';
+import { GET_MONSTER_REVIEWS } from '../../../src/graphql/queries/monsterQueries.ts';
+import { ADD_REVIEW, UPDATE_REVIEW } from '../../../src/graphql/mutations/monsterMutations.ts';
+import { MockedResponse } from '@apollo/client/testing';
 
 export type Review = {
   id: string;
@@ -68,6 +68,8 @@ const mocksForAddingReview = [
     result: {
       data: {
         monster: {
+          id: mockProps.monsterId,
+          __typename: 'Monster',
           reviews: initialEmptyReviews,
         },
       },
@@ -88,7 +90,13 @@ const mocksForAddingReview = [
     result: {
       data: {
         addReview: {
-          reviews: mockReviewsAdd,
+          id: mockProps.monsterId,
+          __typename: 'Monster',
+          reviews: mockReviewsAdd.map((review) => ({
+            ...review,
+            __typename: 'Review',
+            user: { ...review.user, __typename: 'User' },
+          })),
         },
       },
     },
@@ -101,7 +109,13 @@ const mocksForAddingReview = [
     result: {
       data: {
         monster: {
-          reviews: mockReviewsAdd,
+          id: mockProps.monsterId,
+          __typename: 'Monster',
+          reviews: mockReviewsAdd.map((review) => ({
+            ...review,
+            __typename: 'Review',
+            user: { ...review.user, __typename: 'User' },
+          })),
         },
       },
     },
@@ -117,6 +131,8 @@ const mocksForUpdatingReview = [
     result: {
       data: {
         monster: {
+          id: mockProps.monsterId,
+          __typename: 'Monster',
           reviews: mockReviewsAdd,
         },
       },
@@ -158,14 +174,48 @@ const mocksForUpdatingReview = [
     result: {
       data: {
         monster: {
+          id: mockProps.monsterId,
           reviews: mockReviewsUpdate,
         },
       },
     },
   },
 ];
+const mocksForResetForm = [
+  {
+    request: {
+      query: GET_MONSTER_REVIEWS,
+      variables: { monsterId: mockProps.monsterId },
+    },
+    result: {
+      data: {
+        monster: {
+          id: mockProps.monsterId,
+          __typename: 'Monster',
+          reviews: mockReviewsAdd,
+        },
+      },
+    },
+  },
+  {
+    request: {
+      query: GET_MONSTER_REVIEWS,
+      variables: { monsterId: mockProps.monsterId },
+    },
+    result: {
+      data: {
+        monster: {
+          id: mockProps.monsterId,
+          __typename: 'Monster',
+          reviews: mockReviewsAdd,
+        },
+      },
+    },
+  },
+];
 
-const renderComponent = (mocks: any) => {
+const renderComponent = (mocks: MockedResponse[]) => {
+  // any since structure is not always the same
   return render(
     <MockedProvider mocks={mocks} addTypename={false}>
       <AuthContext.Provider
@@ -226,15 +276,19 @@ describe('MonsterReviewModal', () => {
 
     await user.click(reviewButton);
 
-    await user.clear(screen.getByRole('textbox'));
+    await screen.findByRole('dialog');
 
-    await user.type(screen.getByRole('textbox'), 'New review');
+    const textarea = await screen.findByLabelText('Description');
 
-    await user.click(screen.getByRole('button', { name: 'Save-button' }));
+    await user.clear(textarea);
+    await user.type(textarea, 'New review');
 
-    await waitFor(() => {
-      expect(screen.getByRole('textbox')).toHaveValue('New review');
-    });
+    const saveButton = await screen.findByRole('button', { name: /save-button/i });
+    await user.click(saveButton);
+
+    await user.click(reviewButton);
+
+    expect(screen.getByLabelText('Description')).toHaveValue('New review');
   });
 
   it('handles updating existing review', async () => {
@@ -246,11 +300,13 @@ describe('MonsterReviewModal', () => {
 
     await user.click(reviewButton);
     await waitFor(() => {
-      expect(screen.getByRole('textbox')).toHaveValue('New review');
+      expect(screen.getByLabelText('Description')).toHaveValue('New review');
     });
 
-    await user.clear(screen.getByRole('textbox'));
-    await user.type(screen.getByRole('textbox'), 'Updated review');
+    await user.clear(screen.getByLabelText('Description'));
+
+    await user.type(screen.getByLabelText('Description'), 'Updated review');
+
     await user.click(screen.getByRole('button', { name: 'Save-button' }));
 
     await waitFor(() => {
@@ -258,8 +314,9 @@ describe('MonsterReviewModal', () => {
     });
 
     await user.click(reviewButton);
+
     await waitFor(() => {
-      expect(screen.getByRole('textbox')).toHaveValue('Updated review');
+      expect(screen.getByLabelText('Description')).toHaveValue('Updated review');
     });
   });
 
@@ -303,22 +360,28 @@ describe('MonsterReviewModal', () => {
   );
 
   it('resets form when modal is closed and re-opened', async () => {
-    renderComponent(mocksForUpdatingReview);
+    renderComponent(mocksForResetForm);
     const user = userEvent.setup();
 
     const reviewButton = await screen.findByText('Review');
+
     expect(reviewButton).toBeInTheDocument();
 
     await user.click(reviewButton);
-    await user.clear(screen.getByRole('textbox'));
-    await user.type(screen.getByRole('textbox'), 'Temporary review');
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Description')).toHaveValue('New review');
+    });
+    await user.clear(screen.getByLabelText('Description'));
+
+    await user.type(screen.getByLabelText('Description'), 'Temporary review');
+
     await user.click(screen.getByText('Cancel'));
 
-    await user.click(screen.getByText('Review'));
+    await user.click(reviewButton);
 
     await waitFor(() => {
       expect(screen.getByRole('textbox')).toHaveValue('New review');
     });
   });
 });
-*/

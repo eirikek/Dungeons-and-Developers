@@ -1,9 +1,9 @@
 import { MockedProvider } from '@apollo/client/testing';
-import { render, waitFor } from '@testing-library/react';
-import { describe } from 'vitest';
-import AppProviders from '../../../src/components/AppProviders/AppProviders.tsx';
-import { AuthContext } from '../../../src/context/AuthContext.tsx';
-import { GET_USER_FAVORITES } from '../../../src/graphql/queries/userQueries.ts';
+import { render, screen, waitFor } from '@testing-library/react';
+import { describe, expect, vi } from 'vitest';
+import { GET_USER_DUNGEON_NAME, GET_USER_FAVORITES } from '../../../src/graphql/queries/userQueries';
+import AppProviders from '../../../src/components/AppProviders/AppProviders';
+import { AuthContext } from '../../../src/context/AuthContext';
 
 const mockAuthContextValue = { userId: '12345', userName: 'Bob', token: '32', login: vi.fn(), logout: vi.fn() };
 const mockShowToast = vi.fn();
@@ -22,7 +22,21 @@ const mocks = [
     result: {
       data: {
         user: {
+          id: '123',
           favoritedMonsters: [],
+        },
+      },
+    },
+  },
+  {
+    request: {
+      query: GET_USER_DUNGEON_NAME,
+      variables: { userId: mockAuthContextValue.userId },
+    },
+    result: {
+      data: {
+        user: {
+          dungeonName: 'Some Dungeon',
         },
       },
     },
@@ -31,7 +45,7 @@ const mocks = [
 
 describe('AppProviders', () => {
   it('Renders with correct values', () => {
-    const { getByText } = render(
+    render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <AuthContext.Provider value={mockAuthContextValue}>
           <AppProviders>
@@ -41,7 +55,8 @@ describe('AppProviders', () => {
       </MockedProvider>
     );
     waitFor(() => {
-      expect(getByText('Test child')).toBeInTheDocument();
+      const testChild = screen.getByText('Test child');
+      expect(testChild).toBeTruthy();
     });
   });
 });

@@ -56,8 +56,8 @@ const MonsterDetailsModal = ({ id, name, hit_points, type, image, onClose }: Mon
       <DialogContent className="flex flex-col xl:flex-row bg-black gap-6 h-full overflow-x-hidden">
         {/* Monster Info Section */}
         <Box className="w-full xl:w-1/2 flex flex-col xl:items-center justify-center gap-2 flex-shrink-0">
-          <img src={image} alt={name} className="w-full sm:w-3/4 xl:w-1/2 rounded" />
-          <h2 className="header">{name}</h2>
+          <img src={image} alt={name} className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-[70%] rounded" />
+          <h2 className="mt-2 sub-header font-bold">{name}</h2>
 
           <div className="flex flex-col gap-2">
             <p className="text">Type: {type}</p>
@@ -69,7 +69,7 @@ const MonsterDetailsModal = ({ id, name, hit_points, type, image, onClose }: Mon
         {/* Scrollable Reviews Section */}
         <Box className="w-full xl:w-1/2 rounded h-full flex flex-col gap-3">
           <div className="sticky top-0 z-10 bg-black py-4">
-            <h2 className="header xl:ml-[1.5vw]">Reviews</h2>
+            <h2 className="sub-header xl:ml-[1.5vw]">Reviews</h2>
           </div>
 
           <div className="overflow-y-auto flex-1 flex flex-col gap-5 p-1">

@@ -9,6 +9,8 @@ interface ReviewTextFieldProps {
 
 const ReviewTextField: React.FC<ReviewTextFieldProps> = ({ value, onChange, label = 'Description' }) => (
   <TextField
+    name={label}
+    id={label}
     value={value}
     onChange={onChange}
     label={label}

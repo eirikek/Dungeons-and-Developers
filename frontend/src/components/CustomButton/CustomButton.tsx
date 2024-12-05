@@ -40,11 +40,13 @@ export default function CustomButton({
     </>
   );
 
+  const baseClasses = 'sub-header';
+
   if (linkTo) {
     return (
       <Link
         to={linkTo}
-        className={`w-fit relative group flex ${activeClass} ${className}`}
+        className={`w-fit relative group flex ${baseClasses} ${activeClass} ${className}`}
         onFocus={onFocus}
         onBlur={onBlur}
       >
@@ -55,7 +57,7 @@ export default function CustomButton({
 
   return (
     <button
-      className={`relative group flex ${activeClass} ${className}`}
+      className={`relative group flex ${baseClasses} ${activeClass} ${className}`}
       onClick={onClick}
       onFocus={onFocus}
       onBlur={onBlur}

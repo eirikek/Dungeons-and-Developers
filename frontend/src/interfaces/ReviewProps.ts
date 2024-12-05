@@ -14,4 +14,3 @@ export type ReviewFormType = {
   name: string;
   image: string;
 };
-

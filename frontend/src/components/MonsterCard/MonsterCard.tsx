@@ -47,8 +47,7 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
+    if (e.key === 'Enter' && e.shiftKey) {
       e.stopPropagation();
       setIsModalOpen(true);
     }
@@ -98,6 +97,7 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
               />
               <div className="absolute left-[75%] top-5">
                 <DungeonButton
+                  data-testid={`${name}-dungeon-button`}
                   onAddToDungeonClick={handleToggleDungeon}
                   isInDungeon={isInDungeon(id)}
                   aria-label={isInDungeon(id) ? 'Remove from dungeon' : 'Add to dungeon'}
@@ -108,9 +108,10 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
           {!imageLoaded && <div className="flex justify-center w-full py-24">Loading image...</div>}
         </div>
         <div className="flex flex-col gap-1 w-full p-3">
-          <h2 className="text-5xl md:text-3xl lg:text-2xl xl:text-xl 2xl:text-lg bold">{name}</h2>
-          <p className="text-4xl md:text-2xl xl:text-lg 2xl:text-sm">Type: {type}</p>
-          <p className="text-4xl md:text-2xl xl:text-lg 2xl:text-sm">HP: {hit_points}</p>
+          <h2 className="text-xl md:text-lg lg:text-base xl:text-base 2xl:text-lg bold">{name}</h2>
+          <p className="text-lg md:text-base lg:text-sm xl:text-sm 2xl:text-base">Type: {type}</p>
+          <p className="text-lg md:text-base lg:text-sm xl:text-sm 2xl:text-base">HP: {hit_points}</p>
+
           <div className="flex w-full justify-between">
             {/* stopPropagation to prevent showing the details modal when the review button is clicked */}
             <div onClick={(e) => e.stopPropagation()}>
@@ -121,7 +122,7 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
                 e.stopPropagation();
                 handleToggleDungeon();
               }}
-              className="text-4xl md:text-2xl xl:text-lg 2xl:text-sm hover:text-customRed transition-all duration-200 monster-text-button"
+              className="xs:text-base sm:text-sm hover:text-customRed transition-all duration-200 monster-text-button"
             >
               {isInDungeon(id) ? 'Remove from dungeon' : 'Add to dungeon'}
             </button>
@@ -143,6 +144,4 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
   );
 };
 
-export default React.memo(MonsterCard, (prevProps, nextProps) => {
-  return prevProps.id === nextProps.id;
-});
+export default MonsterCard;
