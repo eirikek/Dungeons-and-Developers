@@ -1,11 +1,12 @@
 import { MockedProvider } from '@apollo/client/testing';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import MonsterReviewModal from '../../../src/components/MonsterCard/MonsterReviewModal.tsx';
 import { AuthContext } from '../../../src/context/AuthContext.tsx';
 import { GET_MONSTER_REVIEWS } from '../../../src/graphql/queries/monsterQueries.ts';
 import { ADD_REVIEW, UPDATE_REVIEW } from '../../../src/graphql/mutations/monsterMutations.ts';
+import { MockedResponse } from '@apollo/client/testing';
 
 export type Review = {
   id: string;
@@ -213,7 +214,7 @@ const mocksForResetForm = [
   },
 ];
 
-const renderComponent = (mocks: any) => {
+const renderComponent = (mocks: MockedResponse[]) => {
   // any since structure is not always the same
   return render(
     <MockedProvider mocks={mocks} addTypename={false}>

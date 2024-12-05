@@ -59,15 +59,23 @@ body {
 }
 
 .header {
-  @apply text-2xl sm:text-3xl md:text-5xl lg:text-5xl leading-10 xl:leading-10 text-white;
+  @apply text-3xl md:text-4xl xl:text-5xl leading-10  text-white;
 }
 
 .sub-header {
-  @apply text-xl sm:text-lg md:text-xl lg:text-2xl xl:text-2xl leading-8 xl:leading-10 text-white;
+  @apply text-xl sm:text-lg md:text-xl xl:text-2xl leading-8 xl:leading-10 text-white;
 }
 
 .text {
-  @apply text-xs sm:text-base md:text-lg lg:text-xl leading-8 xl:leading-10 text-white;
+  @apply sm:text-base md:text-lg lg:text-xl leading-10 xl:leading-10 text-white;
+}
+
+.pagination {
+  @apply text-lg xs:text-xl sm:text-2xl text-white;
+}
+
+.sub-menu {
+  @apply text-3xl xl:text-2xl 2xl:text-3xl 3xl:text-4xl text-white;
 }
 
 .main {

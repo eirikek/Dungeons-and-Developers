@@ -24,7 +24,7 @@ const MonsterGrid = ({ monsters = [], isDungeonPage = false }: MonsterGridProps)
   return (
     <section
       className={`grid grid-cols-1 md:grid-cols-2 ${
-        isDungeonPage ? 'xl:grid-cols-3 gap-x-10 xl:gap-x-28' : 'xl:grid-cols-4 gap-x-[10vw] lg:gap-x-[4vw]'
+        isDungeonPage ? 'xl:grid-cols-3 gap-x-10 xl:gap-x-28' : 'xl:grid-cols-4 gap-x-[10vw] lg:gap-x-32'
       } gap-y-5 place-items-center transition-opacity duration-500 p-5`}
     >
       {monstersWithDungeonStatus.map((monster) => (

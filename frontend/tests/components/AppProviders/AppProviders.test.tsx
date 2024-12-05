@@ -45,7 +45,7 @@ const mocks = [
 
 describe('AppProviders', () => {
   it('Renders with correct values', () => {
-    const { getByText } = render(
+    render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <AuthContext.Provider value={mockAuthContextValue}>
           <AppProviders>

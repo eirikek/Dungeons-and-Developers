@@ -1,17 +1,17 @@
-import text_logo from '../../assets/images/text_logo.png';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import Tilt from 'react-parallax-tilt';
 import characterImg from '../../assets/images/characters.webp';
-import monstersImg from '../../assets/images/monsters.jpg';
-import hammerImg from '../../assets/images/hammer.png';
 import dragonGif from '../../assets/images/dragon.gif';
 import favoriteImg from '../../assets/images/dungeon-gate.svg';
-import Tilt from 'react-parallax-tilt';
+import hammerImg from '../../assets/images/hammer.png';
+import monstersImg from '../../assets/images/monsters.jpg';
+import text_logo from '../../assets/images/text_logo.png';
 import HomeSection from '../../components/Home/HomeSection.tsx';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useContext, useEffect, useState, useRef } from 'react';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
-import { useToast } from '../../hooks/useToast.ts';
 import { AuthContext } from '../../context/AuthContext.tsx';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { useToast } from '../../hooks/useToast.ts';
 
 export default function HomePage() {
   const { scrollYProgress } = useScroll();
