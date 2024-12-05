@@ -1,5 +1,10 @@
 import { model, Schema, Types } from 'mongoose';
 
+/**
+ * Schema for a Player entity in the database.
+ * Represents a user with attributes like class, race, ability scores, and more.
+ */
+
 const playerSchema = new Schema({
   userName: { type: String, required: true },
   class: { type: Types.ObjectId, ref: 'Class' },

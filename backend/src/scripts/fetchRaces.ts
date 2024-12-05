@@ -4,6 +4,9 @@ import Joi from 'joi';
 import { raceValidationSchema } from '../utils/validationSchemas.js';
 const url = { races: 'https://www.dnd5eapi.co/api/races' };
 
+/**
+ * Fetches races from api with name, size, description, alignment and speed information
+ */
 async function fetchRaces() {
   let races;
   try {

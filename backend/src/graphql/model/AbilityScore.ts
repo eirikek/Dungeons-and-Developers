@@ -1,5 +1,10 @@
 import { model, Schema } from 'mongoose';
 
+/**
+ * Represents the schema for an ability score in the database.
+ * Ability scores include properties such as `index`, `name`, and associated `skills`.
+ */
+
 const AbilityScoreSchema = new Schema({
   index: { type: String, required: true },
   name: { type: String, required: true },
