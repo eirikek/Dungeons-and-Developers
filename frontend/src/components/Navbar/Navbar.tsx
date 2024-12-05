@@ -3,10 +3,21 @@ import { FaChevronDown } from 'react-icons/fa';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { IoIosLogOut } from 'react-icons/io';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAccessibility } from '../../../src/hooks/useAccessibility.ts';
+import { useAccessibility } from '../../hooks/useAccessibility.ts';
 import logo from '../../assets/images/logo.svg';
 import Accessibility from '../AccessibilityToggle/AccessibilityToggle.tsx';
 import CustomButton from '../CustomButton/CustomButton.tsx';
+
+/**
+ * Navbar component renders a component with links, dropdown menus, and accessibility options.
+ *
+ *
+ * What it includes and functionality:
+ * - Menus for Monster, Dungeon, My Character(Dropdown menu)
+ * - Drop down menu with Races, Classes, Ability Scores and Equipment
+ * - Accessibility toggle
+ * - Log out functionality that clears the token. Sending you to the login page.
+ */
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
