@@ -15,7 +15,7 @@ interface UserArgs {
 export default {
   Query: {
     async user(_: any, { id }: { id: string }) {
-      return User.findById(id)
+      const user = await User.findById(id)
         .select('dungeonName')
         .populate({
           path: 'favoritedMonsters',
@@ -25,6 +25,11 @@ export default {
         .populate('class')
         .populate('equipments')
         .populate('abilityScores');
+      if (!user) {
+        throw new Error(`User with ID ${id} not found`);
+      }
+
+      return user;
     },
 
     async checkUsername(_: any, { userName }: UserArgs) {

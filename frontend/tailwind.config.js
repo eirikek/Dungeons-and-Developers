@@ -38,13 +38,13 @@ export default {
         sans: ['"Helvetica Neue"', 'Arial', 'sans-serif'],
       },
       backgroundImage: {
-        login: "url('/src/assets/images/background/login_bg.jpeg')",
-        dungeon: "url('/src/assets/images/background/dungeon_bg.png')",
-        equipments: "url('/src/assets/images/background/equipment_bg.jpeg')",
-        myCharacter: "url('/src/assets/images/background/my_character_bg.jpg')",
-        monsters: "url('/src/assets/images/background/monsters_bg.png')",
-        home: "url('/src/assets/images/background/home_bg.jpeg')",
-        subPage: "url('/src/assets/images/background/sub_page_bg3.png')",
+        login: "url('/src/assets/images/background/login_bg.webp')",
+        dungeon: "url('/src/assets/images/background/dungeon_bg.webp')",
+        equipments: "url('/src/assets/images/background/equipment_bg.webp')",
+        myCharacter: "url('/src/assets/images/background/my_character_bg.webp')",
+        monsters: "url('/src/assets/images/background/monsters_bg.webp')",
+        home: "url('/src/assets/images/background/home_bg.webp')",
+        subPage: "url('/src/assets/images/background/sub_page_bg3.webp')",
       },
       keyframes: {
         underlineExpand: {

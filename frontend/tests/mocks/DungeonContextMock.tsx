@@ -1,7 +1,7 @@
 // src/tests/mocks/DungeonContextMock.tsx
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { DungeonContext } from '../../src/context/DungeonContext.tsx';
+import { DungeonContext } from '../../src/context/DungeonProvider.tsx';
 import { MonsterCardProps } from '../../src/interfaces/MonsterCardProps.ts';
 import { useToast } from '../../src/hooks/useToast.ts';
 

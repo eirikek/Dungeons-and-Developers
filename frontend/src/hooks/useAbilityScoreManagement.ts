@@ -1,6 +1,6 @@
 import { abilitiesVar } from '../utils/apolloVars.ts';
 import { useReactiveVar } from '@apollo/client';
-import useCharacterContext from './useCharacter.ts';
+import { useCharacterContext } from '../context/CharacterContext.ts';
 
 const useAbilityScoreManagement = (
   showToast: (args: { message: string; type: 'success' | 'error'; duration: number }) => void

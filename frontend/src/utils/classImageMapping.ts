@@ -1,15 +1,15 @@
-import barbarian from '../assets/images/class/barbarian.png';
-import bard from '../assets/images/class/bard.png';
-import cleric from '../assets/images/class/cleric.png';
-import druid from '../assets/images/class/druid.png';
-import fighter from '../assets/images/class/fighter.png';
-import monk from '../assets/images/class/monk.png';
-import paladin from '../assets/images/class/paladin.png';
-import ranger from '../assets/images/class/ranger.png';
-import rogue from '../assets/images/class/rogue.png';
-import sorcerer from '../assets/images/class/sorcerer.png';
-import warlock from '../assets/images/class/warlock.png';
-import wizard from '../assets/images/class/wizard.png';
+import barbarian from '../assets/images/class/barbarian.webp';
+import bard from '../assets/images/class/bard.webp';
+import cleric from '../assets/images/class/cleric.webp';
+import druid from '../assets/images/class/druid.webp';
+import fighter from '../assets/images/class/fighter.webp';
+import monk from '../assets/images/class/monk.webp';
+import paladin from '../assets/images/class/paladin.webp';
+import ranger from '../assets/images/class/ranger.webp';
+import rogue from '../assets/images/class/rogue.webp';
+import sorcerer from '../assets/images/class/sorcerer.webp';
+import warlock from '../assets/images/class/warlock.webp';
+import wizard from '../assets/images/class/wizard.webp';
 
 /**
  * A mapping of character class names to their corresponding image file paths.

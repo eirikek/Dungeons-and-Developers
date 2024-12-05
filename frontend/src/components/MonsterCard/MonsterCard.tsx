@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Blurhash } from 'react-blurhash';
 import NoMonsterImageFound from '../../assets/images/no_monster_image_found.jpg';
-import { DungeonContext } from '../../context/DungeonContext.tsx';
+import { DungeonContext } from '../../context/DungeonContext.ts';
 import { MonsterCardProps } from '../../interfaces/MonsterCardProps.ts';
 import DungeonButton from './DungeonButton.tsx';
 import MonsterDetailsModal from './MonsterDetailsModal.tsx';

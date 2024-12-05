@@ -1,9 +1,5 @@
-import React, { createContext, useEffect, useState } from 'react';
-
-export const AccessibilityContext = createContext({
-  isAccessibilityMode: false,
-  toggleAccessibilityMode: () => {},
-});
+import React, { useEffect, useState } from 'react';
+import { AccessibilityContext } from './AccessibilityContext';
 
 export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAccessibilityMode, setIsAccessibilityMode] = useState(false);

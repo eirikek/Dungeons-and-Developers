@@ -1,14 +1,14 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
+import Accessibility from '../../components/AccessibilityToggle/AccessibilityToggle.tsx';
 import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { CREATE_USER, LOGIN_USER } from '../../graphql/mutations/userMutations.ts';
 import { CHECK_USERNAME } from '../../graphql/queries/userQueries.ts';
-import { useAccessibility } from '../../hooks/useAccessibility.ts';
+import { useAccessibilityContext } from '../../context/AccessibilityContext.ts';
 import { useToast } from '../../hooks/useToast.ts';
-import Accessibility from '../../components/AccessibilityToggle/AccessibilityToggle.tsx';
 
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',
@@ -66,16 +66,19 @@ export default function LoginPage() {
   const [isUsernameAvailable, setIsUsernameAvailable] = useState<boolean | null>(null);
   const [shakeInput, setShakeInput] = useState(false);
   const { showToast } = useToast();
-  const { isAccessibilityMode } = useAccessibility();
+  const { isAccessibilityMode } = useAccessibilityContext();
+
+  const quoteIndexRef = useRef(0);
 
   // Change quote every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setFade(false);
       setTimeout(() => {
-        setCurrentQuoteIndex((prevIndex) => (prevIndex === quotes.length - 1 ? 0 : prevIndex + 1));
+        quoteIndexRef.current = (quoteIndexRef.current + 1) % quotes.length;
+        setCurrentQuoteIndex(quoteIndexRef.current);
         setFade(true);
-      }, 500);
+      }, 300);
     }, 5000);
 
     return () => clearInterval(interval);
@@ -212,7 +215,9 @@ export default function LoginPage() {
         <section className="w-[90%] h-3/4 relative z-10 flex flex-col items-center justify-center">
           <header className="absolute top-0 w-full">
             <h1
-              className={`sub-header xl:text-2xl text-center transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`}
+              className={`sub-header xl:text-2xl text-center transition-opacity duration-500 ${
+                fade ? 'opacity-100' : currentQuoteIndex === 0 ? 'opacity-80' : 'opacity-0'
+              }`}
             >
               {quotes[currentQuoteIndex]}
             </h1>

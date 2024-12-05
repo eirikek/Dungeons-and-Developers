@@ -11,7 +11,7 @@ import useEquipmentSuggestions from '../../hooks/useEquipmentsSuggestions.ts';
 import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import { useMediaQuery } from 'react-responsive';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
-import useCharacterContext from '../../hooks/useCharacter.ts';
+import { useCharacterContext } from '../../context/CharacterContext.ts';
 import { useReactiveVar } from '@apollo/client';
 import { equipmentsVar } from '../../utils/apolloVars.ts';
 import { useLocation } from 'react-router-dom';

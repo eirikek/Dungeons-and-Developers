@@ -1,5 +1,4 @@
-import { createContext, ReactNode, useCallback, useMemo } from 'react';
-
+import { ReactNode, useCallback, useEffect, useMemo } from 'react';
 import { useReactiveVar } from '@apollo/client';
 import useDungeon from '../hooks/useDungeon.ts';
 import { useToast } from '../hooks/useToast.ts';
@@ -7,32 +6,23 @@ import { MonsterCardProps } from '../interfaces/MonsterCardProps.ts';
 import { dungeonMonstersVar } from '../utils/apolloVars.ts';
 import { handleError } from '../utils/handleError.ts';
 import { UserNotFound } from '../utils/UserNotFound.ts';
-
-interface DungeonContextType {
-  dungeonMonsters: MonsterCardProps[];
-  toggleDungeon: (monster: MonsterCardProps) => void;
-  isInDungeon: (monsterIndex: string) => boolean;
-}
+import { DungeonContext } from './DungeonContext';
 
 interface DungeonProviderProps {
   children: ReactNode;
   userId: string;
 }
 
-export const DungeonContext = createContext<DungeonContextType>({
-  dungeonMonsters: [],
-  toggleDungeon: () => {},
-  isInDungeon: () => false,
-});
-
 export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
   const maxFavorites = 6;
   const { showToast } = useToast();
-
   const { dungeonMonsters, toggleFavorite, favoritesError } = useDungeon();
-  if (favoritesError) {
-    handleError(favoritesError, 'Failed to load favorite monsters. Please try again later.', 'critical', showToast);
-  }
+
+  useEffect(() => {
+    if (favoritesError) {
+      handleError(favoritesError, 'Failed to load favorite monsters. Please try again later.', 'critical', showToast);
+    }
+  }, [favoritesError, showToast]);
 
   const currentDungeonMonsters = useReactiveVar(dungeonMonstersVar);
 
