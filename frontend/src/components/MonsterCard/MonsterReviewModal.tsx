@@ -10,6 +10,15 @@ import { ReviewFormType, ReviewType } from '../../interfaces/ReviewProps.ts';
 import ReviewSlider from './ReviewSlider.tsx';
 import ReviewTextField from './ReviewTextField.tsx';
 
+/**
+ * Renders a modal for submitting, deleting and editing review of interacted monster card.
+ *
+ * @param {string} name - The name of the monster being reviewed.
+ * @param {string} monsterId - The id of the Monster
+ * @param {string} image - The image URL of the monster to display in the modal.
+ *
+ */
+
 const MonsterReviewModal = ({ name, monsterId, image }: ReviewFormType) => {
   const { userId } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
