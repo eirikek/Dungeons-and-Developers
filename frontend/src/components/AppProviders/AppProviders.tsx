@@ -1,11 +1,13 @@
-import { ReactNode, useContext } from 'react';
+import { useContext } from 'react';
 import { DungeonProvider } from '../../context/DungeonContext.tsx';
 import { AuthContext } from '../../context/AuthContext.tsx';
+import AppProvidersProps from '../../interfaces/AppProviderProps.ts';
 
-interface AppProvidersProps {
-  children: ReactNode;
-}
-
+/**
+ * AppProviders ensures that child components have access to the necessary contexts.
+ *
+ * @param {AppProvidersProps} props - passes children to be wrapped in context providers.
+ */
 const AppProviders = ({ children }: AppProvidersProps) => {
   const { userId } = useContext(AuthContext);
 
