@@ -144,7 +144,7 @@ describe('MonsterFilter Component', () => {
 
     await waitFor(() => {
       expect(screen.getByText('dragon (5)')).toBeTruthy();
-      expect(screen.getByText('fiend')).toBeTruthy();
+      expect(screen.getByText('fiend (0)')).toBeTruthy();
       expect(screen.getByText('humanoid (8)')).toBeTruthy();
     });
   });
