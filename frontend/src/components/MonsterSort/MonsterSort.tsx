@@ -1,11 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 import { FiX } from 'react-icons/fi';
+import SortDropdownProps from '../../interfaces/SortDropDownProps.ts';
 
-interface SortDropdownProps {
-  selectedSort: string;
-  onSortChange: (sort: string) => void;
-}
+/**
+ * SortDropdown component allows users to select an option to sort from a list of 'sortOptions'.
+ *
+ * @param {SortDropdownProps} props - The sorting dropdown component props.
+ * @param {string} selectedSort - The current selected sorting option value.
+ * @param {function} onSortChange - Callback to update the sorting option when changed.
+ *
+ */
 
 const sortOptions = [
   { label: 'A-Z', value: 'name-asc' },
