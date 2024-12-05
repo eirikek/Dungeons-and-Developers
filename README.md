@@ -25,9 +25,6 @@ An application to explore the various functionalities and mechanics of the popul
     - [Resolvers](#resolvers)
     - [Use in frontend](#use-in-frontend)
   - [Tests](#tests)
-    - [E2E testing](#e2e-testing)
-    - [Component testing](#component-testing)
-      - [Running the tests](#running-the-tests)
   - [D\&D API](#dd-api)
     - [Specifications](#specifications)
   - [Accesability](#accesability)
@@ -66,18 +63,36 @@ An application to explore the various functionalities and mechanics of the popul
 
 ### Frontend
 
-- **React**: Provides a component-based structure for building interactive UIs.
-- **TypeScript**: Enhances code reliability with static typing, making the application more maintainable.
-- **TailwindCSS**: Allows for shorthand CSS styling inline, while also creating and using our own global styles.
-- **Framer Motion**: Allows for animations that make the UI more personal and dynamic.
-- **Lodash**: Offers utility functions, simplifying common tasks like debouncing.
+- [**React**](https://react.dev/): Provides a component-based structure for building interactive UIs.
+- [**TypeScript**](https://www.typescriptlang.org/): Enhances code reliability with static typing, making the application more maintainable.
+- [**TailwindCSS**](https://tailwindcss.com/): Allows for shorthand CSS styling inline, while also creating and using our own global styles.
+- [**Framer Motion**](https://motion.dev/): Allows for animations that make the UI more personal and dynamic.
+- [**Lodash**](https://www.npmjs.com/package/lodash): Offers utility functions, simplifying common tasks like debouncing.
+- [**Apollo Client**](https://www.apollographql.com/docs/react): A statemanagement library used to manage GraphQL data by fetching, using cache
+  - We have used this together with its reactive variables to reduce fetching
+- [**Material UI**](https://mui.com/material-ui/): A React component library that implements Google's Material Design.
+
+  - We have used it to reduce time consumption on creating complex components.
+
+- [**LDRS**](https://uiball.com/ldrs): A library that provides loading spinners
+- [**React Toastify**](https://fkhadra.github.io/react-toastify/introduction): A library that provides a way to customize Toast for giving feedback during interaction for users
+- [**React blurhash**](https://www.npmjs.com/package/react-blurhash): Renders blurhashes for images
 
 ### Backend
 
-- **Node.js**: Enables running JavaScript on the server, handling requests, and serving content.
-- **Apollo Server**: Used to implement a GraphQL API, facilitating flexible data fetching for the frontend.
-- **GraphQL**: Provides efficient querying of data, allowing clients to request exactly what they need.
-- **MongoDB**: A NoSQL database that stores data in a flexible, document-oriented format.
+- [**Node.js**](https://nodejs.org/en): Enables running JavaScript on the server, handling requests, and serving content.
+- [**Axios**](https://www.npmjs.com/package/axios):
+  A simple promise based HTTP client
+- [**Apollo Server**](https://www.apollographql.com/docs/apollo-server): Used to implement a GraphQL API, facilitating flexible data fetching for the frontend.
+- [**GraphQL**](https://graphql.org/): Provides efficient querying of data, allowing clients to request exactly what they need.
+- [**MongoDB**](https://www.mongodb.com/): A NoSQL database that stores data in a flexible, document-oriented format.
+- [**Express**](https://www.npmjs.com/package/express): A webframework for node. We use it to set-up backend server
+- [**P-limit**](https://www.npmjs.com/package/p-limit): A tool to run multiple promise-returning & async functions with limited concurrency
+  - We use it to optimize fetching monsters to our database'
+- [**Joi**](https://joi.dev/api/?v=17.13.3): A validation tool used to validate database schema
+  - We use it to validate our mongoose schema
+- [**Sharp**](https://sharp.pixelplumbing.com/): An image tool to convert large images to smaller formats like WEBP.
+  - We use it to optimize images fethed from API
 
 ## Run Locally
 
@@ -174,44 +189,14 @@ To be able to use all this functionality we have defined multiple GraphQL querie
 
 ## Tests
 
-### E2E testing
-
-For E2E testing we have used Cypress to simulate different user stories. We have made;
-
-- **Login.cy**: Tests login, searching, and user interaction with data
-- **Filtering.cy**: tests login and filtering.
-
-To run the E2E tests you need a running frontend and backend, be in the frontend folder and run:
-
-```bash
-  npx cypress open
-```
-
-This should open a Cypress desktop where you need to navigate to E2E testing.
-From here you can select the tests and watch as they are ran in a virtual desktop!
-
-### Component testing
-
-We have also made several component testing in the _tests_ folder in our frontend folder. These are to make sure the component
-renders correctly, and behaves as expected during interactions.
-
-We have used _AuthContext_ and _AuthProvider_.
-
-We have made sure to use _MockedProvider_ to mock requests, and the components are tested for correct data handling from GraphQL-requests
-
-#### Running the tests
-
-Be in the frontend folder, and you can run:
-
-```bash
-  npm test
-```
+Read about testing here: [Testing](docs/testing.md)
 
 ## D&D API
 
 #### Specifications
 
 We use the [D&D 5e API](https://www.dnd5eapi.co/) to fetch the different objects used for the page. Such at the different classes, monsters, equipment etc. Which helps us keep the page true to how D&D works and what is possible in the game.
+We use [5e-encouter](https://github.com/seball/5e-encounter/tree/master/src/assets/monsters) to retrieve or pixel art images
 
 ## Accesability
 

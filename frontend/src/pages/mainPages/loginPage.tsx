@@ -8,6 +8,7 @@ import { CREATE_USER, LOGIN_USER } from '../../graphql/mutations/userMutations.t
 import { CHECK_USERNAME } from '../../graphql/queries/userQueries.ts';
 import { useAccessibility } from '../../hooks/useAccessibility.ts';
 import { useToast } from '../../hooks/useToast.ts';
+import Accessibility from '../../components/AccessibilityToggle/AccessibilityToggle.tsx';
 
 const quotes = [
   'In the heart of every adventure, lies the soul of a hero.',
