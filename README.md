@@ -25,6 +25,7 @@ Where you can create your own character, explore the games classes, monsters, ra
         - [Resolvers](#resolvers)
     - [Folder Structure](#folder-structure)
     - [Tests](#tests)
+    - [AI-tools](#ai-tools)
     - [D\&D API](#dd-api)
     - [Accessibility](#accessibility)
         - [ARIA Labels and Keyboard Navigation](#aria-labels-and-keyboard-navigation)
@@ -270,6 +271,10 @@ frontend
 ## Tests
 
 Read about testing here: [Testing](docs/testing.md)
+
+## AI-tools
+
+Read about the use of AI-tools here: [AI-tools](docs/ai-tools.md)
 
 ## D&D API
 
