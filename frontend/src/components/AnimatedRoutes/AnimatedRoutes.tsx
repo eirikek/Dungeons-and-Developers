@@ -13,6 +13,7 @@ import RacePage from '../../pages/subPages/racePage.tsx';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute.tsx';
 import { CharacterProvider } from '../../context/CharacterProvider.tsx';
 import { DungeonProvider } from '../../context/DungeonProvider.tsx';
+import NotFoundPage from '../../pages/mainPages/notFoundPage.tsx';
 
 export default function AnimatedRoutes() {
   const location = useLocation();
@@ -74,6 +75,8 @@ export default function AnimatedRoutes() {
           <Route path="/monsters" element={<MonsterPage />} />
           <Route path="/dungeon" element={<DungeonPage />} />
         </Route>
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     );
   }
