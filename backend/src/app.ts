@@ -1,11 +1,11 @@
-import express from 'express';
 import { ApolloServer } from '@apollo/server';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import typeDefs from './graphql/typeDefs/index.ts';
-import resolvers from './graphql/resolvers/index.ts';
-import fetchData from './scripts/fetchData.ts';
 import { expressMiddleware } from '@apollo/server/express4';
+import cors from 'cors';
+import express from 'express';
+import mongoose from 'mongoose';
+import resolvers from './graphql/resolvers/index.ts';
+import typeDefs from './graphql/typeDefs/index.ts';
+import fetchData from './scripts/fetchData.ts';
 
 const app = express();
 app.use(express.json());
@@ -16,14 +16,10 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: 'https://it2810-20.idi.ntnu.no/project2',
+    origin: 'http://localhost:5173',
     credentials: true,
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
-
-app.options('*', cors());
 
 const MONGODBURLPROFILE =
   'mongodb://admin:adminpassordetditt@it2810-20.idi.ntnu.no:27017/Profile?directConnection=true&authSource=admin&appName=mongosh+2.3.2';
@@ -39,19 +35,10 @@ mongoose
     console.log('MongoDB connection established');
 
     server.start().then(() => {
-      app.use(
-        '/graphql',
-        cors({
-          origin: 'https://it2810-20.idi.ntnu.no/project2',
-          credentials: true,
-          methods: ['GET', 'POST', 'OPTIONS'],
-          allowedHeaders: ['Content-Type', 'Authorization'],
-        }),
-        expressMiddleware(server)
-      );
+      app.use('/graphql', expressMiddleware(server));
 
-      app.listen(3001, () => {
-        console.log('Server is running at http://localhost:3001/graphql');
+      app.listen(4000, () => {
+        console.log('Server is running at http://localhost:4000/graphql');
         fetchData()
           .then(() => console.log('Data fetching complete'))
           .catch((error) => console.error('Error fetching data:', error));
