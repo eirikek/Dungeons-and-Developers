@@ -4,7 +4,7 @@ describe('Updates ability score, increments and decrements', () => {
   });
 
   it('Logs in and performs user story for changing and adjusting ability score', () => {
-    cy.visit('http://localhost:5173/');
+    cy.visit('http://it2810-20.idi.ntnu.no/project2/');
 
     cy.get('input#log-in-input').type('Cypress test user');
     cy.get('button').first().should('exist').should('have.text', 'Log in').click();
@@ -24,10 +24,9 @@ describe('Updates ability score, increments and decrements', () => {
     let number1: number;
     let number3: number;
     let number2: number;
-    cy.get('.sub-header').parent().get('.text-5xl');
+    cy.get('.sub-header').parent().should('exist');
     cy.get('.sub-header')
       .parent()
-      .get('.text-5xl')
       .invoke('text')
       .then((text) => {
         number1 = parseInt(text);
@@ -45,7 +44,6 @@ describe('Updates ability score, increments and decrements', () => {
 
     cy.get('.sub-header')
       .parent()
-      .get('.text-5xl')
       .invoke('text')
       .then((text) => {
         number2 = parseInt(text);
@@ -63,7 +61,6 @@ describe('Updates ability score, increments and decrements', () => {
 
     cy.get('.sub-header')
       .parent()
-      .get('.text-5xl')
       .invoke('text')
       .then((text) => {
         number3 = parseInt(text);

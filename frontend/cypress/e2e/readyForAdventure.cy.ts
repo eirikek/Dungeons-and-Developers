@@ -4,7 +4,7 @@ describe('Character Creation: Updates Race, Class, and Equipment', () => {
   });
 
   it('Logs in, selects race, class, and equipment, then removes equipment', () => {
-    cy.visit('http://localhost:5173/');
+    cy.visit('http://it2810-20.idi.ntnu.no/project2//');
 
     cy.get('input#log-in-input').type('Cypress test user');
     cy.get('button').first().should('exist').should('have.text', 'Log in').click();
