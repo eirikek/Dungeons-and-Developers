@@ -2,13 +2,20 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import classImages from '../../utils/classImageMapping.ts';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
+import ClassCardProps from '../../interfaces/ClassCardProps.ts';
 
-import ClassProps from '../../interfaces/ClassProps.ts';
-
-interface ClassCardProps extends ClassProps {
-  selectedClassId: string;
-  onSelect: (id: string) => void;
-}
+/**
+ * A card component showing information about a character class: name, hit die, skills, and an image.
+ *
+ * @param {string} id - Identification of the class
+ * @param {string} name - The name of the class
+ * @param {number} hit_die - The hit die for the class.
+ * @param {number} index - Index of the class
+ * @param {string[]} skills=[] - A list of skills for the class.
+ * @param {string} selectedClassId - The ID of the currently selected class.
+ * @param {function} onSelect - Function to select the class.
+ *
+ */
 
 const ClassCard: React.FC<ClassCardProps> = ({ id, name, hit_die, index, skills = [], selectedClassId, onSelect }) => {
   const classImage = classImages[index];

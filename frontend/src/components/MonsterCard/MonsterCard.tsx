@@ -1,18 +1,30 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Blurhash } from 'react-blurhash';
 import NoMonsterImageFound from '../../assets/images/no_monster_image_found.jpg';
-import { DungeonContext } from '../../context/DungeonContext.tsx';
+import { useDungeonContext } from '../../context/DungeonContext.ts';
 import { MonsterCardProps } from '../../interfaces/MonsterCardProps.ts';
 import DungeonButton from './DungeonButton.tsx';
 import MonsterDetailsModal from './MonsterDetailsModal.tsx';
 import MonsterReviewModal from './MonsterReviewModal.tsx';
 
+/**
+ * A card component that displays monster details
+ *
+ * @param {string} id - Identification of the monster
+ * @param {string} name - Name of the monster.
+ * @param {string} type - Type of Monster
+ * @param {number} hit_points - The health points of the monster.
+ * @param {string} alignment - The alignment of the monster
+ * @param {string} size - The size of the monster
+ * @param {string | undefined} image - The base64-encoded image or URL of the monster.
+ *
+ */
 const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: MonsterCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { toggleDungeon, isInDungeon } = useContext(DungeonContext);
+  const { toggleDungeon, isInDungeon } = useDungeonContext();
 
   useEffect(() => {
     if (id && !image) {
@@ -32,7 +44,7 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
   const monsterImageURL = image
     ? image.startsWith('data:image')
       ? image
-      : `data:image/webp;base64,${image}`
+      : `data:image/avif;base64,${image}`
     : NoMonsterImageFound;
 
   const handleToggleDungeon = () => {

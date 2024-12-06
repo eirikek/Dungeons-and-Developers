@@ -4,6 +4,21 @@ import { LuSwords } from 'react-icons/lu';
 import React from 'react';
 import { Theme } from '@mui/system';
 
+/**
+ * ReviewSlider component displays a slider with custom marks and icons for rating difficulty.
+ *
+ * @param {number} value - The current value of the slider.
+ * @param {function} [onChange] - The function to handle slider value changes.
+ * @param {boolean} [disabled=false] - Boolean value that checks if it is disabled or not.
+ * @param {Array} [marks=marks] - The array of marks to be displayed on the slider with custom icons.
+ * @param {number} [min=0] - The minimum value of the slider.
+ * @param {number} [max=100] - The maximum value of the slider.
+ * @param {number} [step=10] - The step value of the slider.
+ * @param {SxProps<Theme>} [sx] - Custom styles for the slider.
+ *
+ * @interface SliderProps - Issue with splitting up into a separate file for interface and marks.
+ * But is the interface passed down to the component.
+ */
 const marks = [
   { value: 10, label: <LuSwords size={20} /> },
   { value: 30, label: <GiRoundShield size={20} /> },

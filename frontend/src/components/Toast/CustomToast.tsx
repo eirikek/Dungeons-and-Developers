@@ -4,9 +4,19 @@ import { FaUndoAlt } from 'react-icons/fa';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
 import { IoAlertCircleOutline, IoCloseCircleOutline } from 'react-icons/io5';
 import { toast, ToastContainer, Zoom } from 'react-toastify';
-import { ToastContext, ToastProps } from '../../context/ToastContext';
+import { ToastContext } from '../../context/ToastContext';
 import 'react-toastify/dist/ReactToastify.css';
 import './CustomToast.css';
+import { ToastProps } from '../../interfaces/ToastContextProps.ts';
+
+/**
+ * Renders a CustomToast component showing a toast message with an optional undo action.
+ *
+ * @param {string} message - The message of the toast.
+ * @param {string} type - The type of toast
+ * @param {function} undoAction - Function to handle action when the "Undo" button is clicked.
+ * @param {function} closeToast - Function for closing the toast.
+ **/
 
 const CustomToast = ({ message, type, undoAction, closeToast }: ToastProps) => {
   const [undoVisible, setUndoVisible] = useState(true);

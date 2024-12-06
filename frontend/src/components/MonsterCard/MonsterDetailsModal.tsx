@@ -5,16 +5,20 @@ import { AuthContext } from '../../context/AuthContext';
 import { GET_MONSTER_REVIEWS } from '../../graphql/queries/monsterQueries.ts';
 import { ReviewType } from '../../interfaces/ReviewProps.ts';
 import Review from './Review.tsx';
+import { MonsterDetailsModalProps } from '../../interfaces/MonsterDetailsModalProps.ts';
 
-type MonsterDetailsModalProps = {
-  id: string;
-  name: string;
-  hit_points: number;
-  type: string;
-  image: string;
-  onClose: () => void;
-};
-
+/**
+ * Renders a modal of the interacted Monster card.
+ * Allows users to view reviews and the average difficulty rating of the monster.
+ *
+ * @param {string} id - The unique identifier for the monster.
+ * @param {string} name - The name of the monster.
+ * @param {number} hit_points - The health points of the monster.
+ * @param {string} type - The type of the monster
+ * @param {string} image - The URL or base64-encoded image of the monster.
+ * @param {Function} onClose - Closes the modal.
+ *
+ */
 const MonsterDetailsModal = ({ id, name, hit_points, type, image, onClose }: MonsterDetailsModalProps) => {
   const { userId } = useContext(AuthContext);
 

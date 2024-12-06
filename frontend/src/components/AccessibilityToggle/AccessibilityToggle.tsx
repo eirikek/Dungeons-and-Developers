@@ -2,11 +2,12 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import accessabilityIcon from '../../assets/images/accessibility-icon.png';
 import { useAccessibility } from '../../hooks/useAccessibility';
-
-interface AccesibilityProps {
-  checked: boolean;
-  onChange?: (checked: boolean) => void;
-}
+import AccesibilityProps from '../../interfaces/AccesibilityProps.ts';
+/**
+ * AccessibilityToggle component allows users to change the complex UI to a more accessible mode.
+ *
+ * Renders a component that user can interact with as an image and a checkbox.
+ */
 const AccessibilityToggle = ({ checked = false, onChange }: AccesibilityProps) => {
   const { isAccessibilityMode, toggleAccessibilityMode } = useAccessibility();
   const location = useLocation();
@@ -29,7 +30,7 @@ const AccessibilityToggle = ({ checked = false, onChange }: AccesibilityProps) =
     <label className="flex items-center cursor-pointer z-50" onKeyDown={handleKeyDown} tabIndex={0}>
       <div className="mr-3">
         <img
-          src={accessabilityIcon}
+          src={accessibilityIcon}
           alt="accessability icon"
           className={`w-10 ${isLoginPage ? 'filter invert' : ''}`}
         />

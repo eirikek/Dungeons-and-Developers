@@ -3,6 +3,16 @@ import React from 'react';
 import AbilityScoreCardProps from '../../interfaces/AbilityScoreProps.ts';
 import Counter from '../Counter/Counter.tsx';
 
+/**
+ * A card component displaying the ability score with a value and it's corresponding skills.
+ *
+ * @param {string} name - The name of the ability.
+ * @param {string[]} skills - A list recommended skills corresponding for this ability.
+ * @param {number} score - The current ability score.
+ * @param {function} onChange - Function to update the ability score.
+ *
+ */
+
 const AbilityScoreCard: React.FC<AbilityScoreCardProps & { score: number; onChange: (value: number) => void }> = ({
   name,
   skills = [],

@@ -86,7 +86,7 @@ export default function DungeonPage() {
             aria-label="Enter dungeon name"
             data-testid="input-for-dungeon-name"
           />
-          {dungeonMonsters.length === 0 && (
+          {dungeonMonsters.length === 0 && !loading && (
             <section className="align-middle text-center mt-10 min-h-[380vh] w-full">
               <h2 className="text-xl xs:text-2xl sm:text-3xl lg:text-4xl">No monsters in dungeon!</h2>
             </section>

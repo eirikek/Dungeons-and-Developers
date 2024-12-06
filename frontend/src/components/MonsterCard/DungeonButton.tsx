@@ -1,10 +1,13 @@
 import { GiDungeonGate } from 'react-icons/gi';
+import DungeonButtonprops from '../../interfaces/DungeonButtonProps.ts';
 
-interface DungeonButtonprops {
-  onAddToDungeonClick: () => void;
-  isInDungeon: boolean;
-}
-
+/**
+ * DungeonButton component renders a button that allows the user to add or remove a monster from the users dungeon.
+ *
+ * @param {Function} onAddToDungeonClick - The function that will be called when the button is clicked.
+ * @param {boolean} isInDungeon - Boolean value that checks if the monster is in dungeon.
+ *
+ */
 const DungeonButton = ({ onAddToDungeonClick, isInDungeon }: DungeonButtonprops) => {
   return (
     <button
@@ -12,7 +15,7 @@ const DungeonButton = ({ onAddToDungeonClick, isInDungeon }: DungeonButtonprops)
         isInDungeon ? 'bg-customRed' : 'hover:bg-white'
       }`}
       onClick={(e) => {
-        e.stopPropagation(); // Prevent the details modal from opening when clicking the favorite icon
+        e.stopPropagation();
         onAddToDungeonClick();
       }}
       aria-label={isInDungeon ? 'Remove from dungeon' : 'Add to dungeon'}

@@ -1,12 +1,16 @@
 import { motion } from 'framer-motion';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar.tsx';
+import MainPageLayoutProps from '../../interfaces/MainPageLayoutProps.ts';
 
-interface MainPageLayoutProps {
-  children: React.ReactNode;
-  isLoginTransition?: boolean;
-}
+/**
+ * MainPageLayout component manages the layout for the main pages
+ *
+ *
+ * @param {React.ReactNode} children - The child elements to be rendered within the layout.
+ * @param {boolean} isLoginTransition - Boolean value that checks if it will be a curtain drop or not.
+ */
 
 const MainPageLayout = ({ children, isLoginTransition = false }: MainPageLayoutProps) => {
   const location = useLocation();

@@ -1,8 +1,14 @@
-import { useContext } from 'react';
-import { DungeonContext } from '../../context/DungeonContext';
+import { useDungeonContext } from '../../context/DungeonContext';
 
+/**
+ * DungeonStats is a component that calculates the total hit-points of the dungeon.
+ *
+ * It uses the `DungeonContext` to calculate the sum of their `hit_points`.
+ * This is shown in your dungeon.
+ *
+ **/
 const DungeonStats = () => {
-  const { dungeonMonsters } = useContext(DungeonContext);
+  const { dungeonMonsters } = useDungeonContext();
   const totalHp = dungeonMonsters.reduce((sum, monster) => sum + monster.hit_points, 0);
 
   return (

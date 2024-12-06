@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import client from './client/apollo.ts';
 import ToastProvider from './components/Toast/CustomToast.tsx';
-import { AccessibilityProvider } from './context/AccessibilityContext.tsx';
+import { AccessibilityProvider } from './context/AccessibilityProvider.tsx';
 import { AuthProvider } from './context/AuthContext.tsx';
 import './index.css';
 

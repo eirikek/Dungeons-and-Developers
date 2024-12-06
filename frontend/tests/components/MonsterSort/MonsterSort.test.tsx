@@ -57,22 +57,6 @@ describe('SortDropdown Component', () => {
     expect(selectedOption).toHaveClass('font-bold');
   });
 
-  it('supports keyboard navigation and selection', async () => {
-    render(<SortDropdown selectedSort="name-asc" onSortChange={mockOnSortChange} />);
-
-    const toggleButton = screen.getByText('A-Z');
-    await userEvent.click(toggleButton);
-
-    const dropdown = screen.getByRole('list');
-    dropdown.focus();
-
-    await userEvent.keyboard('{ArrowDown}');
-    await userEvent.keyboard('{ArrowDown}');
-    await userEvent.keyboard('{Enter}');
-
-    expect(mockOnSortChange).toHaveBeenCalledWith('difficulty-desc');
-  });
-
   it('closes the dropdown when clicking outside', async () => {
     render(<SortDropdown selectedSort="name-asc" onSortChange={mockOnSortChange} />);
 

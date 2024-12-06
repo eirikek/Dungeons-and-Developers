@@ -3,12 +3,15 @@ import userEvent from '@testing-library/user-event';
 import { useLocation } from 'react-router-dom';
 import { describe, expect, it, MockedFunction, vi } from 'vitest';
 import AccessibilityToggle from '../../../src/components/AccessibilityToggle/AccessibilityToggle.tsx';
-import { useAccessibility } from '../../../src/hooks/useAccessibility.ts';
+import { useAccessibilityContext } from '../../../src/context/AccessibilityContext.ts';
 
-// Mock the AccessibilityContext hook
-vi.mock('../../../src/hooks/useAccessibility.ts', () => ({
-  useAccessibility: vi.fn(),
-}));
+vi.mock('../../../src/context/AccessibilityContext.ts', async () => {
+  const original = await vi.importActual('../../../src/context/AccessibilityContext.ts');
+  return {
+    ...original,
+    useAccessibilityContext: vi.fn(),
+  };
+});
 
 vi.mock('react-router-dom', () => ({
   useLocation: vi.fn(),
@@ -20,7 +23,7 @@ describe('AccessibilityToggle', () => {
 
   beforeEach(() => {
     vi.resetAllMocks();
-    (useAccessibility as MockedFunction<typeof useAccessibility>).mockReturnValue({
+    (useAccessibilityContext as MockedFunction<typeof useAccessibilityContext>).mockReturnValue({
       isAccessibilityMode: false,
       toggleAccessibilityMode: mockToggleAccessibilityMode,
     });
@@ -67,7 +70,7 @@ describe('AccessibilityToggle', () => {
   });
 
   it('displays the toggle with the correct background color when accessibility mode is on', () => {
-    (useAccessibility as MockedFunction<typeof useAccessibility>).mockReturnValue({
+    (useAccessibilityContext as MockedFunction<typeof useAccessibilityContext>).mockReturnValue({
       isAccessibilityMode: true,
       toggleAccessibilityMode: mockToggleAccessibilityMode,
     });
@@ -94,7 +97,7 @@ describe('AccessibilityToggle', () => {
   });
 
   it('displays the toggle knob at the correct position when accessibility mode is on', () => {
-    (useAccessibility as MockedFunction<typeof useAccessibility>).mockReturnValue({
+    (useAccessibilityContext as MockedFunction<typeof useAccessibilityContext>).mockReturnValue({
       isAccessibilityMode: true,
       toggleAccessibilityMode: mockToggleAccessibilityMode,
     });

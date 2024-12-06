@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Button from '../CustomButton/CustomButton.tsx';
 
+/**
+ * Renders a SubMenu component it inhabits a navigation menu with buttons for Race, Class, and Ability Scores.
+ */
+
 const SubMenu = () => {
   const location = useLocation();
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
