@@ -16,10 +16,14 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'http://localhost:4173'],
+    origin: 'https://it2810-20.idi.ntnu.no/project2',
     credentials: true,
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
+
+app.options('*', cors());
 
 const MONGODBURLPROFILE =
   'mongodb://admin:adminpassordetditt@it2810-20.idi.ntnu.no:27017/Profile?directConnection=true&authSource=admin&appName=mongosh+2.3.2';
@@ -35,10 +39,19 @@ mongoose
     console.log('MongoDB connection established');
 
     server.start().then(() => {
-      app.use('/graphql', expressMiddleware(server));
+      app.use(
+        '/graphql',
+        cors({
+          origin: 'https://it2810-20.idi.ntnu.no/project2',
+          credentials: true,
+          methods: ['GET', 'POST', 'OPTIONS'],
+          allowedHeaders: ['Content-Type', 'Authorization'],
+        }),
+        expressMiddleware(server)
+      );
 
-      app.listen(4000, () => {
-        console.log('Server is running at http://localhost:4000/graphql');
+      app.listen(3001, () => {
+        console.log('Server is running at http://localhost:3001/graphql');
         fetchData()
           .then(() => console.log('Data fetching complete'))
           .catch((error) => console.error('Error fetching data:', error));
