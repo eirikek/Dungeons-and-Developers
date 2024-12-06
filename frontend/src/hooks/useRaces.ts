@@ -4,6 +4,49 @@ import RaceProps from '../interfaces/RaceProps.ts';
 import { GET_RACES } from '../graphql/queries/raceQueries.ts';
 import { handleError } from '../utils/handleError.ts';
 
+/**
+ * Custom Hook: `useRaces`
+ *
+ * Fetches and transforms race data from the GraphQL API, supporting pagination and conditional fetching.
+ *
+ * Features:
+ * - Executes a query to fetch race data based on the current page and number of races per page.
+ * - Handles GraphQL query errors with custom error handling.
+ * - Transforms the fetched race data into a usable format.
+ *
+ * Dependencies:
+ * - `GET_RACES`: GraphQL query to fetch races and their metadata.
+ * - `handleError`: Utility function to log and handle errors gracefully.
+ *
+ * @param currentPage The current page for race pagination.
+ * @param racesPerPage The number of races to fetch per page.
+ * @param shouldFetch A boolean to determine whether the query should execute.
+ *
+ * @returns An object containing:
+ * - `races`: An array of transformed race data.
+ * - `totalRaces`: The total number of races available in the dataset.
+ * - `loading`: A boolean indicating if the races are being fetched.
+ * - `error`: Any error encountered during the query execution.
+ *
+ * @example
+ * ```tsx
+ * const { races, totalRaces, loading, error } = useRaces(1, 10, true);
+ *
+ * if (loading) return <p>Loading...</p>;
+ * if (error) return <p>Error fetching races</p>;
+ *
+ * return (
+ *   <ul>
+ *     {races.map((race) => (
+ *       <li key={race.id}>
+ *         {race.name} - Speed: {race.speed}
+ *       </li>
+ *     ))}
+ *   </ul>
+ * );
+ * ```
+ */
+
 function useRaces(currentPage: number, racesPerPage: number, shouldFetch: boolean) {
   const offset = (currentPage - 1) * racesPerPage;
 

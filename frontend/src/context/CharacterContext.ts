@@ -1,29 +1,5 @@
-import AbilityScoreCardProps from '../interfaces/AbilityScoreProps.ts';
-import ClassData from '../interfaces/ClassProps.ts';
-import RaceData from '../interfaces/RaceProps.ts';
-import { Equipment } from '../interfaces/EquipmentProps.ts';
 import { createContext, useContext } from 'react';
-
-interface CharacterContextType {
-  stateAbilities: AbilityScoreCardProps[];
-  userAbilityScores: Map<string, number>;
-  updateAbilityScores: (newValue: number, updatedAbilityName: string) => Promise<void>;
-  classes: ClassData[];
-  updateClass: (classId: string) => Promise<void>;
-  races: RaceData[];
-  updateRace: (raceId: string) => Promise<void>;
-  addToEquipments: (equipment: Equipment) => void;
-  removeFromEquipments: (equipment: Equipment) => void;
-  removeAllEquipments: () => void;
-  loadingStates: LoadingStates;
-}
-
-interface LoadingStates {
-  abilityScoresLoading: boolean;
-  classLoading: boolean;
-  raceLoading: boolean;
-  equipmentsLoading: boolean;
-}
+import { CharacterContextType } from '../interfaces/CharacterContextProps.ts';
 
 export const CharacterContext = createContext<CharacterContextType>({
   stateAbilities: [],

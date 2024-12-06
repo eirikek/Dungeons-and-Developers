@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useReactiveVar } from '@apollo/client';
 import useDungeon from '../hooks/useDungeon.ts';
 import { useToast } from '../hooks/useToast.ts';
@@ -6,12 +6,8 @@ import { MonsterCardProps } from '../interfaces/MonsterCardProps.ts';
 import { dungeonMonstersVar } from '../utils/apolloVars.ts';
 import { handleError } from '../utils/handleError.ts';
 import { UserNotFound } from '../utils/UserNotFound.ts';
-import { DungeonContext } from './DungeonContext';
-
-interface DungeonProviderProps {
-  children: ReactNode;
-  userId: string;
-}
+import { DungeonProviderProps } from '../interfaces/DungeonContextProps.ts';
+import { DungeonContext } from './DungeonContext.ts';
 
 export const DungeonProvider = ({ children, userId }: DungeonProviderProps) => {
   const maxFavorites = 6;

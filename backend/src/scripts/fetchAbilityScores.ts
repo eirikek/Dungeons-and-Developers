@@ -4,6 +4,10 @@ import Joi from 'joi';
 import { abilityScoreValidationSchema } from '../utils/validationSchemas.js';
 const url = { abilities: 'https://www.dnd5eapi.co/api/ability-scores' };
 
+/**
+ * Fetches abilityscore data from the api
+ */
+
 async function fetchAbilityScores() {
   let abilities;
   try {

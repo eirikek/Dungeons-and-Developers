@@ -10,6 +10,10 @@ import fetchData from './scripts/fetchData.ts';
 const app = express();
 app.use(express.json());
 
+/**
+ * Setup of mongodb connection with GraphQL, starts backend server.
+ */
+
 app.use(
   cors({
     origin: ['http://localhost:5173', 'http://localhost:4173'],

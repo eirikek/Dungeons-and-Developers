@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AccessibilityContext } from './AccessibilityContext';
+import { AccessibilityProviderProps } from '../interfaces/AccessibilityProviderProps.ts';
 
-export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AccessibilityProvider = ({ children }: AccessibilityProviderProps) => {
   const [isAccessibilityMode, setIsAccessibilityMode] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    const storedMode = localStorage.getItem('accesibility-mode') === 'true';
+    const storedMode = localStorage.getItem('accessibility-mode') === 'true';
     setIsAccessibilityMode(storedMode);
     setIsInitialized(true);
   }, []);
@@ -18,10 +19,10 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (isInitialized) {
       if (isAccessibilityMode) {
-        localStorage.setItem('accesibility-mode', 'true');
+        localStorage.setItem('accessibility-mode', 'true');
         document.body.classList.add('accessibility-mode');
       } else {
-        localStorage.setItem('accesibility-mode', 'false');
+        localStorage.setItem('accessibility-mode', 'false');
         document.body.classList.remove('accessibility-mode');
       }
     }

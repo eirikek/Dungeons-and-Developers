@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Blurhash } from 'react-blurhash';
 import NoMonsterImageFound from '../../assets/images/no_monster_image_found.jpg';
-import { DungeonContext } from '../../context/DungeonContext.ts';
+import { useDungeonContext } from '../../context/DungeonContext.ts';
 import { MonsterCardProps } from '../../interfaces/MonsterCardProps.ts';
 import DungeonButton from './DungeonButton.tsx';
 import MonsterDetailsModal from './MonsterDetailsModal.tsx';
@@ -12,7 +12,7 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
   const [imageError, setImageError] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { toggleDungeon, isInDungeon } = useContext(DungeonContext);
+  const { toggleDungeon, isInDungeon } = useDungeonContext();
 
   useEffect(() => {
     if (id && !image) {
