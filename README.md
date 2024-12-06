@@ -27,10 +27,13 @@ Where you can create your own character, explore the games classes, monsters, ra
     - [Tests](#tests)
     - [D\&D API](#dd-api)
     - [Accessibility](#accessibility)
+        - [ARIA Labels and Keyboard Navigation](#aria-labels-and-keyboard-navigation)
+        - [Accessibility Mode](#accessibility-mode)
     - [Sustainability](#sustainability)
         - [Optimized Image Handling](#optimized-image-handling)
         - [Efficient API Usage](#efficient-api-usage)
         - [State Management and Pagination](#state-management-and-pagination)
+        - [Secure and User-Friendly Navigation](#secure-and-user-friendly-navigation)
     - [Known Issues](#known-issues)
     - [Authors](#authors)
     - [License](#license)
@@ -211,6 +214,59 @@ using Apollo Client.
 
 ## Folder Structure
 
+```plaintext
+T20-Project-2
+├── backend
+│   ├── src
+│   │   ├── graphql
+│   │   │   ├── model
+│   │   │   ├── resolvers
+│   │   │   └── typeDefs
+│   │   ├── scripts
+│   │   ├── utils
+│   │   ├── app.ts
+│   │   └── main.ts
+├── docs
+frontend
+├── cypress
+│   ├── e2e
+│   ├── fixtures
+│   └── support
+├── public
+├── src
+│   ├── assets
+│   │   ├── fonts
+│   │   └── images
+│   ├── client
+│   ├── components
+│   │   ├── ... (component folders)
+│   ├── context
+│   ├── graphql
+│   │   ├── mutations
+│   │   ├── queries
+│   │   └── queryInterface.ts
+│   ├── hooks
+│   ├── interfaces
+│   ├── pages
+│   │   ├── mainPages
+│   │   ├── subPages
+│   ├── test
+│   ├── utils
+│   ├── App.tsx
+│   ├── index.css
+│   └── main.tsx
+├── tests
+│   ├── components
+│   │   ├── ... (component folders)
+│   │   │   ├── __snapshots__
+│   │   │   ├── (component).test.tsx
+│   ├── context
+│   │   │   ├── __snapshots__
+│   │   │   ├── AuthContext.test.tsx
+│   ├── mocks
+│   └── utils
+```
+
 ## Tests
 
 Read about testing here: [Testing](docs/testing.md)
@@ -225,11 +281,18 @@ images
 
 ## Accessibility
 
-For better accessibility we have provided ARIA-labels for the essential elements for our code.
-Which helps us provide context for our custom elements, and provide information to assistive technologies.
+### ARIA Labels and Keyboard Navigation
 
-- Users can navigate using keyboard
-- Accessibility mode
+- **ARIA Labels:** Essential elements include ARIA labels to provide additional context for custom components and ensure
+  compatibility with assistive technologies. This enhances the overall usability of the application for all users.
+- **Keyboard Navigation:** The entire application is fully navigable using a keyboard. All interactive elements, such as
+  buttons and links, are accessible without requiring a mouse.
+
+### Accessibility Mode
+
+- **Accessibility Mode:** A dedicated accessibility mode is available via a toggle button in the navigation bar and on
+  the login page. This mode adjusts the user interface by removing background images and applying a black background,
+  making text and buttons more distinguishable and easier to interact with for users with visual impairments.
 
 ## Sustainability
 
@@ -255,6 +318,13 @@ Which helps us provide context for our custom elements, and provide information 
   in sessionStorage. This allows users to navigate between pages without losing their search results or filter settings.
 - **Pagination:** Instead of fetching the entire dataset at once, we implement pagination to retrieve only the relevant
   monsters for the current page.
+
+### Secure and User-Friendly Navigation
+
+- **Protected Routes:** Users cannot access any part of the application except the login page unless authenticated
+  (logged in)
+- **404 Page:** A custom 404 page has been implemented to handle invalid routes. This minimizes confusion and helps
+  guide users back to valid pages.
 
 ## Known Issues
 
