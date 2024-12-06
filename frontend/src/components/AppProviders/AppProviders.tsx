@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { DungeonProvider } from '../../context/DungeonContext.tsx';
+import { DungeonProvider } from '../../context/DungeonProvider.tsx';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import AppProvidersProps from '../../interfaces/AppProviderProps.ts';
 

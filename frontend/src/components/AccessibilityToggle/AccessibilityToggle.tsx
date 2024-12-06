@@ -1,8 +1,8 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import accessabilityIcon from '../../assets/images/accessibility-icon.png';
-import { useAccessibilityContext } from '../../context/AccessibilityContext.ts';
+import accessibilityIcon from '../../assets/images/accessibility-icon.png';
 import AccesibilityProps from '../../interfaces/AccesibilityProps.ts';
+import { useAccessibilityContext } from '../../context/AccessibilityContext.ts';
 /**
  * AccessibilityToggle component allows users to change the complex UI to a more accessible mode.
  *
@@ -30,7 +30,7 @@ const AccessibilityToggle = ({ checked = false, onChange }: AccesibilityProps) =
     <label className="flex items-center cursor-pointer z-50" onKeyDown={handleKeyDown} tabIndex={0}>
       <div className="mr-3">
         <img
-          src={accessabilityIcon}
+          src={accessibilityIcon}
           alt="accessability icon"
           className={`w-10 ${isLoginPage ? 'filter invert' : ''}`}
         />
