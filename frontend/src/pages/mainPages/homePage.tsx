@@ -261,7 +261,7 @@ export default function HomePage() {
         />
       </main>
       <motion.div
-        className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer"
+        className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-30 cursor-pointer"
         onClick={handleChevronClick}
         animate={{
           y: [0, -10, 0],
