@@ -4,7 +4,7 @@ describe('Creates a review, then deletes it. Now with Accesibility mode on', () 
   });
 
   it('Logs in and reviews, edit the reviews from two different ways and then deletes it.', () => {
-    cy.visit('http://localhost:5173/');
+    cy.visit('http://it2810-20.idi.ntnu.no/project2/');
 
     cy.get('img[alt="accessability icon"]').should('exist');
     cy.get('label').should('exist');
