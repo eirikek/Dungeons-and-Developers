@@ -37,7 +37,7 @@ mongoose
     server.start().then(() => {
       app.use('/graphql', expressMiddleware(server));
 
-      app.listen(4000, () => {
+      app.listen(3001, () => {
         console.log('Server is running at http://localhost:4000/graphql');
         fetchData()
           .then(() => console.log('Data fetching complete'))
