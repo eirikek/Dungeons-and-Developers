@@ -34,7 +34,7 @@ export default defineConfig({
         'src/vite-env.d.ts',
         'src/App.tsx',
         'src/components/subPages/**',
-        'cypress.config.ts',
+        'cypress.config.js',
         'eslint.config.js',
         'tailwind.config.js',
         'vite.config.mts',
