@@ -1,6 +1,16 @@
 import { EquipmentCardProps } from '../../interfaces/EquipmentProps.ts';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
 
+/**
+ * Renders EquipmentCard component displays information about an equipment item.
+ *
+ * @param {Object} equipment - Is the equipment, it's attributes are name and value.
+ * @param {boolean} isChecked - Boolean value for the checkbox to say if it is checked.
+ * @param {function} onChange - Function to handle checkbox state.
+ * @param {boolean} disabled - Boolean value to see if the checkbox is disabled.
+ * @param {function} onDisabledClick - Function for when the disabled checkbox is clicked.
+ */
+
 const EquipmentCard = ({ equipment, isChecked, onChange, disabled, onDisabledClick }: EquipmentCardProps) => {
   const handleCheckboxChange = (checked: boolean) => {
     if (disabled) {
