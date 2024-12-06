@@ -17,7 +17,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: 'http://it2810-20.idi.ntnu.no',
     credentials: true,
   })
 );
