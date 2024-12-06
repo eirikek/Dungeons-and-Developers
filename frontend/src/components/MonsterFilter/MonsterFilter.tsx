@@ -6,17 +6,21 @@ import { FiX } from 'react-icons/fi';
 import { GET_MONSTER_HP_RANGE } from '../../graphql/queries/monsterQueries.ts';
 import { useToast } from '../../hooks/useToast.ts';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
+import MonsterFilterProps from '../../interfaces/MonsterFilterProps.ts';
 
-interface MonsterFilterProps {
-  selectedFilters: Set<string>;
-  setSelectedFilters: (filters: Set<string> | ((prev: Set<string>) => Set<string>)) => void;
-  onHpChange: (min: number, max: number) => void;
-  setCurrentPage: (page: number) => void;
-  onClearFilters: () => void;
-  monsterCounts: Record<string, number>;
-  monsterTypes: string[];
-  searchTerm: string;
-}
+/**
+ * Renders a MonsterFilter component and allows the users to filter monsters based on hit points and type.
+ *
+ * @param {Set<string>} selectedFilters - Selected filters.
+ * @param {function} setSelectedFilters - Updates the selected filters.
+ * @param {function} onHpChange - Function to handle HP range change.
+ * @param {function} setCurrentPage - Function to reset the current page when filters change.
+ * @param {function} onClearFilters - Function to clear all selected filters.
+ * @param {object} monsterCounts - Record holding the name and amount of monsters for each filter option.
+ * @param {string[]} monsterTypes - List of available monster types to filter by.
+ * @param {string} searchTerm - Search term for monsters, in this case you need to clear it fore use of the filter.
+ *
+ */
 
 export default function MonsterFilter({
   selectedFilters,

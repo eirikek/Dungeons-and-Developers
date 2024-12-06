@@ -1,14 +1,17 @@
 import React from 'react';
+import CustomCheckboxProps from '../../interfaces/CustomCheckboxProps.ts';
 
-interface CustomCheckboxProps {
-  checked?: boolean;
-  onChange?: (checked: boolean) => void;
-  scale?: number;
-  disableUncheck?: boolean;
-  disabled?: boolean;
-  onDisabledClick?: () => void;
-}
-
+/**
+ * A custom checkbox component that handles different cases.
+ *
+ * @param {boolean} checked - The current checked state of the checkbox.
+ * @param {(checked: boolean) => void} onChange - Function that handles when the state of the checkbox changes.
+ * @param {number} scale - Transforms the scale
+ * @param {boolean} disableUncheck- Disables the checkbox from unchecking
+ * @param {boolean} disabled - Boolean value decides if the checkbox is disabled.
+ * @param {() => void} onDisabledClick - Function to handle when the disabled checkbox is clicked.
+ *
+ */
 const CustomCheckbox = ({
   checked = false,
   onChange,

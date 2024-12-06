@@ -8,6 +8,17 @@ import logo from '../../assets/images/logo.svg';
 import Accessibility from '../AccessibilityToggle/AccessibilityToggle.tsx';
 import CustomButton from '../CustomButton/CustomButton.tsx';
 
+/**
+ * Navbar component renders a component with links, dropdown menus, and accessibility options.
+ *
+ *
+ * What it includes and functionality:
+ * - Menus for Monster, Dungeon, My Character(Dropdown menu)
+ * - Drop down menu with Races, Classes, Ability Scores and Equipment
+ * - Accessibility toggle
+ * - Log out functionality that clears the token. Sending you to the login page.
+ */
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);

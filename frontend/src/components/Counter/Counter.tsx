@@ -1,14 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import CounterProps from '../../interfaces/CounterProps.ts';
 
-interface CounterProps {
-  value: number;
-  onChange?: (newValue: number) => void;
-  scale?: number;
-  onPointerUp?: () => void;
-  onMouseUp?: () => void;
-  onValueFinalized?: (finalValue: number) => void;
-}
+/**
+ * Renders a custom Counter that can be incremented and decremented using different events.
+ *
+ * @param {number} value - The current value of the counter
+ * @param {(value: number) => void} onChange - Handles value change.
+ * @param {number} scale - Transforms the size
+ * @param {() => void} onPointerUp - Function for pointer up
+ * @param {() => void} onMouseUp - Function for mouseevent.
+ * @param {(value: number) => void} onValueFinalized - Handles finalized value
+ *
+ */
 
 export default function Counter({ value, onChange, scale, onPointerUp, onMouseUp, onValueFinalized }: CounterProps) {
   const changeTimer = useRef<NodeJS.Timeout | null>(null);

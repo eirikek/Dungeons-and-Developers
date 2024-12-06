@@ -1,14 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { CiSearch } from 'react-icons/ci';
+import SearchBarProps from '../../interfaces/SearchBarProps.ts';
 
-interface SearchBarProps {
-  searchTerm: string;
-  handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  suggestions: string[];
-  onSuggestionClick: (suggestion: string) => void;
-  placeholder?: string;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-}
+/**
+ * A search bar component that shows results based on user input.
+ *
+ * @param {string} searchTerm - The current search term.
+ * @param {function} handleSearchChange - Handles changes in search terms
+ * @param {string[]} suggestions - List of suggestions based on the search term.
+ * @param {function} onSuggestionClick - Handles the function of the clicked suggestion
+ * @param {string} placeholder='Search for a monster...' - Placeholder text.
+ * @param {function} .onKeyDown - Handler of keydown
+ *
+ */
 
 const SearchBar = ({
   searchTerm,

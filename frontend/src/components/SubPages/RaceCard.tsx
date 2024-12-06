@@ -1,15 +1,21 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
-
-import RaceProps from '../../interfaces/RaceProps.ts';
-
 import raceImageMapping from '../../utils/raceImageMapping.ts';
+import RaceCardProps from '../../interfaces/RaceCardProps.ts';
 
-interface RaceCardProps extends RaceProps {
-  selectedRaceId: string;
-  onSelect: (id: string) => void;
-}
+/**
+ * Renders a RaceCard component showing information about name, alignment, size, speed, and an image of the race.
+ *
+ * @param {string} id - The id of the race
+ * @param {number} index - The index of the race
+ * @param {string} name - The name of the race.
+ * @param {string} alignment - The alignment of the race.
+ * @param {string} size - The size of the race.
+ * @param {string} speed - The speed of the race.
+ * @param {string} selectedRaceId - The ID of the selected race.
+ * @param {function} onSelect - Function to handle selection of race.
+ */
 
 const RaceCard: React.FC<RaceCardProps> = ({ id, index, name, alignment, size, speed, selectedRaceId, onSelect }) => {
   const raceImage = raceImageMapping[index];

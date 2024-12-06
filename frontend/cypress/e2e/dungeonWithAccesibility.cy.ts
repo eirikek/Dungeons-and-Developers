@@ -1,6 +1,6 @@
 describe(
   'Logs in, searches for a monster and adds black dragon to dungeon,' +
-    ' filters on undead and adds Whight to dungeon. Now with AccesibilityMode on',
+    ' filters on undead adds to dungeon. Now with AccesibilityMode on',
   () => {
     beforeEach(() => {
       cy.viewport(1280, 720);

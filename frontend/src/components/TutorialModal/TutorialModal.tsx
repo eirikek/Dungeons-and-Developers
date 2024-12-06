@@ -7,6 +7,10 @@ import abilityScoreGif from '../../assets/images/abilityscore.gif';
 import classGif from '../../assets/images/class.gif';
 import raceGif from '../../assets/images/race.gif';
 
+/**
+ * Renders a TutorialModal component and gives the user a
+ * tutorial modal with information about the game's character customization.
+ **/
 const TutorialModal = () => {
   const [isOpen, setIsOpen] = useState(false);
 

@@ -2,10 +2,16 @@ import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { ReviewType } from '../interfaces/ReviewProps.ts';
 
+/**
+ * Apollo Client for interacting with GraphQL server
+ * Implements authorization, caching
+ * **/
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000/graphql',
 });
-
+/**
+ * Configures authorization by given the 'Bearer' token to the request header.
+ **/
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token');
   return {
@@ -16,6 +22,11 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+/**
+ * Apollo Client configuration.
+ * With custom cache behaviour for types and fields.
+ * Implements custom Merge behaviours
+ **/
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
   devtools: {
