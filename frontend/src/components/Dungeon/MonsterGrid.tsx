@@ -22,7 +22,8 @@ const MonsterGrid = ({ monsters = [], isDungeonPage = false }: MonsterGridProps)
   }, [monsters, dungeonMonsters, isDungeonPage]);
 
   return (
-    <section
+    <article
+      role="grid"
       className={`grid grid-cols-1 md:grid-cols-2 ${
         isDungeonPage ? 'xl:grid-cols-3 gap-x-10 xl:gap-x-28' : 'xl:grid-cols-4 gap-x-[10vw] lg:gap-x-32'
       } gap-y-5 place-items-center transition-opacity duration-500 p-5`}
@@ -30,7 +31,7 @@ const MonsterGrid = ({ monsters = [], isDungeonPage = false }: MonsterGridProps)
       {monstersWithDungeonStatus.map((monster) => (
         <MonsterCard key={monster.id} {...monster} data-testid="monster-card" />
       ))}
-    </section>
+    </article>
   );
 };
 

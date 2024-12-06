@@ -172,25 +172,30 @@ const MyCharacterPage = () => {
   return (
     <MainPageLayout>
       <main className="main xl:before:bg-myCharacter">
-        <div className="black-overlay opacity-80" />
-        <div className="wrapper w-full py-[15vh] gap-32">
-          <div className="flex justify-center items-center gap-6 flex-col">
-            <h1 className="header">{userName ? `${userName}'s Character` : 'My Character'}</h1>
+        <div className="black-overlay opacity-80" role="banner" />
+        <section className="wrapper w-full py-[15vh] gap-32">
+          <header className="flex justify-center items-center gap-6 flex-col">
+            <h1 className="header" role="heading">
+              {userName ? `${userName}'s Character` : 'My Character'}
+            </h1>
             <TutorialModal />
-          </div>
+          </header>
           {raceLoading || classLoading || abilityScoresLoading || equipmentsLoading ? (
-            <div className="flex justify-center items-center h-[70vh]">
+            <article className="flex justify-center items-center h-[70vh]">
               <LoadingHourglass />
-            </div>
+            </article>
           ) : (
             <>
               {/* Race Section */}
               <section className="w-full flex flex-col lg:flex-row justify-between">
-                <article className="w-full xl:w-1/2 flex flex-col items-center">
-                  <h2 className="header mb-4">Race:</h2>
+                <article className="w-full xl:w-1/2 flex flex-col items-center" aria-labelledby="race-section">
+                  <h2 className="header mb-4" id="race-section">
+                    Race:
+                  </h2>
                   <div className="flex items-center">
                     <button className="arrow-button" onClick={() => handleChange('race', 'prev')}>
                       <FaChevronLeft />
+                      <p className="sr-only">Button left</p>
                     </button>
                     {currentRaceData && (
                       <div className="flex flex-col justify-center items-center gap-4 min-w-52">
@@ -211,16 +216,23 @@ const MyCharacterPage = () => {
                     )}
                     <button className="arrow-button" onClick={() => handleChange('race', 'next')}>
                       <FaChevronRight />
+                      <p className="sr-only">Button right</p>
                     </button>
                   </div>
                 </article>
 
                 {/* Class Section */}
-                <article className="w-full xl:w-1/2 flex flex-col items-center mt-[10vh] lg:mt-0">
-                  <h2 className="header mb-4">Class:</h2>
+                <article
+                  className="w-full xl:w-1/2 flex flex-col items-center mt-[10vh] lg:mt-0"
+                  aria-labelledby="class-section"
+                >
+                  <h2 className="header mb-4" id="class-section">
+                    Class:
+                  </h2>
                   <div className="flex items-center gap-4">
                     <button className="arrow-button" onClick={() => handleChange('class', 'prev')}>
                       <FaChevronLeft />
+                      <p className="sr-only">Button left</p>
                     </button>
                     {currentClassData && (
                       <div className="flex flex-col items-center gap-4">
@@ -241,14 +253,17 @@ const MyCharacterPage = () => {
                     )}
                     <button className="arrow-button" onClick={() => handleChange('class', 'next')}>
                       <FaChevronRight />
+                      <p className="sr-only">Button right</p>
                     </button>
                   </div>
                 </article>
               </section>
 
               {/* Ability Scores Section */}
-              <article className="flex flex-col items-center w-full">
-                <h2 className="header mb-[8vh]">Ability Scores:</h2>
+              <article className="flex flex-col items-center w-full" aria-labelledby="ability-section">
+                <h2 className="header mb-[8vh]" id="class-section">
+                  Ability Scores:
+                </h2>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[12vh] gap-x-[25vw]">
                   {stateAbilities.map((ability, index) => (
                     <div key={index} className="flex items-center">
@@ -264,8 +279,10 @@ const MyCharacterPage = () => {
               </article>
 
               {/* Equipment Section */}
-              <article className="flex flex-col items-center w-full mt-10">
-                <h2 className="header mb-[5vh]">Equipments:</h2>
+              <article className="flex flex-col items-center w-full mt-10" aria-labelledby="equipment-section">
+                <h2 className="header mb-[5vh]" id="class-section">
+                  Equipments:
+                </h2>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[5vh] gap-x-[40vw] xl:gap-y-[10vh]">
                   {currentEquipments.length < 1 && (
                     <div className="flex items-center justify-center h-full w-full col-span-full text-center">
@@ -294,7 +311,7 @@ const MyCharacterPage = () => {
               </article>
             </>
           )}
-        </div>
+        </section>
       </main>
     </MainPageLayout>
   );

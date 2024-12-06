@@ -56,27 +56,31 @@ export default function SortDropdown({ selectedSort, onSortChange }: SortDropdow
   }, [isDropdownOpen]);
 
   return (
-    <div className="relative flex items-center" ref={dropdownRef}>
-      <label className="mr-4 whitespace-nowrap sub-header">Sort By:</label>
-      <div className="relative">
+    <section className="relative flex items-center" ref={dropdownRef} aria-labelledby="sort-dropdown-label">
+      <label className="mr-4 whitespace-nowrap sub-header" id="sort-dropdown-label">
+        Sort By:
+      </label>
+      <div className="relative" role="group">
         <button
           onClick={() => setIsDropdownOpen((prev) => !prev)}
           className="px-1 rounded-lg border-2 bg-customRed sub-header text-nowrap hover:bg-transparent border-customRed hover:text-customRed transition-colors duration-200 flex items-center justify-between min-w-48 lg:min-w-60 "
           onKeyDown={handleKeyDown}
+          aria-expanded={isDropdownOpen}
+          aria-controls="sort-options-menu"
         >
           {sortOptions.find((option) => option.value === selectedSort)?.label || 'Select'}
           <FaChevronDown className="ml-3" />
         </button>
         {isDropdownOpen && (
           <div
+            id="sort-options-menu"
             className="absolute top-full left-0 mt-2 bg-customGray shadow-xl shadow-black rounded-lg z-10 w-full"
             onKeyDown={handleKeyDown}
             tabIndex={0}
           >
-            <div className="flex justify-end p-2">
-              <FiX
-                aria-label="close-button"
-                className="h-8 w-8 text-white hover:text-customRed cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-customRed"
+            <div className="flex justify-end p-2" role="button">
+              <button
+                aria-label="Close dropdown"
                 onClick={() => setIsDropdownOpen(false)}
                 onBlur={() => setIsDropdownOpen(false)}
                 tabIndex={0}
@@ -85,7 +89,9 @@ export default function SortDropdown({ selectedSort, onSortChange }: SortDropdow
                     setIsDropdownOpen(false);
                   }
                 }}
-              />
+              >
+                <FiX className="h-8 w-8 text-white hover:text-customRed cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-customRed" />
+              </button>
             </div>
             <ul>
               {sortOptions.map((option, index) => (
@@ -103,6 +109,6 @@ export default function SortDropdown({ selectedSort, onSortChange }: SortDropdow
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }

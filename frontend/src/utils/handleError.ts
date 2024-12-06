@@ -1,4 +1,4 @@
-import { ToastProps } from '../context/ToastContext.tsx';
+import { ToastProps } from '../interfaces/ToastContextProps.ts';
 
 export const handleError = (
   error: unknown,

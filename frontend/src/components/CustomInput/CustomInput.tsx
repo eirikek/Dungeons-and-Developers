@@ -1,6 +1,7 @@
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import SaveIcon from '@mui/icons-material/Save';
 import React, { useEffect, useRef, useState } from 'react';
+import { useToast } from '../../hooks/useToast.ts';
 
 type InputProps = {
   placeholder: string;
@@ -35,6 +36,10 @@ const CustomInput = ({ placeholder, inputName, value, onSave }: InputProps) => {
 
   const [isEditing, setIsEditing] = useState(false);
 
+  const { showToast } = useToast();
+
+  const [error, setError] = useState<string | null>(null);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -63,9 +68,15 @@ const CustomInput = ({ placeholder, inputName, value, onSave }: InputProps) => {
     const currentValue = inputValue.trim();
 
     if (currentValue === '' || currentValue === placeholder) {
-      alert(`${inputName} cannot be empty!`);
+      setError(`${inputName} cannot be empty!`);
+      showToast({
+        message: `${inputName} cannot be empty!`,
+        type: 'error',
+        duration: 3000,
+      });
       setInputValue(placeholder);
     } else {
+      setError(null);
       onSave(currentValue);
     }
     setIsEditing(false);
@@ -105,7 +116,7 @@ const CustomInput = ({ placeholder, inputName, value, onSave }: InputProps) => {
               id={inputName}
               type="text"
               value={inputValue}
-              aria-label="Edit name"
+              aria-describedby={error ? `${inputName}-error` : undefined}
               data-testid="dungeon-input"
               onChange={handleChange}
               onBlur={handleBlur}

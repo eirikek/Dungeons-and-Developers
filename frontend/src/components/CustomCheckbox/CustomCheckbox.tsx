@@ -41,20 +41,21 @@ const CustomCheckbox = ({
       onClick={disabled ? onDisabledClick : undefined}
       onKeyDown={handleKeyDown}
     >
+      <p className="sr-only">Select this option</p>
       <input
+        id="checkbox"
         type="checkbox"
         checked={checked}
         onChange={handleCheckboxChange}
         className="opacity-0 absolute inset-0 "
         disabled={disabled}
-        aria-label="equipment-checkbox"
+        aria-label={checked ? 'Selected' : 'Not selected'}
         name="checkbox"
         data-testid="equipment-checkbox"
       />
       <span
         className={`absolute h-6 w-6 rounded transition-all duration-300 ${checked ? 'bg-red-600' : 'bg-gray-300'} focus-visible:outline-red-600 focus-visible:outline-8 focus-visible:outline `}
         style={{ top: '-12px', left: '-8px' }}
-        aria-label="checkbox"
         tabIndex={disabled ? -1 : 0}
       />
       {checked && (

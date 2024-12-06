@@ -54,6 +54,9 @@ const SearchBar = ({
     <div className="relative flex flex-col items-center">
       <div className="flex justify-center items-center">
         <CiSearch size="25" className="absolute left-3 top-1/2 transform -translate-y-[60%] text-gray-400" />
+        <label htmlFor="search-input" className="sr-only">
+          Search field
+        </label>
         <input
           ref={inputRef}
           id="search-input"

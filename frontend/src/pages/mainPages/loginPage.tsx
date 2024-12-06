@@ -1,6 +1,6 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import Accessibility from '../../components/AccessibilityToggle/AccessibilityToggle.tsx';
 import CustomButton from '../../components/CustomButton/CustomButton.tsx';
 import MainPageLayout from '../../components/Layouts/MainPageLayout.tsx';
@@ -198,12 +198,12 @@ export default function LoginPage() {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if (isLogin) {
-        handleLogin();
+        await handleLogin();
       } else {
-        handleRegister();
+        await handleRegister();
       }
     }
   };
@@ -239,6 +239,9 @@ export default function LoginPage() {
                   <>
                     <h2 className="sub-header mb-5">Log in to continue your adventure</h2>
                     <div className="flex flex-col items-center gap-5">
+                      <label htmlFor="log-in-input" className="sr-only">
+                        Username
+                      </label>
                       <input
                         id="log-in-input"
                         className={`text w-60 xs:w-72 p-2 border-2 border-gray-500 rounded bg-transparent text-center focus:outline-none 
@@ -265,6 +268,9 @@ export default function LoginPage() {
                 ) : (
                   <>
                     <h2 className="sub-header mb-10">Or register to start a new adventure</h2>
+                    <label htmlFor="register-input" className="sr-only">
+                      Username
+                    </label>
                     <input
                       id="register-input"
                       value={registerUsername}

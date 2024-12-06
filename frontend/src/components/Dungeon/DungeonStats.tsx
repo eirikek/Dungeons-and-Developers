@@ -7,9 +7,9 @@ const DungeonStats = () => {
   return (
     <>
       {dungeonMonsters.length > 0 && (
-        <h2 className="mt-5 sub-header" aria-label="Total Dungeon HP">
+        <h3 className="mt-5 sub-header" aria-label="Total Dungeon HP">
           Total Dungeon HP: {totalHp}
-        </h2>
+        </h3>
       )}
     </>
   );
