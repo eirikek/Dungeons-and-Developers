@@ -20,7 +20,7 @@ const monstersPerPage = 8;
 /**
  * MonsterPage Component
  *
- * A comprehensive monster browsing interface that provides advanced filtering,
+ * A comprehensive monster browsing page that provides advanced filtering,
  * searching, and sorting capabilities.
  *
  * Features:

@@ -17,7 +17,7 @@ import raceImageMapping from '../../utils/raceImageMapping';
 /**
  * MyCharacterPage Component
  *
- * A character customization interface that allows users to create and manage their D&D character.
+ * A character customization page that allows users to create and manage their D&D character.
  *
  * Features:
  * - Race selection with image previews and carousel navigation
