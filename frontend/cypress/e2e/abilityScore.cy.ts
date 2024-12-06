@@ -1,3 +1,4 @@
+//ChatGPt was used here for the logic of triggering of the counter. Covers the entire page.
 describe('Updates ability score, increments and decrements', () => {
   beforeEach(() => {
     cy.viewport(1280, 720);
