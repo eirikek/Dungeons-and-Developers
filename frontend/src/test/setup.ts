@@ -33,11 +33,7 @@ vi.mock('react-blurhash');
  *
  * Usage:
  * - Add to vite.config.ts - setupFiles
- *
- * Example:
- * ```ts
- * import './setup.ts';
- * ```
+
  */
 class IntersectionObserver {
   observe = vi.fn();

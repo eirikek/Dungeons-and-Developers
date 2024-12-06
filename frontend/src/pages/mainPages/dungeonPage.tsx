@@ -60,7 +60,7 @@ export default function DungeonPage() {
   });
 
   if (nameError) {
-    handleError(nameError, 'An error occured while fetching name', 'critical');
+    handleError(nameError, 'An error occurred while fetching name', 'critical');
   }
 
   const dungeonName = dungeonData?.user?.dungeonName || null;
@@ -77,18 +77,25 @@ export default function DungeonPage() {
     <MainPageLayout>
       <main className="main xl:before:bg-dungeon xl:h-screen xl:overflow-hidden">
         <div className="black-overlay opacity-60" />
-        <div className="wrapper min-w-[70%] mt-[10vh] h-full !justify-start">
-          <CustomInput
-            placeholder="Enter dungeon name"
-            inputName="Dungeon Name"
-            value={dungeonName}
-            onSave={handleSaveDungeonName}
-            aria-label="Enter dungeon name"
-            data-testid="input-for-dungeon-name"
-          />
+        <section className="wrapper min-w-[70%] mt-[10vh] h-full !justify-start">
+          <header className="mb-5">
+            <CustomInput
+              placeholder="Enter dungeon name"
+              inputName="Dungeon Name"
+              value={dungeonName}
+              onSave={handleSaveDungeonName}
+              aria-label="Enter dungeon name"
+              data-testid="input-for-dungeon-name"
+            />
+          </header>
           {dungeonMonsters.length === 0 && !loading && (
-            <section className="align-middle text-center mt-10 min-h-[380vh] w-full">
-              <h2 className="text-xl xs:text-2xl sm:text-3xl lg:text-4xl">No monsters in dungeon!</h2>
+            <section
+              className="align-middle text-center mt-10 min-h-[380vh] w-full"
+              aria-labelledby="empty-dungeon-message"
+            >
+              <h2 className="text-xl xs:text-2xl sm:text-3xl lg:text-4xl" id="empty-dungeon-message">
+                No monsters in dungeon!
+              </h2>
             </section>
           )}
           {loading ? (
@@ -101,7 +108,7 @@ export default function DungeonPage() {
               <MonsterGrid isDungeonPage={true} />
             </>
           )}
-        </div>
+        </section>
       </main>
     </MainPageLayout>
   );

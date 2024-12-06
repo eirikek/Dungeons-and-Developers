@@ -103,15 +103,15 @@ const Navbar = () => {
   }, [lastScrollY]);
 
   return (
-    <>
+    <header>
       <nav
         className={`${
           showNavbar ? 'top-0' : '-top-20'
         } fixed w-full bg-customRed text-white p-2 z-50 transition-all duration-300 ease-in-out`}
       >
         <div className="flex xl:justify-center justify-between items-center xl:w-full">
-          <Link to={'/home'}>
-            <img src={logo} alt="Dungeons & Developers logo" className="w-12 ml-6 xl:hidden shadow-none" />
+          <Link to={'/home'} aria-label="Go to home">
+            <img src={logo} alt="Dungeons & Developers logo" className="w-12 ml-6 xl:hidden shadow-none z-60" />
           </Link>
 
           {/* Hamburger Icon */}
@@ -328,7 +328,7 @@ const Navbar = () => {
           onClick={toggleMenu}
         ></div>
       )}
-    </>
+    </header>
   );
 };
 

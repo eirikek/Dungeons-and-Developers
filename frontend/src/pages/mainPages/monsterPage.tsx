@@ -20,7 +20,7 @@ const monstersPerPage = 8;
 /**
  * MonsterPage Component
  *
- * A comprehensive monster browsing interface that provides advanced filtering,
+ * A comprehensive monster browsing page that provides advanced filtering,
  * searching, and sorting capabilities.
  *
  * Features:
@@ -218,7 +218,7 @@ export default function MonsterPage() {
         <div className="black-overlay opacity-40" />
 
         <section className="wrapper py-10 w-[90%] mt-[5vh] !justify-start">
-          <div className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row'}>
+          <div className={'flex gap-10 z-10 items-center justify-center flex-col-reverse xl:flex-row'} role="group">
             <MonsterFilter
               selectedFilters={selectedFilters}
               setSelectedFilters={setSelectedFilters}
@@ -230,7 +230,7 @@ export default function MonsterPage() {
               searchTerm={searchTerm}
             />
             <MonsterSort selectedSort={sortOption} onSortChange={handleSortChange} />
-            <div className="relative flex items-center">
+            <section className="relative flex items-center">
               <SearchBar
                 searchTerm={searchTerm}
                 handleSearchChange={handleSearchChange}
@@ -261,7 +261,7 @@ export default function MonsterPage() {
                   <MdCancel size={24} />
                 </IconButton>
               )}
-            </div>
+            </section>
           </div>
           {loading ? (
             <div className="flex flex-col items-center justify-center h-[79.5vh]" data-testid="loading-indicator">
@@ -276,7 +276,12 @@ export default function MonsterPage() {
                   <MonsterGrid monsters={monsters} isDungeonPage={false} />
                   {totalMonsters > monstersPerPage && (
                     <div className="mt-6 w-full flex justify-center relative xl:sticky bottom-0">
-                      <Pagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
+                      <Pagination
+                        currentPage={currentPage}
+                        onPageChange={handlePageChange}
+                        totalPages={totalPages}
+                        aria-label="Pagination navigation"
+                      />
                     </div>
                   )}
                 </>
