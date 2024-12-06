@@ -1,4 +1,3 @@
-import React from 'react';
 import { useLocation } from 'react-router-dom';
 import accessibilityIcon from '../../assets/images/accessibility-icon.png';
 import AccesibilityProps from '../../interfaces/AccesibilityProps.ts';
@@ -41,6 +40,7 @@ const AccessibilityToggle = ({ checked = false, onChange }: AccesibilityProps) =
         onChange={toggleAccessibilityMode}
         className="sr-only"
         onKeyDown={handleKeyDown}
+        aria-label="accessibility-checkbox"
       />
       <span
         className={`relative inline-block w-14 h-8 rounded-full transition-colors ${
