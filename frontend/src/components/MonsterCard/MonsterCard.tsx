@@ -71,8 +71,10 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
 
   return (
     <>
-      <div
+      <article
+        role="listitem"
         onClick={handleCardClick}
+        aria-labelledby={`${id}-monster-title`}
         className="flex flex-col items-center justify-between bg-black pb-5 w-[75vw] md:w-[42vw] xl:w-[22vw] 2xl:w-[18vw] h-[40vh] sm:h-[45vh] md:h-[35vh] rounded-lg overflow-hidden
            transition-transform duration-300 ease-in-out transform focus:hover:shadow-lg focus:shadow-black focus:scale-105 hover:scale-105 hover:shadow-lg hover:shadow-black cursor-pointer card monster-card"
         aria-label={name}
@@ -80,7 +82,7 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
         onKeyDown={handleKeyDown}
         tabIndex={0}
       >
-        <div className="relative w-full h-[30vh] overflow-hidden monster-image">
+        <figure className="relative w-full h-[30vh] overflow-hidden monster-image">
           {!imageLoaded && (
             <Blurhash
               hash="LEHV6nWB2yk8pyo0adR*.7kCMdnj"
@@ -101,13 +103,13 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
             <div className="relative flex justify-center w-full h-full">
               <img
                 src={monsterImageURL}
-                alt={image ? 'Image of the monster' : 'No monster image found'}
+                alt={image ? `Image of ${name} ` : 'No monster image found'}
                 className="object-cover h-full w-full object-top"
                 onLoad={handleImageLoad}
                 onError={handleImageError}
                 style={{ display: imageLoaded ? 'block' : 'none' }}
               />
-              <div className="absolute left-[75%] top-5">
+              <div className="absolute left-[75%] top-5" role="button">
                 <DungeonButton
                   data-testid={`${name}-dungeon-button`}
                   onAddToDungeonClick={handleToggleDungeon}
@@ -118,11 +120,14 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
             </div>
           )}
           {!imageLoaded && <div className="flex justify-center w-full py-24">Loading image...</div>}
-        </div>
+          <figcaption className="sr-only">{name}</figcaption>
+        </figure>
         <div className="flex flex-col gap-1 w-full p-3">
-          <h2 className="text-xl md:text-lg lg:text-base xl:text-base 2xl:text-lg bold">{name}</h2>
-          <p className="text-lg md:text-base lg:text-sm xl:text-sm 2xl:text-base">Type: {type}</p>
-          <p className="text-lg md:text-base lg:text-sm xl:text-sm 2xl:text-base">HP: {hit_points}</p>
+          <header>
+            <h2 className="text-xl md:text-lg lg:text-base xl:text-base 2xl:text-lg bold">{name}</h2>
+            <p className="text-lg md:text-base lg:text-sm xl:text-sm 2xl:text-base">Type: {type}</p>
+            <p className="text-lg md:text-base lg:text-sm xl:text-sm 2xl:text-base">HP: {hit_points}</p>
+          </header>
 
           <div className="flex w-full justify-between">
             {/* stopPropagation to prevent showing the details modal when the review button is clicked */}
@@ -130,6 +135,7 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
               <MonsterReviewModal monsterId={id} name={name} image={monsterImageURL} />
             </div>
             <button
+              aria-pressed={isInDungeon(id)}
               onClick={(e) => {
                 e.stopPropagation();
                 handleToggleDungeon();
@@ -140,7 +146,7 @@ const MonsterCard = ({ id, name, type, hit_points, alignment, size, image }: Mon
             </button>
           </div>
         </div>
-      </div>
+      </article>
       {/* Monster Details Modal */}
       {isModalOpen && (
         <MonsterDetailsModal

@@ -26,7 +26,7 @@ describe('SortDropdown Component', () => {
       expect(screen.getByText('Z-A')).toBeInTheDocument();
     });
 
-    const button = screen.getByLabelText('close-button');
+    const button = screen.getByLabelText('Close dropdown');
     await userEvent.click(button);
 
     await waitFor(() => {

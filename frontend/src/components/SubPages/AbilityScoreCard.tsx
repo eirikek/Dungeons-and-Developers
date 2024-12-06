@@ -20,7 +20,7 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps & { score: number; onChan
   onChange,
 }) => {
   return (
-    <motion.section
+    <motion.article
       className="flex flex-col xl:flex-row xl:h-[400px] 2xl:h-[350px] w-full justify-between items-center p-8 xl:p-12 rounded-lg bg-black bg-opacity-90 gap-16 card"
       initial="hidden"
       whileInView="visible"
@@ -30,9 +30,14 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps & { score: number; onChan
         hidden: { opacity: 0, y: 100 },
         visible: { opacity: 1, y: 0 },
       }}
+      role="region"
+      aria-labelledby={`${name}-title`}
+      aria-describedby={`${name}-description`}
     >
       <div className="flex items-center gap-16 xl:flex-row flex-col">
-        <h2 className="sub-header">{name}</h2>
+        <header id={`${name}-title`}>
+          <h3 className="sub-header">{name}</h3>
+        </header>
         <Counter
           value={score}
           onChange={(newValue) => console.log('Local update:', newValue)}
@@ -41,15 +46,17 @@ const AbilityScoreCard: React.FC<AbilityScoreCardProps & { score: number; onChan
         />
       </div>
 
-      <ul className="w-full justify-start xl:w-auto xl:justify-center xl:min-w-[15vw] 2xl:min-w-[10vw] text-center xl:text-left">
-        <li className="bold text">Skills recommended:</li>
-        {skills.map((skill, skillIndex) => (
-          <li key={skillIndex} className="text">
-            {skill}
-          </li>
-        ))}
-      </ul>
-    </motion.section>
+      <section className="w-full justify-start xl:w-auto xl:justify-center xl:min-w-[15vw] 2xl:min-w-[10vw] text-center xl:text-left">
+        <h3 className="bold text">Skills recommended:</h3>
+        <ul>
+          {skills.map((skill, skillIndex) => (
+            <li key={skillIndex} className="text">
+              {skill}
+            </li>
+          ))}
+        </ul>
+      </section>
+    </motion.article>
   );
 };
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox.tsx';
 import raceImageMapping from '../../utils/raceImageMapping.ts';
@@ -17,7 +16,7 @@ import RaceCardProps from '../../interfaces/RaceCardProps.ts';
  * @param {function} onSelect - Function to handle selection of race.
  */
 
-const RaceCard: React.FC<RaceCardProps> = ({ id, index, name, alignment, size, speed, selectedRaceId, onSelect }) => {
+const RaceCard = ({ id, index, name, alignment, size, speed, selectedRaceId, onSelect }: RaceCardProps) => {
   const raceImage = raceImageMapping[index];
   const handleSelectRace = () => {
     if (selectedRaceId !== id) {
@@ -26,7 +25,7 @@ const RaceCard: React.FC<RaceCardProps> = ({ id, index, name, alignment, size, s
   };
 
   return (
-    <motion.section
+    <motion.article
       className="flex flex-col xl:flex-row xl:h-90 w-full justify-between items-center p-8 xl:p-12 rounded-lg bg-black bg-opacity-90 gap-10 card"
       initial="hidden"
       whileInView="visible"
@@ -36,12 +35,22 @@ const RaceCard: React.FC<RaceCardProps> = ({ id, index, name, alignment, size, s
         hidden: { opacity: 0, y: 100 },
         visible: { opacity: 1, y: 0 },
       }}
+      role="article"
+      aria-labelledby={`${id}-name`}
+      aria-describedby={`${id}-details`}
     >
       <div className="flex flex-col xl:flex-row gap-5 justify-center items-center ">
-        <img src={raceImage} alt={name} className="max-w-36 xl:max-w-28 shadow-none" />
-        <div>
-          <h2 className="sub-header bold">{name}</h2>
-          <p className="text">{alignment}</p>
+        <figure className="max-w-36 xl:max-w-28">
+          <img src={raceImage} alt={`${name} race illustration`} className="shadow-none" />
+          <figcaption className="sr-only">{name}</figcaption>
+        </figure>
+        <div role="group">
+          <h2 id={`${id}-name`} className="sub-header bold">
+            {name}
+          </h2>
+          <p id={`${id}-details`} className="text">
+            {alignment}
+          </p>
           <p className="text">
             <span className="bold">Size:</span> {size}
           </p>
@@ -51,9 +60,15 @@ const RaceCard: React.FC<RaceCardProps> = ({ id, index, name, alignment, size, s
         </div>
       </div>
       <div className="w-1/5 flex items-center justify-center xl:justify-end">
-        <CustomCheckbox scale={2} checked={selectedRaceId === id} onChange={handleSelectRace} disableUncheck={true} />
+        <CustomCheckbox
+          scale={2}
+          checked={selectedRaceId === id}
+          onChange={handleSelectRace}
+          disableUncheck={true}
+          aria-label={`Select ${name} race`}
+        />
       </div>
-    </motion.section>
+    </motion.article>
   );
 };
 
