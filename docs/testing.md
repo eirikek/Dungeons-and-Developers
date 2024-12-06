@@ -8,6 +8,7 @@ For E2E testing we have used Cypress to simulate different user stories. We have
 
 - **Login.cy**: Tests login, searching, and user interaction with data
 - **Filtering.cy**: tests login and filtering.
+- **And more**...
 
 To run the E2E tests you need a running frontend and backend, be in the frontend folder and run:
 
@@ -61,12 +62,8 @@ Our testing strategy employs a multi-layered approach, combining both component 
 
 We strive for a test coverage that covers the most critical parts of our website. The flow and branches a user can take when entering our website. As stated earlier we have excluded some components/pages from report and vitest, because we considered it too difficult and time consuming.
 
-**[Insert Coverage Report Here]**
+![img.png](img.png)
 
-**Tested Files:**
-
-- **Component Tests:** [List of tested component files]
-- **E2E Tests:** [List of tested user flows/scenarios]
 
 ### Rationale for Testing Choices
 
