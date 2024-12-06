@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { DungeonContext } from '../../../src/context/DungeonContext.tsx';
+import { DungeonContext } from '../../../src/context/DungeonContext.ts';
 import DungeonStats from '../../../src/components/Dungeon/DungeonStats.tsx';
 import { MonsterCardProps } from '../../../src/interfaces/MonsterCardProps.ts'; // Adjust path as needed
 

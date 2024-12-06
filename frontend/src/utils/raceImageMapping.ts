@@ -1,12 +1,12 @@
-import dragonborn from '../assets/images/race/dragonborn.png';
-import dwarf from '../assets/images/race/dwarf.png';
-import elf from '../assets/images/race/elf.png';
-import gnome from '../assets/images/race/gnome.png';
-import half_elf from '../assets/images/race/half-elf.png';
-import half_orc from '../assets/images/race/half-orc.png';
-import halfling from '../assets/images/race/halfling.png';
-import human from '../assets/images/race/human.png';
-import tiefling from '../assets/images/race/tiefling.png';
+import dragonborn from '../assets/images/race/dragonborn.webp';
+import dwarf from '../assets/images/race/dwarf.webp';
+import elf from '../assets/images/race/elf.webp';
+import gnome from '../assets/images/race/gnome.webp';
+import half_elf from '../assets/images/race/half-elf.webp';
+import half_orc from '../assets/images/race/half-orc.webp';
+import halfling from '../assets/images/race/halfling.webp';
+import human from '../assets/images/race/human.webp';
+import tiefling from '../assets/images/race/tiefling.webp';
 
 /**
  * A mapping of race names to their corresponding image file paths.

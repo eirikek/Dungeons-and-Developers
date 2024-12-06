@@ -128,7 +128,7 @@ export default function MonsterFilter({
     <div className="relative text-white" ref={dropdownRef}>
       <button
         onClick={toggleDropdown}
-        className={`sub-header px-1 rounded-md border-2 transition-colors duration-200 text-nowrap ${
+        className={`sub-header flex items-center px-1 rounded-md border-2 transition-colors duration-200 text-nowrap ${
           searchTerm
             ? 'bg-customGray text-gray-500 border-gray-500 cursor-not-allowed'
             : 'bg-customRed hover:bg-transparent border-customRed hover:border-customRed hover:text-customRed'

@@ -3,7 +3,7 @@ import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 import ClassCard from '../../components/SubPages/ClassCard.tsx';
 
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
-import useCharacterContext from '../../hooks/useCharacter.ts';
+import { useCharacterContext } from '../../context/CharacterContext.ts';
 import { classVar } from '../../utils/apolloVars.ts';
 
 /**

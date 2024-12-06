@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
+import { formatDocument } from '../../utils/formatDocument.ts';
+import AbilityScore from '../model/AbilityScore.js';
 import Class from '../model/Class.js';
 import Race from '../model/Race.js';
 import User from '../model/User.ts';
-import AbilityScore from '../model/AbilityScore.js';
-import { formatDocument } from '../../utils/formatDocument.ts';
 
 const SECRET_KEY = process.env.SECRET_KEY || 'secret_key';
 
@@ -22,7 +22,7 @@ export default {
      */
 
     async user(_: any, { id }: { id: string }) {
-      return User.findById(id)
+      const user = await User.findById(id)
         .select('dungeonName')
         .populate({
           path: 'favoritedMonsters',
@@ -32,6 +32,11 @@ export default {
         .populate('class')
         .populate('equipments')
         .populate('abilityScores');
+      if (!user) {
+        throw new Error(`User with ID ${id} not found`);
+      }
+
+      return user;
     },
 
     async checkUsername(_: any, { userName }: UserArgs) {

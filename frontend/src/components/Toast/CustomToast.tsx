@@ -4,9 +4,10 @@ import { FaUndoAlt } from 'react-icons/fa';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
 import { IoAlertCircleOutline, IoCloseCircleOutline } from 'react-icons/io5';
 import { toast, ToastContainer, Zoom } from 'react-toastify';
-import { ToastContext, ToastProps } from '../../context/ToastContext';
+import { ToastContext } from '../../context/ToastContext';
 import 'react-toastify/dist/ReactToastify.css';
 import './CustomToast.css';
+import { ToastProps } from '../../interfaces/ToastContextProps.ts';
 
 const CustomToast = ({ message, type, undoAction, closeToast }: ToastProps) => {
   const [undoVisible, setUndoVisible] = useState(true);

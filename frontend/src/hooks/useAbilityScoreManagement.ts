@@ -1,6 +1,6 @@
 import { abilitiesVar } from '../utils/apolloVars.ts';
 import { useReactiveVar } from '@apollo/client';
-import useCharacterContext from './useCharacter.ts';
+import { useCharacterContext } from '../context/CharacterContext.ts';
 
 /**
  * Custom Hook: `useAbilityScoreManagement`
