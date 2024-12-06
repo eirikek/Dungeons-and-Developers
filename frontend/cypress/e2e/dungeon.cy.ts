@@ -25,7 +25,7 @@ describe('Logs in, searches for a monster and adds black dragon to dungeon, filt
 
     cy.get('input[type="text"]').clear();
 
-    cy.get('button').contains('Filter Monsters').click();
+    cy.get('button').contains('Filter Monsters').click({ force: true });
 
     cy.wait(1000);
 

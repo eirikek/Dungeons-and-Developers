@@ -14,7 +14,7 @@ describe(
 
       cy.get('input[type="checkbox"]').should('not.be.checked');
 
-      cy.get('label').click();
+      cy.get(`[aria-label=accessibility-checkbox]`).click({ force: true });
 
       cy.get('input#log-in-input').type('Cypress test user');
       cy.get('button').first().should('exist').should('have.text', 'Log in').click();

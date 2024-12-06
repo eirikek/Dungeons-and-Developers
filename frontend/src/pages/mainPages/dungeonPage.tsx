@@ -78,7 +78,7 @@ export default function DungeonPage() {
       <main className="main xl:before:bg-dungeon xl:h-screen xl:overflow-hidden">
         <div className="black-overlay opacity-60" />
         <section className="wrapper min-w-[70%] mt-[10vh] h-full !justify-start">
-          <header className="mb-5">
+          <header>
             <CustomInput
               placeholder="Enter dungeon name"
               inputName="Dungeon Name"
