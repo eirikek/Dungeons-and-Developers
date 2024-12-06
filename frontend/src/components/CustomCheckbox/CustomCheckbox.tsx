@@ -55,14 +55,14 @@ const CustomCheckbox = ({
         data-testid="equipment-checkbox"
       />
       <span
-        className={`absolute h-6 w-6 rounded transition-all duration-300 ${checked ? 'bg-red-600' : 'bg-gray-300'} focus:outline-red-600 focus:outline-8 focus:outline `}
+        className={`absolute h-6 w-6 rounded transition-all duration-300 ${checked ? 'bg-red-600' : 'bg-gray-300'} focus-visible:outline-red-600 focus-visible:outline-8 focus-visible:outline `}
         style={{ top: '-12px', left: '-8px' }}
         aria-label="checkbox"
         tabIndex={disabled ? -1 : 0}
       />
       {checked && (
         <span
-          className="absolute w-[5px] h-[10px] border-white border-2 border-t-0 border-l-0 transform rotate-45 focus:outline-red-600 focus:outline-8 focus:outline"
+          className="absolute w-[5px] h-[10px] border-white border-2 border-t-0 border-l-0 transform rotate-45 focus-visible:outline-red-600 focus-visible:outline-8 focus-visible:outline"
           style={{ top: '-6px', left: '1px' }}
           aria-label="checkbox"
         />

@@ -3,6 +3,67 @@ import { useMemo } from 'react';
 import { GET_MONSTER_TYPE_COUNTS, GET_MONSTERS } from '../graphql/queries/monsterQueries.ts';
 import MonsterDataProps from '../interfaces/MonsterDataProps.ts';
 
+/**
+ * Custom Hook: `useMonster`
+ *
+ * Fetches and manages data for a list of monsters based on various filters and criteria.
+ *
+ * Features:
+ * - Queries monsters based on search term, filters, hit point range, and sorting options.
+ * - Retrieves counts for different monster types.
+ * - Filters and transforms monster data for convenient use in the UI.
+ *
+ * Dependencies:
+ * - `GET_MONSTERS`: GraphQL query to fetch monsters with optional filters and sorting.
+ * - `GET_MONSTER_TYPE_COUNTS`: GraphQL query to fetch monster type counts based on HP range.
+ *
+ * @param searchTerm The search term used to filter monsters by name or attributes.
+ * @param currentPage The current page number for pagination.
+ * @param monstersPerPage The number of monsters to display per page.
+ * @param selectedFilters A set of selected monster type filters.
+ * @param minHp (Optional) Minimum hit points to filter monsters.
+ * @param maxHp (Optional) Maximum hit points to filter monsters.
+ * @param sortOption (Default: `'name-asc'`) The sorting option for the monster list.
+ *
+ * @returns An object containing:
+ * - `monsters`: An array of transformed monster data.
+ * - `totalMonsters`: The total number of monsters matching the query.
+ * - `minHp`: The minimum HP value from the query result (default is 1).
+ * - `maxHp`: The maximum HP value from the query result (default is 1000).
+ * - `monsterCounts`: An object mapping monster types to their respective counts.
+ * - `monsterTypes`: An array of available monster types.
+ * - `loading`: A boolean indicating if the data is currently being fetched.
+ * - `error`: Any error encountered during the query execution.
+ *
+ * @example
+ * ```tsx
+ * const {
+ *   monsters,
+ *   totalMonsters,
+ *   minHp,
+ *   maxHp,
+ *   monsterCounts,
+ *   monsterTypes,
+ *   loading,
+ *   error,
+ * } = useMonster('dragon', 1, 10, new Set(['fire']), 50, 500, 'difficulty-desc');
+ *
+ * if (loading) return <p>Loading...</p>;
+ * if (error) return <p>Error loading monsters</p>;
+ *
+ * return (
+ *   <div>
+ *     <h1>Total Monsters: {totalMonsters}</h1>
+ *     <ul>
+ *       {monsters.map((monster) => (
+ *         <li key={monster.id}>{monster.name} - {monster.type}</li>
+ *       ))}
+ *     </ul>
+ *   </div>
+ * );
+ * ```
+ */
+
 function useMonster(
   searchTerm: string,
   currentPage: number,

@@ -1,7 +1,7 @@
 import SubPageLayout from '../../components/Layouts/SubPageLayout.tsx';
 import AbilityScoreCard from '../../components/SubPages/AbilityScoreCard.tsx';
 import { useToast } from '../../hooks/useToast.ts';
-import useCharacterContext from '../../hooks/useCharacter.ts';
+import { useCharacterContext } from '../../context/CharacterContext.ts';
 import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass.tsx';
 import useAbilityScoreManagement from '../../hooks/useAbilityScoreManagement.ts';
 import { useEffect } from 'react';

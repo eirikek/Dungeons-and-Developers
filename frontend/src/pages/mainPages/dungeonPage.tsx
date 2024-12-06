@@ -10,6 +10,38 @@ import useDungeon from '../../hooks/useDungeon.ts';
 import { dungeonMonstersVar } from '../../utils/apolloVars.ts';
 import { handleError } from '../../utils/handleError.ts';
 
+/**
+ * DungeonPage Component
+ *
+ * Displays the user's dungeon, allowing management of its name and the monsters within it.
+ *
+ * Features:
+ * - Displays the user's dungeon name and allows updating it via a custom input field.
+ * - Shows stats and monsters added to the dungeon.
+ * - Handles loading states and errors during data fetching.
+ * - Integrates with Apollo Client to fetch and manage data related to the dungeon.
+ *
+ * Key Components:
+ * - `CustomInput`: For editing and saving the dungeon name.
+ * - `DungeonStats`: Displays total HP of the monsters in the dungeon.
+ * - `MonsterGrid`: Shows a grid of monsters in the dungeon.
+ * - `LoadingHourglass`: A loading spinner displayed while data is being fetched.
+ * - `MainPageLayout`: A consistent layout wrapper for the main content.
+ *
+ * Hooks:
+ * - `useQuery`: Fetches the dungeon name using `GET_USER_DUNGEON_NAME`.
+ * - `useReactiveVar`: Reactively manages dungeon monster data using `dungeonMonstersVar`.
+ * - `useDungeon`: Provides utilities to manage the dungeon's state, including `toggleDungeonName`.
+ *
+ * Error Handling:
+ * - Utilizes `handleError` to log and display errors encountered during dungeon name fetching.
+ *
+ * States:
+ * - `dungeonMonsters`: A reactive variable holding the list of monsters in the dungeon.
+ * - `dungeonName`: The name of the dungeon fetched from the server.
+ *
+ */
+
 export default function DungeonPage() {
   const { toggleDungeonName, userId } = useDungeon();
 
@@ -54,7 +86,7 @@ export default function DungeonPage() {
             aria-label="Enter dungeon name"
             data-testid="input-for-dungeon-name"
           />
-          {dungeonMonsters.length === 0 && (
+          {dungeonMonsters.length === 0 && !loading && (
             <section className="align-middle text-center mt-10 min-h-[380vh] w-full">
               <h2 className="text-xl xs:text-2xl sm:text-3xl lg:text-4xl">No monsters in dungeon!</h2>
             </section>

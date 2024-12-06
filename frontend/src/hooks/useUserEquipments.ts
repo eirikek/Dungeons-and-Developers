@@ -13,6 +13,67 @@ import { handleError } from '../utils/handleError.ts';
 import { GetUserEquipmentResponse } from '../graphql/queryInterface.ts';
 import { equipmentsVar } from '../utils/apolloVars.ts';
 
+/**
+ * Custom Hook: `useUserEquipments`
+ *
+ * Manages equipment-related operations for a user, including fetching, adding, and removing equipment.
+ *
+ * Features:
+ * - Fetches the user's current equipment from the server and updates the Apollo cache.
+ * - Provides mutations to add, remove, or clear all equipment for a user.
+ * - Ensures the local equipment state is synchronized with the server.
+ *
+ * Dependencies:
+ * - GraphQL Queries:
+ *   - `GET_USER_EQUIPMENT`: Fetches the user's equipment.
+ * - GraphQL Mutations:
+ *   - `ADD_EQUIPMENT_TO_CHARACTER`: Adds an equipment item to the user's list.
+ *   - `REMOVE_EQUIPMENT_FROM_CHARACTER`: Removes a specific equipment item.
+ *   - `REMOVE_ALL_EQUIPMENTS`: Clears all equipment for the user.
+ * - Utilities:
+ *   - `equipmentsVar`: Reactive variable for managing equipment state.
+ *   - `handleError`: Error handling utility for logging and displaying errors.
+ *
+ * State:
+ * - `loading`: Boolean indicating whether data is currently being fetched.
+ *
+ * Returns:
+ * - `loading`: Indicates if the equipment data is loading.
+ * - `addToEquipmentsMutation`: Adds a specific equipment item to the user.
+ * - `removeFromEquipmentsMutation`: Removes a specific equipment item from the user.
+ * - `removeAllUserEquipmentsMutation`: Removes all equipment from the user.
+ *
+ * @example
+ * ```tsx
+ * import useUserEquipments from '../hooks/useUserEquipments';
+ *
+ * const MyComponent = () => {
+ *   const {
+ *     loading,
+ *     addToEquipmentsMutation,
+ *     removeFromEquipmentsMutation,
+ *     removeAllUserEquipmentsMutation,
+ *   } = useUserEquipments();
+ *
+ *   if (loading) return <p>Loading...</p>;
+ *
+ *   return (
+ *     <div>
+ *       <button onClick={() => addToEquipmentsMutation('equipmentId')}>
+ *         Add Equipment
+ *       </button>
+ *       <button onClick={() => removeFromEquipmentsMutation('equipmentId')}>
+ *         Remove Equipment
+ *       </button>
+ *       <button onClick={removeAllUserEquipmentsMutation}>
+ *         Remove All Equipment
+ *       </button>
+ *     </div>
+ *   );
+ * };
+ * ```
+ */
+
 const useUserEquipments = () => {
   const { userId } = useContext(AuthContext);
   const location = useLocation();

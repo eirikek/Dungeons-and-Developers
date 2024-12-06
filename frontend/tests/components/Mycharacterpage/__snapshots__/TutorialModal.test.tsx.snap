@@ -4,7 +4,7 @@ exports[`TutorialModal Component > matches snapshot 1`] = `
 <div>
   <button
     aria-label="Help"
-    class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-up7ing-MuiButtonBase-root-MuiIconButton-root"
+    class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-22jpiv-MuiButtonBase-root-MuiIconButton-root"
     tabindex="0"
     type="button"
   >

@@ -1,6 +1,8 @@
 import { gql } from 'graphql-tag';
 
 export const monsterType = gql`
+  scalar Base64
+
   type Monster {
     id: ID!
     name: String!
@@ -8,7 +10,7 @@ export const monsterType = gql`
     type: String!
     alignment: String!
     hit_points: Int!
-    image: String
+    image: Base64
     reviews: [Review!]!
     averageDifficulty: Float
     reviewsCount: Int

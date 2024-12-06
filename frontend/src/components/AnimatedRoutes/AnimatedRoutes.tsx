@@ -11,8 +11,8 @@ import ClassPage from '../../pages/subPages/classPage.tsx';
 import EquipmentPage from '../../pages/subPages/equipmentPage.tsx';
 import RacePage from '../../pages/subPages/racePage.tsx';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute.tsx';
-import { CharacterProvider } from '../../context/CharacterContext.tsx';
-import { DungeonProvider } from '../../context/DungeonContext.tsx';
+import { CharacterProvider } from '../../context/CharacterProvider.tsx';
+import { DungeonProvider } from '../../context/DungeonProvider.tsx';
 
 export default function AnimatedRoutes() {
   const location = useLocation();

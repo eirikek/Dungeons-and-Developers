@@ -3,7 +3,7 @@ import { FaChevronDown } from 'react-icons/fa';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { IoIosLogOut } from 'react-icons/io';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAccessibility } from '../../hooks/useAccessibility.ts';
+import { useAccessibilityContext } from '../../context/AccessibilityContext.ts';
 import logo from '../../assets/images/logo.svg';
 import Accessibility from '../AccessibilityToggle/AccessibilityToggle.tsx';
 import CustomButton from '../CustomButton/CustomButton.tsx';
@@ -25,7 +25,7 @@ const Navbar = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
   const [isDropdownHovered, setIsDropdownHovered] = useState(false);
-  const { isAccessibilityMode } = useAccessibility();
+  const { isAccessibilityMode } = useAccessibilityContext();
 
   const navigate = useNavigate();
   const location = useLocation();

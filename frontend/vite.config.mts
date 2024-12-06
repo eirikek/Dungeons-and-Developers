@@ -36,7 +36,7 @@ export default defineConfig({
         'src/App.tsx',
         'src/components/subPages/**',
         'cypress.config.ts',
-        'eslint.config.mjs',
+        'eslint.config.js',
         'tailwind.config.js',
         'vite.config.mts',
         'src/hooks/**',

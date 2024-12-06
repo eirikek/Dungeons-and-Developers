@@ -1,11 +1,11 @@
-import express from 'express';
 import { ApolloServer } from '@apollo/server';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import typeDefs from './graphql/typeDefs/index.ts';
-import resolvers from './graphql/resolvers/index.ts';
-import fetchData from './scripts/fetchData.ts';
 import { expressMiddleware } from '@apollo/server/express4';
+import cors from 'cors';
+import express from 'express';
+import mongoose from 'mongoose';
+import resolvers from './graphql/resolvers/index.ts';
+import typeDefs from './graphql/typeDefs/index.ts';
+import fetchData from './scripts/fetchData.ts';
 
 const app = express();
 app.use(express.json());

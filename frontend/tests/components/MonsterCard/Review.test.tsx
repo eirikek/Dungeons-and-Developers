@@ -4,9 +4,9 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Review from '../../../src/components/MonsterCard/Review';
 import { AuthContext } from '../../../src/context/AuthContext';
-import { ReviewType } from '../../../src/interfaces/ReviewProps';
-import { GET_MONSTER_REVIEWS } from '../../../src/graphql/queries/monsterQueries';
 import { DELETE_REVIEW, UPDATE_REVIEW } from '../../../src/graphql/mutations/monsterMutations';
+import { GET_MONSTER_REVIEWS } from '../../../src/graphql/queries/monsterQueries';
+import { ReviewType } from '../../../src/interfaces/ReviewProps';
 
 vi.mock('../../../src/hooks/useToast', () => ({
   useToast: () => ({

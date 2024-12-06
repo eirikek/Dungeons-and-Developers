@@ -30,7 +30,7 @@ const AccessibilityToggle = ({ checked = false, onChange }: AccesibilityProps) =
     <label className="flex items-center cursor-pointer z-50" onKeyDown={handleKeyDown} tabIndex={0}>
       <div className="mr-3">
         <img
-          src={accessabilityIcon}
+          src={accessibilityIcon}
           alt="accessability icon"
           className={`w-10 ${isLoginPage ? 'filter invert' : ''}`}
         />

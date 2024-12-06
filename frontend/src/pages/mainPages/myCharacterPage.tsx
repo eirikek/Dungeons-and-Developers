@@ -7,7 +7,7 @@ import LoadingHourglass from '../../components/LoadingHourglass/LoadingHourglass
 import TutorialModal from '../../components/TutorialModal/TutorialModal';
 import { AuthContext } from '../../context/AuthContext';
 import abilityScoreManagement from '../../hooks/useAbilityScoreManagement.ts';
-import useCharacterContext from '../../hooks/useCharacter';
+import { useCharacterContext } from '../../context/CharacterContext.ts';
 import { useToast } from '../../hooks/useToast.ts';
 import { Equipment } from '../../interfaces/EquipmentProps.ts';
 import { classVar, equipmentsVar, raceVar } from '../../utils/apolloVars.ts';
@@ -202,7 +202,9 @@ const MyCharacterPage = () => {
                             alt={currentRaceData.name}
                             className="w-full h-full object-contain shadow-none"
                             onLoad={() => setRaceImageLoaded(true)}
-                            style={{ display: raceImageLoaded ? 'block' : 'none' }}
+                            style={{
+                              display: raceImageLoaded ? 'block' : 'none',
+                            }}
                           />
                         </div>
                       </div>
