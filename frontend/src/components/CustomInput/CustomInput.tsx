@@ -116,6 +116,7 @@ const CustomInput = ({ placeholder, inputName, value, onSave }: InputProps) => {
               id={inputName}
               type="text"
               value={inputValue}
+              aria-label="Edit name"
               aria-describedby={error ? `${inputName}-error` : undefined}
               data-testid="dungeon-input"
               onChange={handleChange}

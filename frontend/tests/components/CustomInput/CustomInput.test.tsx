@@ -3,6 +3,12 @@ import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import CustomInput from '../../../src/components/CustomInput/CustomInput';
 
+const mockShowToast = vi.fn();
+vi.mock('../../../src/hooks/useToast.ts', () => ({
+  useToast: () => ({
+    showToast: mockShowToast,
+  }),
+}));
 describe('CustomInput Component', () => {
   const placeholder = 'Enter your dungeon name';
   const inputName = 'Dungeon';
@@ -71,16 +77,20 @@ describe('CustomInput Component', () => {
     expect(onSaveMock).toHaveBeenCalledWith('New Name');
   });
 
-  it('shows an alert when trying to save an empty value', async () => {
+  it('shows an error toast when trying to save an empty value', async () => {
     const user = userEvent.setup();
-    const alertMock = vi.spyOn(window, 'alert').mockImplementation(() => {});
     render(<CustomInput placeholder={placeholder} inputName={inputName} value={initialValue} onSave={onSaveMock} />);
+
     await user.click(screen.getByRole('button', { name: `Edit ${inputName}` }));
     const inputElement = screen.getByRole('textbox', { name: 'Edit name' });
     await user.clear(inputElement);
     await user.click(screen.getByRole('button', { name: `Save ${inputName}` }));
-    expect(alertMock).toHaveBeenCalledWith(`${inputName} cannot be empty!`);
-    alertMock.mockRestore();
+
+    expect(mockShowToast).toHaveBeenCalledWith({
+      message: `${inputName} cannot be empty!`,
+      type: 'error',
+      duration: 3000,
+    });
   });
 
   it('saves on blur', async () => {

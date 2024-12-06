@@ -2,11 +2,14 @@
 
 exports[`MonsterFilter Component > renders correctly and matches snapshot 1`] = `
 <div>
-  <div
+  <section
+    aria-labelledby="monster-filters"
     class="relative text-white"
   >
     <button
-      class="sub-header px-1 rounded-md border-2 transition-colors duration-200 text-nowrap bg-customRed hover:bg-transparent border-customRed hover:border-customRed hover:text-customRed"
+      aria-controls="monster-filters-dropdown"
+      aria-expanded="false"
+      class="sub-header flex items-center px-1 rounded-md border-2 transition-colors duration-200 text-nowrap bg-customRed hover:bg-transparent border-customRed hover:border-customRed hover:text-customRed"
       style="pointer-events: initial;"
     >
       Filter Monsters
@@ -25,6 +28,6 @@ exports[`MonsterFilter Component > renders correctly and matches snapshot 1`] = 
         />
       </svg>
     </button>
-  </div>
+  </section>
 </div>
 `;
