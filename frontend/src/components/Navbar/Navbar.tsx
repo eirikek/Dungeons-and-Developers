@@ -111,10 +111,7 @@ const Navbar = () => {
       >
         <div className="flex xl:justify-center justify-between items-center xl:w-full">
           <Link to={'/home'} aria-label="Go to home">
-            <h1 className="sr-only">
-              Go home
-              <img src={logo} alt="Dungeons & Developers logo" className="w-12 ml-6 xl:hidden shadow-none" />
-            </h1>
+            <img src={logo} alt="Dungeons & Developers logo" className="w-12 ml-6 xl:hidden shadow-none z-60" />
           </Link>
 
           {/* Hamburger Icon */}
