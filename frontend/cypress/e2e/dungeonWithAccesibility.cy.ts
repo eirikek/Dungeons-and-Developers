@@ -7,7 +7,7 @@ describe(
     });
 
     it('Logs in and performs user story for adding and removing monsters from dungeon', () => {
-      cy.visit('http://localhost:5173/');
+      cy.visit('http://it2810-20.idi.ntnu.no/project2/');
 
       cy.get('img[alt="accessability icon"]').should('exist');
       cy.get('label').should('exist');
