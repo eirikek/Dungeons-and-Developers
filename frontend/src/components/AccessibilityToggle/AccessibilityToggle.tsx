@@ -1,15 +1,15 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import accessabilityIcon from '../../assets/images/accessibility-icon.png';
-import { useAccessibility } from '../../hooks/useAccessibility';
+import accessibilityIcon from '../../assets/images/accessibility-icon.png';
 import AccesibilityProps from '../../interfaces/AccesibilityProps.ts';
+import { useAccessibilityContext } from '../../context/AccessibilityContext.ts';
 /**
  * AccessibilityToggle component allows users to change the complex UI to a more accessible mode.
  *
  * Renders a component that user can interact with as an image and a checkbox.
  */
 const AccessibilityToggle = ({ checked = false, onChange }: AccesibilityProps) => {
-  const { isAccessibilityMode, toggleAccessibilityMode } = useAccessibility();
+  const { isAccessibilityMode, toggleAccessibilityMode } = useAccessibilityContext();
   const location = useLocation();
   const isLoginPage = location.pathname === '/';
 
