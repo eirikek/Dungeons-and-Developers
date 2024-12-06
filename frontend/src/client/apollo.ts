@@ -87,15 +87,7 @@ const client = new ApolloClient({
         keyFields: ['id'],
         fields: {
           reviews: {
-            merge(existing = [], incoming) {
-              const mergedReviews = [...existing];
-              incoming.forEach((incomingReview: ReviewType) => {
-                if (!mergedReviews.some((review) => review.id === incomingReview.id)) {
-                  mergedReviews.push(incomingReview);
-                }
-              });
-              return mergedReviews;
-            },
+            merge: false,
           },
         },
       },
